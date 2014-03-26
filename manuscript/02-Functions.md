@@ -13,7 +13,7 @@ Functions in JavaScript are unique in that they allow any number of parameters t
         return start + middle + end;
     }
 
-The logical OR operator (`||`) always returns the second operand when the first is falsy. Since named function parameters that are not explicitly provided are set to `undefined`, the logical OR operator is frequently used to provide default values for missing parameters. Other ways of determining if an parameters is missing include checking <code>arguments.length</code> For the number of parameters that were passed or directly inspecting each parameter to see if it is `undefined`.
+The logical OR operator (`||`) always returns the second operand when the first is falsy. Since named function parameters that are not explicitly provided are set to `undefined`, the logical OR operator is frequently used to provide default values for missing parameters. Other ways of determining if any parameters are missing include checking <code>arguments.length</code> for the number of parameters that were passed or directly inspecting each parameter to see if it is `undefined`.
 
 ECMAScript 6 makes it easier to provide default values for parameters by providing initializations that are used when the parameter isn't formally passed. For example:
 
