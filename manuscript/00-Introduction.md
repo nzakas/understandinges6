@@ -48,6 +48,6 @@ This book is not for beginners who have never written JavaScript. You will need 
 
 ## Help and Support
 
-You can file issues, suggest changes, and open pull requests against this book by visiting: https://github.com/nzakas/understandinges6
+You can file issues, suggest changes, and open pull requests against this book by visiting: [https://github.com/nzakas/understandinges6](https://github.com/nzakas/understandinges6)
 
-For anything else, please send a message to the mailing list: http://groups.google.com/group/zakasbooks.
+For anything else, please send a message to the mailing list: [http://groups.google.com/group/zakasbooks](http://groups.google.com/group/zakasbooks).

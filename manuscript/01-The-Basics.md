@@ -1,6 +1,6 @@
 # The Basics
 
-
+ECMAScript 6 makes a large number of changes on top of ECMAScript 5. Some of the changes are larger, such as adding new types or syntax, while others are quite small, providing incremental improvements on top of the language. This chapter covers those incremental improvements that likely won't gain a lot of attention but provide some important functionality that can may make certain types of problems easier to solve.
 
 ## Better Unicode Support
 
@@ -251,8 +251,6 @@ ECMAScript 6 introduces `Object.is()` to make up for the remaining quirks of the
 
 In most cases you will probably still want to use `==` or `===` for comparing values, as special cases covered by `Object.is()` may not affect you directly.
 
-
-
 ## Block bindings
 
 Traditionally, one of the tricky parts of JavaScript has been the way that `var` declarations work. In most C-based languages, variables are created at the spot where the declaration occurs. In JavaScript, however, this is not the case. Variables declared using `var` are *hoisted* to the top of the function (or global scope) regardless of where the actual declaration occurs. For example:
@@ -331,22 +329,14 @@ In other languages, where block level scoping is the default, code like this wor
 
 In this example, the variable `i` only exists within the `for` loop. Once the loop is complete, the variable is destroyed and is no longer accessible elsewhere.
 
-One tricky thing to keep in mind about `let` is that the declarations are actually hoisted to the top of the block in which they reside. For example:
+Unlike `var`, `let` has no hoisting characteristics. A variable declared with `let` cannot be accessed until after the `let` statement. Attempting to do so results in a syntax error:
 
     if (condition) {
-        console.log(value);     // undefined
+        console.log(value);     // error!
         let value = "blue";
     }
 
-In this code, the variable `value` is defined and initialized using `let`. The declaration is actually hoisted to the top of the `if` block and so it's possible to access the variable `value` before it appears to be declared (if it weren't declared, using `console.log(value)` would result in an error being thrown). In fact, the JavaScript engine has interpreted the code as if it were written like this:
-
-    if (condition) {
-        let value;
-        console.log(value);     // undefined
-        value = "blue";
-    }
-
-Similar to `var`, the declaration is hoisted while the initialization stays in place. That means the value of `value` is actually `undefined` when `console.log(value)` is executed.
+In this code, the variable `value` is defined and initialized using `let`, but that statement is never executed because the previous line throws an error.
 
 If an identifier has already been defined in the block, then using the identifier in a `let` declaration causes an error to be thrown. For example:
 
@@ -459,161 +449,6 @@ The capability to work with any array-like object makes `for-of` a big improveme
 Note: The `for-of` statement works with any iterable object, which includes arrays, arguments, DOM `NodeList` objects, and generators. It will not work with regular objects.
 
 The `for-of` statement is available in Firefox 13+.
-
-
-
-
-
-
-
-
-## Changes to String
-
-JavaScript is used quite frequently for string manipulation, however, string support has evolved very slowly. ECMAScript 5 finally added a `trim()` method but aside from that, strings have remained mostly the same since JavaScript first came into being. ECMAScript 6 attempts to bring strings into modern times by adding some new functionality.
-
-Locating substrings has long been the territory of the `indexOf()` method, which returns the zero-based position of a substring within a string or -1 if the substring doesn't exist within the string. This works fine most of the time but it's quite common for developers to use this method incorrectly, such as:
-
-    var message = "Hello world!";
-
-    // Error: "Hello" is at position 0, so this returns false
-    if (message.indexOf("Hello")) {
-        // this doesn't get executed
-    }
-
-In this code, the intent is to test if "Hello" exists within the variable `message`. The `indexOf()` method returns 0 in this case and is therefore considered false so the body of the `if` statement is never executed. What the code should do is ensure the value returned from `indexOf()` is greater than -1:
-
-    var message = "Hello world!";
-
-    // Correct
-    if (message.indexOf("Hello") > -1) {
-        // this executes
-    }
-
-Dealing with indices into strings  is a common source of error. In many cases, you just want to know if the string exists at a particular point within another string. ECMAScript 6 adds several new methods to make locating substrings easier.
-
-First, there's a new method `startsWith()` that is available on all strings. As the name suggests, the method returns true if the string begins with the specified characters. For example:
-
-    var message = "Hello world!";
-
-    if (message.startsWith("Hello")) {
-        // this executes
-    }
-
-The `startsWith()` method is really just a convenience over using `indexOf()`. In fact, you could write your own `startsWith()` method that acts the same way by using `indexOf()`:
-
-    String.prototype.startsWith = function(value) {
-        return this.indexOf(value) === 0;
-    };
-
-All `startsWith()` does is ensure that the given value is located at index 0 in the string.
-
-To accompany `startsWith()` is `endsWith()`, which simply checks to see if the substring is located at the end of the string. For example:
-
-
-    var message = "Hello world!";
-
-    if (message.endsWith("world!")) {
-        // this executes
-    }
-
-Once again, `endsWith()` is simply a wrapper around `indexOf()` that makes this particular use case a little bit easier. You can create your own implementation in this way:
-
-    String.prototype.endsWith = function(value) {
-        return this.indexOf(value) === this.length - value.length;
-    };
-
-The third method that helps you locate substrings is `contains()`, which returns true if the substring is located anywhere within the string:
-
-    var message = "Hello world!";
-
-    if (message.contains("wo")) {
-        // this executes
-    }
-
-The `contains()` method is the same as ensuring the result of `indexOf()` is greater than -1. You can create your own version using this code:
-
-    String.prototype.contains = function(value) {
-        return this.indexOf(value) > -1;
-    };
-
-All three methods, `startsWith()`, `endsWith()`, and `contains()` allow you to more easily locate substrings. Of course, if you actually need to know the index of the substring, then you'll still need to use `indexOf()`, but for all other cases you're likely to find yourself using these new methods much more frequently.
-
-
-
-
-
-## Object Literal Extensions
-
-One of the most popular patterns in JavaScript is the object literal. It's the syntax upon which JSON is built and can be seen in nearly every JavaScript file on the Internet. The reason for the popularity is clear: Asus synced syntax for creating objects that otherwise would take several lines of code to accomplish. ECMAScript 6 recognized the popularity of the object literal and extends the syntax in several ways to make object literals more powerful and even more succinct.
-
-### Property Initializer Shorthand
-
-In ECMAScript 5 and earlier, object literals were simply collections of name-value pairs. That meant there could be some duplication when property values are being initialized. For example:
-
-    function createPerson(name, age) {
-        return {
-            name: name,
-            age: age
-        };
-    }
-
-The `createPerson()` function creates an object whose property names are the same as the function parameter names. The result is what appears to be duplication of `name` and `age` even though each represents a different aspect of the process.
-
-In ECMAScript 6, you can eliminate the duplication that exists around property names and local variables by using a property initializer shorthand. When the property name is going to be the same as the local variable name, you can simply include the name without a colon and value. For example, `createPerson()` can be rewritten as follows:
-
-    function createPerson(name, age) {
-        return {
-            name,
-            age
-        };
-    }
-
-When a property in an object literal only has a name and no value, the JavaScript engine looks into the surrounding scope for a variable of the same name. If found, that value is assigned to the same name on the object literal. So in this example, the object literal property `name` is assigned the value of the local variable `name`.
-
-The purpose of this extension is to make object literal initialization even more simple then it already was. Assigning a property with the same name as a local variable is a very common pattern in JavaScript and so this extension is a welcome addition.
-
-### Method Initializer Shorthand
-
-ECMAScript 6 also improves syntax for assigning methods to object literals. In ECMAScript 5 and earlier, you must specify a name and then the full function definition to add a method to an object. For example:
-
-    var person = {
-        name: "Nicholas",
-        sayName: function() {
-            console.log(this.name);
-        }
-    };
-
-In ECMAScript 6, the syntax is made more sustained by eliminating the colon and the `function` keyword. you can then rewrite this example as follows:
-
-    var person = {
-        name: "Nicholas",
-        sayName() {
-            console.log(this.name);
-        }
-    };
-
-This shorthand syntax creates a method on the `person` object just as the previous example did.
-
-There is several important differences between the two ways of assigning methods to an object literal. First, methods assigned using the shorthand syntax cannot be used as a constructor. That means if you try to use the `new` operator with such a method, you'll get an error. For example:
-
-    var person = {
-        name: "Nicholas",
-        sayName() {
-            console.log(this.name);
-        }
-    };
-
-    // TypeError: Cannot use shorthand method as a constructor
-    var something = new person.sayName();
-
-Here, an error is thrown when the `new` operator is used with `person.sayName()` because the method cannot be used as a constructor.
-
-Methods defined using the shorthand syntax are also not enumerable, so they will not show up in a `for-in` loop nor in the array returned from `Object.keys()`. They will still show up in the array returned from `Object.getOwnPropertyNames()`.
-
-
-
-
-
 
 
 

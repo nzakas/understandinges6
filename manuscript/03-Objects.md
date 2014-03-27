@@ -54,23 +54,7 @@ In ECMAScript 6, the syntax is made more sustained by eliminating the colon and 
         }
     };
 
-This shorthand syntax creates a method on the `person` object just as the previous example did.
-
-There are several important differences between the two ways of assigning methods to an object literal. First, methods assigned using the shorthand syntax cannot be used as a constructor. That means if you try to use the `new` operator with such a method, you'll get an error. For example:
-
-    var person = {
-        name: "Nicholas",
-        sayName() {
-            console.log(this.name);
-        }
-    };
-
-    // TypeError: Cannot use shorthand method as a constructor
-    var something = new person.sayName();
-
-Here, an error is thrown when the `new` operator is used with `person.sayName()` because the method cannot be used as a constructor.
-
-Methods defined using the shorthand syntax are enumerable, so they will show up in a `for-in` loop and in the array returned from `Object.keys()` and `Object.getOwnPropertyNames()`.
+This shorthand syntax creates a method on the `person` object just as the previous example did. There is no difference aside from saving you some keystrokes.
 
 
 
