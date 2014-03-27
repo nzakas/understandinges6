@@ -47,7 +47,7 @@ This function adds together all of the parameters that are passed to it so you c
 Rest parameters are indicated by three dots (`...`) preceding a named parameter. That named parameter then becomes an `Array` containing the rest of the parameters (which is why these are called "rest" parameters). For example, `sum()` can be rewritten using rest parameters like this:
 
     function sum(first, ...numbers) {
-        var result = first,
+        let result = first,
             i = 0,
             len = numbers.length;
 
@@ -67,7 +67,7 @@ The only restriction on rest parameters is that no other named arguments can fol
 
     // Syntax error: Can't have a named parameter after rest parameters
     function sum(first, ...numbers, last) {
-        var result = first,
+        let result = first,
             i = 0,
             len = numbers.length;
 
