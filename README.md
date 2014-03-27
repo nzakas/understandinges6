@@ -10,7 +10,7 @@ This book is a guide for the transition between ECMAScript 5 and 6. It is not sp
 
 What you'll learn:
 
-* All of the changes to the language since ECMAScript 6
+* All of the changes to the language since ECMAScript 5
 * How the new class syntax relates to more familiar JavaScript concepts
 * Why iterators and generators are useful
 * How arrow functions differ from regular functions
