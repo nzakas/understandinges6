@@ -61,7 +61,7 @@ Rest parameters are indicated by three dots (`...`) preceding a named parameter.
 
 In this version of the function, `numbers` is a rest parameter that contains all parameters after the first one (unlike `arguments`, which contains all parameters including the first one). That means you can iterate over `numbers` from beginning to end without worry. As a bonus, you can tell by looking at the function that it is capable of handling any number of parameters.
 
-Note: The `sum()` method doesn't actually need any named parameters. You could, in theory, justifying rest parameters and have it continue to work exactly the same. However, in that case, the rest parameters would effectively be the same as `arguments`, so you're not really getting any additional benefit.
+Note: The `sum()` method doesn't actually need any named parameters. You could, in theory, use only rest parameters and have it continue to work exactly the same. However, in that case, the rest parameters would effectively be the same as `arguments`, so you're not really getting any additional benefit.
 
 The only restriction on rest parameters is that no other named arguments can follow in the function declaration. For example, this causes syntax error:
 
