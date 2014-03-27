@@ -102,7 +102,7 @@ One of the most common areas of error in JavaScript is the binding of `this` ins
         }
     };
 
-In this code, the object `PageHandler` Is designed to handle interactions on the page. The `init()` method is called to set up the interactions and that method in turn assigns an event handler to call `this.doSomething()`. However, this code doesn't work as intended. The reference to `this.doSomething()` is broken because `this` points to a global object inside of the event handler instead of being bound to `PageHandler`. If you tried to run this code, you will get an error when the event handler fires because `this.doSomething()` doesn't exist on the global object.
+In this code, the object `PageHandler` is designed to handle interactions on the page. The `init()` method is called to set up the interactions and that method in turn assigns an event handler to call `this.doSomething()`. However, this code doesn't work as intended. The call to `this.doSomething()` is broken because `this` is a reference to the element object (in this case `document`) that was the target of the event, instead of being bound to `PageHandler`. If you tried to run this code, you will get an error when the event handler fires because `this.doSomething()` doesn't exist on the target `document` object.
 
 You can bind the value of `this` to `PageHandler` explicitly using the `bind()` method on the function:
 
