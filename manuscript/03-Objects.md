@@ -70,7 +70,7 @@ There are several important differences between the two ways of assigning method
 
 Here, an error is thrown when the `new` operator is used with `person.sayName()` because the method cannot be used as a constructor.
 
-Methods defined using the shorthand syntax are also not enumerable, so they will not show up in a `for-in` loop nor in the array returned from `Object.keys()`. They will still show up in the array returned from `Object.getOwnPropertyNames()`.
+Methods defined using the shorthand syntax are enumerable, so they will show up in a `for-in` loop and in the array returned from `Object.keys()` and `Object.getOwnPropertyNames()`.
 
 
 
