@@ -13,7 +13,7 @@ What you'll learn:
 * All of the changes to the language since ECMAScript 6
 * How the new class syntax relates to more familiar JavaScript concepts
 * Why iterators and generators are useful
-* How arrow functions are differ from regular functions
+* How arrow functions differ from regular functions
 * Additional options for storing data using sets, maps, and more
 * The power of inheriting from native types
 * Why people are so excited about promises for asynchronous programming
