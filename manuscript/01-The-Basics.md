@@ -99,7 +99,7 @@ Another interesting aspect of Unicode is that different characters may be consid
 The important thing to understand is that due to these relationships, it's possible to have two strings that represent fundamentally the same text and yet have them contain different code point sequences. For example,
 the character "æ" and the string "ae" may be used interchangeably even though they are different code points. These two strings would therefore be unequal in JavaScript unless they are normalized in some way.
 
-ECMAScript 6 supports the four Unicode normalization forms through a new `normalize()` method on strings. This method optionally accepts a single parameter, one of `"NFC"` (default), `"NFD"`, `"NFKC"`, or `"NFKD"`. It's beyond the scope of this book explain the differences between these four forms. Just keep in mind that, in order to be used, you must normally both strings that are being compared to the same form. For example:
+ECMAScript 6 supports the four Unicode normalization forms through a new `normalize()` method on strings. This method optionally accepts a single parameter, one of `"NFC"` (default), `"NFD"`, `"NFKC"`, or `"NFKD"`. It's beyond the scope of this book explain the differences between these four forms. Just keep in mind that, in order to be used, you must normalize both strings that are being compared to the same form. For example:
 
 {lang=js}
     var normalized = values.map(text => text.normalize());
@@ -232,7 +232,7 @@ This method is really a convenience function above all else, which can be especi
 
 When you want to compare two values, you're probably used to using either the equals operator (`==`) or the identically equals operator (`===`). Many prefer to use the latter to avoid type coercion during the comparison. However, even the identically equals operator isn't entirely accurate. For example, the values +0 and -0 are considered equal by `===` even though they are represented differently in the JavaScript engine. Also `NaN === NaN` returns `false`, which necessitates using `isNaN()` to detect `NaN` properly.
 
-ECMAScript 6 introduces `Object.is()` to make up for the remaining quirks of the identically equals operator. This method accepts two arguments and returns `true` if the values are equivalent. Two values are considered equivalent they are of the same type and have the same value. In many cases, `Object.is()` works the same as `===`. The only differences are that +0 and -0 are considered not equivalent and `NaN` is considered equivalent to `NaN`. Here are some examples:
+ECMAScript 6 introduces `Object.is()` to make up for the remaining quirks of the identically equals operator. This method accepts two arguments and returns `true` if the values are equivalent. Two values are considered equivalent if they are of the same type and have the same value. In many cases, `Object.is()` works the same as `===`. The only differences are that +0 and -0 are considered not equivalent and `NaN` is considered equivalent to `NaN`. Here are some examples:
 
     console.log(+0 == -0);              // true
     console.log(+0 === -0);             // true
@@ -404,7 +404,7 @@ Also similar to `let`, an error is thrown whenever a `const` declaration is made
     const message = "Goodbye!";
     const age = 30;
 
-Note: Several browsers implement pre-ECMAScript 6 versions of `const`. Implementations range from being simply a synonm for `var` (allowing the value to be overwritten) to actually defining constants but only in the global or function scope. for this reason, be especially careful with using `const` in a production system. It may not be providing you with the functionality you expect.
+Note: Several browsers implement pre-ECMAScript 6 versions of `const`. Implementations range from being simply a synonym for `var` (allowing the value to be overwritten) to actually defining constants but only in the global or function scope. For this reason, be especially careful with using `const` in a production system. It may not be providing you with the functionality you expect.
 
 
 
@@ -469,7 +469,7 @@ The `for-of` statement is available in Firefox 13+.
 
 ## Changes to String
 
-JavaScript is used quite frequently for string manipulation, however, string support has who leave evolved very slowly. ECMAScript 5 finally added a `trim()` methodbut aside from that, strings have remained mostly the same since JavaScript first came into being. ECMAScript 6 attempts to bring strings into modern times by adding some new functionality.
+JavaScript is used quite frequently for string manipulation, however, string support has evolved very slowly. ECMAScript 5 finally added a `trim()` method but aside from that, strings have remained mostly the same since JavaScript first came into being. ECMAScript 6 attempts to bring strings into modern times by adding some new functionality.
 
 Locating substrings has long been the territory of the `indexOf()` method, which returns the zero-based position of a substring within a string or -1 if the substring doesn't exist within the string. This works fine most of the time but it's quite common for developers to use this method incorrectly, such as:
 
