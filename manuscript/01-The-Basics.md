@@ -570,7 +570,7 @@ In ECMAScript 6, you can eliminate the duplication that exists around property n
 
 When a property in an object literal only has a name and no value, the JavaScript engine looks into the surrounding scope for a variable of the same name. If found, that value is assigns to the same name on the object literal. So in this example, the object literal property `name` is assigned the value of the local variable `name`.
 
-The purpose of this extension is to make object literal initialization even more so since then it already was. Assigning a property with the same name as a local variable is a very common pattern in JavaScript and so this extension is a welcome addition.
+The purpose of this extension is to make object literal initialization even more simple then it already was. Assigning a property with the same name as a local variable is a very common pattern in JavaScript and so this extension is a welcome addition.
 
 ### Method Initializer Shorthand
 
