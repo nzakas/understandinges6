@@ -36,7 +36,7 @@ The first example of fully supporting UTF-16 is the `codePointAt()` method, whic
     console.log(text.codePointAt(0));   // 134071
     console.log(text.codePointAt(1));   // 97
 
-The value returned is the Unicode code point value. For BMP characters, this will be the same result as using `charCodeAt()`, so the `"a"` is returns 97. This method is the easiest way to determine if a given character is represented by one or two code points:
+The value returned is the Unicode code point value. For BMP characters, this will be the same result as using `charCodeAt()`, so the `"a"` returns 97. This method is the easiest way to determine if a given character is represented by one or two code points:
 
 {lang=js}
     function is32Bit(c) {
@@ -99,7 +99,7 @@ Another interesting aspect of Unicode is that different characters may be consid
 The important thing to understand is that due to these relationships, it's possible to have two strings that represent fundamentally the same text and yet have them contain different code point sequences. For example,
 the character "æ" and the string "ae" may be used interchangeably even though they are different code points. These two strings would therefore be unequal in JavaScript unless they are normalized in some way.
 
-ECMAScript 6 supports the four Unicode normalization forms through a new `normalize()` method on strings. This method optionally accepts a single parameter, one of `"NFC"` (default), `"NFD"`, `"NFKC"`, or `"NFKD"`. It's beyond the scope of this book explain the differences between these four forms. Just keep in mind that, in order to be used, you must normalize both strings that are being compared to the same form. For example:
+ECMAScript 6 supports the four Unicode normalization forms through a new `normalize()` method on strings. This method optionally accepts a single parameter, one of `"NFC"` (default), `"NFD"`, `"NFKC"`, or `"NFKD"`. It's beyond the scope of this book to explain the differences between these four forms. Just keep in mind that, in order to be used, you must normalize both strings that are being compared to the same form. For example:
 
 {lang=js}
     var normalized = values.map(text => text.normalize());
@@ -181,7 +181,7 @@ JavaScript strings have always lagged behind similar features of other languages
 
 ## contains(), startsWith(), endsWith()
 
-Developers have used `indexOf()` as a way to identify strings inside of other strings since time JavaScript was first introduced. ECMAScript 6 adds three new methods whose purpose is to identify strings inside of other strings:
+Developers have used `indexOf()` as a way to identify strings inside of other strings since JavaScript was first introduced. ECMAScript 6 adds three new methods whose purpose is to identify strings inside of other strings:
 
 * `contains()` - returns true if the given text is found anywhere within the string or false if not.
 * `startsWith()` - returns true if the given text is found at the beginning of the string or false if not.
@@ -204,7 +204,7 @@ Each of these methods accepts two arguments: the text to search for and an optio
     console.log(msg.endsWith("o", 8));          // true
     console.log(msg.contains("o", 8));          // false
 
-These three methods make it much easier to identifier substrings without needing to worry about identifying their exact position.
+These three methods make it much easier to identify substrings without needing to worry about identifying their exact position.
 
 I> All of these methods return a boolean value. If you need to find the position of a string within another, use `indexOf()` or `lastIndexOf()`.
 
@@ -232,11 +232,11 @@ This method is really a convenience function above all else, which can be especi
 
 When you want to compare two values, you're probably used to using either the equals operator (`==`) or the identically equals operator (`===`). Many prefer to use the latter to avoid type coercion during the comparison. However, even the identically equals operator isn't entirely accurate. For example, the values +0 and -0 are considered equal by `===` even though they are represented differently in the JavaScript engine. Also `NaN === NaN` returns `false`, which necessitates using `isNaN()` to detect `NaN` properly.
 
-ECMAScript 6 introduces `Object.is()` to make up for the remaining quirks of the identically equals operator. This method accepts two arguments and returns `true` if the values are equivalent. Two values are considered equivalent if they are of the same type and have the same value. In many cases, `Object.is()` works the same as `===`. The only differences are that +0 and -0 are considered not equivalent and `NaN` is considered equivalent to `NaN`. Here are some examples:
+ECMAScript 6 introduces `Object.is()` to make up for the remaining quirks of the identically equals operator. This method accepts two arguments and returns `true` if the values are equivalent. Two values are considered equivalent when they are of the same type and have the same value. In many cases, `Object.is()` works the same as `===`. The only differences are that +0 and -0 are considered not equivalent and `NaN` is considered equivalent to `NaN`. Here are some examples:
 
     console.log(+0 == -0);              // true
     console.log(+0 === -0);             // true
-    console.log(Object.is(+0, -0));     // true
+    console.log(Object.is(+0, -0));     // false
 
     console.log(NaN == NaN);            // false
     console.log(NaN === NaN);           // false
@@ -430,7 +430,7 @@ You can also use the `forEach()` method:
         process(value);
     });
 
-However, these approaches have some limitations. The `for` loop requires some setup in the form of variables; `forEach()` only works on arrays and not other array-like objects. ECMAScript 6 solves for all of these problems with the new statement.
+However, these approaches have some limitations. The `for` loop requires some setup in the form of variables; `forEach()` only works on arrays and not other array-like objects. ECMAScript 6 solves all of these problems with the new statement.
 
 The `for-of` statement is designed to iterate over values in any array-like object. Instead of setting up a variable to monitor which item in the array to process, you simply use one variable that is assigned each subsequent value in the array until all values have been through the loop. For example:
 
@@ -559,7 +559,7 @@ In ECMAScript 5 and earlier, object literals were simply collections of name-val
 
 The `createPerson()` function creates an object whose property names are the same as the function parameter names. The result is what appears to be duplication of `name` and `age` even though each represents a different aspect of the process.
 
-In ECMAScript 6, you can eliminate the duplication that exists around property names and local variables by using an property initializer shorthand. When the property name is going to be the same as the local variable name, you can simply include the name without a colon and value. For example, `createPerson()` can be rewritten as follows:
+In ECMAScript 6, you can eliminate the duplication that exists around property names and local variables by using a property initializer shorthand. When the property name is going to be the same as the local variable name, you can simply include the name without a colon and value. For example, `createPerson()` can be rewritten as follows:
 
     function createPerson(name, age) {
         return {
@@ -568,7 +568,7 @@ In ECMAScript 6, you can eliminate the duplication that exists around property n
         };
     }
 
-When a property in an object literal only has a name and no value, the JavaScript engine looks into the surrounding scope for a variable of the same name. If found, that value is assigns to the same name on the object literal. So in this example, the object literal property `name` is assigned the value of the local variable `name`.
+When a property in an object literal only has a name and no value, the JavaScript engine looks into the surrounding scope for a variable of the same name. If found, that value is assigned to the same name on the object literal. So in this example, the object literal property `name` is assigned the value of the local variable `name`.
 
 The purpose of this extension is to make object literal initialization even more simple then it already was. Assigning a property with the same name as a local variable is a very common pattern in JavaScript and so this extension is a welcome addition.
 
