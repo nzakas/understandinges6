@@ -112,7 +112,7 @@ You can bind the value of `this` to `PageHandler` explicitly using the `bind()` 
 
         init: function() {
             document.addEventListener("click", (function(event) {
-                this.doSomething(event.type);     // error
+                this.doSomething(event.type);     // no error
             }).bind(this), false);
         },
 
