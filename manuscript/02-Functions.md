@@ -127,7 +127,7 @@ Arrow functions are a new way to define functions in ECMAScript 6 that solves th
 
     (arg1, arg2, ...argN) => result
 
-You can specify any number of arguments in parentheses and then use the `=>` to define what the body of the function should be. If the body simply returns a value or executes one statement, then you can include the result immediately to the right of `=>`. The value that the one statement evaluates to is returned as a function value. For example:
+You can specify any number of arguments in parentheses and then use the `=>` to define what the body of the function should be. If the body simply returns a value or executes one statement, then you can include the result immediately to the right of `=>`. The value that the one statement evaluates to is returned. For example:
 
     var sum = (first, middle, last) => first + middle + last;
     console.log(sum(1, 2, 3));  // 6
