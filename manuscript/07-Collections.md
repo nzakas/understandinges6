@@ -216,7 +216,7 @@ Compare this to the clunky way of iterating over values and a regular object:
 
         // make sure it's not from the prototype!
         if (object.hasOwnProperty(key)) {
-            console.log(&quot;Key: %s, Value: %s&quot;, key, object[key]);
+            console.log("Key: %s, Value: %s", key, object[key]);
         }
 
     }
@@ -227,7 +227,7 @@ When using objects as maps, it was always a concern that properties from the pro
 
         // make sure it's not from the prototype or a function!
         if (object.hasOwnProperty(key) && typeof object[key] !== "function") {
-            console.log(&quot;Key: %s, Value: %s&quot;, key, object[key]);
+            console.log("Key: %s, Value: %s", key, object[key]);
         }
 
     }
