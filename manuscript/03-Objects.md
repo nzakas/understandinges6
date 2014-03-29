@@ -56,9 +56,56 @@ In ECMAScript 6, the syntax is made more sustained by eliminating the colon and 
 
 This shorthand syntax creates a method on the `person` object just as the previous example did. There is no difference aside from saving you some keystrokes.
 
+### Computed Property Names
 
+JavaScript objects have long had computed property names through the use of square brackets instead of dot notation. The square brackets allow you to specify property names using variables and string literals that may contain characters that would be a syntax error if used in an identifier. For example:
 
+    var person = {},
+        lastName = "last name";
 
+    person["first name"] = "Nicholas";
+    person[lastName] = "Zakas";
+
+    console.log(person["first name"]);      // "Nicholas"
+    console.log(person[lastName]);          // "Zakas"
+
+Both of the property names in this example have a space, making it impossible to reference those names using dot notation. However, bracket notation allows any string value to be used as a property name.
+
+In ECMAScript 5, you could use string literals as property names in object literals, such as:
+
+    var person = {
+        "first name": "Nicholas"
+    };
+
+    console.log(person["first name"]);      // "Nicholas"
+
+If you could provide the string literal inside of the object literal property definition then you were all set. If, however, the property name was contained in a variable or had to be calculated, then there was no way to define that property using an object literal.
+
+ECMAScript 6 adds computed property names to object literal syntax by using the same square bracket notation that has been used to reference computed property names in object instances. For example:
+
+    var lastName = "last name";
+
+    var person = {
+        "first name": "Nicholas",
+        [lastName]: "Zakas"
+    };
+
+    console.log(person["first name"]);      // "Nicholas"
+    console.log(person[lastName]);          // "Zakas"
+
+The square brackets inside of the object literal indicate that the property name is computed, so its contents are evaluated as a string. That means you can also include expressions such as:
+
+    var suffix = " name";
+
+    var person = {
+        ["first" + suffix]: "Nicholas",
+        ["last" + suffix]: "Zakas"
+    };
+
+    console.log(person["first name"]);      // "Nicholas"
+    console.log(person[lastName]);          // "Zakas"
+
+Anything you would be inside of square brackets while using bracket notation on object instances will also work for computed property names inside of object literals.
 
 
 
