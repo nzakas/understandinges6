@@ -32,7 +32,7 @@ This book is not for beginners who have never written JavaScript. You will need 
 
 **Chapter 5: Arrays** details the changes to native arrays and the interesting new ways they can be used in JavaScript.
 
-**Chapter 6: Iterators and Generators** discusses the addition of iterators and generators to the language. These features all you to work collections of data in powerful ways that were never before possible in JavaScript.
+**Chapter 6: Iterators and Generators** discusses the addition of iterators and generators to the language. These features allow you to work with collections of data in powerful ways that were not possible in previous versions of JavaScript.
 
 **Chapter 7: Collections** details the new collection types of `Set`, `WeakSet`, `Map`, and `WeakMap`. These types expand on the usefulness of arrays by adding semantics, de-duping, and memory management designed specifically for JavaScript.
 

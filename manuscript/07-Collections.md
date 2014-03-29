@@ -169,7 +169,7 @@ In order to make it easier to add large amounts of data into a map, you can pass
     console.log(map.get("title"));  // "Author"
     console.log(map.size);        // 2
 
-When you want to work with all of the data in the map, you have several options. There are actually three generator methods to choose from: `keys`, which iterates over the keys in the map, `values`, which iterates over the values in the map, and `items`, which iterates over key-value pairs by returning an array containing the key and the value (`items` is the default iterator for maps). The easiest way to make use of these is to use a `for-of` loop:
+When you want to work with all of the data in the map, you have several options. There are actually three generator methods to choose from: `keys`, which iterates over the keys in the map, `values`, which iterates over the values in the map, and `entries`, which iterates over key-value pairs by returning an array containing the key and the value (`entries` is the default iterator for maps). The easiest way to make use of these is to use a `for-of` loop:
 
     for (let key of map.keys()) {
         console.log("Key: %s", key);
@@ -179,11 +179,11 @@ When you want to work with all of the data in the map, you have several options.
         console.log("Value: %s", value);
     }
 
-    for (let item of map.items()) {
+    for (let item of map.entries()) {
         console.log("Key: %s, Value: %s", item[0], item[1]);
     }
 
-    // same as using map.items()
+    // same as using map.entries()
     for (let item of map) {
         console.log("Key: %s, Value: %s", item[0], item[1]);
     }
@@ -216,7 +216,7 @@ Compare this to the clunky way of iterating over values and a regular object:
 
         // make sure it's not from the prototype!
         if (object.hasOwnProperty(key)) {
-            console.log(&quot;Key: %s, Value: %s&quot;, key, object[key]);
+            console.log("Key: %s, Value: %s", key, object[key]);
         }
 
     }
@@ -227,7 +227,7 @@ When using objects as maps, it was always a concern that properties from the pro
 
         // make sure it's not from the prototype or a function!
         if (object.hasOwnProperty(key) && typeof object[key] !== "function") {
-            console.log(&quot;Key: %s, Value: %s&quot;, key, object[key]);
+            console.log("Key: %s, Value: %s", key, object[key]);
         }
 
     }

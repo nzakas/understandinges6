@@ -238,7 +238,7 @@ TODO
 
 TODO
 
-## __proto__
+## ~~__proto__~~ Object.setPrototypeOf()
 
 TODO
 
