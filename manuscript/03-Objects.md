@@ -107,10 +107,128 @@ The square brackets inside of the object literal indicate that the property name
 
 Anything you would be inside of square brackets while using bracket notation on object instances will also work for computed property names inside of object literals.
 
+## Symbols
 
+ECMAScript 6 symbols began as a way to create private object members, a feature JavaScript developers have long wanted. The focus was around creating properties that were not identified by string names. Any property with a string name was easy picking to access regardless of the obscurity of the name. The initial "private names" feature aimed to create non-string property names. That way, normal techniques for detecting these private names wouldn't work.
 
+The private names proposal eventually evolved into ECMAScript 6 symbols. While the implementation details remained the same (non-string values for property identifiers), TC-39 dropped the requirement that these properties be private. Instead, the properties would be categorized separately, being non-enumerable by default by still discoverable.
 
+Symbols are actually a new kind of primitive value, joining strings, numbers, booleans, `null`, and `undefined`. They are unique among JavaScript primitives in that they do not have a literal form. The ECMAScript 6 standard uses a special notation to indicate symbols, prefixing the identifier with `@@`, such as `@@create`. This book uses this same convention for ease of understanding.
 
+W> Despite the notation, symbols do not exactly map to strings beginning with "@@". Don't try to use string values where symbols are required.
+
+### Creating Symbols
+
+You can create a symbol by using the `Symbol` function, such as:
+
+    var firstName = Symbol();
+    var person = {};
+
+    person[firstName] = "Nicholas";
+    console.log(person[firstName]);     // "Nicholas"
+
+In this example, the symbol `firstName` is created and used to assign a new property on `person`. That symbol must be used each time you want to access that same property. It's a good idea to name the symbol variable appropriately so you can easily tell what the symbol represents.
+
+W> Because symbols are primitive values, `new Symbol()` throws an error when called. It's not possible to create an instance of `Symbol`, which also differentiates it from `String`, `Number`, and `Boolean`.
+
+The `Symbol` function accepts an optional argument that is the description of the symbol. The description itself cannot be used to access the property but is used for debugging purposes. For example:
+
+    var firstName = Symbol("first name");
+    var person = {};
+
+    person[firstName] = "Nicholas";
+
+    console.log("first name" in person);        // false
+    console.log(person[firstName]);             // "Nicholas"
+    console.log(firstName);                     // "Symbol(first name)"
+
+A symbol's description is stored internally in a property called `[[Description]]`. This property is read whenever the symbol's `toString()` method is called either explicitly or implicitly (as in this example). It is not otherwise possible to access `[[Description]]` directly from code. It's recommended to always provide a description to make both reading and debugging code using symbols easier.
+
+### Identifying Symbols
+
+Since symbols are primitive values, you can use the `typeof` operator to identify them. ECMAScript 6 extends `typeof` to return `"symbol"` when used on a symbol. For example:
+
+    var symbol = Symbol("test symbol");
+    console.log(typeof symbol);         // "symbol"
+
+While there are other indirect ways of determining whether a variable is a symbol, `typeof` is the most accurate and preferred way of doing so.
+
+### Using Symbols
+
+You can use symbols anywhere you would use a computed property name. You've already seen the use of bracket notation in the previous sections, but you can use symbols in computed object literal property names as well as with `Object.defineProperty()`, and `Object.defineProperties()`, such as:
+
+    var firstName = Symbol("first name");
+    var person = {
+        [firstName]: "Nicholas"
+    };
+
+    // make the property read only
+    Object.defineProperty(person, firstName, { writable: false });
+
+    var lastName = Symbol("last name");
+
+    Object.defineProperties(person, {
+        [lastName]: {
+            value: "Zakas",
+            writable: false
+        }
+    });
+
+    console.log(person[firstName]);     // "Nicholas"
+    console.log(person[lastName]);      // "Zakas"
+
+With computer property names in object literals, symbols are very easy to work with.
+
+### Sharing Symbols
+
+You may find that you want different parts of your code to use the same symbols. For example, suppose you have two different object types in your application that should use the same symbol property to represent a unique identifier. Keeping track of symbols across files or large codebases can be difficult and error-prone. That's why ECMAScript 6 provides a global symbol registry that you can access at any point in time.
+
+When you want to create a symbol to be shared, use the `Symbol.for()` method instead of calling `Symbol()`. The `Symbol.for()` method accepts a single parameter, which is a string identifier for the symbol you want to create (this value doubles as the description). For example:
+
+    var uid = Symbol.for("uid");
+    var object = {};
+
+    object[uid] = "12345";
+
+    console.log(object[uid]);       // "Nicholas"
+    console.log(uid);               // "Symbol(uid)"
+
+The `Symbol.for()` method first searches the global symbol registry to see if a symbol with the key `"uid"` exists. If so, then it returns the already existing symbol. If no such symbol exists, then a new symbol is created and registered into the global symbol registry using the specified key. The new symbol is then returned. That means subsequent calls to `Symbol.for()` using the same key will return the same symbol:
+
+    var uid = Symbol.for("uid");
+    var object = {};
+
+    object[uid] = "12345";
+
+    console.log(object[uid]);       // "Nicholas"
+    console.log(uid);               // "Symbol(uid)"
+
+    var uid2 = Symbol.for("uid");
+
+    console.log(uid === uid2);      // true
+    console.log(object[uid2]);      // "Nicholas"
+    console.log(uid2);              // "Symbol(uid)"
+
+In this example, `uid` and `uid2` contain the same symbol and so they can be used interchangeably. The first call to `Symbol.for()` creates the symbol and second call retrieves the symbol from the global symbol registry.
+
+Another unique aspect of shared symbols is that you can retrieve the key associated with a symbol in the global symbol registry by using `Symbol.keyFor()`, for example:
+
+    var uid = Symbol.for("uid");
+    console.log(Symbol.keyFor(uid));    // "uid"
+
+    var uid2 = Symbol.for("uid");
+    console.log(Symbol.keyFor(uid2));   // "uid"
+
+    var uid3 = Symbol("uid");
+    console.log(Symbol.keyFor(uid3));   // undefined
+
+Notice that both `uid` and `uid2` return the key `"uid"`. The symbol `uid3` doesn't exist in the global symbol registry, so it has no key associated with it and so `Symbol.keyFor()` returns `undefined`.
+
+W> The global symbol registry is a shared environment, just like the global scope. That means you can't make assumptions about what is or is not already present in that environment. You should use namespacing of symbol keys to reduce the likelihood of naming collisions when using third-party components. For example, jQuery might prefix all keys with `"jquery."`, such as `"jquery.element"`.
+
+### Finding Object Symbols
+
+TODO
 
 ## Object Destructuring
 
