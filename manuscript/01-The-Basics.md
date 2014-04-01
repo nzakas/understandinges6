@@ -12,7 +12,6 @@ The first 2^16 code points are represented as single 16-bit code units in UTF-16
 
 ECMAScript 5 kept all operations as working on 16-bit code units, meaning that you could get unexpected results from strings containing surrogate pairs. For example:
 
-{lang=js}
     var text = "𠮷";
 
     console.log(text.length);           // 2
@@ -30,7 +29,6 @@ ECMAScript 6 enforces encoding of strings in UTF-16. Standardizing on this chara
 
 The first example of fully supporting UTF-16 is the `codePointAt()` method, which can be used to retrieve the Unicode code point that maps to a given character. This method accepts the character position (not the code unit position) and returns an integer value:
 
-{lang=js}
     var text = "𠮷a";
 
     console.log(text.codePointAt(0));   // 134071
@@ -38,7 +36,6 @@ The first example of fully supporting UTF-16 is the `codePointAt()` method, whic
 
 The value returned is the Unicode code point value. For BMP characters, this will be the same result as using `charCodeAt()`, so the `"a"` returns 97. This method is the easiest way to determine if a given character is represented by one or two code points:
 
-{lang=js}
     function is32Bit(c) {
         return c.codePointAt(0) > 0xFFFF;
     }
@@ -52,7 +49,6 @@ The upper bound of 16-bit characters is represented in hexadecimal as `FFFF`, so
 
 When ECMAScript provides a way to do something, it also tends to provide a way to do the reverse. You can use `codePointAt()` to retrieve the code point for a character in a string while `String.fromCodePoint()` produces a single-character string for the given code point. For example:
 
-{lang=js}
     console.log(String.fromCodePoint(134071));  // "𠮷"
 
 You can think of `String.fromCodePoint()` as a more complete version of `String.fromCharCode()`. Each method has the same result for all characters in the BMP; the only difference is with characters outside of that range.
@@ -61,19 +57,16 @@ You can think of `String.fromCodePoint()` as a more complete version of `String.
 
 ECMAScript 5 allows strings to contain 16-bit Unicode characters represented by an *escape sequence*. The escape sequence is the `\u` followed by four hexadecimal values. For example, the escape sequence `\u0061` represents the letter `"a"`:
 
-{lang=js}
     console.log("\u0061");      // "a"
 
 If you try to use an escape sequence with a number past `FFFF`, the upper bound of the BMP, then you can get some surprising results:
 
-{lang=js}
     console.log("\u20BB7");     // "₻7"
 
 Since Unicode escape sequences were defined as always having exactly four hexadecimal characters, ECMAScript evaluates `\u20BB7` as two characters: `\u20BB` and `"7"`. The first character is unprintable and the second is the number 7.
 
 ECMAScript 6 solves this problem by introducing an extended Unicode escape sequence where the hexadecimal numbers are contained within curly braces. This allows up to 8 hexadecimal characters to specify a single character:
 
-{lang=js}
     console.log("\u{20BB7}");     // "𠮷"
 
 Using the extended escape sequence, the correct character is contained in the string.
@@ -101,7 +94,6 @@ the character "æ" and the string "ae" may be used interchangeably even though t
 
 ECMAScript 6 supports the four Unicode normalization forms through a new `normalize()` method on strings. This method optionally accepts a single parameter, one of `"NFC"` (default), `"NFD"`, `"NFKC"`, or `"NFKD"`. It's beyond the scope of this book to explain the differences between these four forms. Just keep in mind that, in order to be used, you must normalize both strings that are being compared to the same form. For example:
 
-{lang=js}
     var normalized = values.map(text => text.normalize());
     normalized.sort(function(first, second) {
         if (first < second) {
@@ -115,7 +107,6 @@ ECMAScript 6 supports the four Unicode normalization forms through a new `normal
 
 In this code, the strings in a `values` array are converted into a normalized form so that the array can be sorted appropriately. You can accomplish the sort on the original array by calling `normalize()` as part of the comparator:
 
-{lang=js}
     values.sort(function(first, second) {
         var firstNormalized = first.normalize(),
             secondNormalized = second.normalize();
@@ -131,7 +122,6 @@ In this code, the strings in a `values` array are converted into a normalized fo
 
 Once again, the most important thing to remember is that both values must be normalized in the same way. These examples have used the default, NFC, but you can just as easily specify one of the others:
 
-{lang=js}
     values.sort(function(first, second) {
         var firstNormalized = first.normalize("NFD"),
             secondNormalized = second.normalize("NFD");
@@ -153,7 +143,6 @@ Many common string operations are accomplished by using regular expressions. How
 
 When a regular expression has the `u` flag set, it switches modes to work on characters and not code units. That means the regular expression will no longer get confused about surrogate pairs in strings and can behave as expected. For example:
 
-{lang=js}
     var text = "𠮷";
 
     console.log(text.length);           // 2
@@ -162,7 +151,6 @@ When a regular expression has the `u` flag set, it switches modes to work on cha
 
 Adding the `u` flag allows the regular expression to correctly match the string by characters. Unfortunately, ECMAScript 6 does not have a way of determining how many code points are present in a string; fortunately, regular expressions can be used to figure it out:
 
-{lang=js}
     function codePointLength(text) {
         var result = text.match(/[\s\S]/gu);
         return result ? result.length : 0;
@@ -189,7 +177,6 @@ Developers have used `indexOf()` as a way to identify strings inside of other st
 
 Each of these methods accepts two arguments: the text to search for and an optional location from which to start the search. When the second argument is omitted, `contains()` and `startsWith()` start search from the beginning of the string while `endsWith()` starts from the end. In effect, the second argument results in less of the string being searched. Here are some examples:
 
-{lang=js}
     var msg = "Hello world!";
 
     console.log(msg.startsWith("Hello"));       // true
@@ -212,14 +199,12 @@ I> All of these methods return a boolean value. If you need to find the position
 
 ECMAScript 6 also adds a `repeat()` method to strings. This method accepts a single argument, which is the number of times to repeat the string, and returns a new string that has the original string repeated the specified number of times. For example:
 
-{lang=js}
     console.log("x".repeat(3));         // "xxx"
     console.log("hello".repeat(2));     // "hellohello"
     console.log("abc".repeat(4));       // "abcabcabcabc"
 
 This method is really a convenience function above all else, which can be especially useful when dealing with text manipulation. One example where this functionality comes in useful is with code formatting utilities where you need to create indentation levels:
 
-{lang=js}
     // indent using a specified number of spaces
     var indent = " ".repeat(size),
         indentLevel = 0;
