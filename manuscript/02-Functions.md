@@ -253,13 +253,13 @@ Wrapping the object literal in parentheses signals that the braces are an object
 
 ## Other things to know
 
-Arrow functions are different than traditional functions do share some common characteristics. For example:
+Arrow functions are different than traditional functions, but do share some common characteristics. For example:
 
 * The `typeof` operator returns "function" for arrow functions.
 * Arrow functions are still instances of `Function`, so `instanceof` works the same way.
 * The methods `call()`, `apply()`, and `bind()` are still usable with arrow functions, though they do not augment the value of `this`.
 
-The biggest difference is that arrow functions can't be used with `new`, attempting to do results in an error being thrown.
+The biggest difference is that arrow functions can't be used with `new`—attempting to do so results in an error being thrown.
 
 ## Conclusion
 
