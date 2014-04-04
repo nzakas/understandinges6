@@ -1,6 +1,6 @@
 # Objects
 
-A lot of ECMAScript 6 focused on improving the utility of objects. The focus makes sense given that nearly every value in JavaScript is represented by some type of object. Additionally, the number of objects used in an average Javascript program continues to increase, meaning that developers are writing more objects all the time. With more objects comes the ability to use them more effectively.
+A lot of ECMAScript 6 focused on improving the utility of objects. The focus makes sense given that nearly every value in JavaScript is represented by some type of object. Additionally, the number of objects used in an average Javascript program continues to increase, meaning that developers are writing more objects all the time. With more objects comes the necessity to use them more effectively.
 
 ECMAScript 6 improves objects in a number of ways, from simple syntax to new ways of manipulating and interacting with objects.
 
