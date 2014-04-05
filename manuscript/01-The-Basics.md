@@ -394,13 +394,56 @@ Also similar to `let`, an error is thrown whenever a `const` declaration is made
     const message = "Goodbye!";
     const age = 30;
 
-Note: Several browsers implement pre-ECMAScript 6 versions of `const`. Implementations range from being simply a synonym for `var` (allowing the value to be overwritten) to actually defining constants but only in the global or function scope. For this reason, be especially careful with using `const` in a production system. It may not be providing you with the functionality you expect.
+W> Several browsers implement pre-ECMAScript 6 versions of `const`. Implementations range from being simply a synonym for `var` (allowing the value to be overwritten) to actually defining constants but only in the global or function scope. For this reason, be especially careful with using `const` in a production system. It may not be providing you with the functionality you expect.
 
+## Numbers
 
+TODO: Intro
 
+### Octal and Binary Literals
 
+ECMAScript 5 sought to simplify some common numerical errors by removing the previously-included octal integer literal notation in two places: `parseInt()` and strict mode. In ECMAScript 3 and earlier, octal numbers were represented with a leading `0` followed by any number of digits. For example:
 
+    // ECMAScript 3
+    var number = 071;       // 57 in decimal
 
-## Statements
+    var value1 = parseInt("71");    // 71
+    var value2 = parseInt("071");   // 57
 
+Many developers were confused by this version of octal literal numbers, and many mistakes were made as a result of misunderstanding the effects of a leading zero in various places. The most egregious was in `parseInt()`, where a leading zero meant the value would be treated as an octal rather than a decimal. This led to one of Douglas Crockford's first JSLint rules: always use the second argument of `parseInt()` to specify how the string should be interpreted.
 
+ECMAScript 5 cut down on the use of octal numbers. First, `parseInt()` was changed so that it ignores leading zeros in the first argument when there is no second argument. This means a number cannot accidentally be treated as octal anymore. The second change was to eliminate octal literal notation in strict mode. Attempting to use an octal literal in strict mode results in a syntax error.
+
+    // ECMAScript 5
+    var number = 071;       // 57 in decimal
+
+    var value1 = parseInt("71");        // 71
+    var value2 = parseInt("071");       // 71
+    var value3 = parseInt("071", 8);    // 57
+
+    function getValue() {
+        "use strict";
+        return 071;     // syntax error
+    }
+
+By making these two changes, ECMAScript 5 sought to eliminate a lot of the confusion and errors associated with octal literals.
+
+ECMAScript 6 took things a step further by reintroducing an octal literal notation, along with a binary literal notation. Both of these notations take a hint for the hexadecimal literal notation of prepending `0x`or `0X` to a value. The new octal literal format begins with `0o` or 0O` while the new binary literal format begins with `0b` or `0B`. Each literal type must be followed by one or more digits, 0-7 for octal, 0-1 for binary. Here's an example:
+
+    // ECMAScript 6
+    var value1 = 0o71;      // 57 in decimal
+    var value2 = 0b101;     // 5 in decimal
+
+Adding these two literal types allows JavaScript developers to quickly and easily include numeric values in binary, octal, decimal, and hexadecimal formats, which is very important in certain types of mathematical operations.
+
+The `parseInt()` method doesn't handle strings that look like octal or binary literals:
+
+    console.log(parseInt("0o71"));      // 0
+    console.log(parseInt("0b101"));     // 0
+
+However, the `Number()` function will convert a string containing octal or binary literals correctly:
+
+    console.log(Number("0o71"));      // 57
+    console.log(Number("0b101"));     // 5
+
+When using octal or binary literal in strings, be sure to understand your use case and use the most appropriate method for converting them into numeric values.
