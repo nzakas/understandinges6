@@ -1,5 +1,7 @@
 # The Basics
 
+**Note:** This chapter is a work-in-progress. All of the information it contains is accurate, however, there are pieces of content missing. Wherever possible, a "TODO" has been left indicating where more content will be added.
+
 ECMAScript 6 makes a large number of changes on top of ECMAScript 5. Some of the changes are larger, such as adding new types or syntax, while others are quite small, providing incremental improvements on top of the language. This chapter covers those incremental improvements that likely won't gain a lot of attention but provide some important functionality that can may make certain types of problems easier to solve.
 
 ## Better Unicode Support
@@ -447,3 +449,15 @@ However, the `Number()` function will convert a string containing octal or binar
     console.log(Number("0b101"));     // 5
 
 When using octal or binary literal in strings, be sure to understand your use case and use the most appropriate method for converting them into numeric values.
+
+## More
+
+Possible content for this chapter:
+
+* New methods on `Number`
+* New methods on `Math`
+
+
+## Summary
+
+TODO
