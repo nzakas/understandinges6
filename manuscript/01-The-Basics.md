@@ -291,7 +291,7 @@ If you are unfamiliar with JavaScript, you might expect that the variable `value
 
 The declaration of `value` is moved to the top (hoisted) while the initialization remains in the same spot. That means the variable `value` is actually still accessible from within the `else` clause, it just has a value of `undefined` because it hasn't been initialized.
 
-It often takes new JavaScript developers some time to get used to declaration hoisting and this unique behavior can end up causing bugs. For this reason, ECMAScript 6 introduces block level scoping options to make the control of variable lifecycle of little more powerful.
+It often takes new JavaScript developers some time to get used to declaration hoisting and this unique behavior can end up causing bugs. For this reason, ECMAScript 6 introduces block level scoping options to make the control of variable lifecycle a little more powerful.
 
 ### Let declarations
 
@@ -329,12 +329,12 @@ In other languages, where block level scoping is the default, code like this wor
 
     // i is not accessible here
 
-In this example, the variable `i` only exists within the `for` loop. Once the loop is complete, the variable is destroyed and is no longer accessible elsewhere.
+In this example, the variable `i` only exists within the `for` loop (in fact, a new `i` is declared for *each iteration* of the loop). Once the loop is complete, the variable is destroyed and is no longer accessible elsewhere.
 
-Unlike `var`, `let` has no hoisting characteristics. A variable declared with `let` cannot be accessed until after the `let` statement. Attempting to do so results in a syntax error:
+Unlike `var`, `let` has no hoisting characteristics. A variable declared with `let` cannot be accessed until after the `let` statement. Attempting to do so results in a reference error:
 
     if (condition) {
-        console.log(value);     // error!
+        console.log(value);     // ReferenceError!
         let value = "blue";
     }
 
@@ -363,7 +363,7 @@ Here, the `let` declaration will not throw an error because it is creating a new
 
 The intent of `let` is to replace `var` long term, as the former behaves more like variable declarations in other languages. If you are writing JavaScript that will execute only in an ECMAScript 6 or higher environment, you may want to try using `let` exclusively and leaving `var` for other scripts that require backwards compatibility.
 
-Note: Since all `let` declarations are hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block.
+Note: Since `let` declarations are *not* hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block.
 
 ### Constant declarations
 
