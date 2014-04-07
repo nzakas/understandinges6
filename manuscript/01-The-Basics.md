@@ -329,7 +329,7 @@ In other languages, where block level scoping is the default, code like this wor
 
     // i is not accessible here
 
-In this example, the variable `i` only exists within the `for` loop (in fact, a new `i` is declared for *each iteration* of the loop). Once the loop is complete, the variable is destroyed and is no longer accessible elsewhere.
+In this example, the variable `i` only exists within the `for` loop. Once the loop is complete, the variable is destroyed and is no longer accessible elsewhere.
 
 Unlike `var`, `let` has no hoisting characteristics. A variable declared with `let` cannot be accessed until after the `let` statement. Attempting to do so results in a reference error:
 
