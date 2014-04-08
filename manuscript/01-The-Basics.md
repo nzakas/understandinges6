@@ -181,7 +181,7 @@ W> Although this approach works, it's not very fast, especially when applied to 
 
 JavaScript strings have always lagged behind similar features of other languages. It was only in ECMAScript 5 that strings finally gained a `trim()` method, and ECMAScript 6 continues extending strings with new functionality.
 
-## contains(), startsWith(), endsWith()
+### contains(), startsWith(), endsWith()
 
 Developers have used `indexOf()` as a way to identify strings inside of other strings since JavaScript was first introduced. ECMAScript 6 adds three new methods whose purpose is to identify strings inside of other strings:
 
