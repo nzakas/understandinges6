@@ -110,7 +110,9 @@ the character "æ" and the string "ae" may be used interchangeably even though t
 ECMAScript 6 supports the four Unicode normalization forms through a new `normalize()` method on strings. This method optionally accepts a single parameter, one of `"NFC"` (default), `"NFD"`, `"NFKC"`, or `"NFKD"`. It's beyond the scope of this book to explain the differences between these four forms. Just keep in mind that, in order to be used, you must normalize both strings that are being compared to the same form. For example:
 
 ```js
-var normalized = values.map(text => text.normalize());
+var normalized = values.map(function(text) {
+    return text.normalize();
+});
 normalized.sort(function(first, second) {
     if (first < second) {
         return -1;
