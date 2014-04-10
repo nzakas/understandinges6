@@ -1,6 +1,6 @@
 # Collections
 
-For most of JavaScript's history, there has been only one type of collection represented by the `Array` type. Arrays are used in JavaScript just like arrays and other languages but pull double and triple duty mimicking queues and stacks as well. Since arrays only use numeric indices, developers had to use objects whenever a non-numeric index was necessary. ECMAScript 6 introduces several new types of collections to allow better and more efficient storing of order data.
+For most of JavaScript's history, there has been only one type of collection, represented by the `Array` type. Arrays are used in JavaScript just like arrays and other languages but pull double and triple duty mimicking queues and stacks as well. Since arrays only use numeric indices, developers had to use objects whenever a non-numeric index was necessary. Objects started to be used more like maps, but they had their own limitations since all property names must be strings. ECMAScript 6 introduces several new types of collections to allow better and more efficient storing of order data.
 
 ## Sets
 
