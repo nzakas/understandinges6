@@ -494,7 +494,7 @@ const age = 30;
 
 W> Several browsers implement pre-ECMAScript 6 versions of `const`. Implementations range from being simply a synonym for `var` (allowing the value to be overwritten) to actually defining constants but only in the global or function scope. For this reason, be especially careful with using `const` in a production system. It may not be providing you with the functionality you expect.
 
-## Numbers
+## Numbers and Math
 
 TODO: Intro
 
@@ -561,7 +561,24 @@ When using octal or binary literal in strings, be sure to understand your use ca
 Possible content for this chapter:
 
 * New methods on `Number`
-* New methods on `Math`
+
+| Method | Description |
+|--------|-------------|
+|`Math.imul(x, y)`| Fast 32-bit multiplication of two numbers. |
+|`Math.log10(x)`| TODO |
+|`Math.log2(x)`| TODO |
+|`Math.log1p(x)`| TODO |
+|`Math.expm1(x)`| TODO |
+|`Math.cosh(x)`| TODO |
+|`Math.sinh(x)`| TODO |
+|`Math.tanh(x)`| TODO |
+|`Math.acosh(x)`| TODO |
+|`Math.asinh(x)`| TODO |
+|`Math.atanh(x)`| TODO |
+|`Math.hypot(...values)`| TODO |
+|`Math.trunc(x)`| Removes fraction digits from a float and returns an integer.|
+|`Math.sign(x)`| Returns -1 if the `x` is negative 0 if `x` is +0 or -0, or 1 if `x` is positive.|
+|`Math.fround(x)`| TODO |
 
 
 ## Summary
