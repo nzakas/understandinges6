@@ -375,7 +375,7 @@ Another new way to define variables is to use the `const` declaration syntax. Va
     // Syntax error: missing initialization
     const NAME;
 
-Constants are also block-level declarations, similar to `let`. That means constants are destroyed once execution flows out of the block in which they were declared and declarations are hoisted to the top of the block. For example:
+Constants are also block-level declarations, similar to `let`. This means that constants are both hoisted to the top of the block as well as destroyed once execution flows out of the block in which they were declared. For example:
 
     if (condition) {
         const MAX_ITEMS = 5;
@@ -385,7 +385,7 @@ Constants are also block-level declarations, similar to `let`. That means consta
 
     // MAX_ITEMS isn't accessible here
 
-In this code, the constant `MAX_ITEMS` is declared within and `if` statement. Once the statement finishes executing, `MAX_ITEMS` is destroyed and is not accessible outside of that block.
+In this code, the constant `MAX_ITEMS` is declared within an `if` statement. Once the statement finishes executing, `MAX_ITEMS` is destroyed and is not accessible outside of that block.
 
 Also similar to `let`, an error is thrown whenever a `const` declaration is made with an identifier for an already-defined variable in the same scope. It doesn't matter if that variable was declared using `var` (for global or function scope) or `let` (for block scope). For example:
 
