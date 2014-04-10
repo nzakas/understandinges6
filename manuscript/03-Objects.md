@@ -12,23 +12,27 @@ One of the most popular patterns in JavaScript is the object literal. It's the s
 
 In ECMAScript 5 and earlier, object literals were simply collections of name-value pairs. That meant there could be some duplication when property values are being initialized. For example:
 
-    function createPerson(name, age) {
-        return {
-            name: name,
-            age: age
-        };
-    }
+```js
+function createPerson(name, age) {
+    return {
+        name: name,
+        age: age
+    };
+}
+```
 
 The `createPerson()` function creates an object whose property names are the same as the function parameter names. The result is what appears to be duplication of `name` and `age` even though each represents a different aspect of the process.
 
 In ECMAScript 6, you can eliminate the duplication that exists around property names and local variables by using the property initializer shorthand. When the property name is going to be the same as the local variable name, you can simply include the name without a colon and value. For example, `createPerson()` can be rewritten as follows:
 
-    function createPerson(name, age) {
-        return {
-            name,
-            age
-        };
-    }
+```js
+function createPerson(name, age) {
+    return {
+        name,
+        age
+    };
+}
+```
 
 When a property in an object literal only has a name and no value, the JavaScript engine looks into the surrounding scope for a variable of the same name. If found, that value is assigned to the same name on the object literal. So in this example, the object literal property `name` is assigned the value of the local variable `name`.
 
@@ -38,21 +42,25 @@ The purpose of this extension is to make object literal initialization even more
 
 ECMAScript 6 also improves syntax for assigning methods to object literals. In ECMAScript 5 and earlier, you must specify a name and then the full function definition to add a method to an object. For example:
 
-    var person = {
-        name: "Nicholas",
-        sayName: function() {
-            console.log(this.name);
-        }
-    };
+```js
+var person = {
+    name: "Nicholas",
+    sayName: function() {
+        console.log(this.name);
+    }
+};
+```
 
 In ECMAScript 6, the syntax is made more sustained by eliminating the colon and the `function` keyword. you can then rewrite this example as follows:
 
-    var person = {
-        name: "Nicholas",
-        sayName() {
-            console.log(this.name);
-        }
-    };
+```js
+var person = {
+    name: "Nicholas",
+    sayName() {
+        console.log(this.name);
+    }
+};
+```
 
 This shorthand syntax creates a method on the `person` object just as the previous example did. There is no difference aside from saving you some keystrokes.
 
@@ -60,50 +68,58 @@ This shorthand syntax creates a method on the `person` object just as the previo
 
 JavaScript objects have long had computed property names through the use of square brackets instead of dot notation. The square brackets allow you to specify property names using variables and string literals that may contain characters that would be a syntax error if used in an identifier. For example:
 
-    var person = {},
-        lastName = "last name";
+```js
+var person = {},
+    lastName = "last name";
 
-    person["first name"] = "Nicholas";
-    person[lastName] = "Zakas";
+person["first name"] = "Nicholas";
+person[lastName] = "Zakas";
 
-    console.log(person["first name"]);      // "Nicholas"
-    console.log(person[lastName]);          // "Zakas"
+console.log(person["first name"]);      // "Nicholas"
+console.log(person[lastName]);          // "Zakas"
+```
 
 Both of the property names in this example have a space, making it impossible to reference those names using dot notation. However, bracket notation allows any string value to be used as a property name.
 
 In ECMAScript 5, you could use string literals as property names in object literals, such as:
 
-    var person = {
-        "first name": "Nicholas"
-    };
+```js
+var person = {
+    "first name": "Nicholas"
+};
 
-    console.log(person["first name"]);      // "Nicholas"
+console.log(person["first name"]);      // "Nicholas"
+```
 
 If you could provide the string literal inside of the object literal property definition then you were all set. If, however, the property name was contained in a variable or had to be calculated, then there was no way to define that property using an object literal.
 
 ECMAScript 6 adds computed property names to object literal syntax by using the same square bracket notation that has been used to reference computed property names in object instances. For example:
 
-    var lastName = "last name";
+```js
+var lastName = "last name";
 
-    var person = {
-        "first name": "Nicholas",
-        [lastName]: "Zakas"
-    };
+var person = {
+    "first name": "Nicholas",
+    [lastName]: "Zakas"
+};
 
-    console.log(person["first name"]);      // "Nicholas"
-    console.log(person[lastName]);          // "Zakas"
+console.log(person["first name"]);      // "Nicholas"
+console.log(person[lastName]);          // "Zakas"
+```
 
 The square brackets inside of the object literal indicate that the property name is computed, so its contents are evaluated as a string. That means you can also include expressions such as:
 
-    var suffix = " name";
+```js
+var suffix = " name";
 
-    var person = {
-        ["first" + suffix]: "Nicholas",
-        ["last" + suffix]: "Zakas"
-    };
+var person = {
+    ["first" + suffix]: "Nicholas",
+    ["last" + suffix]: "Zakas"
+};
 
-    console.log(person["first name"]);      // "Nicholas"
-    console.log(person[lastName]);          // "Zakas"
+console.log(person["first name"]);      // "Nicholas"
+console.log(person[lastName]);          // "Zakas"
+```
 
 Anything you would be inside of square brackets while using bracket notation on object instances will also work for computed property names inside of object literals.
 
@@ -121,11 +137,13 @@ W> Despite the notation, symbols do not exactly map to strings beginning with "@
 
 You can create a symbol by using the `Symbol` function, such as:
 
-    var firstName = Symbol();
-    var person = {};
+```js
+var firstName = Symbol();
+var person = {};
 
-    person[firstName] = "Nicholas";
-    console.log(person[firstName]);     // "Nicholas"
+person[firstName] = "Nicholas";
+console.log(person[firstName]);     // "Nicholas"
+```
 
 In this example, the symbol `firstName` is created and used to assign a new property on `person`. That symbol must be used each time you want to access that same property. It's a good idea to name the symbol variable appropriately so you can easily tell what the symbol represents.
 
@@ -133,14 +151,16 @@ W> Because symbols are primitive values, `new Symbol()` throws an error when cal
 
 The `Symbol` function accepts an optional argument that is the description of the symbol. The description itself cannot be used to access the property but is used for debugging purposes. For example:
 
-    var firstName = Symbol("first name");
-    var person = {};
+```js
+var firstName = Symbol("first name");
+var person = {};
 
-    person[firstName] = "Nicholas";
+person[firstName] = "Nicholas";
 
-    console.log("first name" in person);        // false
-    console.log(person[firstName]);             // "Nicholas"
-    console.log(firstName);                     // "Symbol(first name)"
+console.log("first name" in person);        // false
+console.log(person[firstName]);             // "Nicholas"
+console.log(firstName);                     // "Symbol(first name)"
+```
 
 A symbol's description is stored internally in a property called `[[Description]]`. This property is read whenever the symbol's `toString()` method is called either explicitly or implicitly (as in this example). It is not otherwise possible to access `[[Description]]` directly from code. It's recommended to always provide a description to make both reading and debugging code using symbols easier.
 
@@ -148,8 +168,10 @@ A symbol's description is stored internally in a property called `[[Description]
 
 Since symbols are primitive values, you can use the `typeof` operator to identify them. ECMAScript 6 extends `typeof` to return `"symbol"` when used on a symbol. For example:
 
-    var symbol = Symbol("test symbol");
-    console.log(typeof symbol);         // "symbol"
+```js
+var symbol = Symbol("test symbol");
+console.log(typeof symbol);         // "symbol"
+```
 
 While there are other indirect ways of determining whether a variable is a symbol, `typeof` is the most accurate and preferred way of doing so.
 
@@ -157,25 +179,27 @@ While there are other indirect ways of determining whether a variable is a symbo
 
 You can use symbols anywhere you would use a computed property name. You've already seen the use of bracket notation in the previous sections, but you can use symbols in computed object literal property names as well as with `Object.defineProperty()`, and `Object.defineProperties()`, such as:
 
-    var firstName = Symbol("first name");
-    var person = {
-        [firstName]: "Nicholas"
-    };
+```js
+var firstName = Symbol("first name");
+var person = {
+    [firstName]: "Nicholas"
+};
 
-    // make the property read only
-    Object.defineProperty(person, firstName, { writable: false });
+// make the property read only
+Object.defineProperty(person, firstName, { writable: false });
 
-    var lastName = Symbol("last name");
+var lastName = Symbol("last name");
 
-    Object.defineProperties(person, {
-        [lastName]: {
-            value: "Zakas",
-            writable: false
-        }
-    });
+Object.defineProperties(person, {
+    [lastName]: {
+        value: "Zakas",
+        writable: false
+    }
+});
 
-    console.log(person[firstName]);     // "Nicholas"
-    console.log(person[lastName]);      // "Zakas"
+console.log(person[firstName]);     // "Nicholas"
+console.log(person[lastName]);      // "Zakas"
+```
 
 With computer property names in object literals, symbols are very easy to work with.
 
@@ -185,42 +209,48 @@ You may find that you want different parts of your code to use the same symbols.
 
 When you want to create a symbol to be shared, use the `Symbol.for()` method instead of calling `Symbol()`. The `Symbol.for()` method accepts a single parameter, which is a string identifier for the symbol you want to create (this value doubles as the description). For example:
 
-    var uid = Symbol.for("uid");
-    var object = {};
+```js
+var uid = Symbol.for("uid");
+var object = {};
 
-    object[uid] = "12345";
+object[uid] = "12345";
 
-    console.log(object[uid]);       // "Nicholas"
-    console.log(uid);               // "Symbol(uid)"
+console.log(object[uid]);       // "Nicholas"
+console.log(uid);               // "Symbol(uid)"
+```
 
 The `Symbol.for()` method first searches the global symbol registry to see if a symbol with the key `"uid"` exists. If so, then it returns the already existing symbol. If no such symbol exists, then a new symbol is created and registered into the global symbol registry using the specified key. The new symbol is then returned. That means subsequent calls to `Symbol.for()` using the same key will return the same symbol:
 
-    var uid = Symbol.for("uid");
-    var object = {};
+```js
+var uid = Symbol.for("uid");
+var object = {};
 
-    object[uid] = "12345";
+object[uid] = "12345";
 
-    console.log(object[uid]);       // "Nicholas"
-    console.log(uid);               // "Symbol(uid)"
+console.log(object[uid]);       // "Nicholas"
+console.log(uid);               // "Symbol(uid)"
 
-    var uid2 = Symbol.for("uid");
+var uid2 = Symbol.for("uid");
 
-    console.log(uid === uid2);      // true
-    console.log(object[uid2]);      // "Nicholas"
-    console.log(uid2);              // "Symbol(uid)"
+console.log(uid === uid2);      // true
+console.log(object[uid2]);      // "Nicholas"
+console.log(uid2);              // "Symbol(uid)"
+```
 
 In this example, `uid` and `uid2` contain the same symbol and so they can be used interchangeably. The first call to `Symbol.for()` creates the symbol and second call retrieves the symbol from the global symbol registry.
 
 Another unique aspect of shared symbols is that you can retrieve the key associated with a symbol in the global symbol registry by using `Symbol.keyFor()`, for example:
 
-    var uid = Symbol.for("uid");
-    console.log(Symbol.keyFor(uid));    // "uid"
+```js
+var uid = Symbol.for("uid");
+console.log(Symbol.keyFor(uid));    // "uid"
 
-    var uid2 = Symbol.for("uid");
-    console.log(Symbol.keyFor(uid2));   // "uid"
+var uid2 = Symbol.for("uid");
+console.log(Symbol.keyFor(uid2));   // "uid"
 
-    var uid3 = Symbol("uid");
-    console.log(Symbol.keyFor(uid3));   // undefined
+var uid3 = Symbol("uid");
+console.log(Symbol.keyFor(uid3));   // undefined
+```
 
 Notice that both `uid` and `uid2` return the key `"uid"`. The symbol `uid3` doesn't exist in the global symbol registry, so it has no key associated with it and so `Symbol.keyFor()` returns `undefined`.
 
