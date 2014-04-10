@@ -224,6 +224,8 @@ These three methods make it much easier to identify substrings without needing t
 
 I> All of these methods return a boolean value. If you need to find the position of a string within another, use `indexOf()` or `lastIndexOf()`.
 
+W> The `startsWith()`, `endsWith()`, and `contains()` methods will throw an error if you pass a regular expression instead of a string. This stands in contrast to `indexOf()` and `lastIndexOf()`, which both convert a regular expression argument into a string and then search for that string.
+
 ### repeat()
 
 ECMAScript 6 also adds a `repeat()` method to strings. This method accepts a single argument, which is the number of times to repeat the string, and returns a new string that has the original string repeated the specified number of times. For example:
