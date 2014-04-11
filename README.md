@@ -80,3 +80,29 @@ These types of issues will simply be marked as invalid and closed without commen
 Copyright 2014 Nicholas C. Zakas.
 
 This work is licensed under a [Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License](http://creativecommons.org/licenses/by-nc-nd/3.0/).
+
+## Frequently Asked Questions
+
+### When will the book be finished?
+
+To be determined. Since I'm writing this in my spare time, it's hard to predict when it will be complete. The goal is to have it complete by December 2014, but that is a goal and not a deadline.
+
+### If I buy a copy now, do I get the finished one?
+
+Yes. When you buy a copy today, you will automatically get all updates for the book. You'll be notified of updated versions via email after purchase.
+
+### How often is the book published?
+
+Roughly every week or two the changes in GitHub are published to Leanpub.
+
+### What is the state of content in GitHub?
+
+Everything in GitHub is a work in progress. Those parts that are known to be correct and fully-formed enough to be valuable are published to Leanpub. That's why there's more content in GitHub than is available on Leanpub, as GitHub contains everything, including content that's not quite ready for the book.
+
+### Will there be a print version of the book?
+
+In all likelihood yes. I've already been contacted by a couple of publishers, but there will be no final decision made until the content of the book is complete. This is intentional on my part because publishers have deadlines, and I'm unable to estimate when I'll have the book finished.
+
+### Can I acquire translation rights?
+
+Not at this time. I will likely leave that to the publisher of the print book.
