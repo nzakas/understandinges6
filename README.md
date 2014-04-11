@@ -19,6 +19,12 @@ What you'll learn:
 * Why people are so excited about promises for asynchronous programming
 * How modules will change the way you organize code
 
+## Where to Read
+
+The [published version](https://leanpub.com/understandinges6/read/) is available for free and contains the latest "blessed" version. The content may be incomplete but should be correct. New releases are published several times a month.
+
+Anything that is not present in the published version is considered a work-in-progress and may be incomplete or incorrect.
+
 ## Purchasing a copy
 
 You can purchase a copy of this ebook through [Leanpub](https://leanpub.com/understandinges6).
