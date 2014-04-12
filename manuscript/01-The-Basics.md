@@ -190,7 +190,7 @@ The regular expression in this example matches a both whitespace and non-whitesp
 
 W> Although this approach works, it's not very fast, especially when applied to long strings. Try to minimize counting code points whenever possible. Hopefully ECMAScript 7 will bring a more performant means by which to count code points.
 
-## More string methods
+## Additional String-Related Changes
 
 JavaScript strings have always lagged behind similar features of other languages. It was only in ECMAScript 5 that strings finally gained a `trim()` method, and ECMAScript 6 continues extending strings with new functionality.
 
@@ -246,6 +246,82 @@ var indent = " ".repeat(size),
 // whenever you increase the indent
 var newIndent = indent.repeat(++indentLevel);
 ```
+
+### The Regular Expression y Flag
+
+ECMAScript 6 standardized the `y` flag after it had been implemented in Firefox as a proprietary extension to regular expressions. The `y` (sticky) flag indicates that the next match should be made starting with the value of `lastIndex` on the regular expression.
+
+The `lastIndex` property indicates the position at which to start the match of a string and is set to `0` by default, meaning matches always start at the beginning of a string. You can, however, overwrite `lastIndex` to have it start from somewhere else:
+
+```js
+var pattern = /hello\d\s?/g,
+    text = "hello1 hello2 hello3",
+    result = pattern.exec(text);
+
+console.log(result[0]);     // "hello1 "
+
+pattern.lastIndex = 7;
+result = pattern.exec(text);
+
+console.log(result[0]);     // "hello2 "
+```
+
+In this example, the regular expression matches the string `"hello"` followed by a number and optionally a whitespace character. The `g` flag is important as it allows the regular expression to use `lastIndex` when set (without it, matches always start at `0` regardless of the `lastIndex` value). The first call to `exec()` results in matching "hello1" first while the second call, with a `lastIndex` of 6, matches "hello2" first.
+
+The sticky flag tells the regular expression to save the index of the next character after the last match in `lastIndex` whenever an operation is performed (in the previous example, 7 is the location of next character after "hello1 "). If an operation results in no match then `lastIndex` is set back to 0.
+
+```js
+var pattern = /hello\d\s?/y,
+    text = "hello1 hello2 hello3",
+    result = pattern.exec(text);
+
+console.log(result[0]);             // "hello1 "
+console.log(pattern.lastIndex);     // 7
+
+result = pattern.exec(text);
+
+console.log(result[0]);             // "hello2 "
+console.log(pattern.lastIndex);     // 14
+```
+
+Here, the same pattern is used but with the sticky flag instead of the global flag. The value of `lastIndex` changed to 7 after the first call to `exec()` and to 14 after the second call. Since the sticky flag is updating `lastIndex` for you, there's no need to keep track and manually update it yourself.
+
+Perhaps the most important thing to understand about the sticky flag is that sticky regular expressions have an implied `^` at the beginning, indicating that the pattern should match from the beginning of the input. For example, if the previous example is changed to not match the whitespace character, there are different results:
+
+```js
+var pattern = /hello\d/y,
+    text = "hello1 hello2 hello3",
+    result = pattern.exec(text);
+
+console.log(result[0]);             // "hello1 "
+console.log(pattern.lastIndex);     // 6
+
+result = pattern.exec(text);
+
+console.log(result);                // null
+console.log(pattern.lastIndex);     // 0
+```
+
+Without matching the whitespace character, the `lastIndex` is set to 6 after the first call to `exec()`. That means the regular expression will be evaluating the string as if it were this:
+
+```js
+" hello2 hello3"
+```
+
+Since there is an implied `^` at the beginning of the regular expression pattern, the pattern starts by matching `"h"` against the space and sees that they are not equivalent. The matching stops there and `null` is returned. The `lastIndex` property is reset to 0.
+
+As with other regular expression flags, you can detect the presence of `y` by using a property. The `sticky` property is set to true with the sticky flag is present and false if not:
+
+```js
+var pattern = /hello\d/y;
+
+console.log(pattern.sticky);    // true
+```
+
+The `sticky` property is read-only based on the presence of the flag and so cannot be changed in code.
+
+I> The `lastIndex` property is only honored when calling methods on the regular expression object such as `exec()` and `test()`. Passing the regular expression to a string method, such as `match()`, will not result in the sticky behavior.
+
 
 ## Object.is()
 
