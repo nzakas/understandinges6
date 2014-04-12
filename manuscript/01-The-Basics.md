@@ -494,9 +494,9 @@ const age = 30;
 
 W> Several browsers implement pre-ECMAScript 6 versions of `const`. Implementations range from being simply a synonym for `var` (allowing the value to be overwritten) to actually defining constants but only in the global or function scope. For this reason, be especially careful with using `const` in a production system. It may not be providing you with the functionality you expect.
 
-## Numbers and Math
+## Numbers
 
-TODO: Intro
+JavaScript numbers can be particularly complex due to the dual usage of a single type for both integers and floats. Numbers are stored in the IEEE 754 double precision floating point format, and that same format is used to represent both types of numbers. As one of the foundational data types of JavaScript (along with strings and booleans), numbers are quite important to JavaScript developers. Given the new emphasis on gaming and graphics in JavaScript, ECMAScript 6 sought to make working with numbers easier and more powerful.
 
 ### Octal and Binary Literals
 
@@ -556,31 +556,34 @@ console.log(Number("0b101"));     // 5
 
 When using octal or binary literal in strings, be sure to understand your use case and use the most appropriate method for converting them into numeric values.
 
-## More
+### New Math Methods
 
-Possible content for this chapter:
+The aforementioned new emphasis on gaming and graphics in JavaScript led to the realization that many mathematical calculations could be done more efficiently by a JavaScript engine than with pure JavaScript code. Optimization strategies like asm.js, which works on a subset of JavaScript to improve performance, need more information to perform calculations in the fastest way possible. It's important, for instance, to know whether the numbers should be treated as 32-bit integers or as 64-bit floats.
 
-* New methods on `Number`
+As a result, ECMAScript 6 adds several new methods to the `Math` object. These new methods are important for improving the speed of common mathematical calculations, and therefore, improving the speed of applications that must perform many calculations (such as graphics programs). The new methods are listed below.
 
 | Method | Description |
 |--------|-------------|
-|`Math.imul(x, y)`| Fast 32-bit multiplication of two numbers. |
-|`Math.log10(x)`| TODO |
-|`Math.log2(x)`| TODO |
-|`Math.log1p(x)`| TODO |
-|`Math.expm1(x)`| TODO |
-|`Math.cosh(x)`| TODO |
-|`Math.sinh(x)`| TODO |
-|`Math.tanh(x)`| TODO |
-|`Math.acosh(x)`| TODO |
-|`Math.asinh(x)`| TODO |
-|`Math.atanh(x)`| TODO |
-|`Math.hypot(...values)`| TODO |
+|`Math.acosh(x)`| Returns the inverse hyperbolic cosine of `x`. |
+|`Math.asinh(x)`| Returns the inverse hyperbolic sine of `x`. |
+|`Math.atanh(x)`| Returns the inverse hyperbolic tangent of `x` |
+|`Math.cbrt(x)`| Returns the cubed root of `x`. |
+|`Math.clz32(x)`| Returns the number of leading zero bits in the 32-bit integer representation of `x`. |
+|`Math.cosh(x)`| Returns the hyperbolic cosine of `x`. |
+|`Math.expm1(x)`| Returns the result of subtracting 1 from the exponential function of `x`|
+|`Math.fround(x)`| Returns the nearest single-precision float of `x`.|
+|`Math.hypot(...values)`| Returns the square root of the sum of the squares of each argument. |
+|`Math.imul(x, y)`| Returns the result of performing true 32-bit multiplication of the two arguments. |
+|`Math.log1p(x)`| Returns the natural logarithm of `1 + x`. |
+|`Math.log10(x)`| Returns the base 10 logarithm of `x`. |
+|`Math.log2(x)`| Returns the base 2 logarithm of `x`. |
+|`Math.sign(x)`| Returns -1 if the `x` is negative 0 if `x` is +0 or -0, or 1 if `x` is positive.||`Math.sinh(x)`| Returns the hyperbolic sine of `x`. |
+|`Math.tanh(x)`| Returns the hyperbolic tangent of `x`. |
 |`Math.trunc(x)`| Removes fraction digits from a float and returns an integer.|
-|`Math.sign(x)`| Returns -1 if the `x` is negative 0 if `x` is +0 or -0, or 1 if `x` is positive.|
-|`Math.fround(x)`| TODO |
 
+It's beyond the scope of this book to explain each new method and what it does in detail. However, if you are looking for a reasonably common calculation, be sure to check the new `Math` methods before implementing it yourself.
 
 ## Summary
 
 TODO
+
