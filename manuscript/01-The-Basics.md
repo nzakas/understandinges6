@@ -436,60 +436,59 @@ for (let i=0; i < items.length; i++) {
 
 In this example, the variable `i` only exists within the `for` loop. Once the loop is complete, the variable is destroyed and is no longer accessible elsewhere.
 
-A> ### Using let in loops
-A>
-A> The behavior of `let` inside of loops is slightly different than with other blocks. Instead of creating a variable that is used with each iteration of the loop, each iteration actually gets its own variable to use. This is to solve an old problem with JavaScript loops. Consider the following:
-A>
-A> {:lang="js"}
-A> ~~~~~~~~
-A>  var funcs = [];
-A>
-A>  for (var i=0; i < 10; i++) {}
-A>      funcs.push(function() { console.log(i); });
-A>  }
-A>
-A>  funcs.forEach(function(func) {
-A>      func();     // outputs 11 ten times
-A>  })
-A> ~~~~~~~~
-A>
-A> This code will output the number `11` ten times in a row. That's because the variable `i` is shared across each iteration of the loop, meaning the closures created inside the loop all hold a reference to the same variable. The variable `i` has a value of `11` once the loop completes, and so that's the value each function outputs.
-A> To fix this problem, developers use immediately-invoked function expressions (IIFEs) inside of loops to force a new copy of the variable to be created:
-A>
-A> {:lang="js"}
-A> ~~~~~~~~
-A>  var funcs = [];
-A>
-A>  for (var i=0; i < 10; i++) {}
-A>      funcs.push((function(value) {
-A>          return function() {
-A>              console.log(value);
-A>          }
-A>      }(i)));
-A>  }
-A>
-A>  funcs.forEach(function(func) {
-A>      func();     // outputs 1, then 2, then 3, up to 10
-A>  })
-A> ~~~~~~~~
-A>
-A> This version of the example uses an IIFE inside of the loop. The `i` variable is passed to the IIFE, which creates it's own copy and stores it as `value`. This is the value used of the function for that iteration, so calling each function returns the expected value.
-A> A `let` declaration does this for you without the IIFE. Each iteration through the loop results in a new variable being created and initialized to the value of the variable with the same name from the previous iteration. That means you can simplify the process by using this code:
-A>
-A> {:lang="js"}
-A> ~~~~~~~~
-A>  var funcs = [];
-A>
-A>  for (let i=0; i < 10; i++) {}
-A>      funcs.push(function() { console.log(i); });
-A>  }
-A>
-A>  funcs.forEach(function(func) {
-A>      func();     // outputs 1, then 2, then 3, up to 10
-A>  })
-A> ~~~~~~~~
-A>
-A>  This code works exactly like the code that used `var` and an IIFE but is, arguably, cleaner.
+## Using let in loops
+
+The behavior of `let` inside of loops is slightly different than with other blocks. Instead of creating a variable that is used with each iteration of the loop, each iteration actually gets its own variable to use. This is to solve an old problem with JavaScript loops. Consider the following:
+
+```js
+var funcs = [];
+
+for (var i=0; i < 10; i++) {}
+  funcs.push(function() { console.log(i); });
+}
+
+funcs.forEach(function(func) {
+  func();     // outputs 11 ten times
+});
+```
+
+This code will output the number `11` ten times in a row. That's because the variable `i` is shared across each iteration of the loop, meaning the closures created inside the loop all hold a reference to the same variable. The variable `i` has a value of `11` once the loop completes, and so that's the value each function outputs.
+
+To fix this problem, developers use immediately-invoked function expressions (IIFEs) inside of loops to force a new copy of the variable to be created:
+
+```js
+var funcs = [];
+
+for (var i=0; i < 10; i++) {}
+  funcs.push((function(value) {
+    return function() {
+      console.log(value);
+    };
+  }(i)));
+}
+
+funcs.forEach(function(func) {
+  func();     // outputs 1, then 2, then 3, up to 10
+})
+```
+
+This version of the example uses an IIFE inside of the loop. The `i` variable is passed to the IIFE, which creates it's own copy and stores it as `value`. This is the value used of the function for that iteration, so calling each function returns the expected value.
+
+A `let` declaration does this for you without the IIFE. Each iteration through the loop results in a new variable being created and initialized to the value of the variable with the same name from the previous iteration. That means you can simplify the process by using this code:
+
+```js
+var funcs = [];
+
+for (let i=0; i < 10; i++) {}
+  funcs.push(function() { console.log(i); });
+}
+
+funcs.forEach(function(func) {
+  func();     // outputs 1, then 2, then 3, up to 10
+})
+```
+
+This code works exactly like the code that used `var` and an IIFE but is, arguably, cleaner.
 
 Unlike `var`, `let` has no hoisting characteristics. A variable declared with `let` cannot be accessed until after the `let` statement. Attempting to do so results in a reference error:
 
