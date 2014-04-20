@@ -715,22 +715,6 @@ The number `inside` is the largest safe integer, so it returns `true` for both `
 
 Most of the time, you only want to deal with safe integers when doing integer arithmetic or comparisons in JavaScript, so it's a good idea to use `Number.isSafeInteger()` as part of input validation.
 
-#### Creating Integers
-
-Creating integers in JavaScript is easy, you simply create a variable that contains a numeric constant without a fraction value:
-
-```js
-var myInteger = 5;
-```
-
-The process is a bit more complicated, however, if you aren't sure if you have an integer but you want to be using an integer value. You can use `Number.isInteger()` to determine if the value is an integer, but then you're left with the task of converting a non-integer into one. To do this manually, you'd need to determine the fractional portion of the value and subtract it, but due to how floating-point arithmetic is performed you can never be certain that the return value will be an integer.
-
-ECMAScript 5 provides some alternatives: `Math.round()`, `Math.ceil()`, and `Math.floor()`. Each of these methods performs a rounding operation on a float to convert it into an integer. However, you don't always want to round a float into an integer, sometimes you just want to eliminate the fractional portion of the number completely.
-
-ECMAScript 6 adds `Number.toInteger()`, which does just that: it takes a float and removes the fractional portion.
-
-TODO
-
 ### New Math Methods
 
 The aforementioned new emphasis on gaming and graphics in JavaScript led to the realization that many mathematical calculations could be done more efficiently by a JavaScript engine than with pure JavaScript code. Optimization strategies like asm.js, which works on a subset of JavaScript to improve performance, need more information to perform calculations in the fastest way possible. It's important, for instance, to know whether the numbers should be treated as 32-bit integers or as 64-bit floats.
