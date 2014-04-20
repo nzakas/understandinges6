@@ -1,5 +1,8 @@
 # Functions
 
+W> This chapter is a work-in-progress. As such, it may have more typos or content errors than others.
+
+TODO: Intro
 
 ## Default Parameters
 
@@ -13,7 +16,7 @@ Functions in JavaScript are unique in that they allow any number of parameters t
         return start + middle + end;
     }
 
-The logical OR operator (`||`) always returns the second operand when the first is falsy. Since named function parameters that are not explicitly provided are set to `undefined`, the logical OR operator is frequently used to provide default values for missing parameters. Other ways of determining if any parameters are missing include checking <code>arguments.length</code> for the number of parameters that were passed or directly inspecting each parameter to see if it is `undefined`.
+The logical OR operator (`||`) always returns the second operand when the first is falsy. Since named function parameters that are not explicitly provided are set to `undefined`, the logical OR operator is frequently used to provide default values for missing parameters. Other ways of determining if any parameters are missing include checking `arguments.length` for the number of parameters that were passed or directly inspecting each parameter to see if it is `undefined`.
 
 ECMAScript 6 makes it easier to provide default values for parameters by providing initializations that are used when the parameter isn't formally passed. For example:
 
@@ -143,7 +146,7 @@ If, on the other hand, the function body requires multiple steps, you can includ
 
 When using braces for the body of an arrow function, you must explicitly use `return` to return the function value. Otherwise, it acts exactly the same as when the braces aren't present. Braces are required if the function body has zero statements.
 
-Note: You can omit the parentheses when there is only one parameter to the function.
+I> You can omit the parentheses when there is only one parameter to the function.
 
 Arrow functions have implicit `this` binding, which means that the value of `this` inside of an arrow function is always the same as the value of `this` in the scope in which the arrow function was defined. For example:
 
@@ -182,11 +185,30 @@ That's a lot of syntax for a very simple procedure. Compare that to the more ter
 
 The array methods that accept callback functions such as `sort()`, `map()`, and `reduce()` all can benefit from simpler syntax with arrow functions to change what would appear to be more complex processes into simpler code.
 
-Generally speaking, arrow functions are designed to be used in places where anonymous functions are currently being used. They are not really designed to be kept around for long periods of time, hence the inability to use arrow functions as constructors. Arrow functions are best used for callbacks that are passed into other functions, as seen in the examples in this section.
+Generally speaking, arrow functions are designed to be used in places where anonymous functions have traditionally been used. They are not really designed to be kept around for long periods of time, hence the inability to use arrow functions as constructors. Arrow functions are best used for callbacks that are passed into other functions, as seen in the examples in this section.
+
+### Still Functions
+
+Despite the different syntax, arrow functions are still functions and are identified as such:
+
+```js
+var comparator = (a, b) => a - b;
+
+console.log(typeof comparator);                 // "function"
+console.log(comparator instanceof Function);    // true
+```
+
+Both `typeof` and `instanceof` behave the same with arrow functions as they do with other functions.
+
+Also like other functions, you can still use `call()`, `apply()`, and `bind()`, although the `this`-binding of the function will not be affected.
+
+TODO: Example
 
 
 
-##########
+--------------
+
+TODO: Duplicate content below, figure out how to incorporate.
 
 One of the most interesting new parts of ECMAScript 6 are arrow functions. Arrow functions are, as the name suggests, functions defined with a new syntax that uses an "arrow" (`=>`) as part of the syntax. However, arrow functions behave differently than traditional JavaScript functions in a number of important ways:
 
