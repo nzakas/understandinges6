@@ -1,7 +1,5 @@
 # The Basics
 
-**Note:** This chapter is a work-in-progress. All of the information it contains is accurate, however, there are pieces of content missing. Wherever possible, a "TODO" has been left indicating where more content will be added.
-
 ECMAScript 6 makes a large number of changes on top of ECMAScript 5. Some of the changes are larger, such as adding new types or syntax, while others are quite small, providing incremental improvements on top of the language. This chapter covers those incremental improvements that likely won't gain a lot of attention but provide some important functionality that may make certain types of problems easier to solve.
 
 ## Better Unicode Support
@@ -92,7 +90,7 @@ W> {lang=js}
 W> ~~~~~~~~
 W> function supportsExtendedEscape() {
 W>     try {
-W>         "\u{00FF1}";
+W>         eval("'\u{00FF1}'");
 W>         return true;
 W>     } catch (ex) {
 W>         return false;
@@ -190,7 +188,24 @@ The regular expression in this example matches a both whitespace and non-whitesp
 
 W> Although this approach works, it's not very fast, especially when applied to long strings. Try to minimize counting code points whenever possible. Hopefully ECMAScript 7 will bring a more performant means by which to count code points.
 
-## Additional String-Related Changes
+Since the `u` flag is a syntax change, attempting to use it in non-compliant JavaScript engines means a syntax error is thrown. The safest way to determine if the `u` flag is supported is with a function:
+
+```js
+function hasRegExpU() {
+    try {
+        var pattern = new RegExp(".", "u");
+        return true;
+    } catch (ex) {
+        return false;
+    }
+}
+```
+
+This function uses the `RegExp` constructor to pass in the `u` flag as an argument. This is valid syntax even in older JavaScript engines, however, the constructor will throw an error if `u` isn't supported.
+
+I> If your code needs to still work in older JavaScript engines, it's best to use the `RegExp` constructor exclusively when using the `u` flag. This will prevent syntax errors and allow you to optionally detect and use the `u` flag without aborting execution.
+
+## Other String Changes
 
 JavaScript strings have always lagged behind similar features of other languages. It was only in ECMAScript 5 that strings finally gained a `trim()` method, and ECMAScript 6 continues extending strings with new functionality.
 
@@ -293,7 +308,7 @@ var pattern = /hello\d/y,
     text = "hello1 hello2 hello3",
     result = pattern.exec(text);
 
-console.log(result[0]);             // "hello1 "
+console.log(result[0]);             // "hello1"
 console.log(pattern.lastIndex);     // 6
 
 result = pattern.exec(text);
@@ -322,6 +337,20 @@ The `sticky` property is read-only based on the presence of the flag and so cann
 
 I> The `lastIndex` property is only honored when calling methods on the regular expression object such as `exec()` and `test()`. Passing the regular expression to a string method, such as `match()`, will not result in the sticky behavior.
 
+Similar to the `u` flag, the `y` flag is a syntax change, so it will cause a syntax error in older JavaScript engines. You can use the same approach to detect support:
+
+```js
+function hasRegExpY() {
+    try {
+        var pattern = new RegExp(".", "y");
+        return true;
+    } catch (ex) {
+        return false;
+    }
+}
+```
+
+Also similar to `u`, if you need to use `y` in code that runs in older JavaScript engines, be sure to use the `RegExp` constructor when defining those regular expressions to avoid a syntax error.
 
 ## Object.is()
 
@@ -444,16 +473,16 @@ A> {:lang="js"}
 A> ~~~~~~~~
 A>  var funcs = [];
 A>
-A>  for (var i=0; i < 10; i++) {}
+A>  for (var i=0; i < 10; i++) {
 A>      funcs.push(function() { console.log(i); });
 A>  }
 A>
 A>  funcs.forEach(function(func) {
 A>      func();     // outputs 11 ten times
-A>  })
+A>  });
 A> ~~~~~~~~
 A>
-A> This code will output the number `11` ten times in a row. That's because the variable `i` is shared across each iteration of the loop, meaning the closures created inside the loop all hold a reference to the same variable. The variable `i` has a value of `11` once the loop completes, and so that's the value each function outputs.
+A> This code will output the number `10` ten times in a row. That's because the variable `i` is shared across each iteration of the loop, meaning the closures created inside the loop all hold a reference to the same variable. The variable `i` has a value of `10` once the loop completes, and so that's the value each function outputs.
 A>
 A> To fix this problem, developers use immediately-invoked function expressions (IIFEs) inside of loops to force a new copy of the variable to be created:
 A>
@@ -470,8 +499,8 @@ A>      }(i)));
 A>  }
 A>
 A>  funcs.forEach(function(func) {
-A>      func();     // outputs 1, then 2, then 3, up to 10
-A>  })
+A>      func();     // outputs 0, then 1, then 2, up to 9
+A>  });
 A> ~~~~~~~~
 A>
 A> This version of the example uses an IIFE inside of the loop. The `i` variable is passed to the IIFE, which creates it's own copy and stores it as `value`. This is the value used of the function for that iteration, so calling each function returns the expected value.
@@ -487,7 +516,7 @@ A>      funcs.push(function() { console.log(i); });
 A>  }
 A>
 A>  funcs.forEach(function(func) {
-A>      func();     // outputs 1, then 2, then 3, up to 10
+A>      func();     // outputs 0, then 1, then 2, up to 9
 A>  })
 A> ~~~~~~~~
 A>
@@ -509,7 +538,7 @@ If an identifier has already been defined in the block, then using the identifie
 ```js
 var count = 30;
 
-// Throws an error
+// Syntax error
 let count = 40;
 ```
 
@@ -608,7 +637,7 @@ function getValue() {
 
 By making these two changes, ECMAScript 5 sought to eliminate a lot of the confusion and errors associated with octal literals.
 
-ECMAScript 6 took things a step further by reintroducing an octal literal notation, along with a binary literal notation. Both of these notations take a hint for the hexadecimal literal notation of prepending `0x`or `0X` to a value. The new octal literal format begins with `0o` or 0O` while the new binary literal format begins with `0b` or `0B`. Each literal type must be followed by one or more digits, 0-7 for octal, 0-1 for binary. Here's an example:
+ECMAScript 6 took things a step further by reintroducing an octal literal notation, along with a binary literal notation. Both of these notations take a hint for the hexadecimal literal notation of prepending `0x`or `0X` to a value. The new octal literal format begins with `0o` or `0O` while the new binary literal format begins with `0b` or `0B`. Each literal type must be followed by one or more digits, 0-7 for octal, 0-1 for binary. Here's an example:
 
 ```js
 // ECMAScript 6
@@ -744,5 +773,14 @@ It's beyond the scope of this book to explain each new method and what it does i
 
 ## Summary
 
-TODO
+ECMAScript 6 makes a lot of changes, both large and small, to JavaScript. Some of the smaller changes detailed in this chapter will likely be overlooked by many but they are just as important to the evolution of the language as the big changes.
 
+Full Unicode support allows JavaScript to start dealing with UTF-16 characters in logical ways. The ability to transfer between code point and character via `codePointAt()` and `String.fromCodePoint()` is an important step for string manipulation. The addition of the regular expression `u` flag makes it possible to operate on code points instead of 16-bit characters, and the `normalize()` method allows for more appropriate string comparisons.
+
+Additional methods for working with strings were added, allowing you to more easily identify substrings no matter where they are found. The `Object.is()` method performs strict equality on any value, effectively becoming a safer version of `===` when dealing with special JavaScript values.
+
+The `let` and `const` block bindings introduce lexical scoping to JavaScript. These declarations are not hoisted and only exist within the block in which they are declared. That means behavior that is more like other languages and less likely to cause unintentional errors, as variables can now be declared exactly where they are needed. It's expected that the majority of JavaScript code going forward will use `let` and `const` exclusively, effectively making `var` a deprecated part of the language.
+
+ECMAScript 6 makes it easier to work with numbers through the introduction of new syntax and new methods. The binary and octal literal forms allow you to embed numbers directly into source code while keeping the most appropriate representation visible. There are `Number.isFinite()` and `Number.isNaN()` that are safer versions of the global methods of the same names due to their lack of type coercion. You can more easily identify integers using `Number.isInteger()` and `Number.isSafeInteger()` as well as perform a lot more mathematical operations thanks to new methods on `Math`.
+
+Though many of these changes are small, they will make a significant difference in the lives of JavaScript developers for years to come. Each change addresses a particular concern that can otherwise requires a lot of custom code to address. By building this functionality into the language, developers can focus on writing the code for their product rather than low-level utilities.
