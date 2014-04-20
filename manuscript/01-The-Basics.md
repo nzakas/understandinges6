@@ -454,6 +454,7 @@ A>  })
 A> ~~~~~~~~
 A>
 A> This code will output the number `11` ten times in a row. That's because the variable `i` is shared across each iteration of the loop, meaning the closures created inside the loop all hold a reference to the same variable. The variable `i` has a value of `11` once the loop completes, and so that's the value each function outputs.
+A>
 A> To fix this problem, developers use immediately-invoked function expressions (IIFEs) inside of loops to force a new copy of the variable to be created:
 A>
 A> {:lang="js"}
@@ -474,6 +475,7 @@ A>  })
 A> ~~~~~~~~
 A>
 A> This version of the example uses an IIFE inside of the loop. The `i` variable is passed to the IIFE, which creates it's own copy and stores it as `value`. This is the value used of the function for that iteration, so calling each function returns the expected value.
+A>
 A> A `let` declaration does this for you without the IIFE. Each iteration through the loop results in a new variable being created and initialized to the value of the variable with the same name from the previous iteration. That means you can simplify the process by using this code:
 A>
 A> {:lang="js"}
@@ -631,6 +633,103 @@ console.log(Number("0b101"));     // 5
 ```
 
 When using octal or binary literal in strings, be sure to understand your use case and use the most appropriate method for converting them into numeric values.
+
+### isFinite() and isNaN()
+
+JavaScript has long had a couple of global methods for identifying certain types of numbers:
+
+* `isFinite()` determines if a value represents a finite number (not `Infinity` or `-Infinity`)
+* `isNaN()` determines if a value is `NaN` (since `NaN` is the only value that is not equal to itself)
+
+Although intended to work with numbers, these methods are capable of inferring a numeric value from and value that is passed in. That both methods can return incorrect results when passed a value that isn't a number. For example:
+
+```js
+console.log(isFinite(25));      // true
+console.log(isFinite("25"));    // true
+
+console.log(isNaN(NaN));        // true
+console.log(isNaN("NaN"));      // true
+```
+
+Both `isFinite()` and `isNaN()` pass their arguments through `Number()` to get a numeric value and then perform their comparisons on that numeric value rather than the original. This confusing outcome can lead to errors when value types are not checked before being used with one of these methods.
+
+ECMAScript 6 adds two new methods that perform the same comparison but only for number values: `Number.isFinite()` and `Number.isNaN()`. These methods always return `false` when passed a non-number value and return the same values as their global counterparts when passed a number value:
+
+```js
+console.log(isFinite(25));              // true
+console.log(isFinite("25"));            // true
+console.log(Number.isFinite(25));       // true
+console.log(Number.isFinite("25"));     // false
+
+console.log(isNaN(NaN));                // true
+console.log(isNaN("NaN"));              // true
+console.log(Number.isNaN(NaN));         // true
+console.log(Number.isNaN("NaN"));       // false
+```
+
+In this code, `Number.isFinite("25")` returns `false` even though `isFinite("25")` returns `true`; likewise `Number.isNaN("NaN") returns `false` even though `isNaN("NaN")` returns `true`.
+
+These two new methods are aimed at eliminating certain types of errors that can be caused when non-number values are used with `isFinite()` and `isNaN()` without dramatically changing the language.
+
+### Working with Integers
+
+A lot of confusion has been caused over the years related to JavaScript's single number type that is used to represent both integers and floats. The language goes through great pains to ensure that developers don't need to worry about the details, but problems still leak through from time to time. ECMAScript 6 seeks to address this by making it easier to identify and work with integers.
+
+#### Identifying Integers
+
+The first addition is `Number.isInteger()`, which allows you to determine if a value represents an integer in JavaScript. Since integers and floats are stored differently, the JavaScript engine looks at the underlying representation of the value to make this determination. That means numbers that look like floats might actually be stored as integers and therefore return `true` from `Number.isInteger()`. For example:
+
+```js
+console.log(Number.isInteger(25));      // true
+console.log(Number.isInteger(25.0));    // true
+console.log(Number.isInteger(25.1));    // false
+```
+
+In this code, `Number.isInteger()` returns `true` for both `25` and `25.0` even though the latter looks like a float. Simply adding a decimal point to a number doesn't automatically make it a float in JavaScript. Since `25.0` is really just `25`, it is stored as an integer. The number `25.1`, however, is stored as a float because there is a fraction value.
+
+#### Safe Integers
+
+However, all is not so simple with integers. JavaScript can only accurately represent integers between -2^53 and 2^53, and outside of this "safe" range, binary representations end up reused for multiple numeric values. For example:
+
+```js
+console.log(Math.pow(2, 53));      // 9007199254740992
+console.log(Math.pow(2, 53) + 1);  // 9007199254740992
+```
+
+This example doesn't contain a typo, two different numbers end up represented by the same JavaScript integer. The effect becomes more prevalent the further the value is outside of the safe range.
+
+ECMAScript 6 introduces `Number.isSafeInteger()` to better identify integers that can accurately be represented in the language. There is also `Number.MAX_SAFE_INTEGER` and `Number.MIN_SAFE_INTEGER` that represent the upper and lower bounds of the same range, respectively. The `Number.isSafeInteger()` method ensures that a value is an integer and falls within the safe range of integer values:
+
+```js
+var inside = Number.MAX_SAFE_INTEGER,
+    outside = inside + 1;
+
+console.log(Number.isInteger(inside));          // true
+console.log(Number.isSafeInteger(inside));      // true
+
+console.log(Number.isInteger(outside));         // true
+console.log(Number.isSafeInteger(outside));     // false
+```
+
+The number `inside` is the largest safe integer, so it returns `true` for both `Number.isInteger()` and `Number.isSafeInteger()`. The number `outside` is the first questionable integer value, so it is no longer considered safe even though it's still an integer.
+
+Most of the time, you only want to deal with safe integers when doing integer arithmetic or comparisons in JavaScript, so it's a good idea to use `Number.isSafeInteger()` as part of input validation.
+
+#### Creating Integers
+
+Creating integers in JavaScript is easy, you simply create a variable that contains a numeric constant without a fraction value:
+
+```js
+var myInteger = 5;
+```
+
+The process is a bit more complicated, however, if you aren't sure if you have an integer but you want to be using an integer value. You can use `Number.isInteger()` to determine if the value is an integer, but then you're left with the task of converting a non-integer into one. To do this manually, you'd need to determine the fractional portion of the value and subtract it, but due to how floating-point arithmetic is performed you can never be certain that the return value will be an integer.
+
+ECMAScript 5 provides some alternatives: `Math.round()`, `Math.ceil()`, and `Math.floor()`. Each of these methods performs a rounding operation on a float to convert it into an integer. However, you don't always want to round a float into an integer, sometimes you just want to eliminate the fractional portion of the number completely.
+
+ECMAScript 6 adds `Number.toInteger()`, which does just that: it takes a float and removes the fractional portion.
+
+TODO
 
 ### New Math Methods
 
