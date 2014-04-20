@@ -712,6 +712,10 @@ In this code, `Number.isFinite("25")` returns `false` even though `isFinite("25"
 
 These two new methods are aimed at eliminating certain types of errors that can be caused when non-number values are used with `isFinite()` and `isNaN()` without dramatically changing the language.
 
+### parseInt() and parseFloat()
+
+The global functions `parseInt()` and `parseFloat()` now also reside at `Number.parseInt()` and `Number.parseFloat()`. These functions behave exactly the same as the global functions of the same name. The only purpose in making this move is to categorize purely global functions that clearly relate to a specific data type. Since these functions both create numbers from strings, they are now on `Number` along with the other functions that relate to numbers.
+
 ### Working with Integers
 
 A lot of confusion has been caused over the years related to JavaScript's single number type that is used to represent both integers and floats. The language goes through great pains to ensure that developers don't need to worry about the details, but problems still leak through from time to time. ECMAScript 6 seeks to address this by making it easier to identify and work with integers.
