@@ -522,21 +522,9 @@ A> ~~~~~~~~
 A>
 A>  This code works exactly like the code that used `var` and an IIFE but is, arguably, cleaner.
 
-Unlike `var`, `let` has no hoisting characteristics. A variable declared with `let` cannot be accessed until after the `let` statement. Attempting to do so returns `undefined` in sloppy mode:
+Unlike `var`, `let` has no hoisting characteristics. A variable declared with `let` cannot be accessed until after the `let` statement. Attempting to do so results in a reference error:
 
 ```js
-if (condition) {
-    console.log(value);     // undefined
-    let value = "blue";
-}
-```
-
-Here, the variable `value` is defined and initialized using `let`. Although not hoisted, the  `value` is returned as `undefined`. In strict mode, however, the same code throws an error:
-
-
-```js
-"use strict";
-
 if (condition) {
     console.log(value);     // ReferenceError!
     let value = "blue";
