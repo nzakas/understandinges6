@@ -769,7 +769,8 @@ As a result, ECMAScript 6 adds several new methods to the `Math` object. These n
 |`Math.log1p(x)`| Returns the natural logarithm of `1 + x`. |
 |`Math.log10(x)`| Returns the base 10 logarithm of `x`. |
 |`Math.log2(x)`| Returns the base 2 logarithm of `x`. |
-|`Math.sign(x)`| Returns -1 if the `x` is negative 0 if `x` is +0 or -0, or 1 if `x` is positive.||`Math.sinh(x)`| Returns the hyperbolic sine of `x`. |
+|`Math.sign(x)`| Returns -1 if the `x` is negative 0 if `x` is +0 or -0, or 1 if `x` is positive.|
+|`Math.sinh(x)`| Returns the hyperbolic sine of `x`. |
 |`Math.tanh(x)`| Returns the hyperbolic tangent of `x`. |
 |`Math.trunc(x)`| Removes fraction digits from a float and returns an integer.|
 
