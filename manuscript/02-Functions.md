@@ -32,6 +32,28 @@ Here, only the first parameter is expected to be passed all the time. The other 
 
 Any parameters with a default value are considered to be optional parameters while those without default value are considered to be required parameters.
 
+It's possible to specify default values for any arguments, including those that appear before arguments without default values. For example, this is fine:
+
+```js
+function combineText(start, middle = "", end) {
+    return start + middle + end;
+}
+```
+
+In this case, the default value for `middle` will only be used if there is no second argument passed in or if the second argument is explicitly passed in as `undefined`. For example:
+
+```js
+// uses default
+combineText("Hello", undefined, "Goodbye");
+
+// uses default
+combineText("Hello");
+
+// doesn't use default
+combineText("Hello", null, "Goodbye");
+```
+
+In the case of default parameter values, the value of `null` is considered to be valid and the default value will not be used.
 ## Rest Parameters
 
 Since JavaScript functions can be passed any number of parameters, it's not always necessary to define each parameter specifically. Early on, JavaScript provided the `arguments` object as a way of inspecting all function parameters that were passed without necessarily defining each one individually. While that worked fine in most cases, it can become a little cumbersome to work with. For example:
