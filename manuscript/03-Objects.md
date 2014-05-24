@@ -53,7 +53,7 @@ var person = {
 };
 ```
 
-In ECMAScript 6, the syntax is made more sustained by eliminating the colon and the `function` keyword. you can then rewrite this example as follows:
+In ECMAScript 6, the syntax is made more succinct by eliminating the colon and the `function` keyword. You can then rewrite the previous example as:
 
 ```js
 var person = {
@@ -64,7 +64,7 @@ var person = {
 };
 ```
 
-This shorthand syntax creates a method on the `person` object just as the previous example did. There is no difference aside from saving you some keystrokes.
+This shorthand syntax creates a method on the `person` object just as the previous example did. There is no difference aside from saving you some keystrokes, so `sayName()` is assigned an anonymous function expression and has all of the same characteristics as the function defined in the previous example.
 
 ### Computed Property Names
 
