@@ -392,8 +392,12 @@ function getValue(condition) {
         return value;
     } else {
 
+        // value exists here with a value of undefined
+
         return null;
     }
+
+    // value exists here with a value of undefined
 }
 ```
 
@@ -436,8 +440,12 @@ function getValue(condition) {
         return value;
     } else {
 
+        // value doesn't exist here
+
         return null;
     }
+
+    // value doesn't exist here
 }
 ```
 
@@ -450,7 +458,7 @@ for (var i=0; i < items.length; i++) {
     process(items[i]);
 }
 
-// i is still accessible here
+// i is still accessible here and is equal to items.length
 ```
 
 In other languages, where block level scoping is the default, code like this works as intended. In JavaScript, the variable `i` is still accessible after the loop is completed because the `var` declaration was hoisted. Using `let` allows you to get the intended behavior:
@@ -531,7 +539,26 @@ if (condition) {
 }
 ```
 
-In this code, the variable `value` is defined and initialized using `let`, but that statement is never executed because the previous line throws an error.
+In this code, the variable `value` is defined and initialized using `let`, but that statement is never executed because the previous line throws an error. The same is true anytime you attempt to use a `let` variable inside of the same block prior to it being defined. Even the normally safe-to-use `typeof` operator isn't safe:
+
+```js
+if (condition) {
+    console.log(type value);     // ReferenceError!
+    let value = "blue";
+}
+```
+
+Here, `typeof value` throws the same error as the previous example. You cannot use a `let` variable before its declaration within the same block. However, you can use `typeof` outside of the block:
+
+```js
+console.log(type value);     // "undefined"
+
+if (condition) {
+    let value = "blue";
+}
+```
+
+This example has the `typeof` operator applied outside of the block in which `value` is declared. That means there is no `value` binding and `typeof` simply returns `"undefined"`.
 
 If an identifier has already been defined in the block, then using the identifier in a `let` declaration causes an error to be thrown. For example:
 
