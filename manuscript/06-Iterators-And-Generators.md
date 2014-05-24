@@ -52,5 +52,6 @@ For strings, `for-of` iterates over code points.
 
 
 
+#### @@iterator
 
 

@@ -6,6 +6,17 @@ A lot of ECMAScript 6 focused on improving the utility of objects. The focus mak
 
 ECMAScript 6 improves objects in a number of ways, from simple syntax to new ways of manipulating and interacting with objects.
 
+## Object Categories
+
+The ECMAScript 6 specification introduced some new terminology to help distinguish between categories of objects. JavaScript has long been littered with a mix of terminology used to describe objects found in the standard as opposed to those that are added by execution environments such as the browser. ECMAScript 6 takes the time to clearly define each category of object, and it's important to understand this terminology to have a good understanding of the language as a whole. The object categories are:
+
+* *Ordinary objects* are objects that have all of the default internal behaviors for objects in JavaScript.
+* *Exotic objects* are objects whose internal behavior is different than the default in some way.
+* *Standard objects* are objects defined by ECMAScript 6, such as `Array`, `Date`, etc. Standard objects may be ordinary or exotic.
+* *Built-in objects* are objects that are present in a JavaScript execution environment when a script begins to execute. All standard objects are built-in objects.
+
+These terms are used throughout the book to explain the various objects defined by ECMAScript 6.
+
 ## Object Literal Extensions
 
 One of the most popular patterns in JavaScript is the object literal. It's the syntax upon which JSON is built and can be seen in nearly every JavaScript file on the Internet. The reason for the popularity is clear: a succinct syntax for creating objects that otherwise would take several lines of code to accomplish. ECMAScript 6 recognized the popularity of the object literal and extends the syntax in several ways to make object literals more powerful and even more succinct.
@@ -120,7 +131,7 @@ var person = {
 };
 
 console.log(person["first name"]);      // "Nicholas"
-console.log(person["last name"]);          // "Zakas"
+console.log(person["last name"]);       // "Zakas"
 ```
 
 Anything you would be inside of square brackets while using bracket notation on object instances will also work for computed property names inside of object literals.
@@ -225,9 +236,9 @@ The `Symbol.for()` method first searches the global symbol registry to see if a 
 
 ```js
 var uid = Symbol.for("uid");
-var object = {};
-
-object[uid] = "12345";
+var object = {
+    [uid]: "12345"
+};
 
 console.log(object[uid]);       // "Nicholas"
 console.log(uid);               // "Symbol(uid)"
@@ -260,7 +271,120 @@ W> The global symbol registry is a shared environment, just like the global scop
 
 ### Finding Object Symbols
 
+As with other properties on objects, you can access symbol properties using the `Object.getOwnPropertySymbols()` method. This method works exactly the same as `Object.getOwnPropertyNames()` except that the returned values are symbols rather than strings. Since symbols technically aren't property names, they are omitted from the result of `Object.getOwnPropertyNames()`.
+
+The return value of `Object.getOwnPropertySymbols()` is an array of symbols that represent own properties. For example:
+
+```js
+var uid = Symbol.for("uid");
+var object = {
+    [uid]: "12345"
+};
+
+var symbols = Object.getOwnPropertySymbols(object);
+
+console.log(symbols.length);        // 1
+console.log(symbols[0]);            // "Symbol(uid)"
+console.log(object[symbols[0]]);    // "12345"
+```
+
+In this code, `object` has a single symbol property. The array returned from `Object.getOwnPropertySymbols()` is an array containing just that symbol.
+
+I> All objects start off with zero own symbol properties (although they do have some inherited symbol properties).
+
+### Well-Known Symbols
+
+In addition to the symbols you defined, there are some predefined symbols as well (called *well-known* symbols in the specification). These symbols represent common behaviors in JavaScript that were previously considered internal-only operations. Each well-known symbol is represented by a property on `Symbol`, such as `Symbol.create` for the `@@create` symbol.
+
+The well-known symbols are discussed throughout this book in the context that is appropriate. Since not all well-known symbols apply to all objects, you'll see them covered where it makes the most sense.
+
+## Exposing Internal Logic
+
+A central theme for both ECMAScript 5 and ECMAScript 6 was exposing and defining some of the "magic" parts of JavaScript - the parts that couldn't be emulated by a developer. ECMAScript 6 follows this tradition by exposing even more of the previously internal-only logic of the language. It does so primarily through the use of symbol prototype properties that define the basic behavior of certain objects.
+
+I> Overwriting a method defined with a well-known symbol changes an ordinary object to an exotic object because this changes some internal default behavior.
+
+### @@toStringTag
+
+Once of the most interesting problems in JavaScript has been the availability of multiple global execution environments. This occurs in web browsers when a page includes an iframe, as the page and the iframe each have their own execution environments. In most cases, this isn't a problem, as data can be passed back and forth between the environments with little cause for concern. The problem arises when trying to identify what type of an object you're dealing with.
+
+The canonical example of this is passing an array from the iframe into the containing page or vice-versa. Now in a different execution environment, `instanceof Array` returns `false` because the array was created with a constructor from a different environment.
+
+Developers soon found a good way to identify arrays. It was discovered that by calling the standard `toString()` method on the object, a predictable string was always returned. Thus, many JavaScript libraries began including a function that works similar to this:
+
+```js
+function isArray(value) {
+    return Object.prototype.toString.call(value) === "[object Array]";
+}
+
+console.log(isArray([]));   // true
+```
+
+This may look a bit roundabout, but in reality it was found to work quite well in all browsers. The `toString()` method on arrays isn't very useful for this purpose because it returns a string representation of the items it contains. The `toString()` method on `Object.prototype`, however, had this quirk where it included some internally-defined name in the result. By using this method on an object, you could retrieve what the JavaScript environment thought the data type was.
+
+Developers quickly realized that since there was no way to change this behavior, it was possible to use the same approach to distinguish between native objects and those created by developers. The most important case of this was the ECMAScript 5 `JSON` object.
+
+Prior to ECMAScript 5, many used Douglas Crockford's `json2.js`, which created a global `JSON` object. As browsers started to implement the `JSON` global object, it became necessary to tell whether the global `JSON` was provided by the JavaScript environment itself or through some other library. Using the same technique, many created functions like this:
+
+```js
+function supportsNativeJSON() {
+    return typeof JSON !== "undefined" &&
+        Object.prototype.toString.call(JSON) === "[object JSON]";
+}
+```
+
+Here, the same characteristic that allowed developers to identify arrays across iframe boundaries also provided a way to tell if `JSON` was the native one or not. A non-native `JSON` object would return `[object Object]` while the native version returned `[object Object]`. From that point on, this approach became the de facto standard for identifying native objects.
+
+ECMAScript 6 explains this behavior through the `@@toStringTag` symbol. This symbol represents a method on each object that defines what value should be produced when `Object.prototype.toString.call()` is called on it. So the value returned for arrays is explained by having the `@@toStringTag` method return `"Array"`. Likewise, you can define that value for your own objects:
+
+```js
+function Person(name) {
+    this.name = name;
+}
+
+Person.prototype[Symbol.toStringTag] = function() {
+    return "Person";
+};
+
+var me = new Person("Nicholas");
+
+console.log(me.toString());                         // "[object Person]"
+console.log(Object.prototype.toString.call(me));    // "[object Person]"
+```
+
+In this example, a `@@toStringTag` method is defined on `Person.prototype` to provide the default behavior for creating a string representation. Since `Person.prototype` inherits `Object.prototype.toString()`, the value returned from `@@toStringTag` is also used when calling `me.toString()`. However, you can still define your own `toString()` that provides a different behavior without affecting the use of `Object.prototype.toString.call()`:
+
+```js
+function Person(name) {
+    this.name = name;
+}
+
+Person.prototype[Symbol.toStringTag] = function() {
+    return "Person";
+};
+
+Person.prototype.toString = function() {
+    return this.name;
+};
+
+var me = new Person("Nicholas");
+
+console.log(me.toString());                         // "Nicholas"
+console.log(Object.prototype.toString.call(me));    // "[object Person]"
+```
+
+This code defines `Person.prototype.toString()` to return the value of the `name` property. Since `Person` instances no longer inherit `Object.prototype.toString()`, calling `me.toString()` exhibits a different behavior.
+
+I> All objects inherit `@@toStringTag` from `Object.prototype` unless otherwise specified. This default method returns `"Object"`.
+
+### @@toPrimitive
+
+JavaScript frequently attempts to convert objects into primitive values implicitly when certain operations are applied. For instance, when you compare a string to an object using double equals (`==`), the object is converted into a primitive value before comparing. Exactly what value should be used was previously an internal operation that is exposed in ECMAScript 6 through the `@@toPrimitive` method.
+
+The `@@toPrimitive` method is defined on the prototype of each standard type and prescribes the exact behavior. When a primitive conversion is needed, `@@toPrimitive` is called with a single argument, referred to as `hint` in the specification. The `hint` argument is `"default"`, specifying that the operation has no preference as to the type, `"string"`, indicating a string should be returned, or `"number"`, if a number is necessary to perform the operation. Most standard objects treat `"default"` as equivalent to `"number"` (except for `Date`, which treats `"default"` as `"string"`).
+
 TODO
+
 
 ## Object Destructuring
 
@@ -275,5 +399,7 @@ TODO
 TODO
 
 ## super
+
+toMethod()
 
 TODO
