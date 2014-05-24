@@ -2,58 +2,103 @@
 
 W> This chapter is a work-in-progress. As such, it may have more typos or content errors than others.
 
-TODO: Intro
+Functions are an important part of any programming language, and JavaScript functions hadn't changed much since the language was first introduced. This left a backlog of problems and nuanced behavior that made it easy to make mistakes or require more code just to achieve a very common behavior.
+
+ECMAScript 6 functions made a big leap forward, taking into account years of complaints and asks from JavaScript developers. The result is a number of incremental improvements on top of ECMAScript 5 functions that make programming in JavaScript less error-prone and more powerful than ever before.
 
 ## Default Parameters
 
 Functions in JavaScript are unique in that they allow any number of parameters to be passed regardless of the number of declared parameters in the function definition. This allows you to define functions that can handle different number of parameters, often by just filling in default values when ones are provided. In ECMAScript 5 and earlier, you would likely use the following pattern to accomplish this:
 
 ```js
-function combineText(start, middle, end) {
+function makeRequest(url, timeout, callback) {
 
-    middle = middle || "";
-    end = end || "";
+    timeout = timeout || 2000;
+    callback = callback || function() {};
 
-    return start + middle + end;
+    // the rest of the function
+
 }
 ```
 
-The logical OR operator (`||`) always returns the second operand when the first is falsy. Since named function parameters that are not explicitly provided are set to `undefined`, the logical OR operator is frequently used to provide default values for missing parameters. Other ways of determining if any parameters are missing include checking `arguments.length` for the number of parameters that were passed or directly inspecting each parameter to see if it is `undefined`.
+In this example, both `timeout` and `callback` are actually optional because they are given a default value if not provided. The logical OR operator (`||`) always returns the second operand when the first is falsy. Since named function parameters that are not explicitly provided are set to `undefined`, the logical OR operator is frequently used to provide default values for missing parameters. There is a flaw with this approach, however, in that a valid value for `timeout` might actually be `0`, but this could would replace it with `2000` because `0` is falsy.
+
+Other ways of determining if any parameters are missing include checking `arguments.length` for the number of parameters that were passed or directly inspecting each parameter to see if it is not `undefined`.
 
 ECMAScript 6 makes it easier to provide default values for parameters by providing initializations that are used when the parameter isn't formally passed. For example:
 
 ```js
-function combineText(start, middle = "", end = "") {
-    return start + middle + end;
+function makeRequest(url, timeout = 2000, callback = function() {}) {
+
+    // the rest of the function
+
 }
 ```
 
-Here, only the first parameter is expected to be passed all the time. The other two parameters have default values of an empty string, which makes the body of the function much smaller because you don't need to add any code to check for a missing value. When `combineText()` is called with all three parameters, then the defaults are not used.
+Here, only the first parameter is expected to be passed all the time. The other two parameters have default values, which makes the body of the function much smaller because you don't need to add any code to check for a missing value. When `makeRequest()` is called with all three parameters, then the defaults are not used. For example:
+
+```js
+// uses default timeout and callback
+makeRequest("/foo");
+
+// uses default callback
+makeRequest("/foo", 500);
+
+// doesn't use defaults
+makeRequest("/foo", 500, function(body) {
+    doSomething(body);
+});
+```
 
 Any parameters with a default value are considered to be optional parameters while those without default value are considered to be required parameters.
 
 It's possible to specify default values for any arguments, including those that appear before arguments without default values. For example, this is fine:
 
 ```js
-function combineText(start, middle = "", end) {
-    return start + middle + end;
+function makeRequest(url, timeout = 2000, callback) {
+
+    // the rest of the function
+
 }
 ```
 
-In this case, the default value for `middle` will only be used if there is no second argument passed in or if the second argument is explicitly passed in as `undefined`. For example:
+In this case, the default value for `timeout` will only be used if there is no second argument passed in or if the second argument is explicitly passed in as `undefined`. For example:
 
 ```js
-// uses default
-combineText("Hello", undefined, "Goodbye");
+// uses default timeout
+makeRequest("/foo", undefined, function(body) {
+    doSomething(body);
+});
 
-// uses default
-combineText("Hello");
+// uses default timeout
+makeRequest("/foo");
 
-// doesn't use default
-combineText("Hello", null, "Goodbye");
+// doesn't use default timeout
+makeRequest("/foo", null, function(body) {
+    doSomething(body);
+});
 ```
 
 In the case of default parameter values, the value of `null` is considered to be valid and the default value will not be used.
+
+Perhaps the most interesting feature of default parameter arguments is that the default value need not be a primitive value. You can, for example, execute a function to retrieve the default parameter:
+
+```js
+function getCallback() {
+    return function() {
+        // some code
+    };
+}
+
+function makeRequest(url, timeout = 2000, callback = getCallback()) {
+
+    // the rest of the function
+
+}
+```
+
+Here, if the last argument isn't provided, the function `getCallback()` is called to retrieve the correct default value. This opens up a lot of interesting possibilities to dynamically inject information into functions.
+
 ## Rest Parameters
 
 Since JavaScript functions can be passed any number of parameters, it's not always necessary to define each parameter specifically. Early on, JavaScript provided the `arguments` object as a way of inspecting all function parameters that were passed without necessarily defining each one individually. While that worked fine in most cases, it can become a little cumbersome to work with. For example:
