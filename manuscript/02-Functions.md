@@ -400,17 +400,17 @@ Both `typeof` and `instanceof` behave the same with arrow functions as they do w
 Also like other functions, you can still use `call()`, `apply()`, and `bind()`, although the `this`-binding of the function will not be affected. Here are some examples:
 
 ```js
-var sum = (a, b) => a + b;
+var sum = (num1, num2) => num1 + num2;
 
 console.log(sum.call(null, 1, 2));      // 3
 console.log(sum.apply(null, [1, 2]));   // 3
 
-var newSum = sum.bind(null, 1, 2);
+var boundSum = sum.bind(null, 1, 2);
 
-console.log(newSum());                  // 3
+console.log(boundSum());                // 3
 ```
 
-In this example, the `sum()` function is called using `call()` and `apply()` to pass arguments as you would with any function. The `bind()` method is used to create `newSum()`, which has its two arguments bound to `1` and `2` so that they don't need to be passed directly.
+In this example, the `sum()` function is called using `call()` and `apply()` to pass arguments as you would with any function. The `bind()` method is used to create `boundSum()`, which has its two arguments bound to `1` and `2` so that they don't need to be passed directly.
 
 Arrow functions are appropriate to use anywhere you're currently using an anonymous function expression, such as with callbacks.
 
