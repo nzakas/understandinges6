@@ -206,6 +206,56 @@ In this example, the last argument passed to `Math.max()` is `0`, which comes af
 
 The spread operator for argument passing makes using arrays for function arguments much easier. You'll likely find it to be a suitable replacement for the `apply()` method in most circumstances.
 
+## The name Property
+
+Identifying functions can be challenging in JavaScript given the various ways a function can be defined. Additionally, the prevalence of anonymous function expressions makes debugging a bit more difficult, often resulting in stack traces that are hard to read and decipher. For these reasons, ECMAScript 6 adds the `name` property to all functions.
+
+Both function declarations and named function expressions will have an appropriate value for their `name` property while all others will have an empty string. For example:
+
+```js
+function doSomething() {
+    // ...
+}
+
+var doSomethingElse = function doSomethingElse() {
+    // ...
+};
+
+var doAnotherThing = function() {
+    // ...
+};
+
+console.log(doSomething.name);          // "doSomething"
+console.log(doSomethingElse.name);      // "doSomethingElse"
+console.log(doAnotherThing.name);       // ""
+```
+
+In this code, `doSomething()` has a `name` property equal to `"doSomething"` because it's a function declaration. The named function expression `doSomethingElse()` has a `name` of `"doSomethingElse"` while the anonymous function expression `doAnotherThing()` has a `name` of `""`.
+
+The `name` property is a readonly property on `Function.prototype'. All functions inherit this `name` property unless specifically overwritten (as in the previous example).
+
+```js
+function doSomething() {
+    // ...
+}
+
+var doSomethingElse = function doSomethingElse() {
+    // ...
+};
+
+var doAnotherThing = function() {
+    // ...
+};
+
+console.log(doSomething.hasOwnProperty("name"));        // true
+console.log(doSomethingElse.hasOwnProperty("name"));    // true
+console.log(doAnotherThing.hasOwnProperty("name"));     // false
+```
+
+Here, the `doAnotherThing()` function does not have its own `name` property because there is no contextual name for it. That means it inherits from `Function.prototype.name` rather than having its own property, as do `doSomething()` and `doSomethingElse()`.
+
+I> All functions returned from `bind()` do not have a contextual name and therefore use the inherited `name` value.
+
 ## Arrow Functions
 
 One of the most interesting new parts of ECMAScript 6 are arrow functions. Arrow functions are, as the name suggests, functions defined with a new syntax that uses an "arrow" (`=>`). However, arrow functions behave differently than traditional JavaScript functions in a number of important ways:
@@ -216,6 +266,8 @@ One of the most interesting new parts of ECMAScript 6 are arrow functions. Arrow
 * **No `arguments` object** - You can't access arguments through the `arguments` object, you must use named arguments or other ES6 features such as rest arguments.
 
 There are a few reasons why these differences exist. First and foremost, `this` binding is a common source of error in JavaScript. It's very easy to lose track of the `this` value inside of a function and can easily result in unintended consequences. Second, by limiting arrow functions to simply executing code with a single `this` value, JavaScript engines can more easily optimize these operations (as opposed to regular functions, which might be used as a constructor or otherwise modified).
+
+I> Arrow functions do not have a contextual name and therefore inherit `Function.prototype.name`.
 
 ## Syntax
 
@@ -274,6 +326,16 @@ var sum = function(num1, num2) {
 ```
 
 You can more or less treat the inside of the curly braces as the same as in a traditional function with the exception that `arguments` is not available.
+
+If you want to create a function that does nothing, then you need to include curly braces:
+
+```js
+var doNothing = () => {};
+
+// effectively equivalent to:
+
+var doNothing = function() {};
+```
 
 Because curly braces are used to denote the function's body, an arrow function that wants to return an object literal outside of a function body must wrap the literal in parentheses. For example:
 
@@ -423,5 +485,7 @@ Default function parameters allow you to easily specify what value to use when a
 Rest parameters allow you to specify an array into which all remaining parameters should be placed. Using a real array and letting you indicate which parameters to include makes rest parameters a much more flexible solution than `arguments`.
 
 The spread operator is a companion to rest parameters, allowing you to destructure an array into separate parameters when calling a function. Prior to ECMAScript 6, the only ways to pass individual parameters that were contained in an array were either manually specifying each parameter or using `apply()`. With the spread operator, you can easily pass an array to any function without worrying about the `this` binding of the function.
+
+The addition of the `name` property helps to more easily identify functions for debugging and evaluation purposes.
 
 The biggest change to functions in ECMAScript 6 was the addition of arrow functions. Arrow functions are designed to be used in places where anonymous function expressions have traditionally been used. Arrow functions have a more concise syntax, lexical `this` binding, and no `arguments` object. Additionally, arrow functions can't change their `this` binding and so can't be used as constructors.
