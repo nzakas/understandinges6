@@ -90,7 +90,7 @@ W> {lang=js}
 W> ~~~~~~~~
 W> function supportsExtendedEscape() {
 W>     try {
-W>         eval("'\u{00FF1}'");
+W>         eval("'\\u{00FF1}'");
 W>         return true;
 W>     } catch (ex) {
 W>         return false;
