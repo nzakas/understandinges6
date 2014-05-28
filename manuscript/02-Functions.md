@@ -210,16 +210,12 @@ The spread operator for argument passing makes using arrays for function argumen
 
 Identifying functions can be challenging in JavaScript given the various ways a function can be defined. Additionally, the prevalence of anonymous function expressions makes debugging a bit more difficult, often resulting in stack traces that are hard to read and decipher. For these reasons, ECMAScript 6 adds the `name` property to all functions.
 
-Both function declarations and named function expressions will have an appropriate value for their `name` property while all others will have an empty string. For example:
+All functions in an ECMAScript 6 program will have an appropriate value for their `name` property while all others will have an empty string. For example:
 
 ```js
 function doSomething() {
     // ...
 }
-
-var doSomethingElse = function doSomethingElse() {
-    // ...
-};
 
 var doAnotherThing = function() {
     // ...
@@ -227,34 +223,47 @@ var doAnotherThing = function() {
 
 console.log(doSomething.name);          // "doSomething"
 console.log(doSomethingElse.name);      // "doSomethingElse"
-console.log(doAnotherThing.name);       // ""
+console.log(doAnotherThing.name);       // "doAnotherThing"
 ```
 
-In this code, `doSomething()` has a `name` property equal to `"doSomething"` because it's a function declaration. The named function expression `doSomethingElse()` has a `name` of `"doSomethingElse"` while the anonymous function expression `doAnotherThing()` has a `name` of `""`.
+In this code, `doSomething()` has a `name` property equal to `"doSomething"` because it's a function declaration. The anonymous function expression `doAnotherThing()` has a `name` of `"doAnotherThing"` due to the variable to which it is assigned.
 
-The `name` property is a readonly property on `Function.prototype'. All functions inherit this `name` property unless specifically overwritten (as in the previous example).
+While function declarations and function expressions as in the last example are easy to find an appropiate name for, ECMAScript 6 goes further to ensure that all functions have appropriate names:
 
 ```js
-function doSomething() {
+var doSomething = function doSomethingElse() {
     // ...
+};
+
+var person = {
+    get firstName() {
+        return "Nicholas"
+    },
+    sayName: function() {
+        console.log(this.name);
+    }
 }
 
-var doSomethingElse = function doSomethingElse() {
-    // ...
-};
-
-var doAnotherThing = function() {
-    // ...
-};
-
-console.log(doSomething.hasOwnProperty("name"));        // true
-console.log(doSomethingElse.hasOwnProperty("name"));    // true
-console.log(doAnotherThing.hasOwnProperty("name"));     // false
+console.log(doSomething.name);      // "doSomethingElse"
+console.log(person.sayName.name);   // "sayName"
+console.log(person.firstName.name); // "get firstName"
 ```
 
-Here, the `doAnotherThing()` function does not have its own `name` property because there is no contextual name for it. That means it inherits from `Function.prototype.name` rather than having its own property, as do `doSomething()` and `doSomethingElse()`.
+In this example, `doSomething.name` is `"doSomethingElse"` because the function expression itself has a name and that name takes priority over the variable to which the function was assigned. The `name` property of `person.sayName()` is `"sayName"`, as the value was interpreted from the object literal. Similarly, `person.firstName` is actually a getter function, so its name is `"get firstName"` to indicate this difference (setter functions are prefixed with `"set"` as well).
 
-I> All functions returned from `bind()` do not have a contextual name and therefore use the inherited `name` value.
+There are a couple of other special cases for function names. Functions created using `bind()` will have their name prefixed with `"bound"` and functions created using the `Function` constructor have a name of `"anonymous"`:
+
+```js
+var doSomething = function() {
+    // ...
+};
+
+console.log(doSomething.bind().name);   // "bound doSomething"
+
+console.log((new Function()).name);     // "anonymous"
+```
+
+The `name` of a bound function will always be the `name` of the function being bound prefixed with the `"bound "`, so the bound version of `doSomething()` is `"bound doSomething"`.
 
 ## Arrow Functions
 
@@ -267,7 +276,7 @@ One of the most interesting new parts of ECMAScript 6 are arrow functions. Arrow
 
 There are a few reasons why these differences exist. First and foremost, `this` binding is a common source of error in JavaScript. It's very easy to lose track of the `this` value inside of a function and can easily result in unintended consequences. Second, by limiting arrow functions to simply executing code with a single `this` value, JavaScript engines can more easily optimize these operations (as opposed to regular functions, which might be used as a constructor or otherwise modified).
 
-I> Arrow functions do not have a contextual name and therefore inherit `Function.prototype.name`.
+I> Arrow functions also have a `name` property that follows the same rule as other functions.
 
 ## Syntax
 
