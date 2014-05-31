@@ -646,6 +646,8 @@ var localRepeat = options.repeat,
 
 Frequently, object properties are stored into local variables for more succinct code and easier access. ECMAScript 6 makes this easy by introducing *destructuring assignment*, which systematically goes through an object or array and stores specified pieces of data into local variables.
 
+W> If the right side value of a destructuring assignment evaluates to `null` or `undefined`, an error is thrown.
+
 ### Object Destructuring
 
 Object destructuring assignment syntax uses an object literal on the left side of an assignment operation. For example:
