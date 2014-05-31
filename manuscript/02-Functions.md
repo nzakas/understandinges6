@@ -161,6 +161,84 @@ Here, the parameter `last` follows the rest parameter `numbers` and causes a syn
 
 Rest parameters were designed to replace `arguments` in ECMAScript. Originally ECMAScript 4 did away with `arguments` and added rest parameters to allow for an unlimited number of arguments to be passed to functions. Even though ECMAScript 4 never came into being, the idea was kept around and reintroduced in ECMAScript 6 despite `arguments` not being removed from the language.
 
+## Destructured Parameters
+
+In Chapter 1, you learned about destructuring assignment. Destructuring can also be used outside of the context of an assignment expression and perhaps the most interesting such case is with destructured parameters.
+
+It's common for functions that take a large number of optional parameters to use an options object as one or more parameters. For example:
+
+```js
+function setCookie(name, value, options) {
+
+    options = options || {};
+
+    var secure = options.secure,
+        path = options.path,
+        domain = options.domain,
+        expires = options.expires;
+
+    // ...
+}
+
+setCookie("type", "js", {
+    secure: true,
+    expires: 60000
+});
+```
+
+There are many `setCookie()` functions in JavaScript libraries that look similar to this. The `name` and `value` are required but everything else is not. And since there is no priority order for the other data, it makes sense to have an options object with named properties rather than extra named properties. This approach is okay, although it makes the expect input for the function a bit opaque.
+
+Using destructured parameters, the previous function can be rewritten as follows:
+
+```js
+function setCookie(name, value, { secure, path, domain, expires }) {
+
+    // ...
+}
+
+setCookie("type", "js", {
+    secure: true,
+    expires: 60000
+});
+```
+
+The behavior of this function is exactly the same as in the previous example, the only difference is the third argument uses destructuring to pull out the necessary data. Doing so makes it clear which parameters are really expected, and the destructured parameters also act like regular parameters in that they are set to `undefined` if they are not passed.
+
+One quirk of this pattern is that the destructured parameters don't exist when the argument isn't provided. If `setCookie()` is called with just two arguments, any attempt to access `secure`, `path`, `domain`, or `expires` will throw an error. You can safely check to see if the argument was passed by using `typeof`:
+
+```js
+function setCookie(name, value, { secure, path, domain, expires }) {
+
+    if (typeof secure !== "undefined") {
+        // use it
+    }
+
+    if (typeof path !== "undefined") {
+        // use it
+    }
+
+    if (typeof domain !== "undefined") {
+        // use it
+    }
+
+    if (typeof expires !== "undefined") {
+        // use it
+    }
+
+    // ...
+}
+
+setCookie("type", "js", {
+    secure: true,
+    expires: 60000
+});
+```
+
+Unless the destructured parameter is required, you should always check to ensure that the variables are present before using them.
+
+I> Unfortunately, there's no way to specify a default value for destructured parameters.
+
+
 ## The Spread Operator
 
 Closely related to rest parameters is the spread operator. Whereas rest parameters allow you to specify multiple independent arguments should be combined into an array, the spread operator allows you to specify an array that should be be split and have its items passed in as separate arguments to a function. Consider the `Math.max()` method, which accepts any number of arguments and returns the one with the highest value. It's basic usage is as follows:
@@ -574,6 +652,8 @@ Functions haven't undergone a huge change in ECMAScript 6, but rather, a series 
 Default function parameters allow you to easily specify what value to use when a particular argument isn't passed. Prior to ECMAScript 6, this would require some extra code inside of the function to both check for the presence of arguments and assign a different value.
 
 Rest parameters allow you to specify an array into which all remaining parameters should be placed. Using a real array and letting you indicate which parameters to include makes rest parameters a much more flexible solution than `arguments`.
+
+Destructured parameters use the destructuring syntax to make options objects more transparent when used as function parameters. The actual data you're interested in can be listed out along with other named parameters.
 
 The spread operator is a companion to rest parameters, allowing you to destructure an array into separate parameters when calling a function. Prior to ECMAScript 6, the only ways to pass individual parameters that were contained in an array were either manually specifying each parameter or using `apply()`. With the spread operator, you can easily pass an array to any function without worrying about the `this` binding of the function.
 
