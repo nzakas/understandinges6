@@ -1,3 +1,5 @@
 00-Introduction.md
 01-The-Basics.md
 02-Functions.md
+03-Objects.md
+08-Symbols.md
