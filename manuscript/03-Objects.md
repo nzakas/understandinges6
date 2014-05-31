@@ -138,14 +138,82 @@ console.log(person["last name"]);       // "Zakas"
 
 Anything you would be inside of square brackets while using bracket notation on object instances will also work for computed property names inside of object literals.
 
+## Object.assign()
+
+One of the most popular patterns for object composition is *mixins*, in which one object receives properties and methods from another object. Many JavaScript libraries have a mixin method similar to this:
+
+```js
+function mixin(receiver, supplier) {
+    Object.keys(supplier).forEach(function(key) {
+        receiver[key] = supplier[key];
+    });
+
+    return receiver;
+}
+```
+
+The `mixin()` function iterates over the own properties of `supplier` and copies them onto `receiver`. This allows the `receiver` to gain new behaviors without inheritance. For example:
+
+```js
+function EventTarget() { /*...*/ }
+EventTarget.prototype = {
+    constructor: EventTarget,
+    emit: function() { /*...*/ },
+    on: function() { /*...*/ }
+}
+
+var myObject = {}
+mixin(myObject, EventTarget.prototype);
+
+myObject.emit("somethingChanged");
+```
+
+In this example, `myObject` receives behavior from `EventTarget.prototype`. This gives `myObject` the ability to publish events and let others subscribe to them using `emit()` and `on()`, respectively.
+
+This pattern became popular enough that ECMAScript 6 added `Object.assign()`, which behaves the same way. The difference in name is to reflect the actual operation that occurs. Since the `mixin()` method uses the assignment operator (`=`), it cannot copy accessor properties to the receiver as accessor properties. The name `Object.assign()` was chosen to reflect this distinction.
+
+You can use `Object.assign()` anywhere the `mixin()` function would have been used:
+
+```js
+function EventTarget() { /*...*/ }
+EventTarget.prototype = {
+    constructor: EventTarget,
+    emit: function() { /*...*/ },
+    on: function() { /*...*/ }
+}
+
+var myObject = {}
+Object.assign(myObject, EventTarget.prototype);
+
+myObject.emit("somethingChanged");
+```
+
+The `Object.assign()` method accepts any number of suppliers, and the receiver receives the properties in the order in which the suppliers are specified. That means the second supplier might overwrite a value from the first supplier on the receiver. For example:
+
+```js
+var receiver = {};
+
+Object.assign(receiver, {
+        type: "js",
+        name: "file.js"
+    }, {
+        type: "css"
+    }
+);
+
+console.log(receiver.type);     // "css"
+console.log(receiver.name);     // "file.js"
+```
+
+The value of `receiver.type` is `"css"` because the second supplier overwrote the value of the first.
+
+The `Object.assign()` method isn't a big addition to ECMAScript 6, but it does formalize a common function that is found in many JavaScript libraries.
+
 
 ## Object Destructuring
 
 TODO
 
-## Object.assign()
-
-TODO
 
 ## ~~__proto__~~ Object.setPrototypeOf()
 
