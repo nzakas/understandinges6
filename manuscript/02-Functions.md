@@ -265,6 +265,88 @@ console.log((new Function()).name);     // "anonymous"
 
 The `name` of a bound function will always be the `name` of the function being bound prefixed with the `"bound "`, so the bound version of `doSomething()` is `"bound doSomething"`.
 
+## Block-Level Functions
+
+In ECMAScript 3 and earlier, a function declaration occurring inside of a block (a *block-level function*) was technically a syntax error, but many browsers still supported it. Unfortunately, each browser that allowed the syntax behaved in a slightly different way, so it is considered a best practice to avoid function declarations inside of blocks (the best alternative is to use a function expression).
+
+In an attempt to reign in this incompatible behavior, ECMAScript 5 strict mode introduced an error whenever a function declaration was used inside of a block. For example:
+
+```js
+"use strict";
+
+if (true) {
+
+    // Throws a syntax error in ES5, not so in ES6
+    function doSomething() {
+        // ...
+    }
+}
+```
+
+In ECMAScript 5, this code throws a syntax error. In ECMAScript 6, the `doSomething()` function is considered a block-level declaration and can be accessed and called within the same block in which it was defined. For example:
+
+```js
+"use strict";
+
+if (true) {
+
+    console.log(typeof doSomething);        // "function"
+
+    function doSomething() {
+        // ...
+    }
+
+    doSomething();
+}
+
+console.log(typeof doSomething);            // "undefined"
+```
+
+Block level functions are hoisted to the top of the block in which they are defined, so `typeof doSomething` returns `"function"` even though it appears before the function declaration in the code. Once the `if` block is finished executing, `doSomething()` no longer exists.
+
+Block level functions are a similar to `let` function expressions in that the function definition is removed once execution flows out of the block in which it's defined. The key difference is that block level functions are hoisted to the top of the containing block while `let` function expressions are not hoisted. For example:
+
+```js
+"use strict";
+
+if (true) {
+
+    console.log(typeof doSomething);        // throws error
+
+    let doSomething = function () {
+        // ...
+    }
+
+    doSomething();
+}
+
+console.log(typeof doSomething);
+```
+
+Here, code execution stops when `typeof doSomething` is executed because the `let` statement hasn't been executed yet.
+
+Whether you want to use block level functions or `let` expressions depends on whether or not you want the hoisting behavior.
+
+ECMAScript 6 also allows block-level functions in nonstrict mode, but the behavior is slightly different. Instead of hoisting these declarations to the top of the block, they are hoisted all the way to the containing function or global environment. For example:
+
+```js
+// ECMAScript 6 behavior
+if (true) {
+
+    console.log(typeof doSomething);        // "function"
+
+    let doSomething = function () {
+        // ...
+    }
+
+    doSomething();
+}
+
+console.log(typeof doSomething);            // "function"
+```
+
+In this example, `doSomething()` is hoisted into the global scope so that it still exists outside of the `if` block. ECMAScript 6 standardized this behavior to remove the incompatible browser behaviors that previously existed. ECMAScript 6 runtimes will all behave in the same way.
+
 ## Arrow Functions
 
 One of the most interesting new parts of ECMAScript 6 are arrow functions. Arrow functions are, as the name suggests, functions defined with a new syntax that uses an "arrow" (`=>`). However, arrow functions behave differently than traditional JavaScript functions in a number of important ways:
@@ -495,6 +577,6 @@ Rest parameters allow you to specify an array into which all remaining parameter
 
 The spread operator is a companion to rest parameters, allowing you to destructure an array into separate parameters when calling a function. Prior to ECMAScript 6, the only ways to pass individual parameters that were contained in an array were either manually specifying each parameter or using `apply()`. With the spread operator, you can easily pass an array to any function without worrying about the `this` binding of the function.
 
-The addition of the `name` property helps to more easily identify functions for debugging and evaluation purposes.
+The addition of the `name` property helps to more easily identify functions for debugging and evaluation purposes. Additionally, ECMAScript 6 formally defines the behavior of block-level functions so they are no longer a syntax error in strict mode.
 
 The biggest change to functions in ECMAScript 6 was the addition of arrow functions. Arrow functions are designed to be used in places where anonymous function expressions have traditionally been used. Arrow functions have a more concise syntax, lexical `this` binding, and no `arguments` object. Additionally, arrow functions can't change their `this` binding and so can't be used as constructors.
