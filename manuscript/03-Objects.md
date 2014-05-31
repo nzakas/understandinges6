@@ -209,18 +209,37 @@ The value of `receiver.type` is `"css"` because the second supplier overwrote th
 
 The `Object.assign()` method isn't a big addition to ECMAScript 6, but it does formalize a common function that is found in many JavaScript libraries.
 
-
 ## Object Destructuring
 
 TODO
 
 
-## ~~__proto__~~ Object.setPrototypeOf()
+## __proto__, Object.setPrototypeOf()
 
 TODO
 
 ## super
 
 toMethod()
+
+TODO
+
+## Reflection Methods
+
+TODO
+
+### Object.getOwnPropertyDescriptors()
+
+TODO
+
+### Object.getPropertyNames()
+
+TODO
+
+### Object.getPropertyDescriptor()
+
+TODO
+
+## Summary
 
 TODO
