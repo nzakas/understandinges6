@@ -238,7 +238,6 @@ Unless the destructured parameter is required, you should always check to ensure
 
 I> Unfortunately, there's no way to specify a default value for destructured parameters.
 
-
 ## The Spread Operator
 
 Closely related to rest parameters is the spread operator. Whereas rest parameters allow you to specify multiple independent arguments should be combined into an array, the spread operator allows you to specify an array that should be be split and have its items passed in as separate arguments to a function. Consider the `Math.max()` method, which accepts any number of arguments and returns the one with the highest value. It's basic usage is as follows:
@@ -413,7 +412,7 @@ if (true) {
 
     console.log(typeof doSomething);        // "function"
 
-    let doSomething = function () {
+    function doSomething() {
         // ...
     }
 
