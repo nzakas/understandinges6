@@ -18,19 +18,7 @@ TODO
 
 TODO
 
-## for-of
-
-TODO
-
 ## The Spread Operator
-
-TODO
-
-## Destructuring Assignments
-
-TODO
-
-#### @@isConcatSpreadable
 
 TODO
 
