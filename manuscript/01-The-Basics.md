@@ -543,7 +543,7 @@ In this code, the variable `value` is defined and initialized using `let`, but t
 
 ```js
 if (condition) {
-    console.log(type value);     // ReferenceError!
+    console.log(typeof value);     // ReferenceError!
     let value = "blue";
 }
 ```
@@ -551,7 +551,7 @@ if (condition) {
 Here, `typeof value` throws the same error as the previous example. You cannot use a `let` variable before its declaration within the same block. However, you can use `typeof` outside of the block:
 
 ```js
-console.log(type value);     // "undefined"
+console.log(typeof value);     // "undefined"
 
 if (condition) {
     let value = "blue";
