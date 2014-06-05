@@ -209,6 +209,28 @@ The value of `receiver.type` is `"css"` because the second supplier overwrote th
 
 The `Object.assign()` method isn't a big addition to ECMAScript 6, but it does formalize a common function that is found in many JavaScript libraries.
 
+A> ### Working with Accessor Properties
+A>
+A> Keep in mind that you cannot create accessor properties on the receiver by using a supplier with accessor properties. Since `Object.assign()` uses the assignment operator, an accessor property on a supplier will become a data property on the receiver. For example:
+A>
+A> ```js
+A> var receiver = {},
+A>     supplier = {
+A>         get name() {
+A>             return "file.js"
+A>         }
+A>     };
+A>
+A> Object.assign(receiver, supplier);
+A>
+A> var descriptor = Object.getOwnPropertyDescriptor(receiver, "name");
+A>
+A> console.log(descriptor.value);      // "file.js"
+A> console.log(descriptor.get);        // undefined
+A> ```
+A>
+A> In this code, the `supplier` has an accessor property called `name`. After using `Object.assign()`, `receiver.name` exists as a data property with the value of `"file.js"`. That's because `supplier.name` returned "file.js" at the time `Object.assign()` was called.
+
 
 ## __proto__, Object.setPrototypeOf()
 
