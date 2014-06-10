@@ -204,34 +204,14 @@ setCookie("type", "js", {
 
 The behavior of this function is similar to the previous example, the biggest difference is the third argument uses destructuring to pull out the necessary data. Doing so makes it clear which parameters are really expected, and the destructured parameters also act like regular parameters in that they are set to `undefined` if they are not passed.
 
-One quirk of this pattern is that the destructured parameters don't exist when the argument isn't provided. If `setCookie()` is called with just two arguments, any attempt to access `secure`, `path`, `domain`, or `expires` will throw an error. You can safely check to see if the argument was passed by using `typeof`:
+One quirk of this pattern is that the destructured parameters throw an error when the argument isn't provided. If `setCookie()` is called with just two arguments, it results in a runtime error:
 
 ```js
-function setCookie(name, value, { secure, path, domain, expires }) {
-
-    if (typeof secure !== "undefined") {
-        // use it
-    }
-
-    if (typeof path !== "undefined") {
-        // use it
-    }
-
-    if (typeof domain !== "undefined") {
-        // use it
-    }
-
-    if (typeof expires !== "undefined") {
-        // use it
-    }
-
-    // ...
-}
-
+// Error!
 setCookie("type", "js");
 ```
 
-Without the `typeof` check, attempting to access `secure`, `path`, `domain`, or `expires` inside of the function will result in an error. That's because the code is effectively the same as this:
+This code throws an error because the third argument is missing (`undefined`). To understand why this is an error, it helps to understand that destructured parameters are really just a shorthand for destructured assignment. The JavaScript engine is actually doing this:
 
 ```js
 function setCookie(name, value, options) {
@@ -242,7 +222,7 @@ function setCookie(name, value, options) {
 }
 ```
 
-Since destructuring assignment throws an error when the right side expression evaluates to `null` or `undefined`, the same is true with the third argument isn't passed.
+Since destructuring assignment throws an error when the right side expression evaluates to `null` or `undefined`, the same is true when the third argument isn't passed.
 
 You can work around this behavior by providing a default value for the destructured parameter:
 
