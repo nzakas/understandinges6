@@ -184,7 +184,7 @@ console.log(codePointLength("abc"));    // 3
 console.log(codePointLength("𠮷bc"));   // 3
 ```
 
-The regular expression in this example matches a both whitespace and non-whitespace characters, and is applied globally with Unicode enabled. The `result` contains an array of matches when there's at least one match, so the array length ends up being the number of code points in the string.
+The regular expression in this example matches both whitespace and non-whitespace characters, and is applied globally with Unicode enabled. The `result` contains an array of matches when there's at least one match, so the array length ends up being the number of code points in the string.
 
 W> Although this approach works, it's not very fast, especially when applied to long strings. Try to minimize counting code points whenever possible. Hopefully ECMAScript 7 will bring a more performant means by which to count code points.
 
