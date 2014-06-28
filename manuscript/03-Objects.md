@@ -231,6 +231,32 @@ A> ```
 A>
 A> In this code, the `supplier` has an accessor property called `name`. After using `Object.assign()`, `receiver.name` exists as a data property with the value of `"file.js"`. That's because `supplier.name` returned "file.js" at the time `Object.assign()` was called.
 
+## Duplicate Object Literal Properties
+
+ECMAScript 5 strict mode introduced a check for duplicate object literal properties that would throw an error if a duplicate was found. For example:
+
+```js
+var person = {
+    name: "Nicholas",
+    name: "Greg"        // syntax error in ES5 strict mode
+};
+```
+
+When running in ECMAScript 5 strict mode, this example results in a syntax error on the second `name` property.
+
+In ECMAScript 6, the duplicate property check has been removed. This change was made due to the additional complexity of spread arguments in object destructuring. Both strict and nonstrict mode code no longer check for duplicate properties and instead take the last property of the given name as the actual value.
+
+```js
+var person = {
+    name: "Nicholas",
+    name: "Greg"        // not an error in ES6
+};
+
+console.log(person.name);       // "Greg"
+```
+
+In this example, the value of `person.name` is `"Greg"` because that was the last value assigned to the property.
+
 
 ## __proto__, Object.setPrototypeOf()
 
