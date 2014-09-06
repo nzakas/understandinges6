@@ -253,6 +253,8 @@ TODO
 
 TODO
 
+Only applied with `with` statement object records - does not refer to other scopes.
+
 ### @@isRegExp
 
 TODO

@@ -22,6 +22,8 @@ TODO
 
 TODO
 
+Also works on strings.
+
 ## Subclassing Arrays
 
 TODO
