@@ -486,7 +486,7 @@ A>      funcs.push(function() { console.log(i); });
 A>  }
 A>
 A>  funcs.forEach(function(func) {
-A>      func();     // outputs 11 ten times
+A>      func();     // outputs the number "10" ten times
 A>  });
 A> ~~~~~~~~
 A>
