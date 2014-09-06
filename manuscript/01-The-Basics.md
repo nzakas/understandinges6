@@ -745,7 +745,7 @@ console.log(firstColor);        // "red"
 console.log(secondColor);       // "green"
 ```
 
-In this example, array destructuring pulls out the first and second values in the `colors` array. Keep in mind that the array itself isn't change in any way.
+In this example, array destructuring pulls out the first and second values in the `colors` array. Keep in mind that the array itself isn't changed in any way.
 
 Similar to object destructuring, you can also nest array destructuring. Just use another set of square brackets to descend into a subarray:
 
