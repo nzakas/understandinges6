@@ -666,7 +666,7 @@ console.log(localRepeat);       // true
 console.log(localSave);         // false
 ```
 
-In this code, the value of `options.repeat` is stored in a variable called `localRepeat` and the value of `options.save` is stoed in a variable called `localSave`. These are both specified using the object literal syntax where the key is the property to find on `options` and the value is the variable in which to store the property value.
+In this code, the value of `options.repeat` is stored in a variable called `localRepeat` and the value of `options.save` is stored in a variable called `localSave`. These are both specified using the object literal syntax where the key is the property to find on `options` and the value is the variable in which to store the property value.
 
 I> If the property with the given name doesn't exist on the object, then the local variable gets a value of `undefined`.
 
