@@ -4,7 +4,7 @@ W> This chapter is a work-in-progress. As such, it may have more typos or conten
 
 ECMAScript 6 symbols began as a way to create private object members, a feature JavaScript developers have long wanted. The focus was around creating properties that were not identified by string names. Any property with a string name was easy picking to access regardless of the obscurity of the name. The initial "private names" feature aimed to create non-string property names. That way, normal techniques for detecting these private names wouldn't work.
 
-The private names proposal eventually evolved into ECMAScript 6 symbols. While the implementation details remained the same (non-string values for property identifiers), TC-39 dropped the requirement that these properties be private. Instead, the properties would be categorized separately, being non-enumerable by default by still discoverable.
+The private names proposal eventually evolved into ECMAScript 6 symbols. While the implementation details remained the same (non-string values for property identifiers), TC-39 dropped the requirement that these properties be private. Instead, the properties would be categorized separately, being non-enumerable by default but still discoverable.
 
 Symbols are actually a new kind of primitive value, joining strings, numbers, booleans, `null`, and `undefined`. They are unique among JavaScript primitives in that they do not have a literal form. The ECMAScript 6 standard uses a special notation to indicate symbols, prefixing the identifier with `@@`, such as `@@create`. This book uses this same convention for ease of understanding.
 
