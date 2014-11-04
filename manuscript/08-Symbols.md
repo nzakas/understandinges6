@@ -193,7 +193,7 @@ function supportsNativeJSON() {
 }
 ```
 
-Here, the same characteristic that allowed developers to identify arrays across iframe boundaries also provided a way to tell if `JSON` was the native one or not. A non-native `JSON` object would return `[object Object]` while the native version returned `[object Object]`. From that point on, this approach became the de facto standard for identifying native objects.
+Here, the same characteristic that allowed developers to identify arrays across iframe boundaries also provided a way to tell if `JSON` was the native one or not. A non-native `JSON` object would return `[object Object]` while the native version returned `[object JSON]`. From that point on, this approach became the de facto standard for identifying native objects.
 
 ECMAScript 6 explains this behavior through the `@@toStringTag` symbol. This symbol represents a method on each object that defines what value should be produced when `Object.prototype.toString.call()` is called on it. So the value returned for arrays is explained by having the `@@toStringTag` method return `"Array"`. Likewise, you can define that value for your own objects:
 
