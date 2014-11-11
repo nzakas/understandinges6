@@ -281,7 +281,7 @@ result = pattern.exec(text);
 console.log(result[0]);     // "hello2 "
 ```
 
-In this example, the regular expression matches the string `"hello"` followed by a number and optionally a whitespace character. The `g` flag is important as it allows the regular expression to use `lastIndex` when set (without it, matches always start at `0` regardless of the `lastIndex` value). The first call to `exec()` results in matching "hello1" first while the second call, with a `lastIndex` of 6, matches "hello2" first.
+In this example, the regular expression matches the string `"hello"` followed by a number and optionally a whitespace character. The `g` flag is important as it allows the regular expression to use `lastIndex` when set (without it, matches always start at `0` regardless of the `lastIndex` value). The first call to `exec()` results in matching "hello1" first while the second call, with a `lastIndex` of 7, matches "hello2" first.
 
 The sticky flag tells the regular expression to save the index of the next character after the last match in `lastIndex` whenever an operation is performed (in the previous example, 7 is the location of next character after "hello1 "). If an operation results in no match then `lastIndex` is set back to 0.
 
