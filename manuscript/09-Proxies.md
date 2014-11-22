@@ -24,6 +24,11 @@ console.log(proxy.name);        // 35
 console.log(proxy.title);       // 35
 ```
 
+## Extra
+
+`Array.isArray(new Proxy([], {}))` is true.
+
+
 ## Uses
 
 
