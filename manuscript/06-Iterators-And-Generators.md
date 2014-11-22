@@ -125,7 +125,7 @@ In this example, an array is iterated over, yielding each item as the loop progr
 
 Of course, you can still call `iterator.next()` directly:
 
-```
+```js
 function *createIterator(items) {
     for (let i=0; i < items.length; i++) {
         yield items[i];
@@ -143,7 +143,65 @@ console.log(iterator.next());           // "{ value: undefined, done: true }"
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
-Of course, collections such as arrays naturally lend themselves to iteration, and that's why ECMAScript 6 has a number of built-in iterators.
+Generator functions are an important part of ECMAScript 6, and since they are just functions, they can be used in all the same places.
+
+### Generator Function Expressions
+
+Generators can be created using function expressions in the same way as using function declarations by including a star (`*`) character between the `function` keyword and the opening paren, for example:
+
+```js
+let createIterator = function *(items) {
+    for (let i=0; i < items.length; i++) {
+        yield items[i];
+    }
+};
+
+let iterator = createIterator([1, 2, 3]);
+
+console.log(iterator.next());           // "{ value: 1, done: false }"
+console.log(iterator.next());           // "{ value: 2, done: false }"
+console.log(iterator.next());           // "{ value: 3, done: false }"
+console.log(iterator.next());           // "{ value: undefined, done: true }"
+
+// for all further calls
+console.log(iterator.next());           // "{ value: undefined, done: true }"
+```
+
+In this code, `createIterator()` is created by using a generator function expression. This behaves exactly the same as the example in the previous section.
+
+### Generator Object Methods
+
+Because generators are just functions, they can be added to objects the same way as any other functions. For example, you can use an ECMAScript 5-style object literal with a function expression:
+
+```js
+var o = {
+
+    createIterator: function *(items) {
+        for (let i=0; i < items.length; i++) {
+            yield items[i];
+        }
+    }
+};
+
+let iterator = o.createIterator([1, 2, 3]);
+```
+
+You can also use the ECMAScript 6 method shorthand by prepending the method name with a star (`*`):
+
+```js
+var o = {
+
+    *createIterator(items) {
+        for (let i=0; i < items.length; i++) {
+            yield items[i];
+        }
+    }
+};
+
+let iterator = o.createIterator([1, 2, 3]);
+```
+
+This example is functionally equivalent to the previous one, the only difference is the syntax used.
 
 ## Built-in Iterators
 
@@ -308,7 +366,54 @@ This example outputs the following:
 
 ### String Iterators
 
-TODO
+Beginning with ECMAScript 5, JavaScript strings have slowly been evolving to be more array-like. ECMAScript 5 formalizes bracket notation for access characters (`text[0]` to get the first character). Unfortunately, bracket notation works on code units rather than characters, so it cannot be used to access double-byte characters correctly. ECMAScript 6 has added a lot of functionality to fully support Unicode (see Chapter 1) and as such, the default iterator for strings works on characters rather than code units.
+
+Using bracket notation and the `length` property, the code units are used instead of characters and the output is a bit unexpected:
+
+
+```js
+var message = "A 𠮷 B";
+
+for (let i=0; i < message.length; i++) {
+    console.log(message[i]);
+}
+```
+
+This code outputs the following:
+
+```
+A
+
+
+
+
+B
+```
+
+Since the double-byte character is treated as two separate code units, there are four empty lines between `A` and `B` in the output.
+
+Using the default string iterator with a `for-of` loop results in a more appropriate result:
+
+
+```js
+var message = "A 𠮷 B";
+
+for (let c of message) {
+    console.log(c);
+}
+```
+
+This code outputs the following:
+
+```
+A
+
+𠮷
+
+B
+```
+
+This output is more in line with what you might expect when working with characters. The default string iterator is ECMAScript 6's attempt at solving the iteration problem by using characters instead of code units.
 
 ### NodeList Iterators
 
@@ -319,6 +424,10 @@ TODO
 TODO
 
 ### Passing Arguments to Iterators
+
+TODO
+
+### Throwing Errors in Iterators
 
 TODO
 
