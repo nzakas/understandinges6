@@ -262,6 +262,10 @@ var indent = " ".repeat(size),
 var newIndent = indent.repeat(++indentLevel);
 ```
 
+## Other Regular Expression Changes
+
+Regular expressions are an important part of working with strings in JavaScript, and like many parts of the language, haven't really changed very much in recent versions. ECMAScript 6, however, made several improvements to regular expressions to go along with the updates to strings.
+
 ### The Regular Expression y Flag
 
 ECMAScript 6 standardized the `y` flag after it had been implemented in Firefox as a proprietary extension to regular expressions. The `y` (sticky) flag indicates that the next match should be made starting with the value of `lastIndex` on the regular expression.
@@ -351,6 +355,69 @@ function hasRegExpY() {
 ```
 
 Also similar to `u`, if you need to use `y` in code that runs in older JavaScript engines, be sure to use the `RegExp` constructor when defining those regular expressions to avoid a syntax error.
+
+### Duplicating Regular Expressions
+
+In ECMAScript 5, you can duplicate regular expressions by passing them into the `RegExp` constructor, such as:
+
+```
+js
+var re1 = /ab/i,
+    re2 = new RegExp(re1);
+```
+
+However, if you provide the second argument to `RegExp`, which specifies the flags for the regular expression, then an error is thrown:
+
+```
+js
+var re1 = /ab/i,
+
+    // throws an error in ES5, okay in ES6
+    re2 = new RegExp(re1, "g");
+```
+
+If you execute this code in an ECMAScript 5 environment, you'll get an error stating that the second argument cannot be used when the first argument is a regular expression. ECMAScript 6 changed this behavior such that the second argument is allowed and will override whichever flags are present on the first argument. For example:
+
+```
+js
+var re1 = /ab/i,
+
+    // throws an error in ES5, okay in ES6
+    re2 = new RegExp(re1, "g");
+
+
+console.log(re1.toString());            // "/ab/i"
+console.log(re2.toString());            // "/ab/g"
+
+console.log(re1.test("ab"));            // true
+console.log(re2.test("ab"));            // true
+
+console.log(re1.test("AB"));            // true
+console.log(re2.test("AB"));            // false
+
+```
+
+In this code, `re1` has the case-insensitive `i` flag present while `re2` has only the global `g` flag. The `RegExp` constructor duplicated the pattern from `re1` and then substituted `g` for `i`. If the second argument was missing then `re2` would have the same flags as `re1`.
+
+### The `flags` Property
+
+In ECMAScript 5, it's possible to get the text of the regular expression by using the `source` property, but to get the flag string requires parsing the output of `toString()`, such as:
+
+```js
+function getFlags(re) {
+    var text = re.toString();
+    return text.substring(text.lastIndexOf("/") + 1, text.length);
+}
+
+// toString() is "/ab/g"
+var re = /ab/g;
+
+console.log(getFlags(re));          // "g"
+```
+
+ECMAScript 6 adds a `flags` property to go along with `source`. Both properties are prototype accessor properties with only a getter assigned (making them read-only). The addition of `flags` makes it easier to inspect regular expressions for both debugging and inheritance purposes.
+
+A late addition to ECMAScript 6, the `flags` property returns the string representation of any flags applied to a regular expression.
 
 ## Object.is()
 
@@ -983,7 +1050,7 @@ ECMAScript 6 makes a lot of changes, both large and small, to JavaScript. Some o
 
 Full Unicode support allows JavaScript to start dealing with UTF-16 characters in logical ways. The ability to transfer between code point and character via `codePointAt()` and `String.fromCodePoint()` is an important step for string manipulation. The addition of the regular expression `u` flag makes it possible to operate on code points instead of 16-bit characters, and the `normalize()` method allows for more appropriate string comparisons.
 
-Additional methods for working with strings were added, allowing you to more easily identify substrings no matter where they are found. The `Object.is()` method performs strict equality on any value, effectively becoming a safer version of `===` when dealing with special JavaScript values.
+Additional methods for working with strings were added, allowing you to more easily identify substrings no matter where they are found, and more functionality was added to regular expressions. The `Object.is()` method performs strict equality on any value, effectively becoming a safer version of `===` when dealing with special JavaScript values.
 
 The `let` and `const` block bindings introduce lexical scoping to JavaScript. These declarations are not hoisted and only exist within the block in which they are declared. That means behavior that is more like other languages and less likely to cause unintentional errors, as variables can now be declared exactly where they are needed. It's expected that the majority of JavaScript code going forward will use `let` and `const` exclusively, effectively making `var` a deprecated part of the language.
 
