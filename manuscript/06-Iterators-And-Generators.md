@@ -1,5 +1,7 @@
 # Iterators and Generators
 
+W> This chapter is a work-in-progress. As such, it may have more typos or content errors than others.
+
 Iterators have been used in many programming languages as a way to more easily work with collections of data. In ECMAScript 6, JavaScript adds iterators as an important feature of the language. When coupled with new array methods and new types of collections (such as sets and maps), iterators become even more important for efficient processing of data.
 
 ## What are Iterators?
