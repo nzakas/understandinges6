@@ -209,37 +209,37 @@ I> If your code needs to still work in older JavaScript engines, it's best to us
 
 JavaScript strings have always lagged behind similar features of other languages. It was only in ECMAScript 5 that strings finally gained a `trim()` method, and ECMAScript 6 continues extending strings with new functionality.
 
-### contains(), startsWith(), endsWith()
+### includes(), startsWith(), endsWith()
 
 Developers have used `indexOf()` as a way to identify strings inside of other strings since JavaScript was first introduced. ECMAScript 6 adds three new methods whose purpose is to identify strings inside of other strings:
 
-* `contains()` - returns true if the given text is found anywhere within the string or false if not.
+* `includes()` - returns true if the given text is found anywhere within the string or false if not.
 * `startsWith()` - returns true if the given text is found at the beginning of the string or false if not.
 * `endsWith()` - returns true if the given text is found at the end of the string or false if not.
 
-Each of these methods accepts two arguments: the text to search for and an optional location from which to start the search. When the second argument is omitted, `contains()` and `startsWith()` start search from the beginning of the string while `endsWith()` starts from the end. In effect, the second argument results in less of the string being searched. Here are some examples:
+Each of these methods accepts two arguments: the text to search for and an optional location from which to start the search. When the second argument is omitted, `includes()` and `startsWith()` start search from the beginning of the string while `endsWith()` starts from the end. In effect, the second argument results in less of the string being searched. Here are some examples:
 
 ```js
 var msg = "Hello world!";
 
 console.log(msg.startsWith("Hello"));       // true
 console.log(msg.endsWith("!"));             // true
-console.log(msg.contains("o"));             // true
+console.log(msg.includes("o"));             // true
 
 console.log(msg.startsWith("o"));           // false
 console.log(msg.endsWith("world!"));        // true
-console.log(msg.contains("x"));             // false
+console.log(msg.includes("x"));             // false
 
 console.log(msg.startsWith("o", 4));        // true
 console.log(msg.endsWith("o", 8));          // true
-console.log(msg.contains("o", 8));          // false
+console.log(msg.includes("o", 8));          // false
 ```
 
 These three methods make it much easier to identify substrings without needing to worry about identifying their exact position.
 
 I> All of these methods return a boolean value. If you need to find the position of a string within another, use `indexOf()` or `lastIndexOf()`.
 
-W> The `startsWith()`, `endsWith()`, and `contains()` methods will throw an error if you pass a regular expression instead of a string. This stands in contrast to `indexOf()` and `lastIndexOf()`, which both convert a regular expression argument into a string and then search for that string.
+W> The `startsWith()`, `endsWith()`, and `includes()` methods will throw an error if you pass a regular expression instead of a string. This stands in contrast to `indexOf()` and `lastIndexOf()`, which both convert a regular expression argument into a string and then search for that string.
 
 ### repeat()
 
