@@ -417,19 +417,105 @@ This output is more in line with what you might expect when working with charact
 
 ### NodeList Iterators
 
-TODO
+In the Document Object Model (DOM), there is a `NodeList` type that represents a collection of elements in a document. For those who write JavaScript to run in web browsers, understanding the difference between `NodeList` objects and arrays has always been a bit difficult. Both use the `length` property to indicate the number of items and both use bracket notation to access individual items. However, internally a `NodeList` and an array behave quite differently, and so that has led to a lot of confusion.
+
+With the addition of default iterators in ECMAScript 6, the DOM definition of `NodeList` now specifically includes a default iterator that behaves in the same manner as the array default iterator. That means you can use `NodeList` in a `for-of` loop or any other place that uses an object's default iterator. For example:
+
+```js
+var divs = document.getElementsByTagName("div");
+
+for (let div of divs) {
+    console.log(div.id);
+}
+```
+
+This code uses `getElementsByTagName()` method to retrieve a `NodeList` that represents all of the `<div>` elements in the document. The `for-of` loop then iterates over each element and outputs its ID, effectively making the code the same as it would be for a standard array.
 
 ## Advanced Functionality
 
-TODO
+There's a lot that can be accomplished with the basic functionality of iterators and the convenience of creating them using generators. However, developers have discovered that iterators are much more powerful when used for tasks other than simply iterating over a collection of values. During the development of ECMAScript 6, a lot of unique ideas and patterns emerged that caused the addition of more functionality. Some of the changes are subtle, but when used together, can accomplish some interesting interactions.
 
 ### Passing Arguments to Iterators
 
-TODO
+Throughout this chapter, you've seen that iterators can pass values out via the `next()` method or by using `yield` in a generator. It's also possible to pass arguments into the iterator through the `next()` method. When an argument is passed to `next()`, it becomes the value of the `yield` statement inside a generator. For example:
+
+```js
+function *createIterator() {
+    let first = yield 1;
+    let second = yield first + 2;       // 4 + 2
+    yield second + 3;                   // 5 + 3
+}
+
+let iterator = createIterator();
+
+console.log(iterator.next());           // "{ value: 1, done: false }"
+console.log(iterator.next(4));          // "{ value: 6, done: false }"
+console.log(iterator.next(5));          // "{ value: 8, done: false }"
+console.log(iterator.next());           // "{ value: undefined, done: true }"
+```
+
+The first call to `next()` is a special case where any argument passed to it is lost. Since arguments passed to `next()` become the value returned by `yield`, there would have to be a way to access that argument before the first `yield` in the generator function. That's not possible, so there's no reason to pass an argument the first time `next()` is called.
+
+On the second call to `next()`, the value `4` is passed as the argument. The `4` ends up assigned to the variable `first` inside the generator function. In a `yield` statement including an assignment the right side of the expression is evaluated on the first call to `next()` and the left side is evaluate on the second call to `next()` before the function continues executing. Since the second call to `next()` passes in `4`, that value is assigned to `first` and then execution continues.
+
+The second `yield` uses the result of the first `yield` and adds two, which means it returns a value of six. When `next()` is called a third time, the value `5` is passed as an argument. That value is assigned to the variable `second` and then used in the third `yield` statement to return eight.
+
+It's a bit easier to think about what's happening by considering which code is executing each time execution continues inside the generator function. Figure 6-1 uses colors to show the code being executed before yielding.
+
+![Figure 6-1: Code execution inside a generator](images/fg0601.png)
+
+The color yellow represents the first call to `next()` and all of the code that is executed inside of the generator as a result; the color aqua represents the call to `next(4)` and the code that is executed; the color purple represents the call to `next(5)` and the code that is executed as a result. The tricky part is the code on the right side of each expression executing and stopping before the left side is executed. This makes debugging complicated generators a bit more involved than regular functions.
 
 ### Throwing Errors in Iterators
 
-TODO
+It's not only possible to pass data into iterators, it's also possible to pass error conditions. Iterators can choose to implement a `throw()` method that instructs the iterator to throw an error when it resumes. You can pass in an error object that should be thrown when the iterator continues processing. For example:
+
+```js
+function *createIterator() {
+    let first = yield 1;
+    let second = yield first + 2;       // yield 4 + 2, then throw
+    yield second + 3;                   // never is executed
+}
+
+let iterator = createIterator();
+
+console.log(iterator.next());                   // "{ value: 1, done: false }"
+console.log(iterator.next(4));                  // "{ value: 6, done: false }"
+console.log(iterator.throw(new Error("Boom"))); // error thrown from generator
+```
+
+In this example, the first two `yield` expressions are evaluated as normal, but when `throw()` is called, an error is thrown before `let second` is evaluated. This effectively halts code execution similar to directly throwing an error. The only difference is the location in which the error is thrown. Figure 6-2 shows which code is executed at each step.
+
+![Figure 6-2: Throwing an error inside a generator](images/fg0602.png)
+
+In this figure, the color red represents the code executed when `throw()` is called and the red star shows approximately when the error is thrown inside the generator. The first two `yield` statements are evaluated fine, it's only when `throw()` is called that an error is thrown before any other code is executed. Knowing this, it's possible to catch such errors inside the generator using a `try-catch` block, such as:
+
+```js
+function *createIterator() {
+    let first = yield 1;
+    let second;
+
+    try {
+        second = yield first + 2;       // yield 4 + 2, then throw
+    } catch (ex) {
+        second = 6;                     // on error, assign a different value
+    }
+    yield second + 3;                   // never is executed
+}
+
+let iterator = createIterator();
+
+console.log(iterator.next());                   // "{ value: 1, done: false }"
+console.log(iterator.next(4));                  // "{ value: 6, done: false }"
+console.log(iterator.throw(new Error("Boom"))); // "{ value: 9, done: false }"
+console.log(iterator.next());                   // "{ value: undefined, done: true }"
+```
+
+In this example, a `try-catch` block is wrapped around the second `yield` statement. While this `yield` executes without error, the error is thrown before any value can be assigned to `second`, so the `catch` block assigns it a value of six. Execution then flows to the next `yield` and returns nine.
+
+You'll also notice something interesting happened - the `throw()` method returned a value similar to that returned by `next()`. Because the error was caught inside the generator, code execution continued on to the next `yield` and returned the appropriate value.
+
+It helps to think of `next()` and `throw()` as both being instructions to the iterator: `next()` instructs the iterator to continue to executing (possibly with a given value) and `throw()` instructs the iterator to continue executing by throwing an error. What happens after that point depends on the code inside the generator.
 
 ### Delegating Generators
 
