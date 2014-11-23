@@ -579,7 +579,7 @@ A>      func();     // outputs 0, then 1, then 2, up to 9
 A>  });
 A> ~~~~~~~~
 A>
-A> This version of the example uses an IIFE inside of the loop. The `i` variable is passed to the IIFE, which creates it's own copy and stores it as `value`. This is the value used of the function for that iteration, so calling each function returns the expected value.
+A> This version of the example uses an IIFE inside of the loop. The `i` variable is passed to the IIFE, which creates its own copy and stores it as `value`. This is the value used of the function for that iteration, so calling each function returns the expected value.
 A>
 A> A `let` declaration does this for you without the IIFE. Each iteration through the loop results in a new variable being created and initialized to the value of the variable with the same name from the previous iteration. That means you can simplify the process by using this code:
 A>
