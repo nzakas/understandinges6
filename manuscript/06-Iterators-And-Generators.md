@@ -508,7 +508,7 @@ let iterator = createIterator();
 console.log(iterator.next());                   // "{ value: 1, done: false }"
 console.log(iterator.next(4));                  // "{ value: 6, done: false }"
 console.log(iterator.throw(new Error("Boom"))); // "{ value: 9, done: false }"
-console.log(iterator.next());               // "{ value: undefined, done: true }"
+console.log(iterator.next());            // "{ value: undefined, done: true }"
 ```
 
 In this example, a `try-catch` block is wrapped around the second `yield` statement. While this `yield` executes without error, the error is thrown before any value can be assigned to `second`, so the `catch` block assigns it a value of six. Execution then flows to the next `yield` and returns nine.
@@ -516,6 +516,45 @@ In this example, a `try-catch` block is wrapped around the second `yield` statem
 You'll also notice something interesting happened - the `throw()` method returned a value similar to that returned by `next()`. Because the error was caught inside the generator, code execution continued on to the next `yield` and returned the appropriate value.
 
 It helps to think of `next()` and `throw()` as both being instructions to the iterator: `next()` instructs the iterator to continue to executing (possibly with a given value) and `throw()` instructs the iterator to continue executing by throwing an error. What happens after that point depends on the code inside the generator.
+
+### Generator Return Statements
+
+Since generators are functions, you can use the `return` statement both to exit early and to specify a return value for the last call to `next()`. For most of this chapter you've seen examples where the last call to `next()` on an iterator returns `undefined`. It's possible to specify an alternate value by using `return` as you would in any other function. In a generator, `return` indicates that all processing is done, so the `done` property is set to `true` and the value, if provided, becomes the `value` field. Here's an example that simply exits early using `return`:
+
+```js
+function *createIterator() {
+    yield 1;
+    return;
+    yield 2;
+    yield 3;
+}
+
+let iterator = createIterator();
+
+console.log(iterator.next());           // "{ value: 1, done: false }"
+console.log(iterator.next());           // "{ value: undefined, done: true }"
+```
+
+In this code, the generator has a `yield` statement followed by a `return` statement. The `return` indicates that there are no more values to come and so the rest of the `yield` statements will not execute (they are unreachable).
+
+You can also specify a return value that will end up in the `value` field of the returned object. For example:
+
+```js
+function *createIterator() {
+    yield 1;
+    return 42;
+}
+
+let iterator = createIterator();
+
+console.log(iterator.next());           // "{ value: 1, done: false }"
+console.log(iterator.next());           // "{ value: 42, done: true }"
+console.log(iterator.next());           // "{ value: undefined, done: true }"
+```
+
+Here, the value `42` is returned in the `value` field on the second call to `next()` (which is the first time that `done` is `true`). The third call to `next()` returns an object whose `value` property is once again `undefined`. Any value you specify with `return` is only available on the returned object one time before the `value` field is reset to `undefined`.
+
+I> Any value specified by `return` is ignored by `for-of`.
 
 ### Delegating Generators
 
@@ -540,61 +579,145 @@ function *createCombinedIterator() {
 
 var iterator = createCombinedIterator();
 
-console.log(iterator.next());               // "{ value: 1, done: false }"
-console.log(iterator.next());               // "{ value: 2, done: false }"
-console.log(iterator.next());               // "{ value: "red", done: false }"
-console.log(iterator.next());               // "{ value: "green", done: false }"
-console.log(iterator.next());               // "{ value: true, done: false }"
-console.log(iterator.next());               // "{ value: undefined, done: true }"
+console.log(iterator.next());           // "{ value: 1, done: false }"
+console.log(iterator.next());           // "{ value: 2, done: false }"
+console.log(iterator.next());           // "{ value: "red", done: false }"
+console.log(iterator.next());           // "{ value: "green", done: false }"
+console.log(iterator.next());           // "{ value: true, done: false }"
+console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
 In this example, the `createCombinedIterator()` generator delegates first to `createNumberIterator()` and then to `createColorIterator()`. The returned iterator appears, from the outside, to be one consistent iterator that has produced all of the values. Each call to `next()` is delegated to the appropriate iterator until they are empty, and then the final `yield` is executed to return `true`.
 
-Generator delegation encourages good encapsulation of iterator behavior by letting you reuse existing generators in new ones.
-
-### Generator Return Statements
-
-Since generators are functions, you can use the `return` statement both to exit early and to specify a return value for the last call to `next()`. For most of this chapter you've seen examples where the last call to `next()` on an iterator returns `undefined`. It's possible to specify an alternate value by using `return` as you would in any other function. In a generator, `return` indicates that all processing is done, so the `done` property is set to `true` and the value, if provided, becomes the `value` field. Here's an example that simply exits early using `return`:
+Generator delegation also lets you use make of generator return values (as seen in the previous section). This is the easiest way to access such returned values and can be quite useful in performing complex tasks. For example:
 
 ```js
-function *createIterator() {
+function *createNumberIterator() {
     yield 1;
-    return;
     yield 2;
-    yield 3;
+    return 3;
 }
 
-let iterator = createIterator();
+function *createRepatingIterator(count) {
+    for (let i=0; i < count; i++) {
+        yield "repeat";
+    }
+}
 
-console.log(iterator.next());               // "{ value: 1, done: false }"
-console.log(iterator.next());               // "{ value: undefined, done: true }"
+function *createCombinedIterator() {
+    let result = yield *createNumberIterator();
+    yield *createRepeatingIterator(result);
+}
+
+var iterator = createCombinedIterator();
+
+console.log(iterator.next());           // "{ value: 1, done: false }"
+console.log(iterator.next());           // "{ value: 2, done: false }"
+console.log(iterator.next());           // "{ value: "repeat", done: false }"
+console.log(iterator.next());           // "{ value: "repeat", done: false }"
+console.log(iterator.next());           // "{ value: "repeat", done: false }"
+console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
-In this code, the generator has a `yield` statement followed by a `return` statement. The `return` indicates that there are no more values to come and so the rest of the `yield` statements will not execute (they are unreachable).
+Here, the `createCombinedIterator()` generator delegates to `createNumberIterator()` and assigns the return value to `result`. Since `createNumberIterator()` contains `return 3`, the returned value is `3`. The `result` variable is then passed to `createRepeatingIterator()` as an argument indicating how many times to yield the same string (in this case, three times).
 
-You can also specify a return value that will end up in the `value` field of the returned object. For example:
+Notice that the value `3` was never output from any call to `next()`, it existed solely inside of `createCombinedIterator()`. It is possible to output that value as well by adding another `yield` statement, such as:
 
 ```js
-function *createIterator() {
+function *createNumberIterator() {
     yield 1;
-    return 42;
+    yield 2;
+    return 3;
 }
 
-let iterator = createIterator();
+function *createRepeatingIterator(count) {
+    for (let i=0; i < count; i++) {
+        yield "repeat";
+    }
+}
 
-console.log(iterator.next());               // "{ value: 1, done: false }"
-console.log(iterator.next());               // "{ value: 42, done: true }"
-console.log(iterator.next());               // "{ value: undefined, done: true }"
+function *createCombinedIterator() {
+    let result = yield *createNumberIterator();
+    yield result;
+    yield *createRepeatingIterator(result);
+}
+
+var iterator = createCombinedIterator();
+
+console.log(iterator.next());           // "{ value: 1, done: false }"
+console.log(iterator.next());           // "{ value: 2, done: false }"
+console.log(iterator.next());           // "{ value: 3, done: false }"
+console.log(iterator.next());           // "{ value: "repeat", done: false }"
+console.log(iterator.next());           // "{ value: "repeat", done: false }"
+console.log(iterator.next());           // "{ value: "repeat", done: false }"
+console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
-Here, the value `42` is returned in the `value` field on the second call to `next()` (which is the first time that `done` is `true`). The third call to `next()` returns an object whose `value` property is once again `undefined`. Any value you specify with `return` is only available on the returned object one time before the `value` field is reset to `undefined`.
+In this code, the extra `yield` statement explicitly outputs the returned value from `createNumberIterator()`.
 
-I> In many cases, the value specified by `return` has no effect on the use of iterators. This value is ignored by `for-of` and tends to only be used with task scheduling (see the next section).
+Generator delegation using the return value is a very powerful paradigm that allows for some very interesting possibilities, especially when used in conjunction with asynchronous operations.
+
+I> You can use `yield *` directly on strings, such as `yield * "hello"` and the string's default iterator will be used.
 
 ### Asynchronous Task Scheduling
 
-TODO
+A lot of the excitement around generators is directly related to usage with asynchronous programming. Asynchronous programming in JavaScript is a double-edged sword: it's very easy to do simple things while complex things become an errand in code organization. Since generators allow you to effectively pause code in the middle of execution, this opens up a lot of possibilities as it relates to asynchronous processing.
+
+The traditional way to perform asynchronous operations is to call a function that has a callback. For example, consider reading a file from disk in Node.js:
+
+```js
+var fs = require("fs");
+
+function readConfigFile(callback) {
+    fs.readFile("config.json", callback);
+}
+
+function init(callback) {
+    readConfigFile(function(err, contents) {
+        if (err) {
+            throw err;
+        }
+
+        doSomethingWith(contents);
+        console.log("Done");
+    });
+}
+
+init();
+```
+
+Instead of providing a callback, you can `yield` and just wait for a response before starting again:
+
+```js
+var fs = require("fs");
+
+var task;
+
+function readConfigFile() {
+    fs.readFile("config.json", function(err, contents) {
+        if (err) {
+            task.throw(err);
+        } else {
+            task.next(contents);
+        }
+    });
+}
+
+function *init() {
+    var contents = yield readConfigFile();
+    doSomethingWith(contents);
+    console.log("Done");
+}
+
+task = init();
+task.next();
+```
+
+The difference between `init()` in this example and the previous one is why developers are excited about generators for asynchronous operation. Instead of using callbacks, `init()` yields to `readConfigFile()`
+
 
 ## Summary
 
 TODO
+
+Generator delegation encourages good encapsulation of iterator behavior by letting you reuse existing generators in new ones.
