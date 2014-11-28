@@ -159,7 +159,7 @@ values.sort(function(first, second) {
 
 If you've never worried about Unicode normalization before, then you probably won't have much use for this method. However, knowing that it is available will help should you ever end up working on an internationalized application.
 
-### The Regular Expression u Flag
+### The Regular Expression `u` Flag
 
 Many common string operations are accomplished by using regular expressions. However, as noted earlier, regular expressions also work on the basis of 16-bit code units each representing a single character. That's why the single character match in the earlier example didn't work. To address this problem, ECMAScript 6 defines a new flag for regular expressions: `u` for "Unicode".
 
@@ -267,7 +267,7 @@ var newIndent = indent.repeat(++indentLevel);
 
 Regular expressions are an important part of working with strings in JavaScript, and like many parts of the language, haven't really changed very much in recent versions. ECMAScript 6, however, made several improvements to regular expressions to go along with the updates to strings.
 
-### The Regular Expression y Flag
+### The Regular Expression `y` Flag
 
 ECMAScript 6 standardized the `y` flag after it had been implemented in Firefox as a proprietary extension to regular expressions. The `y` (sticky) flag indicates that the next match should be made starting with the value of `lastIndex` on the regular expression.
 
