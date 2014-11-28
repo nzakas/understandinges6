@@ -160,9 +160,9 @@ EventTarget.prototype = {
     constructor: EventTarget,
     emit: function() { /*...*/ },
     on: function() { /*...*/ }
-}
+};
 
-var myObject = {}
+var myObject = {};
 mixin(myObject, EventTarget.prototype);
 
 myObject.emit("somethingChanged");
