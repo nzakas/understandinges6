@@ -566,7 +566,7 @@ A> {:lang="js"}
 A> ~~~~~~~~
 A>  var funcs = [];
 A>
-A>  for (var i=0; i < 10; i++) {}
+A>  for (var i=0; i < 10; i++) {
 A>      funcs.push((function(value) {
 A>          return function() {
 A>              console.log(value);
