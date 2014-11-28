@@ -29,16 +29,23 @@ ECMAScript 6 enforces encoding of strings in UTF-16. Standardizing on this chara
 
 ### The codePointAt() Method
 
-The first example of fully supporting UTF-16 is the `codePointAt()` method, which can be used to retrieve the Unicode code point that maps to a given character. This method accepts the character position (not the code unit position) and returns an integer value:
+The first example of fully supporting UTF-16 is the `codePointAt()` method, which can be used to retrieve the Unicode code point that maps to a given position in a string. This method accepts the code unit position (not the character position) and returns an integer value:
 
 ```js
 var text = "𠮷a";
 
+console.log(text.charCodeAt(0));    // 55362
+console.log(text.charCodeAt(1));    // 57271
+console.log(text.charCodeAt(2));    // 97
+
 console.log(text.codePointAt(0));   // 134071
-console.log(text.codePointAt(1));   // 97
+console.log(text.codePointAt(1));   // 57271
+console.log(text.codePointAt(2));   // 97
 ```
 
-The value returned is the Unicode code point value. For BMP characters, this will be the same result as using `charCodeAt()`, so the `"a"` returns 97. This method is the easiest way to determine if a given character is represented by one or two code points:
+The `codePointAt()` method works in the same manner as `charAt()` except for non-BMP characters. The first character in `text` is non-BMP and is therefore comprised of two code units, meaning the entire length of the string is 3 rather than 2. The `charAt()` method returns only the first code unit for position 0 whereas `codePointAt()` returns the full code point even though it spans multiple code units. Both methods return the same value for positions 1 (the second code unit of the first character) and 2 (the `"a"`).
+
+This method is the easiest way to determine if a given character is represented by one or two code points:
 
 ```js
 function is32Bit(c) {
