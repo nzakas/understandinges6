@@ -78,7 +78,7 @@ console.log(person[firstName]);     // "Nicholas"
 console.log(person[lastName]);      // "Zakas"
 ```
 
-With computer property names in object literals, symbols are very easy to work with.
+With computed property names in object literals, symbols are very easy to work with.
 
 ## Sharing Symbols
 
