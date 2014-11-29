@@ -268,29 +268,29 @@ The `Object.setPrototypeOf()` method accepts two arguments, the object whose pro
 
 ```js
 let person = {
-    speak() {
-        console.log("Hello");
+    getGreeting() {
+        return "Hello";
     }
 };
 
 let dog = {
-    speak() {
-        console.log("Woof");
+    getGreeting() {
+        return "Woof";
     }
 };
 
 // prototype is person
 let friend = Object.create(person);
-friend.speak();     // "Hello"
+console.log(friend.getGreeting());                      // "Hello"
 console.log(Object.getPrototypeOf(friend) === person);  // true
 
 // set prototype to dog
 Object.setPrototypeOf(friend, dog);
-friend.speak();     // "Woof"
+console.log(friend.getGreeting());                      // "Woof"
 console.log(Object.getPrototypeOf(friend) === dog);     // true
 ```
 
-This code defines two base objects: `person` and `dog`. Both objects have a method `speak()` that outputs something to the console. The object `friend` starts out inheriting from `person`, meaning that `speak()` will output `"Hello"`. When the prototype is changed to by `dog` instead, `person.speak()` outputs `"Woof"` because the original relationship to `person` is broken.
+This code defines two base objects: `person` and `dog`. Both objects have a method `getGreeting()` that outputs something to the console. The object `friend` starts out inheriting from `person`, meaning that `getGreeting()` will output `"Hello"`. When the prototype is changed to by `dog` instead, `person.getGreeting()` outputs `"Woof"` because the original relationship to `person` is broken.
 
 The actual value of an object's prototype is stored in an internal-only property called `[[Prototype]]`. The `Object.getPrototypeOf()` method returns the value stored in `[[Prototype]]` and `Object.setPrototypeOf()` changes the value stored in `[[Prototype]]`. However, these aren't the only ways to work with the value of `[[Prototype]]`.
 
@@ -300,14 +300,14 @@ In ECMAScript 6 engines, `Object.prototype.__proto__` is defined as an accessor 
 
 ```js
 let person = {
-    speak() {
-        console.log("Hello");
+    getGreeting() {
+        return "Hello";
     }
 };
 
 let dog = {
-    speak() {
-        console.log("Woof");
+    getGreeting() {
+        return "Woof";
     }
 };
 
@@ -315,20 +315,96 @@ let dog = {
 let friend = {
     __proto__: person
 };
-friend.speak();     // "Hello"
+console.log(friend.getGreeting());                      // "Hello"
 console.log(Object.getPrototypeOf(friend) === person);  // true
 console.log(friend.__proto__ === person);               // true
 
 // set prototype to dog
 friend.__proto__ = dog;
-friend.speak();     // "Woof"
+console.log(friend.getGreeting());                      // "Woof"
 console.log(friend.__proto__ === dog);                  // true
 console.log(Object.getPrototypeOf(friend) === dog);     // true
 ```
 
 This example is functionally equivalent to the previous. The call to `Object.create()` has been replaced with an object literal that assigns a value to `__proto__`. The only real difference between creating an object using `Object.create()` or an object literal with `__proto__` is that the former requires you to specify full property descriptors for any additional object properties while the latter is just a standard object literal.
 
-## super
+## Super References
+
+As previously mentioned, prototypes are very important for JavaScript and a lot of work went into making them easier to use in ECMAScript 6. Among the improvements is the introduction of `super` references to more easily access functionality on an object's prototype. For example, if you want to override a method on an object instance such that it also calls the prototype method of the same name, you would need to do the following in ECMAScript 5:
+
+```js
+let person = {
+    getGreeting() {
+        return "Hello";
+    }
+};
+
+let dog = {
+    getGreeting() {
+        return "Woof";
+    }
+};
+
+// prototype is person
+let friend = {
+    __proto__: person,
+    getGreeting() {
+        // same as this.__proto__.getGreeting()
+        return Object.getPrototypeOf(this).getGreeting() + ", hi!";
+    }
+};
+
+console.log(friend.getGreeting());                      // "Hello, hi!"
+console.log(Object.getPrototypeOf(friend) === person);  // true
+console.log(friend.__proto__ === person);               // true
+
+// set prototype to dog
+friend.__proto__ = dog;
+console.log(friend.getGreeting());                      // "Woof, hi!"
+console.log(friend.__proto__ === dog);                  // true
+console.log(Object.getPrototypeOf(friend) === dog);     // true
+```
+
+In this example, `getGreeting()` on `friend` calls the prototype method of the same name. The `Object.getPrototypeOf()` method is used to ensure the method is always getting the accurate prototype and then an additional string is appended.
+
+Needing to remember to do `Object.getPrototypeOf()` to call a method on the prototype is a bit involved, so ECMAScript 6 introduced `super`.
+
+At it's simplest, `super` acts as a pointer to the current object's prototype, effectively acting like `Object.getPrototypeOf(this)`. So you can simplify the `getGreeting()` method by rewriting it as:
+
+```js
+let friend = {
+    __proto__: person,
+    getGreeting() {
+        // same as Object.getPrototypeOf(this).getGreeting()
+        // or this.__proto__.getGreeting()
+        return super.getGreeting() + ", hi!";
+    }
+};
+```
+
+The call to `super.getGreeting()` is the same as `Object.getPrototypeOf(this).getGreeting()` or `this.__proto__.getGreeting()`. Similarly, you can call any method on an object's prototype by using a `super` reference.
+
+If you're calling a prototype method with the exact same name, then you can also call `super` as a function, for example:
+
+```js
+let friend = {
+    __proto__: person,
+    getGreeting() {
+        // same as Object.getPrototypeOf(this).getGreeting()
+        // or this.__proto__.getGreeting()
+        // or super.getGreeting()
+        return super() + ", hi!";
+    }
+};
+```
+
+Calling `super` in this manner tells the JavaScript engine that you want to use the prototype method with the same name as the current method. So `super()` actually calls does a lookup using the containing function's `name` property (discussed in Chapter 2) to find the correct method.
+
+### Use in Constructors
+
+TODO
+
+### Methods
 
 toMethod()
 
