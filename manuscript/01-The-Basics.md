@@ -368,16 +368,14 @@ Also similar to `u`, if you need to use `y` in code that runs in older JavaScrip
 
 In ECMAScript 5, you can duplicate regular expressions by passing them into the `RegExp` constructor, such as:
 
-```
-js
+```js
 var re1 = /ab/i,
     re2 = new RegExp(re1);
 ```
 
 However, if you provide the second argument to `RegExp`, which specifies the flags for the regular expression, then an error is thrown:
 
-```
-js
+```js
 var re1 = /ab/i,
 
     // throws an error in ES5, okay in ES6
@@ -386,8 +384,7 @@ var re1 = /ab/i,
 
 If you execute this code in an ECMAScript 5 environment, you'll get an error stating that the second argument cannot be used when the first argument is a regular expression. ECMAScript 6 changed this behavior such that the second argument is allowed and will override whichever flags are present on the first argument. For example:
 
-```
-js
+```js
 var re1 = /ab/i,
 
     // throws an error in ES5, okay in ES6
