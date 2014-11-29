@@ -249,15 +249,15 @@ TODO
 
 TODO
 
+### @@species
+
+TODO
+
 ### @@unscopeables
 
 TODO
 
 Only applied with `with` statement object records - does not refer to other scopes.
-
-### @@isRegExp
-
-TODO
 
 ### @@iterator
 
@@ -332,10 +332,6 @@ for (let x of collection) {
 This example mirrors the previous one with the exception that a class is used instead of an object literal.
 
 Default iterators can be added to any object by assigning a generator to `Symbol.iterator`. It doesn't matter if the property is an own or prototype property, as `for-of` normal prototype chain lookup applies.
-
-### @@create
-
-TODO
 
 ### @@hasInstance
 
