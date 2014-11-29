@@ -1027,7 +1027,7 @@ In this code, `Number.isInteger()` returns `true` for both `25` and `25.0` even 
 
 #### Safe Integers
 
-However, all is not so simple with integers. JavaScript can only accurately represent integers between -2^53 and 2^53, and outside of this "safe" range, binary representations end up reused for multiple numeric values. For example:
+However, all is not so simple with integers. JavaScript can only accurately represent integers between -2^53^ and 2^53^, and outside of this "safe" range, binary representations end up reused for multiple numeric values. For example:
 
 ```js
 console.log(Math.pow(2, 53));      // 9007199254740992
