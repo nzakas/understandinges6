@@ -261,7 +261,77 @@ TODO
 
 ### @@iterator
 
-TODO
+As you learned in chapter 6, iterators are an important part of ECMAScript 6, and many built-in types has default iterators defined. These default iterators are defined by the `@@iterator` symbol on their prototype. The `for-of` loop uses an object's `@@iterator` property to retrieve an iterator when the given value isn't already one. You can get a reference to the default iterator for arrays using `Symbol.iterator`, such as:
+
+```js
+// retrieve the default generator for arrays
+let arrayGenerator = Array.prototype[Symbol.iterator];
+
+console.log(typeof arrayGenerator);                     // "function"
+console.log(Array.prototype.values === arrayGenerator); // true
+```
+
+In this example, `arrayGenerator` is a generator function used to create the default array iterator. This generator is the same one that is used for `Array.prototype.values`.
+
+The `@@iterator` symbol can also be used to define the default iterator for your objects. For example:
+
+```js
+let collection = {
+    items: [],
+    *[Symbol.iterator]() {
+        yield *this.items.values();
+    }
+
+};
+
+collection.items.push(1);
+collection.items.push(2);
+collection.items.push(3);
+
+for (let x of collection) {
+    console.log(x);
+}
+
+// Output:
+// 1
+// 2
+// 3
+```
+
+This code defines a default iterator for a variable called `collection` using object literal method shorthand and a computed property using `Symbol.iterator`. The generator then delegates to the `values()` iterator of `this.items`. The `for-of` loop then uses the generator to create an iterator and execute the loop.
+
+You can also define a default iterator using classes, such as:
+
+```js
+class Collection {
+
+    constructor() {
+        this.items = [];
+    }
+
+    *[Symbol.iterator]() {
+        yield *this.items.values();
+    }
+}
+
+var collection = new Collection();
+collection.items.push(1);
+collection.items.push(2);
+collection.items.push(3);
+
+for (let x of collection) {
+    console.log(x);
+}
+
+// Output:
+// 1
+// 2
+// 3
+```
+
+This example mirrors the previous one with the exception that a class is used instead of an object literal.
+
+Default iterators can be added to any object by assigning a generator to `Symbol.iterator`. It doesn't matter if the property is an own or prototype property, as `for-of` normal prototype chain lookup applies.
 
 ### @@create
 

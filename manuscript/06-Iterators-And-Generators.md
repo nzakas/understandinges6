@@ -1,7 +1,5 @@
 # Iterators and Generators
 
-W> This chapter is a work-in-progress. As such, it may have more typos or content errors than others.
-
 Iterators have been used in many programming languages as a way to more easily work with collections of data. In ECMAScript 6, JavaScript adds iterators as an important feature of the language. When coupled with new array methods and new types of collections (such as sets and maps), iterators become even more important for efficient processing of data.
 
 ## What are Iterators?
@@ -713,11 +711,20 @@ task = init();
 task.next();
 ```
 
-The difference between `init()` in this example and the previous one is why developers are excited about generators for asynchronous operation. Instead of using callbacks, `init()` yields to `readConfigFile()`
+The difference between `init()` in this example and the previous one is why developers are excited about generators for asynchronous operation. Instead of using callbacks, `init()` yields to `readConfigFile()`, which does the asynchronous read operation and, when complete, either calls `throw()` if there's an error or `next()` if the contents have been ready. That means the `yield` operation inside of `init()` will throw an error if there's a read error or else the file contents will be returned almost as if the operation was synchronous.
 
+Managing the `task` variable is a bit cumbersome in this example, but it's only important that you understand the theory. There are more powerful ways of doing asynchronous task scheduling using promises, and that will be covered further in Chapter 10.
 
 ## Summary
 
-TODO
+Iterators are an important part of ECMAScript 6 and are at the root of several important parts of the language. On the surface, iterators provide a simple way to return a sequence of values using a simple API. However, there are far more complex ways to use iterators in ECMAScript 6.
 
-Generator delegation encourages good encapsulation of iterator behavior by letting you reuse existing generators in new ones.
+The `for-of` loop uses iterators to return a series of values in a loop. This makes creating loops easier than the traditional `for` loop because you no longer need to track values and control when the loop ends. The `for-of` loop automatically reads all values from the iterator until there are no more and then exits.
+
+To make it easier to use `for-of`, many values in ECMAScript 6 have default iterators. All the collection types, arrays, maps, and sets, have iterators designed for easy access to their contents. Strings also have a default iterator so it's easy to iterate over the code points of the string (rather than the code units).
+
+Generators are a special type of function that automatically creates an iterator when called. These functions are indicated by the start (`*`) and make use of the `yield` keyword to indicate which value to return for each successive call to `next()`.
+
+Generator delegation encourages good encapsulation of iterator behavior by letting you reuse existing generators in new ones. This is done using `yield *` instead of `yield`, allowing you to create an iterator that returns values from multiple iterators.
+
+Perhaps the most interesting and exciting aspect of generators and iterators is the possibility of creating cleaner-looking asynchronous code. Instead of needing to use callbacks everywhere, you can setup code that looks synchronous but in fact uses `yield` to wait for asynchronous operations to complete.
