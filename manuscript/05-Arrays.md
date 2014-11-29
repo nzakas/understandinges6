@@ -1,5 +1,9 @@
 # Arrays
 
+W> This chapter is a work-in-progress. As such, it may have more typos or content errors than others.
+
+
+
 TODO
 
 ## New Methods

@@ -244,7 +244,7 @@ var person = {
 
 When running in ECMAScript 5 strict mode, this example results in a syntax error on the second `name` property.
 
-In ECMAScript 6, the duplicate property check has been removed. This change was made due to the additional complexity of spread arguments in object destructuring. Both strict and nonstrict mode code no longer check for duplicate properties and instead take the last property of the given name as the actual value.
+In ECMAScript 6, the duplicate property check has been removed. Both strict and nonstrict mode code no longer check for duplicate properties and instead take the last property of the given name as the actual value.
 
 ```js
 var person = {
@@ -258,9 +258,75 @@ console.log(person.name);       // "Greg"
 In this example, the value of `person.name` is `"Greg"` because that was the last value assigned to the property.
 
 
-## __proto__, Object.setPrototypeOf()
+## Changing Prototypes
 
-TODO
+Prototypes are the foundation of inheritance and JavaScript and so ECMAScript 6 continues to make prototypes more powerful. ECMAScript 5 added the `Object.getPrototypeOf()` method for retrieving the prototype of any given object. ECMAScript 6 adds the reverse operation, `Object.setPrototypeOf()`, which allows you to change the prototype of any given object.
+
+Normally, the prototype of an object is specified at the time of its creation, either by using a constructor or via `Object.create()`. Prior to ECMAScript 6, there was no standard way to change an object's prototype after it had already been created. In a way, `Object.setPrototypeOf()` changes one of the biggest assumptions about objects in JavaScript to this point, which is that an object's prototype remains unchanged after creation.
+
+The `Object.setPrototypeOf()` method accepts two arguments, the object whose prototype should be changed and the object that should become the first argument's prototype. For example:
+
+```js
+let person = {
+    speak() {
+        console.log("Hello");
+    }
+};
+
+let dog = {
+    speak() {
+        console.log("Woof");
+    }
+};
+
+// prototype is person
+let friend = Object.create(person);
+friend.speak();     // "Hello"
+console.log(Object.getPrototypeOf(friend) === person);  // true
+
+// set prototype to dog
+Object.setPrototypeOf(friend, dog);
+friend.speak();     // "Woof"
+console.log(Object.getPrototypeOf(friend) === dog);     // true
+```
+
+This code defines two base objects: `person` and `dog`. Both objects have a method `speak()` that outputs something to the console. The object `friend` starts out inheriting from `person`, meaning that `speak()` will output `"Hello"`. When the prototype is changed to by `dog` instead, `person.speak()` outputs `"Woof"` because the original relationship to `person` is broken.
+
+The actual value of an object's prototype is stored in an internal-only property called `[[Prototype]]`. The `Object.getPrototypeOf()` method returns the value stored in `[[Prototype]]` and `Object.setPrototypeOf()` changes the value stored in `[[Prototype]]`. However, these aren't the only ways to work with the value of `[[Prototype]]`.
+
+Even before ECMAScript 5 was finished, several JavaScript engines already implemented a custom property called `__proto__` that could be used to both get and set the prototype of an object. Effectively, `__proto__` was an early precursor to both `Object.getPrototypeOf()` and `Object.setPrototypeOf()`. It was unrealistic to expect all of the JavaScript engines to remove this property, so ECMAScript 6 formalized the behavior of `__proto__`.
+
+In ECMAScript 6 engines, `Object.prototype.__proto__` is defined as an accessor property whose `get` method calls `Object.getPrototypeOf()` and whose `set` method calls `Object.setPrototypeOf()`. This means that there is no real difference between using `__proto__` and the other methods except that `__proto__` allows you to set the prototype of an object literal directly. For example:
+
+```js
+let person = {
+    speak() {
+        console.log("Hello");
+    }
+};
+
+let dog = {
+    speak() {
+        console.log("Woof");
+    }
+};
+
+// prototype is person
+let friend = {
+    __proto__: person
+};
+friend.speak();     // "Hello"
+console.log(Object.getPrototypeOf(friend) === person);  // true
+console.log(friend.__proto__ === person);               // true
+
+// set prototype to dog
+friend.__proto__ = dog;
+friend.speak();     // "Woof"
+console.log(friend.__proto__ === dog);                  // true
+console.log(Object.getPrototypeOf(friend) === dog);     // true
+```
+
+This example is functionally equivalent to the previous. The call to `Object.create()` has been replaced with an object literal that assigns a value to `__proto__`. The only real difference between creating an object using `Object.create()` or an object literal with `__proto__` is that the former requires you to specify full property descriptors for any additional object properties while the latter is just a standard object literal.
 
 ## super
 
