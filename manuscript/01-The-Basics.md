@@ -709,7 +709,7 @@ if (condition) {
 // MAX_ITEMS isn't accessible here
 ```
 
-In this code, the constant `MAX_ITEMS` is declared within and `if` statement. Once the statement finishes executing, `MAX_ITEMS` is destroyed and is not accessible outside of that block.
+In this code, the constant `MAX_ITEMS` is declared within an `if` statement. Once the statement finishes executing, `MAX_ITEMS` is destroyed and is not accessible outside of that block.
 
 Also similar to `let`, an error is thrown whenever a `const` declaration is made with an identifier for an already-defined variable in the same scope. It doesn't matter if that variable was declared using `var` (for global or function scope) or `let` (for block scope). For example:
 
