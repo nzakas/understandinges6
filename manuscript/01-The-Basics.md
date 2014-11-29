@@ -425,7 +425,17 @@ console.log(getFlags(re));          // "g"
 
 ECMAScript 6 adds a `flags` property to go along with `source`. Both properties are prototype accessor properties with only a getter assigned (making them read-only). The addition of `flags` makes it easier to inspect regular expressions for both debugging and inheritance purposes.
 
-A late addition to ECMAScript 6, the `flags` property returns the string representation of any flags applied to a regular expression.
+A late addition to ECMAScript 6, the `flags` property returns the string representation of any flags applied to a regular expression. For example:
+
+```js
+var re = /ab/g;
+
+console.log(re.source);     // "ab"
+console.log(re.flags);      // "g"
+```
+
+Using `source` and `flags` together allow you to extra just the pieces of the regular expression that are necessary without needing to parse the regular expression string directly.
+
 
 ## Object.is()
 
@@ -660,6 +670,20 @@ if (condition) {
 
 Here, the `let` declaration will not throw an error because it is creating a new variable called `count` within the `if` statement. This new variable shadows the global `count`, preventing access to it from within the `if` block.
 
+A> ### Global let Declarations
+A>
+A> There is the potential for naming collisions when using `let` in the global scope because the global object has predefined properties. Using `let` to define a variable that shares a name with a property of the global object can produce an error because global object properties may be nonconfigurable. Since `let` doesn't allow redefinition of the same identifier in the same scope, it's not possible to shadow nonconfigurable global properties. Attempting to do so will result in an error. For example:
+A>
+A> {:lang="js"}
+A> ~~~~~~~~
+A>  let RegExp = "Hello!";          // ok
+A>  let undefined = "Hello!";       // throws error
+A> ~~~~~~~~
+A>
+A> The first line of this example redefines the global `RegExp` as a string. Even though this would be problematic, there is no error thrown. The second line throws an error because `undefined` is a nonconfigurable own property of the global object. Since it's definition is locked down by the environment, the `let` declaration is illegal.
+A>
+A> It's unusal to use `let` in the global scope, but if you do, it's important to understand this situation.
+
 The intent of `let` is to replace `var` long term, as the former behaves more like variable declarations in other languages. If you are writing JavaScript that will execute only in an ECMAScript 6 or higher environment, you may want to try using `let` exclusively and leaving `var` for other scripts that require backwards compatibility.
 
 I> Since `let` declarations are *not* hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block so that they are available to the entire block.
@@ -699,6 +723,14 @@ let age = 25;
 // Each of these would cause an error given the previous declarations
 const message = "Goodbye!";
 const age = 30;
+```
+
+The big difference between `let` and `const` is that attempting to assign to a previously defined constant will throw an error in both strict and non-strict modes:
+
+```js
+const MAX_ITEMS = 5;
+
+MAX_ITEMS = 6;      // throws error
 ```
 
 W> Several browsers implement pre-ECMAScript 6 versions of `const`. Implementations range from being simply a synonym for `var` (allowing the value to be overwritten) to actually defining constants but only in the global or function scope. For this reason, be especially careful with using `const` in a production system. It may not be providing you with the functionality you expect.
