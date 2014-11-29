@@ -522,6 +522,44 @@ var getTempItem = function(id) {
 
 Wrapping the object literal in parentheses signals that the braces are an object literal instead of the function body.
 
+### Immediately-Invoked Function Expressions (IIFEs)
+
+A popular use of functions in JavaScript is immediately-invoked function expressions (IIFEs). IIFEs allow you to define an anonymous function and call it immediately without saving a reference. This pattern comes in handy when you want to create a scope that is shielded from the rest of a program. For example:
+
+```js
+let person = (function(name) {
+
+    return {
+        getName() {
+            return name;
+        }
+    };
+
+}("Nicholas"));
+
+console.log(person.getName());      // "Nicholas"
+```
+
+In this code, the IIFE is used to create an object with a `getName()` method. The method uses the `name` argument as the return value, effectively making `name` a private member of the returned object.
+
+You can accomplish the same thing using arrow functions so long as you wrap the arrow function in parentheses:
+
+```js
+let person = ((name) => {
+
+    return {
+        getName() {
+            return name;
+        }
+    };
+
+})("Nicholas");
+
+console.log(person.getName());      // "Nicholas"
+```
+
+Note that the location of the parentheses in this example is different from the previous. The previous example using the `function` keyword wraps parentheses around the entire expression, including passing the argument `"Nicholas"` to the function. This example has the parentheses around just the arrow function and then passes the argument.
+
 ### Lexical this Binding
 
 One of the most common areas of error in JavaScript is the binding of `this` inside of functions. Since the value of `this` can change inside of a single function depending on the context in which it's called, it's possible to mistakenly affect one object when you meant to affect another. Consider the following example:
