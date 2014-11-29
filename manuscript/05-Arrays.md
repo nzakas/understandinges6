@@ -6,6 +6,8 @@ TODO
 
 TODO
 
+### includes()
+
 
 ## Species Pattern
 
