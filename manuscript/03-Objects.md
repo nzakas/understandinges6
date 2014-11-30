@@ -349,8 +349,8 @@ let dog = {
 let friend = {
     __proto__: person,
     getGreeting() {
-        // same as this.__proto__.getGreeting()
-        return Object.getPrototypeOf(this).getGreeting() + ", hi!";
+        // same as this.__proto__.getGreeting.call(this)
+        return Object.getPrototypeOf(this).getGreeting.call(this) + ", hi!";
     }
 };
 
@@ -365,9 +365,9 @@ console.log(friend.__proto__ === dog);                  // true
 console.log(Object.getPrototypeOf(friend) === dog);     // true
 ```
 
-In this example, `getGreeting()` on `friend` calls the prototype method of the same name. The `Object.getPrototypeOf()` method is used to ensure the method is always getting the accurate prototype and then an additional string is appended.
+In this example, `getGreeting()` on `friend` calls the prototype method of the same name. The `Object.getPrototypeOf()` method is used to ensure the method is always getting the accurate prototype and then an additional string is appended. The additional `.call(this)` ensures that the `this` value inside the prototype method is set correctly.
 
-Needing to remember to do `Object.getPrototypeOf()` to call a method on the prototype is a bit involved, so ECMAScript 6 introduced `super`.
+Needing to remember to use `Object.getPrototypeOf()` and `.call(this)` to call a method on the prototype is a bit involved, so ECMAScript 6 introduced `super`.
 
 At it's simplest, `super` acts as a pointer to the current object's prototype, effectively acting like `Object.getPrototypeOf(this)`. So you can simplify the `getGreeting()` method by rewriting it as:
 
@@ -375,14 +375,14 @@ At it's simplest, `super` acts as a pointer to the current object's prototype, e
 let friend = {
     __proto__: person,
     getGreeting() {
-        // same as Object.getPrototypeOf(this).getGreeting()
-        // or this.__proto__.getGreeting()
+        // same as Object.getPrototypeOf(this).getGreeting.call(this)
+        // or this.__proto__.getGreeting.call(this)
         return super.getGreeting() + ", hi!";
     }
 };
 ```
 
-The call to `super.getGreeting()` is the same as `Object.getPrototypeOf(this).getGreeting()` or `this.__proto__.getGreeting()`. Similarly, you can call any method on an object's prototype by using a `super` reference.
+The call to `super.getGreeting.call(this)` is the same as `Object.getPrototypeOf(this).getGreeting.call(this)` or `this.__proto__.getGreeting.call(this)`. Similarly, you can call any method on an object's prototype by using a `super` reference.
 
 If you're calling a prototype method with the exact same name, then you can also call `super` as a function, for example:
 
@@ -390,8 +390,8 @@ If you're calling a prototype method with the exact same name, then you can also
 let friend = {
     __proto__: person,
     getGreeting() {
-        // same as Object.getPrototypeOf(this).getGreeting()
-        // or this.__proto__.getGreeting()
+        // same as Object.getPrototypeOf(this).getGreeting.call(this)
+        // or this.__proto__.getGreeting.call(this)
         // or super.getGreeting()
         return super() + ", hi!";
     }
