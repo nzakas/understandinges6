@@ -257,7 +257,7 @@ TODO
 
 TODO
 
-Only applied with `with` statement object records - does not refer to other scopes.
+Only applied to `with` statement object records - does not refer to other scopes.
 
 ### @@iterator
 
