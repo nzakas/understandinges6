@@ -328,6 +328,13 @@ console.log(Object.getPrototypeOf(friend) === dog);     // true
 
 This example is functionally equivalent to the previous. The call to `Object.create()` has been replaced with an object literal that assigns a value to `__proto__`. The only real difference between creating an object using `Object.create()` or an object literal with `__proto__` is that the former requires you to specify full property descriptors for any additional object properties while the latter is just a standard object literal.
 
+W> The `__proto__` property is special in a number of ways:
+W>
+W> 1. You can only specify it once in an object literal. If you specify two `__proto__` properties, then an error is thrown. This is the only object literal property that has this restriction.
+W> 1. The computed form `["__proto__"]` acts like a regular property and does not set or return the current object's prototype. All rules related to object literal properties apply in this form, as opposed to the non-computed form, for which there are exceptions.
+W>
+W> It's best to be careful when using `__proto__` to make sure you don't get caught by these differences.
+
 ## Super References
 
 As previously mentioned, prototypes are very important for JavaScript and a lot of work went into making them easier to use in ECMAScript 6. Among the improvements is the introduction of `super` references to more easily access functionality on an object's prototype. For example, if you want to override a method on an object instance such that it also calls the prototype method of the same name, you would need to do the following in ECMAScript 5:
