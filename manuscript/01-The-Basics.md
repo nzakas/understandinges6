@@ -812,7 +812,7 @@ console.log(save);          // false
 console.log(custom);        // 10
 ```
 
-In this example, the `custom` property is embedded in another object. The extra set of curly braces allows you to descend into a nested an object and pull out its properties.
+In this example, the `custom` property is embedded in another object. The extra set of curly braces allows you to descend into a nested object and pull out its properties.
 
 A> #### Syntax Gotcha
 A>
@@ -1093,4 +1093,4 @@ The `let` and `const` block bindings introduce lexical scoping to JavaScript. Th
 
 ECMAScript 6 makes it easier to work with numbers through the introduction of new syntax and new methods. The binary and octal literal forms allow you to embed numbers directly into source code while keeping the most appropriate representation visible. There are `Number.isFinite()` and `Number.isNaN()` that are safer versions of the global methods of the same names due to their lack of type coercion. You can more easily identify integers using `Number.isInteger()` and `Number.isSafeInteger()` as well as perform a lot more mathematical operations thanks to new methods on `Math`.
 
-Though many of these changes are small, they will make a significant difference in the lives of JavaScript developers for years to come. Each change addresses a particular concern that can otherwise requires a lot of custom code to address. By building this functionality into the language, developers can focus on writing the code for their product rather than low-level utilities.
+Though many of these changes are small, they will make a significant difference in the lives of JavaScript developers for years to come. Each change addresses a particular concern that can otherwise require a lot of custom code to address. By building this functionality into the language, developers can focus on writing the code for their product rather than low-level utilities.
