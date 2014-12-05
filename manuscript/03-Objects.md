@@ -136,7 +136,7 @@ console.log(person["first name"]);      // "Nicholas"
 console.log(person["last name"]);       // "Zakas"
 ```
 
-Anything you would be inside of square brackets while using bracket notation on object instances will also work for computed property names inside of object literals.
+Anything you would put inside of square brackets while using bracket notation on object instances will also work for computed property names inside of object literals.
 
 ## Object.assign()
 
