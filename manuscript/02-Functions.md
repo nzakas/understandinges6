@@ -298,7 +298,6 @@ var doAnotherThing = function() {
 };
 
 console.log(doSomething.name);          // "doSomething"
-console.log(doSomethingElse.name);      // "doSomethingElse"
 console.log(doAnotherThing.name);       // "doAnotherThing"
 ```
 
