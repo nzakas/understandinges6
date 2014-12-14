@@ -92,19 +92,18 @@ console.log("\u{20BB7}");     // "𠮷"
 
 Using the extended escape sequence, the correct character is contained in the string.
 
-W> Make sure that you use this new escape sequence only in an ECMAScript 6 environment. In all other environments, doing so causes a syntax error. You may want to check and see if the environment supports the extended escape sequence using a function such as:
-W>
-W> {lang=js}
-W> ~~~~~~~~
-W> function supportsExtendedEscape() {
-W>     try {
-W>         eval("'\\u{00FF1}'");
-W>         return true;
-W>     } catch (ex) {
-W>         return false;
-W>     }
-W> }
-W> ~~~~~~~~
+Make sure that you use this new escape sequence only in an ECMAScript 6 environment. In all other environments, doing so causes a syntax error. You may want to check and see if the environment supports the extended escape sequence using a function such as:
+
+```js
+function supportsExtendedEscape() {
+    try {
+        eval("'\\u{00FF1}'");
+        return true;
+    } catch (ex) {
+        return false;
+    }
+}
+```
 
 ### The normalize() Method
 
@@ -194,7 +193,7 @@ console.log(codePointLength("𠮷bc"));   // 3
 
 The regular expression in this example matches both whitespace and non-whitespace characters, and is applied globally with Unicode enabled. The `result` contains an array of matches when there's at least one match, so the array length ends up being the number of code points in the string.
 
-W> Although this approach works, it's not very fast, especially when applied to long strings. Try to minimize counting code points whenever possible. Hopefully ECMAScript 7 will bring a more performant means by which to count code points.
+Although this approach works, it's not very fast, especially when applied to long strings. Try to minimize counting code points whenever possible. Hopefully ECMAScript 7 will bring a more performant means by which to count code points.
 
 Since the `u` flag is a syntax change, attempting to use it in non-compliant JavaScript engines means a syntax error is thrown. The safest way to determine if the `u` flag is supported is with a function:
 
@@ -211,7 +210,7 @@ function hasRegExpU() {
 
 This function uses the `RegExp` constructor to pass in the `u` flag as an argument. This is valid syntax even in older JavaScript engines, however, the constructor will throw an error if `u` isn't supported.
 
-I> If your code needs to still work in older JavaScript engines, it's best to use the `RegExp` constructor exclusively when using the `u` flag. This will prevent syntax errors and allow you to optionally detect and use the `u` flag without aborting execution.
+If your code needs to still work in older JavaScript engines, it's best to use the `RegExp` constructor exclusively when using the `u` flag. This will prevent syntax errors and allow you to optionally detect and use the `u` flag without aborting execution.
 
 ## Other String Changes
 
@@ -245,9 +244,9 @@ console.log(msg.includes("o", 8));          // false
 
 These three methods make it much easier to identify substrings without needing to worry about identifying their exact position.
 
-I> All of these methods return a boolean value. If you need to find the position of a string within another, use `indexOf()` or `lastIndexOf()`.
+All of these methods return a boolean value. If you need to find the position of a string within another, use `indexOf()` or `lastIndexOf()`.
 
-W> The `startsWith()`, `endsWith()`, and `includes()` methods will throw an error if you pass a regular expression instead of a string. This stands in contrast to `indexOf()` and `lastIndexOf()`, which both convert a regular expression argument into a string and then search for that string.
+The `startsWith()`, `endsWith()`, and `includes()` methods will throw an error if you pass a regular expression instead of a string. This stands in contrast to `indexOf()` and `lastIndexOf()`, which both convert a regular expression argument into a string and then search for that string.
 
 ### repeat()
 
@@ -347,7 +346,7 @@ console.log(pattern.sticky);    // true
 
 The `sticky` property is read-only based on the presence of the flag and so cannot be changed in code.
 
-I> The `lastIndex` property is only honored when calling methods on the regular expression object such as `exec()` and `test()`. Passing the regular expression to a string method, such as `match()`, will not result in the sticky behavior.
+The `lastIndex` property is only honored when calling methods on the regular expression object such as `exec()` and `test()`. Passing the regular expression to a string method, such as `match()`, will not result in the sticky behavior.
 
 Similar to the `u` flag, the `y` flag is a syntax change, so it will cause a syntax error in older JavaScript engines. You can use the same approach to detect support:
 
@@ -555,62 +554,52 @@ for (let i=0; i < items.length; i++) {
 
 In this example, the variable `i` only exists within the `for` loop. Once the loop is complete, the variable is destroyed and is no longer accessible elsewhere.
 
-A> ### Using let in loops
-A>
-A> The behavior of `let` inside of loops is slightly different than with other blocks. Instead of creating a variable that is used with each iteration of the loop, each iteration actually gets its own variable to use. This is to solve an old problem with JavaScript loops. Consider the following:
-A>
-A> {:lang="js"}
-A> ~~~~~~~~
-A>  var funcs = [];
-A>
-A>  for (var i=0; i < 10; i++) {
-A>      funcs.push(function() { console.log(i); });
-A>  }
-A>
-A>  funcs.forEach(function(func) {
-A>      func();     // outputs the number "10" ten times
-A>  });
-A> ~~~~~~~~
-A>
-A> This code will output the number `10` ten times in a row. That's because the variable `i` is shared across each iteration of the loop, meaning the closures created inside the loop all hold a reference to the same variable. The variable `i` has a value of `10` once the loop completes, and so that's the value each function outputs.
-A>
-A> To fix this problem, developers use immediately-invoked function expressions (IIFEs) inside of loops to force a new copy of the variable to be created:
-A>
-A> {:lang="js"}
-A> ~~~~~~~~
-A>  var funcs = [];
-A>
-A>  for (var i=0; i < 10; i++) {
-A>      funcs.push((function(value) {
-A>          return function() {
-A>              console.log(value);
-A>          }
-A>      }(i)));
-A>  }
-A>
-A>  funcs.forEach(function(func) {
-A>      func();     // outputs 0, then 1, then 2, up to 9
-A>  });
-A> ~~~~~~~~
-A>
-A> This version of the example uses an IIFE inside of the loop. The `i` variable is passed to the IIFE, which creates its own copy and stores it as `value`. This is the value used of the function for that iteration, so calling each function returns the expected value.
-A>
-A> A `let` declaration does this for you without the IIFE. Each iteration through the loop results in a new variable being created and initialized to the value of the variable with the same name from the previous iteration. That means you can simplify the process by using this code:
-A>
-A> {:lang="js"}
-A> ~~~~~~~~
-A>  var funcs = [];
-A>
-A>  for (let i=0; i < 10; i++) {}
-A>      funcs.push(function() { console.log(i); });
-A>  }
-A>
-A>  funcs.forEach(function(func) {
-A>      func();     // outputs 0, then 1, then 2, up to 9
-A>  })
-A> ~~~~~~~~
-A>
-A>  This code works exactly like the code that used `var` and an IIFE but is, arguably, cleaner.
+### Using let in loops
+
+The behavior of `let` inside of loops is slightly different than with other blocks. Instead of creating a variable that is used with each iteration of the loop, each iteration actually gets its own variable to use. This is to solve an old problem with JavaScript loops. Consider the following:
+
+```js
+ var funcs = [];
+ for (var i=0; i < 10; i++) {
+     funcs.push(function() { console.log(i); });
+ }
+ funcs.forEach(function(func) {
+     func();     // outputs the number "10" ten times
+ });
+```
+
+This code will output the number `10` ten times in a row. That's because the variable `i` is shared across each iteration of the loop, meaning the closures created inside the loop all hold a reference to the same variable. The variable `i` has a value of `10` once the loop completes, and so that's the value each function outputs.
+
+To fix this problem, developers use immediately-invoked function expressions (IIFEs) inside of loops to force a new copy of the variable to be created:
+
+```js
+ var funcs = [];
+ for (var i=0; i < 10; i++) {
+     funcs.push((function(value) {
+         return function() {
+             console.log(value);
+         }
+     }(i)));
+ }
+ funcs.forEach(function(func) {
+     func();     // outputs 0, then 1, then 2, up to 9
+ });
+```
+
+This version of the example uses an IIFE inside of the loop. The `i` variable is passed to the IIFE, which creates its own copy and stores it as `value`. This is the value used of the function for that iteration, so calling each function returns the expected value.
+
+A `let` declaration does this for you without the IIFE. Each iteration through the loop results in a new variable being created and initialized to the value of the variable with the same name from the previous iteration. That means you can simplify the process by using this code:
+
+```js
+ var funcs = [];
+ for (let i=0; i < 10; i++) {}
+     funcs.push(function() { console.log(i); });
+ }
+ funcs.forEach(function(func) {
+     func();     // outputs 0, then 1, then 2, up to 9
+ })
+```
+This code works exactly like the code that used `var` and an IIFE but is, arguably, cleaner.
 
 Unlike `var`, `let` has no hoisting characteristics. A variable declared with `let` cannot be accessed until after the `let` statement. Attempting to do so results in a reference error:
 
@@ -667,23 +656,24 @@ if (condition) {
 
 Here, the `let` declaration will not throw an error because it is creating a new variable called `count` within the `if` statement. This new variable shadows the global `count`, preventing access to it from within the `if` block.
 
-A> ### Global let Declarations
-A>
-A> There is the potential for naming collisions when using `let` in the global scope because the global object has predefined properties. Using `let` to define a variable that shares a name with a property of the global object can produce an error because global object properties may be nonconfigurable. Since `let` doesn't allow redefinition of the same identifier in the same scope, it's not possible to shadow nonconfigurable global properties. Attempting to do so will result in an error. For example:
-A>
-A> {:lang="js"}
-A> ~~~~~~~~
-A>  let RegExp = "Hello!";          // ok
-A>  let undefined = "Hello!";       // throws error
-A> ~~~~~~~~
-A>
-A> The first line of this example redefines the global `RegExp` as a string. Even though this would be problematic, there is no error thrown. The second line throws an error because `undefined` is a nonconfigurable own property of the global object. Since it's definition is locked down by the environment, the `let` declaration is illegal.
-A>
-A> It's unusal to use `let` in the global scope, but if you do, it's important to understand this situation.
+### Global let Declarations
+
+There is the potential for naming collisions when using `let` in the global scope because the global object has predefined properties. Using `let` to define a variable that shares a name with a property of the global object can produce an error because global object properties may be nonconfigurable. 
+
+Since `let` doesn't allow redefinition of the same identifier in the same scope, it's not possible to shadow nonconfigurable global properties. Attempting to do so will result in an error. For example:
+
+```js
+ let RegExp = "Hello!";          // ok
+ let undefined = "Hello!";       // throws error
+```
+
+The first line of this example redefines the global `RegExp` as a string. Even though this would be problematic, there is no error thrown. The second line throws an error because `undefined` is a nonconfigurable own property of the global object. Since it's definition is locked down by the environment, the `let` declaration is illegal.
+
+It's unusal to use `let` in the global scope, but if you do, it's important to understand this situation.
 
 The intent of `let` is to replace `var` long term, as the former behaves more like variable declarations in other languages. If you are writing JavaScript that will execute only in an ECMAScript 6 or higher environment, you may want to try using `let` exclusively and leaving `var` for other scripts that require backwards compatibility.
 
-I> Since `let` declarations are *not* hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block so that they are available to the entire block.
+Since `let` declarations are *not* hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block so that they are available to the entire block.
 
 ### Constant declarations
 
@@ -730,7 +720,7 @@ const MAX_ITEMS = 5;
 MAX_ITEMS = 6;      // throws error
 ```
 
-W> Several browsers implement pre-ECMAScript 6 versions of `const`. Implementations range from being simply a synonym for `var` (allowing the value to be overwritten) to actually defining constants but only in the global or function scope. For this reason, be especially careful with using `const` in a production system. It may not be providing you with the functionality you expect.
+Several browsers implement pre-ECMAScript 6 versions of `const`. Implementations range from being simply a synonym for `var` (allowing the value to be overwritten) to actually defining constants but only in the global or function scope. For this reason, be especially careful with using `const` in a production system. It may not be providing you with the functionality you expect.
 
 ## Destructuring Assignment
 
@@ -750,7 +740,7 @@ var localRepeat = options.repeat,
 
 Frequently, object properties are stored into local variables for more succinct code and easier access. ECMAScript 6 makes this easy by introducing *destructuring assignment*, which systematically goes through an object or array and stores specified pieces of data into local variables.
 
-W> If the right side value of a destructuring assignment evaluates to `null` or `undefined`, an error is thrown.
+If the right side value of a destructuring assignment evaluates to `null` or `undefined`, an error is thrown.
 
 ### Object Destructuring
 
@@ -772,7 +762,7 @@ console.log(localSave);         // false
 
 In this code, the value of `options.repeat` is stored in a variable called `localRepeat` and the value of `options.save` is stored in a variable called `localSave`. These are both specified using the object literal syntax where the key is the property to find on `options` and the value is the variable in which to store the property value.
 
-I> If the property with the given name doesn't exist on the object, then the local variable gets a value of `undefined`.
+If the property with the given name doesn't exist on the object, then the local variable gets a value of `undefined`.
 
 If you want to use the property name as the local variable name, you can omit the colon and the identifier, such as:
 
@@ -814,25 +804,25 @@ console.log(custom);        // 10
 
 In this example, the `custom` property is embedded in another object. The extra set of curly braces allows you to descend into a nested object and pull out its properties.
 
-A> #### Syntax Gotcha
-A>
-A> If you try use destructuring assignment without a `var`, `let`, or `const`, you may be surprised by the result:
-A>
-A> ```js
-A> // syntax error
-A> { repeat, save, rules: { custom }} = options;
-A> ```
-A>
-A> This causes a syntax error because the opening curly brace is normally the beginning of a block and blocks can't be part of assignment expressions.
-A>
-A> The solution is to wrap the left side literal in parentheses:
-A>
-A> ```js
-A> // no syntax error
-A> ({ repeat, save, rules: { custom }}) = options;
-A> ```
-A>
-A> This now works without any problems.
+#### Syntax Gotcha
+
+If you try use destructuring assignment without a `var`, `let`, or `const`, you may be surprised by the result:
+
+```js
+// syntax error
+{ repeat, save, rules: { custom }} = options;
+```
+
+This causes a syntax error because the opening curly brace is normally the beginning of a block and blocks can't be part of assignment expressions.
+
+The solution is to wrap the left side literal in parentheses:
+
+```js
+// no syntax error
+({ repeat, save, rules: { custom }}) = options;
+```
+
+This now works without any problems.
 
 ### Array Destructuring
 
