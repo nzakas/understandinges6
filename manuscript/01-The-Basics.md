@@ -431,7 +431,7 @@ console.log(re.source);     // "ab"
 console.log(re.flags);      // "g"
 ```
 
-Using `source` and `flags` together allow you to extra just the pieces of the regular expression that are necessary without needing to parse the regular expression string directly.
+Using `source` and `flags` together allow you to extract just the pieces of the regular expression that are necessary without needing to parse the regular expression string directly.
 
 
 ## Object.is()
@@ -942,7 +942,7 @@ function getValue() {
 
 By making these two changes, ECMAScript 5 sought to eliminate a lot of the confusion and errors associated with octal literals.
 
-ECMAScript 6 took things a step further by reintroducing an octal literal notation, along with a binary literal notation. Both of these notations take a hint for the hexadecimal literal notation of prepending `0x`or `0X` to a value. The new octal literal format begins with `0o` or `0O` while the new binary literal format begins with `0b` or `0B`. Each literal type must be followed by one or more digits, 0-7 for octal, 0-1 for binary. Here's an example:
+ECMAScript 6 took things a step further by reintroducing an octal literal notation, along with a binary literal notation. Both of these notations take a hint for the hexadecimal literal notation of prepending `0x` or `0X` to a value. The new octal literal format begins with `0o` or `0O` while the new binary literal format begins with `0b` or `0B`. Each literal type must be followed by one or more digits, 0-7 for octal, 0-1 for binary. Here's an example:
 
 ```js
 // ECMAScript 6
@@ -975,7 +975,7 @@ JavaScript has long had a couple of global methods for identifying certain types
 * `isFinite()` determines if a value represents a finite number (not `Infinity` or `-Infinity`)
 * `isNaN()` determines if a value is `NaN` (since `NaN` is the only value that is not equal to itself)
 
-Although intended to work with numbers, these methods are capable of inferring a numeric value from and value that is passed in. That both methods can return incorrect results when passed a value that isn't a number. For example:
+Although intended to work with numbers, these methods are capable of inferring a numeric value from any value that is passed in. That means both methods can return incorrect results when passed a value that isn't a number. For example:
 
 ```js
 console.log(isFinite(25));      // true

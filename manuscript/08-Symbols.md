@@ -129,13 +129,13 @@ var uid3 = Symbol("uid");
 console.log(Symbol.keyFor(uid3));   // undefined
 ```
 
-Notice that both `uid` and `uid2` return the key `"uid"`. The symbol `uid3` doesn't exist in the global symbol registry, so it has no key associated with it and so `Symbol.keyFor()` returns `undefined`.
+Notice that both `uid` and `uid2` return the key `"uid"`. The symbol `uid3` doesn't exist in the global symbol registry, so it has no key associated with it and `Symbol.keyFor()` returns `undefined`.
 
 W> The global symbol registry is a shared environment, just like the global scope. That means you can't make assumptions about what is or is not already present in that environment. You should use namespacing of symbol keys to reduce the likelihood of naming collisions when using third-party components. For example, jQuery might prefix all keys with `"jquery."`, such as `"jquery.element"`.
 
 ## Finding Object Symbols
 
-As with other properties on objects, you can access symbol properties using the `Object.getOwnPropertySymbols()` method. This method works exactly the same as `Object.getOwnPropertyNames()` except that the returned values are symbols rather than strings. Since symbols technically aren't property names, they are omitted from the result of `Object.getOwnPropertyNames()`.
+Similar to other properties on objects, you can access symbol properties using the `Object.getOwnPropertySymbols()` method. This method works exactly the same as `Object.getOwnPropertyNames()` except that the returned values are symbols rather than strings. Since symbols technically aren't property names, they are omitted from the result of `Object.getOwnPropertyNames()`.
 
 The return value of `Object.getOwnPropertySymbols()` is an array of symbols that represent own properties. For example:
 
@@ -261,7 +261,7 @@ Only applied to `with` statement object records - does not refer to other scopes
 
 ### @@iterator
 
-As you learned in chapter 6, iterators are an important part of ECMAScript 6, and many built-in types has default iterators defined. These default iterators are defined by the `@@iterator` symbol on their prototype. The `for-of` loop uses an object's `@@iterator` property to retrieve an iterator when the given value isn't already one. You can get a reference to the default iterator for arrays using `Symbol.iterator`, such as:
+As you learned in chapter 6, iterators are an important part of ECMAScript 6, and many built-in types have default iterators defined. These default iterators are defined by the `@@iterator` symbol on their prototype. The `for-of` loop uses an object's `@@iterator` property to retrieve an iterator when the given value isn't already one. You can get a reference to the default iterator for arrays using `Symbol.iterator`, such as:
 
 ```js
 // retrieve the default generator for arrays
