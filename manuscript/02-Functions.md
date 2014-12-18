@@ -48,7 +48,7 @@ makeRequest("/foo", 500, function(body) {
 });
 ```
 
-Any parameters with a default value are considered to be optional parameters while those without default value are considered to be required parameters.
+Any parameters with a default value are considered to be optional parameters while those without a default value are considered to be required parameters.
 
 It's possible to specify default values for any arguments, including those that appear before arguments without default values. For example, this is fine:
 
@@ -186,7 +186,7 @@ setCookie("type", "js", {
 });
 ```
 
-There are many `setCookie()` functions in JavaScript libraries that look similar to this. The `name` and `value` are required but everything else is not. And since there is no priority order for the other data, it makes sense to have an options object with named properties rather than extra named properties. This approach is okay, although it makes the expect input for the function a bit opaque.
+There are many `setCookie()` functions in JavaScript libraries that look similar to this. The `name` and `value` are required but everything else is not. And since there is no priority order for the other data, it makes sense to have an options object with named properties rather than extra named parameters. This approach is okay, although it makes the expected input for the function a bit opaque.
 
 Using destructured parameters, the previous function can be rewritten as follows:
 
@@ -239,7 +239,7 @@ I> It's recommended to always provide the default value for destructured paramet
 
 ## The Spread Operator
 
-Closely related to rest parameters is the spread operator. Whereas rest parameters allow you to specify multiple independent arguments should be combined into an array, the spread operator allows you to specify an array that should be be split and have its items passed in as separate arguments to a function. Consider the `Math.max()` method, which accepts any number of arguments and returns the one with the highest value. It's basic usage is as follows:
+Closely related to rest parameters is the spread operator. Whereas rest parameters allow you to specify that multiple independent arguments should be combined into an array, the spread operator allows you to specify an array that should be be split and have its items passed in as separate arguments to a function. Consider the `Math.max()` method, which accepts any number of arguments and returns the one with the highest value. It's basic usage is as follows:
 
 ```js
 let value1 = 25,
@@ -427,11 +427,11 @@ In this example, `doSomething()` is hoisted into the global scope so that it sti
 One of the most interesting new parts of ECMAScript 6 are arrow functions. Arrow functions are, as the name suggests, functions defined with a new syntax that uses an "arrow" (`=>`). However, arrow functions behave differently than traditional JavaScript functions in a number of important ways:
 
 * **Lexical `this` binding** - The value of `this` inside of the function is determined by where the arrow function is defined not where it is used.
-* **Not `new`able** - Arrow functions cannot be used a constructors and will throw an error when used with `new`.
+* **Not `new`able** - Arrow functions cannot be used as constructors and will throw an error when used with `new`.
 * **Can't change `this`** - The value of `this` inside of the function can't be changed, it remains the same value throughout the entire lifecycle of the function.
 * **No `arguments` object** - You can't access arguments through the `arguments` object, you must use named arguments or other ES6 features such as rest arguments.
 
-There are a few reasons why these differences exist. First and foremost, `this` binding is a common source of error in JavaScript. It's very easy to lose track of the `this` value inside of a function and can easily result in unintended consequences. Second, by limiting arrow functions to simply executing code with a single `this` value, JavaScript engines can more easily optimize these operations (as opposed to regular functions, which might be used as a constructor or otherwise modified).
+There are a few reasons why these differences exist. First and foremost, `this` binding is a common source of error in JavaScript. It's very easy to lose track of the `this` value inside of a function, which can result in unintended consequences. Second, by limiting arrow functions to simply executing code with a single `this` value, JavaScript engines can more easily optimize these operations (as opposed to regular functions, which might be used as a constructor or otherwise modified).
 
 I> Arrow functions also have a `name` property that follows the same rule as other functions.
 

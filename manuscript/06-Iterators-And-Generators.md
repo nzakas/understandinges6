@@ -73,8 +73,6 @@ W> The `for-of` statement will throw an error when used on a `null` or `undefine
 
 You might be thinking that iterators sound interesting but they look like a bunch of work. Indeed, writing iterators so that they adhere to the correct behavior is a bit difficult, which is why ECMAScript 6 provides generators. A *generator* is a special kind of function that returns an iterator. Generator functions are indicated by inserting a star character (`*`) after the `function` keyword (it doesn't matter if the star is directly next to `function` or if there's some whitespace between them). The `yield` keyword is used inside of generators to specify the values that the iterator should return when `next()` is called. So if you want to return three different values for each successive call to `next()`, you can do so as follows:
 
-For example:
-
 ```js
 // generator
 function *createIterator() {
@@ -498,7 +496,7 @@ function *createIterator() {
     } catch (ex) {
         second = 6;                     // on error, assign a different value
     }
-    yield second + 3;                   // never is executed
+    yield second + 3;                   
 }
 
 let iterator = createIterator();
@@ -513,7 +511,7 @@ In this example, a `try-catch` block is wrapped around the second `yield` statem
 
 You'll also notice something interesting happened - the `throw()` method returned a value similar to that returned by `next()`. Because the error was caught inside the generator, code execution continued on to the next `yield` and returned the appropriate value.
 
-It helps to think of `next()` and `throw()` as both being instructions to the iterator: `next()` instructs the iterator to continue to executing (possibly with a given value) and `throw()` instructs the iterator to continue executing by throwing an error. What happens after that point depends on the code inside the generator.
+It helps to think of `next()` and `throw()` as both being instructions to the iterator: `next()` instructs the iterator to continue executing (possibly with a given value) and `throw()` instructs the iterator to continue executing by throwing an error. What happens after that point depends on the code inside the generator.
 
 ### Generator Return Statements
 
