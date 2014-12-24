@@ -1,7 +1,5 @@
 # Objects
 
-W> This chapter is a work-in-progress. As such, it may have more typos or content errors than others.
-
 A lot of ECMAScript 6 focused on improving the utility of objects. The focus makes sense given that nearly every value in JavaScript is represented by some type of object. Additionally, the number of objects used in an average Javascript program continues to increase, meaning that developers are writing more objects all the time. With more objects comes the necessity to use them more effectively.
 
 ECMAScript 6 improves objects in a number of ways, from simple syntax to new ways of manipulating and interacting with objects.
@@ -257,7 +255,6 @@ console.log(person.name);       // "Greg"
 
 In this example, the value of `person.name` is `"Greg"` because that was the last value assigned to the property.
 
-
 ## Changing Prototypes
 
 Prototypes are the foundation of inheritance and JavaScript and so ECMAScript 6 continues to make prototypes more powerful. ECMAScript 5 added the `Object.getPrototypeOf()` method for retrieving the prototype of any given object. ECMAScript 6 adds the reverse operation, `Object.setPrototypeOf()`, which allows you to change the prototype of any given object.
@@ -407,32 +404,115 @@ let friend = {
 
 Calling `super` in this manner tells the JavaScript engine that you want to use the prototype method with the same name as the current method. So `super()` actually calls does a lookup using the containing function's `name` property (discussed in Chapter 2) to find the correct method.
 
-### Use in Constructors
-
-TODO
+W> `super` references can only be used inside of functions and cannot be used in the global scope. Attempting to use `super` in the global scope results in a syntax error.
 
 ### Methods
 
-toMethod()
+Prior to ECMAScript 6, there was no formal definition of a "method" - methods were just object properties that contained functions instead of data. ECMAScript 6 formally defines a method as a function that has an internal `[[HomeObject]]` property containing the object to which the method belongs. Consider the following:
 
-TODO
+```js
+let person = {
 
-## Reflection Methods
+    // method
+    getGreeting() {
+        return "Hello";
+    }
+};
 
-TODO
+// not a method
+function shareGreeting() {
+    return "Hi!";
+}
+```
 
-### Object.getOwnPropertyDescriptors()
+This example defines `person` with a single method called `getGreeting()`. The `[[HomeObject]]` for `getGreeting()` is `person` by virtue of assigning the function directly to an object. The `shareGreeting()` function, on the other hand, has no `[[HomeObject]]` specified because it wasn't assigned to an object when it was created. In most cases this difference isn't important, but it becomes very important when using `super`.
 
-TODO
+Any reference to `super` uses the `[[HomeObject]]` to determine what to do. The first step is to call `Object.getPrototypeOf()` on the `[[HomeObject]]` to retrieve a reference to the prototype. Then, the prototype is searched for a function with the same name as the executing function. Last, the `this`-binding is set and the method is called. If a function has no `[[HomeObject]]`, or has a different one than expected, then this process won't work. For example:
 
-### Object.getPropertyNames()
+```js
+let person = {
+    getGreeting() {
+        return "Hello";
+    }
+};
 
-TODO
+// prototype is person
+let friend = {
+    __proto__: person,
+    getGreeting() {
+        return super() + ", hi!";
+    }
+};
 
-### Object.getPropertyDescriptor()
+function getGreeting() {
+    return super.getGreeting() + ", yo!";
+}
 
-TODO
+console.log(friend.getGreeting());  // "Hello, hi!"
+
+getGreeting();                      // throws error
+```
+
+Calling `friend.getGreeting()` returns a string while calling `getGlobalGreeting()` throws an error for improper use of `super`. Since the `getGlobalGreeting()` function has no `[[HomeObject]]`, it's not possible to perform a lookup. Interestingly, the situation doesn't change if `getGreeting()` is later assigned as a method on `friend`:
+
+```js
+// prototype is person
+let friend = {
+    __proto__: person,
+    getGreeting() {
+        return super() + ", hi!";
+    }
+};
+
+function getGlobalGreeting() {
+    return super.getGreeting() + ", yo!";
+}
+
+console.log(friend.getGreeting());  // "Hello, hi!"
+
+// assign getGreeting to the global function
+friend.getGreeting = getGlobalGreeting;
+
+friend.getGreeting();               // throws error
+```
+
+Here the global `getGlobalGreeting()` function is used to overwrite the previously-defined `getGreeting()` method on `friend`. Calling `friend.getGreeting()` at that point results in an error as well. The value of `[[HomeObject]]` is only set when the function is first created, so even assigning onto an object doesn't fix the problem. Fortunately, ECMAScript 6 has a solution.
+
+Every function has a `toMethod()` method that allows you to create a new version of the same function that has its `[[HomeObject]]` set to a specific object. For example:
+
+```js
+// prototype is person
+let friend = {
+    __proto__: person,
+    getGreeting() {
+        return super() + ", hi!";
+    }
+};
+
+function getGreeting() {
+    return super.getGreeting() + ", yo!";
+}
+
+console.log(friend.getGreeting());  // "Hello, hi!"
+
+// assign getGreeting to the global function
+var getFriendlyGreeting = getGreeting.toMethod(friend);
+
+console.log(getFriendlyGreeting());  // "Hello, yo!"
+```
+
+This code uses `toMethod()` to create a new copy of the global `getGreeting()` whose `[[HomeObject]]` is set to `friend` and is called `getFriendlyGreeting()`. That means the `super` reference inside of the function will now work and return the correct value. Keep in mind that the original `getGlobalGreeting()` still has no `[[HomeObject]]`. Instead, a new copy of the function was created and stored in `getFriendlyGreeting()`. The `getFriendlyGreeting()` method can properly look up `super` even though it's not called as a method of `friend`.
+
+W> This is an important distinction between `this` and `super`. While `this` is evaluated at runtime, `super` is influenced by where the function was created. The value of `[[HomeObject]]` doesn't change after a method is created, so passing around functions with `super` references can be very confusing. In most cases, it's a good idea to not remove or add methods after an object has been created. The `toMethod()` method is there if you really to, but it's best to avoid doing so unless absolutely necessary.
 
 ## Summary
 
-TODO
+Objects are at the center of programming in JavaScript, and ECMAScript 6 has made some helpful changes to objects that both make them easier to deal with and more powerful.
+
+ECMAScript 6 makes several changes to object literals. Shorthand property definitions make it easier to assign properties whose names are the same as in-scope variables. Computed property names allow you to specify non-literal values as property names, which is something you've already been able to do in other areas of the language. Shorthand methods let you type a lot fewer characters in order to define methods on object literals by completely omitting the `function` keyword and colon. A loosening of the strict mode check for duplicate object literal property names was introduced as well, meaning you can now have two properties with the same name in a single object literal without an error being thrown.
+
+The `Object.assign()` method makes it easier to change multiple properties on a single object at once. This can be very useful if you use the mixin pattern.
+
+It's now possible to modify an object's prototype after it's already created using `Object.setPrototypeOf()`. ECMAScript 6 also defines the behavior of the `__proto__` property, which is an accessor property whose getter calls `Object.getPrototypeOf()` and whose setter calls 'Object.setPrototypeOf()`.
+
+The `super` keyword can now be used to call methods on an object's prototype. It can be used either standalone as a method, such as `super()`, or as a reference to the prototype itself, such as `super.getGreeting()`. In both cases, the `this`-binding is setup automatically to work with the current value of `this`. You can change how `super` is evaluated inside of a function by calling `toMethod()` and specifying a new `[[HomeObject]]`. This method returns a new copy of the function whose `[[HomeObject]]` is the argument that was passed in.
