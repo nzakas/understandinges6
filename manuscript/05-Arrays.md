@@ -2,6 +2,9 @@
 
 W> This chapter is a work-in-progress. As such, it may have more typos or content errors than others.
 
+## Changes
+
+Array.prototype.concat/push/splice throw TypeError if new length would be 2^53 or greater.
 
 
 TODO
