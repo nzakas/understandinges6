@@ -402,7 +402,7 @@ let friend = {
 };
 ```
 
-Calling `super` in this manner tells the JavaScript engine that you want to use the prototype method with the same name as the current method. So `super()` actually calls does a lookup using the containing function's `name` property (discussed in Chapter 2) to find the correct method.
+Calling `super` in this manner tells the JavaScript engine that you want to use the prototype method with the same name as the current method. So `super()` actually does a lookup using the containing function's `name` property (discussed in Chapter 2) to find the correct method.
 
 W> `super` references can only be used inside of functions and cannot be used in the global scope. Attempting to use `super` in the global scope results in a syntax error.
 
