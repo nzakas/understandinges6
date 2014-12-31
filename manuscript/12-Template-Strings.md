@@ -1,7 +1,5 @@
 # Template Strings
 
-W> This chapter is a work-in-progress. As such, it may have more typos or content errors than others.
-
 JavaScript's strings have been fairly limited when compared to those in other languages. Template strings add new syntax to allow the creation of domain-specific languages (DSLs) for working with content in a way that is safer than the solutions we have today. The description on the template string strawman was as follows:
 
 > This scheme extends ECMAScript syntax with syntactic sugar to allow libraries to provide DSLs that easily produce, query, and manipulate content from other languages that are immune or resistant to injection attacks such as XSS, SQL Injection, etc.
@@ -11,7 +9,6 @@ In reality, though, template strings are ECMAScript 6's answer to several ongoin
 * **Multiline strings** - JavaScript has never had a formal concept of multiline strings.
 * **Basic string formatting** - The ability to substitute parts of the string for values contained in variables.
 * **HTML escaping** - The ability to transform a string such that it is safe to insert into HTML.
-* **Localization of strings** - The ability to easily swap out a string from one language into a string from another language.
 
 Rather than trying to add more functionality to JavaScript's already-existing strings, template strings represent an entirely new approach to solving these problems.
 
@@ -99,6 +96,17 @@ let html = `
 
 This code begins the template string on the first line but doesn't have any text until the second. The HTML tags are indented to look correct and then the `trim()` method is called to remove the initial (empty) line.
 
+A> If you prefer, you can also use `\n` in a template string to indicate where a newline should be inserted:
+A> {:lang="js"}
+A> ~~~~~~~~
+A>
+A> let message = `Multiline\nstring`;
+A>
+A> console.log(message);           // "Multiline
+A>                                 //  string"
+A> console.log(message.length);    // 16
+A> ~~~~~~~~
+
 ## Substitutions
 
 To this point, template strings may look like a fancier way of defining normal JavaScript strings. The real difference is with template string substitutions. Substitutions allow you to embed any valid JavaScript expression inside of a template string and have the result be output as part of the string.
@@ -121,17 +129,128 @@ Since all substitutions are JavaScript expressions, it's possible to substitute 
 ```js
 let count = 10,
     price = 0.25,
-    message = `The total for ${count} items is $${(count * price).toFixed(2)}.`;
+    message = `${count} items cost $${(count * price).toFixed(2)}.`;
 
-console.log(message);       // "The total for 10 items is $2.50."
+console.log(message);       // "10 items cost $2.50."
 ```
 
 This code performs a calculation as part of the template string. The variables `count` and `price` are multiplied together to get a result, and then formatted to two decimal places using `.toFixed()`. The dollar sign before the second substitution is output as-is because it's not followed by an opening curly brace.
 
 ## Tagged Templates
 
-TODO
+To this point, you've seen how template strings can be used for multiline strings and to insert values into strings without using concatenation. The real power of template strings comes from tagged templates. A *template tag* performs a transformation on the template string and returns the final string value. This tag is specified at the start of the template, just before the first ```` character, such as:
+
+```js
+let message = tag`Hello world`;
+```
+
+In this example, `tag` is the template tag to apply to ```Hello world```.
+
+### Defining Tags
+
+A tag is simply a function that is called with the processed template string data. The function receives data about the template string as individual pieces that the tag must then combined to create the finished value. The first argument is an array containing the literal strings as they are interpreted by JavaScript. Each subsequent argument is the interpreted value of each substitution. Tag functions are typically defined using rest arguments to make dealing with the data easier:
+
+```js
+function tag(literals, ...substitutions) {
+    // return a string
+}
+```
+
+To better understand what is passed to tags, consider the following:
+
+```js
+let count = 10,
+    price = 0.25,
+    message = passthru`${count} items cost $${(count * price).toFixed(2)}.`;
+```
+
+If you had a function called `passthru()`, that function would receive three arguments:
+
+1. `literals`, containing:
+    * `""` - the empty string before the first substitution
+    * `" items cost $"` - the string after the first substitution and before the second
+    * `"."` - the string after the second substitution
+1. `10` - the interpreted value for `count` (this becomes `substitutions[0]`)
+1. `"2.50"` - the interpreted value for `(count * price).toFixed(2)` (this becomes `substitutions[2]`)
+
+Note that the first item in `literals` is an empty string. This is to ensure that `literals[0]` is always the start of the string, just like `literals[literals.length - 1]` is always the end of the string. There is always one fewer substitution than literal, which is to say that `substitutions.length === literals.length - 1` all the time.
+
+Using this pattern, the `literals` and `substitutions` arrays can be interweaved to create the result. The first item in `literals` comes first, then the first item in `substitutions`, and so on, until the string has been completed. So to mimic the default behavior of template, you need only define a function that performs this operation:
+
+```js
+function passthru(literals, ...substitutions) {
+    let result = "";
+
+    // run the loop only for the substitution count
+    for (let i = 0; i < substitutions.length; i++) {
+        result += literals[i];
+        result += substitutions[i];
+    }
+
+    // add the last literal
+    result += literals[literals.length - 1];
+
+    return result;
+}
+
+let count = 10,
+    price = 0.25,
+    message = passthru`${count} items cost $${(count * price).toFixed(2)}.`;
+
+console.log(message);       // "10 items cost $2.50."
+```
+
+This example defines a `passthru` tag that performs the same transformation as the default template string behavior. The only trick is to use `substitutions.length` for the loop rather than `literals.length` to avoid accidentally going past the end of `substitutions`. This works because the relationship between `literals` and `substitutions` is well-defined.
+
+I> The values contained in `substitutions` are not necessarily strings. If an expression is evaluated to be a number, as in the previous example, then the numeric value is passed in. It's part of the tag's job to determine how such values should be output in the result.
+
+### Using Raw Values
+
+Template tags also have access to raw string information, which primarily means access to character escapes before they are transformed into their character equivalents. The simplest way to work with raw string values is to the built-in `String.raw()` tag. For example:
+
+```js
+let message1 = `Multiline\nstring`,
+    message2 = String.raw`Multiline\nstring`;
+
+console.log(message1);          // "Multiline
+                                //  string"
+console.log(message2);          // "Multiline\\nstring"
+```
+
+In this code, the `\n` in `message1` is interpreted as a newline while the `\n` in `message2` is returned in its raw form of `"\\n"` (two characters, the slash and `n`). Retrieving the raw string information in this way allows for more complex processing (when necessary).
+
+The raw string information is also passed into template tags. The first argument in a tag function is an array with an extra property called `raw`. The `raw` property is an array containing the raw equivalent of each literal value. So the value in `literals[0]` always has an equivalent `literals.raw[0]` that contains the raw string information. Knowing that, it's possible to mimic `String.raw()` using the following:
+
+```js
+function raw(literals, ...substitutions) {
+    let result = "";
+
+    // run the loop only for the substitution count
+    for (let i = 0; i < substitutions.length; i++) {
+        result += literals.raw[i];      // use raw values instead
+        result += substitutions[i];
+    }
+
+    // add the last literal
+    result += literals.raw[literals.length - 1];
+
+    return result;
+}
+
+let message = raw`Multiline\nstring`;
+
+console.log(message);           // "Multiline\\nstring"
+console.log(message.length);    // 17
+```
+
+This example uses `literals.raw` instead of `literals` to output the string result. That means any character escapes, including Unicode code point escapes, will be returned in their raw form.
 
 ## Summary
 
-TODO
+Template strings are an important addition to ECMAScript 6 that allows the creating of domain-specific languages (DSLs) to make creating strings easier. The ability to embed variables directly into template strings means that developers have a safer tool than string concatenation for composing long strings with variables.
+
+Built-in support for multiline strings also makes template strings a useful upgrade over normal JavaScript strings, which have never had this ability. Despite allowing newlines directly inside the template string, you can still use `\n` and other character escape sequences.
+
+Template tags are the most important part of this feature for creating DSLs. Tags are functions that receive the pieces of the template string as arguments. You can then use that data to return an appropriate string value. The data provided includes literals, their raw equivalents, and any substitution values. These pieces of information can then be used to determine the correct output for the tag.
+
+ECMAScript 6 has only one built-in tag, which is `String.raw()`. This tag simply returns the template string in its raw form, with character escape sequences in their original form rather than transforming them into their character equivalents.
