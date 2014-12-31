@@ -14,7 +14,7 @@ Rather than trying to add more functionality to JavaScript's already-existing st
 
 ## Basic Syntax
 
-At their simplest, template strings act like regular strings that are delimited by backticks (``) instead of double or single quotes. For example:
+At their simplest, template strings act like regular strings that are delimited by backticks (`` ` ``) instead of double or single quotes. For example:
 
 ```js
 let message = `Hello world!`;
@@ -144,8 +144,9 @@ To this point, you've seen how template strings can be used for multiline string
 let message = tag`Hello world`;
 ```
 
-In this example, `tag` is the template tag to apply to ```Hello world```.
+In this example, `tag` is the template tag to apply to `` `Hello world` ``.
 
+d
 ### Defining Tags
 
 A tag is simply a function that is called with the processed template string data. The function receives data about the template string as individual pieces that the tag must then combined to create the finished value. The first argument is an array containing the literal strings as they are interpreted by JavaScript. Each subsequent argument is the interpreted value of each substitution. Tag functions are typically defined using rest arguments to make dealing with the data easier:
