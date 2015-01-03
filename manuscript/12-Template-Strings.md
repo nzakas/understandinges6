@@ -146,7 +146,6 @@ let message = tag`Hello world`;
 
 In this example, `tag` is the template tag to apply to `` `Hello world` ``.
 
-d
 ### Defining Tags
 
 A tag is simply a function that is called with the processed template string data. The function receives data about the template string as individual pieces that the tag must then combined to create the finished value. The first argument is an array containing the literal strings as they are interpreted by JavaScript. Each subsequent argument is the interpreted value of each substitution. Tag functions are typically defined using rest arguments to make dealing with the data easier:
