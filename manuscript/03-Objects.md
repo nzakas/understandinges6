@@ -503,7 +503,7 @@ console.log(getFriendlyGreeting());  // "Hello, yo!"
 
 This code uses `toMethod()` to create a new copy of `getGlobalGreeting()` whose `[[HomeObject]]` is set to `friend` and is called `getFriendlyGreeting()`. That means the `super` reference inside of the function will now work and return the correct value. Keep in mind that the original `getGlobalGreeting()` still has no `[[HomeObject]]`. Instead, a new copy of the function was created and stored in `getFriendlyGreeting()`. The `getFriendlyGreeting()` method can properly look up `super` even though it's not called as a method of `friend`.
 
-W> This is an important distinction between `this` and `super`. While `this` is evaluated at runtime, `super` is influenced by where the function was created. The value of `[[HomeObject]]` doesn't change after a method is created, so passing around functions with `super` references can be very confusing. In most cases, it's a good idea to not remove or add methods after an object has been created. The `toMethod()` method is there if you really to, but it's best to avoid doing so unless absolutely necessary.
+W> This is an important distinction between `this` and `super`. While `this` is evaluated at runtime, `super` is influenced by where the function was created. The value of `[[HomeObject]]` doesn't change after a method is created, so passing around functions with `super` references can be very confusing. In most cases, it's a good idea to not remove or add methods after an object has been created. The `toMethod()` method is there if you really want to use it, but it's best to avoid doing so unless absolutely necessary.
 
 ## Summary
 
