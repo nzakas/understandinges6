@@ -156,6 +156,12 @@ In this code, `object` has a single symbol property. The array returned from `Ob
 
 I> All objects start off with zero own symbol properties (although they do have some inherited symbol properties).
 
+## Coercing Symbols to Strings
+
+TODO
+
+String(symbol) works but symbol + "" throws
+
 ## Well-Known Symbols
 
 In addition to the symbols you defined, there are some predefined symbols as well (called *well-known* symbols in the specification). These symbols represent common behaviors in JavaScript that were previously considered internal-only operations. Each well-known symbol is represented by a property on `Symbol`, such as `Symbol.create` for the `@@create` symbol.
