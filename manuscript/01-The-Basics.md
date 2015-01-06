@@ -43,7 +43,7 @@ console.log(text.codePointAt(1));   // 57271
 console.log(text.codePointAt(2));   // 97
 ```
 
-The `codePointAt()` method works in the same manner as `charAt()` except for non-BMP characters. The first character in `text` is non-BMP and is therefore comprised of two code units, meaning the entire length of the string is 3 rather than 2. The `charAt()` method returns only the first code unit for position 0 whereas `codePointAt()` returns the full code point even though it spans multiple code units. Both methods return the same value for positions 1 (the second code unit of the first character) and 2 (the `"a"`).
+The `codePointAt()` method works in the same manner as `charCodeAt()` except for non-BMP characters. The first character in `text` is non-BMP and is therefore comprised of two code units, meaning the entire length of the string is 3 rather than 2. The `charAt()` method returns only the first code unit for position 0 whereas `codePointAt()` returns the full code point even though it spans multiple code units. Both methods return the same value for positions 1 (the second code unit of the first character) and 2 (the `"a"`).
 
 This method is the easiest way to determine if a given character is represented by one or two code points:
 
@@ -1074,7 +1074,7 @@ As a result, ECMAScript 6 adds several new methods to the `Math` object. These n
 |`Math.log1p(x)`| Returns the natural logarithm of `1 + x`. |
 |`Math.log10(x)`| Returns the base 10 logarithm of `x`. |
 |`Math.log2(x)`| Returns the base 2 logarithm of `x`. |
-|`Math.sign(x)`| Returns -1 if the `x` is negative 0 if `x` is +0 or -0, or 1 if `x` is positive.|
+|`Math.sign(x)`| Returns -1 if the `x` is negative, 0 if `x` is +0 or -0, or 1 if `x` is positive.|
 |`Math.sinh(x)`| Returns the hyperbolic sine of `x`. |
 |`Math.tanh(x)`| Returns the hyperbolic tangent of `x`. |
 |`Math.trunc(x)`| Removes fraction digits from a float and returns an integer.|
@@ -1091,6 +1091,6 @@ Additional methods for working with strings were added, allowing you to more eas
 
 The `let` and `const` block bindings introduce lexical scoping to JavaScript. These declarations are not hoisted and only exist within the block in which they are declared. That means behavior that is more like other languages and less likely to cause unintentional errors, as variables can now be declared exactly where they are needed. It's expected that the majority of JavaScript code going forward will use `let` and `const` exclusively, effectively making `var` a deprecated part of the language.
 
-ECMAScript 6 makes it easier to work with numbers through the introduction of new syntax and new methods. The binary and octal literal forms allow you to embed numbers directly into source code while keeping the most appropriate representation visible. There are `Number.isFinite()` and `Number.isNaN()` that are safer versions of the global methods of the same names due to their lack of type coercion. You can more easily identify integers using `Number.isInteger()` and `Number.isSafeInteger()` as well as perform a lot more mathematical operations thanks to new methods on `Math`.
+ECMAScript 6 makes it easier to work with numbers through the introduction of new syntax and new methods. The binary and octal literal forms allow you to embed numbers directly into source code while keeping the most appropriate representation visible. `Number.isFinite()` and `Number.isNaN()` are introduced as safer versions of their respective global methods, which lacked type coercion. You can more easily identify integers using `Number.isInteger()` and `Number.isSafeInteger()`, as well as perform more mathematical operations thanks to new methods on `Math`.
 
 Though many of these changes are small, they will make a significant difference in the lives of JavaScript developers for years to come. Each change addresses a particular concern that can otherwise require a lot of custom code to address. By building this functionality into the language, developers can focus on writing the code for their product rather than low-level utilities.
