@@ -1,10 +1,10 @@
 # Collections
 
-For most of JavaScript's history, there has been only one type of collection, represented by the `Array` type. Arrays are used in JavaScript just like arrays and other languages but pull double and triple duty mimicking queues and stacks as well. Since arrays only use numeric indices, developers had to use objects whenever a non-numeric index was necessary. Objects started to be used more like maps, but they had their own limitations since all property names must be strings. ECMAScript 6 introduces several new types of collections to allow better and more efficient storing of order data.
+For most of JavaScript's history, there has been only one type of collection, represented by the `Array` type. Arrays are used in JavaScript just like arrays and other languages but pull double and triple duty mimicking queues and stacks as well. Since arrays only use numeric indices, developers had to use objects whenever a non-numeric index was necessary. Objects started to be used more like maps, but they had their own limitations since all property names must be strings. ECMAScript 6 introduces several new types of collections to allow better and more efficient storing of ordered data.
 
 ## Sets
 
-Sets are nothing new if you come from languages such as Java, Ruby, or Python but have been missing from JavaScript. A set is in an ordered list of values that cannot contain duplicates. You typically don't access items in the set like you would items in an array, instead it's much more common to check the set to see if a value is present.
+Sets are nothing new if you come from languages such as Java, Ruby, or Python but have been missing from JavaScript. A set is in an ordered list of values that cannot contain duplicates. You typically don't access items in the set like you would items in an array; instead, it's much more common to check the set to see if a value is present.
 
 ECMAScript 6 introduces the `Set` type as a set implementation for JavaScript. You can add values to a set by using the `add()` method and see how many items are in the set using `size()`:
 
@@ -14,7 +14,7 @@ ECMAScript 6 introduces the `Set` type as a set implementation for JavaScript. Y
 
     console.log(items.size());    // 2
 
-ECMAScript 6 sets do not coerce values in determining whether or not to values are the same. So, a set can contain both the number `5` and the string `"5"` (internally, the comparison is done using `Object.is()`). If the `add()` method is called more than once with the same value, all calls after the first one are effectively ignored:
+ECMAScript 6 sets do not coerce values in determining whether or not two values are the same. So, a set can contain both the number `5` and the string `"5"` (internally, the comparison is done using `Object.is()`). If the `add()` method is called more than once with the same value, all calls after the first one are effectively ignored:
 
     var items = new Set();
     items.add(5);
@@ -28,7 +28,7 @@ You can initialize the set using an array, and the `Set` constructor will ensure
     var items = new Set([1, 2, 3, 4, 5, 5, 5, 5]);
     console.log(items.size());    // 5
 
-In this example, an array with feed items is used to initialize the set. The number `5` Only appears once in the set even though it appears four times in the array. This functionality makes it easy to convert existing code or JSON structures to use sets.
+In this example, an array with feed items is used to initialize the set. The number `5` only appears once in the set even though it appears four times in the array. This functionality makes it easy to convert existing code or JSON structures to use sets.
 
 You can test to see which items are in the set using the `has()` method:
 
@@ -39,7 +39,7 @@ You can test to see which items are in the set using the `has()` method:
     console.log(items.has(5));    // true
     console.log(items.has(6));    // false
 
-Last, you can Remove an item from the set by using the `delete()` method:
+Last, you can remove an item from the set by using the `delete()` method:
 
     var items = new Set();
     items.add(5);
@@ -47,7 +47,7 @@ Last, you can Remove an item from the set by using the `delete()` method:
 
     console.log(items.has(5));    // true
 
-    items.delete(5)
+    items.delete(5);
 
     console.log(items.has(5));    // false
 
@@ -56,7 +56,7 @@ All of this amounts to a very easy mechanism for tracking unique unordered value
 !!.values
 
 
-Even though there is no random access to items in a set, it still possible to iterate over all of the sets values by using the new ECMAScript 6 `for-of` statement. The `for-of` statement is a loop that iterates over values of a collection, including arrays and array-like structures. you can output values in a set like this:
+Even though there is no random access to items in a set, it is still possible to iterate over all of the set's values by using the new ECMAScript 6 `for-of` statement. The `for-of` statement is a loop that iterates over values of a collection, including arrays and array-like structures. You can output values in a set like this:
 
     var items = new Set([1, 2, 3, 4, 5]);
 
@@ -66,7 +66,7 @@ Even though there is no random access to items in a set, it still possible to it
 
 This code outputs each item in the set to the console in the order in which they were added to the set.
 
-If you would rather just convert the setback into an array, that can be accomplished using the `Array.from()` method:
+If you would rather just convert the set back into an array, that can be accomplished using the `Array.from()` method:
 
     var items = new Set([1, 2, 3, 4, 5]);
     var array = Array.from(items);
@@ -196,7 +196,7 @@ Another way to iterate over items is to use the `forEach()` method. This method 
         console.log("Key: %s, Value: %s", key, value);
     });
 
-Also similar to the arrays version of `forEach()`, you can pass in an optional second argument to specify the `this` value to use inside the callback:
+Also similar to the array's version of `forEach()`, you can pass in an optional second argument to specify the `this` value to use inside the callback:
 
     var reporter = {
         report: function(key, value) {
@@ -236,15 +236,15 @@ The iteration features of maps allow you to focus on just the data  without worr
 
 ### Browser Support
 
-Both Firefox and Chrome have implemented `Map`, however, in Chrome you need to manually enable ECMAScript 6 features: go to `chrome://flags` and enable "Experimental JavaScript Features". Both implementations are incomplete. Neither browser implements any of the generator method for use with `for-of` and Chrome's implementation is missing the `size` method (which is part of the ECMAScript 6 draft specification).
+Both Firefox and Chrome have implemented `Map`, however, in Chrome you need to manually enable ECMAScript 6 features: go to `chrome://flags` and enable "Experimental JavaScript Features". Both implementations are incomplete. Neither browser implements any of the generator methods for use with `for-of` and Chrome's implementation is missing the `size` method (which is part of the ECMAScript 6 draft specification).
 
 ## Weakmaps
 
-Weakmaps are similar to regular maps in that they map a value to a unique key. That key can later be used to retrieve the value it identifies. Weakmaps are different because the key must be an object and cannot be a primitive value. This may seem like a strange constraint but it's actually the core of what makes weakmaps different and useful.
+Weakmaps are similar to regular maps in that they map a value to a unique key. That key can later be used to retrieve the value it identifies. Weakmaps are different because the key must be an object and cannot be a primitive value. This may seem like a strange constraint, but it's actually the core of what makes weakmaps different and useful.
 
 A weakmap holds only a weak reference to a key, which means the reference inside of the weakmap doesn't prevent garbage collection of that object. When the object is destroyed by the garbage collector, the weakmap automatically removes the key-value pair identified by that object. The canonical example for using weakmaps is to create an object related to a particular DOM element. For example, jQuery maintains a cache of objects internally, one for each DOM element that has been referenced. Using a weakmap would allow jQuery to automatically free up memory associated with a DOM element when it is removed from the document.
 
-The ECMAScript 6 `WeakMap` type is an unordered list of key-value pairs where the key must be a non-null object and the value can be of any type. The interface for `WeakMap` is very similar to that of `Map` in that `set()` and `get()` are used to add data and retrieve data, respectively:
+The ECMAScript 6 `WeakMap` type is an unordered list of key-value pairs where the key must be a non-null object and the value can be of any type. The interface for `WeakMap` is very similar to that of `Map` in that `set()` and `get()` are used to add and retrieve data respectively:
 
     var map = new WeakMap(),
         element = document.querySelector(".element");
@@ -264,7 +264,7 @@ The ECMAScript 6 `WeakMap` type is an unordered list of key-value pairs where th
 
 In this example, one key-value pair is stored. The key is a DOM element used to store a corresponding string value. That value was later retrieved by passing in the DOM element to `get()`. If the DOM element is then removed from the document and the variable referencing it is set to `null`, then the data is also removed from the weakmap and the next attempt to retrieve data associated with the DOM element fails.
 
-This example is a little bit misleading because the second call to `map.get(element)` is using the value of `null` (which `element` was set to) rather than a reference to the DOM element. You can't use `null` as a key in weakmaps, so this code isn't really doing a valid lookup. Unfortunately, there is no part of the interface that allows you to query whether or not a reference has been cleared (because the reference no longer exists).
+This example is a little bit misleading because the second call to `map.get(element)` is using the value of `null` (which `element` was set to), rather than a reference to the DOM element. You can't use `null` as a key in weakmaps, so this code isn't really doing a valid lookup. Unfortunately, there is no part of the interface that allows you to query whether or not a reference has been cleared (because the reference no longer exists).
 
 A> The weakmap `set()` method will throw an error if you try to use a primitive value as a key. If you want to use a primitive value as a key, then it's best to use `Map` instead.
 
@@ -282,7 +282,7 @@ Weakmaps also have `has()` for determining if a key exists in the map and `delet
     console.log(map.has(element));   // false
     console.log(map.get(element));   // undefined
 
-Here, a DOM element is once again used as the key in a weakmap. The `has()` method is useful for checking to see if a reference is currently being used as a key in the weakmap. Keep in mind that this only works when you have a non-null reference to a key. The key is  forcibly removed from the weakmap by using `delete()`, at which point `has()` returns `false` and `get()` returned `undefined`.
+Here, a DOM element is once again used as the key in a weakmap. The `has()` method is useful for checking to see if a reference is currently being used as a key in the weakmap. Keep in mind that this only works when you have a non-null reference to a key. The key is  forcibly removed from the weakmap by using `delete()`, at which point `has()` returns `false` and `get()` returns `undefined`.
 
 ### Uses and Limitations
 

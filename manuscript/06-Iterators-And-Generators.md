@@ -321,7 +321,7 @@ This example outputs the following:
 "format"
 ```
 
-Additionally, each collection type has a default iterator that is used by `for-of` whenever an iterator isn't explicitly specified. The default iterator for array and set is `values()` while the default iterator for maps is `entries()`. This makes it a little bit easier to use collection objects in `for-of`:
+Additionally, each collection type has a default iterator that is used by `for-of` whenever an iterator isn't explicitly specified. The default iterator for arrays and sets is `values()` while the default iterator for maps is `entries()`. This makes it a little bit easier to use collection objects in `for-of`:
 
 ```js
 let colors = [ "red", "green", "blue" ];
@@ -554,7 +554,7 @@ I> Any value specified by `return` is ignored by `for-of`.
 
 ### Delegating Generators
 
-In some cases it may be useful to combine the values from two iterators into one. Using generators, it's possible to delegate to another generator using a special form of `yield` with a star (`*`). As with generation definitions, it doesn't matter where the star appears so as long as it is between the keyword `yield` and the generator function name. Here's an example:
+In some cases it may be useful to combine the values from two iterators into one. Using generators, it's possible to delegate to another generator using a special form of `yield` with a star (`*`). As with generator definitions, it doesn't matter where the star appears so as long as it is between the keyword `yield` and the generator function name. Here's an example:
 
 ```js
 function *createNumberIterator() {
