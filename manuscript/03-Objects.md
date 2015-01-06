@@ -444,16 +444,16 @@ let friend = {
     }
 };
 
-function getGreeting() {
+function getGlobalGreeting() {
     return super.getGreeting() + ", yo!";
 }
 
 console.log(friend.getGreeting());  // "Hello, hi!"
 
-getGreeting();                      // throws error
+getGlobalGreeting();                      // throws error
 ```
 
-Calling `friend.getGreeting()` returns a string while calling `getGlobalGreeting()` throws an error for improper use of `super`. Since the `getGlobalGreeting()` function has no `[[HomeObject]]`, it's not possible to perform a lookup. Interestingly, the situation doesn't change if `getGreeting()` is later assigned as a method on `friend`:
+Calling `friend.getGreeting()` returns a string while calling `getGlobalGreeting()` throws an error for improper use of `super`. Since the `getGlobalGreeting()` function has no `[[HomeObject]]`, it's not possible to perform a lookup. Interestingly, the situation doesn't change if `getGlobalGreeting()` is later assigned as a method on `friend`:
 
 ```js
 // prototype is person
@@ -489,21 +489,21 @@ let friend = {
     }
 };
 
-function getGreeting() {
+function getGlobalGreeting() {
     return super.getGreeting() + ", yo!";
 }
 
 console.log(friend.getGreeting());  // "Hello, hi!"
 
 // assign getGreeting to the global function
-var getFriendlyGreeting = getGreeting.toMethod(friend);
+var getFriendlyGreeting = getGlobalGreeting.toMethod(friend);
 
 console.log(getFriendlyGreeting());  // "Hello, yo!"
 ```
 
-This code uses `toMethod()` to create a new copy of the global `getGreeting()` whose `[[HomeObject]]` is set to `friend` and is called `getFriendlyGreeting()`. That means the `super` reference inside of the function will now work and return the correct value. Keep in mind that the original `getGlobalGreeting()` still has no `[[HomeObject]]`. Instead, a new copy of the function was created and stored in `getFriendlyGreeting()`. The `getFriendlyGreeting()` method can properly look up `super` even though it's not called as a method of `friend`.
+This code uses `toMethod()` to create a new copy of `getGlobalGreeting()` whose `[[HomeObject]]` is set to `friend` and is called `getFriendlyGreeting()`. That means the `super` reference inside of the function will now work and return the correct value. Keep in mind that the original `getGlobalGreeting()` still has no `[[HomeObject]]`. Instead, a new copy of the function was created and stored in `getFriendlyGreeting()`. The `getFriendlyGreeting()` method can properly look up `super` even though it's not called as a method of `friend`.
 
-W> This is an important distinction between `this` and `super`. While `this` is evaluated at runtime, `super` is influenced by where the function was created. The value of `[[HomeObject]]` doesn't change after a method is created, so passing around functions with `super` references can be very confusing. In most cases, it's a good idea to not remove or add methods after an object has been created. The `toMethod()` method is there if you really to, but it's best to avoid doing so unless absolutely necessary.
+W> This is an important distinction between `this` and `super`. While `this` is evaluated at runtime, `super` is influenced by where the function was created. The value of `[[HomeObject]]` doesn't change after a method is created, so passing around functions with `super` references can be very confusing. In most cases, it's a good idea to not remove or add methods after an object has been created. The `toMethod()` method is there if you really want to use it, but it's best to avoid doing so unless absolutely necessary.
 
 ## Summary
 
