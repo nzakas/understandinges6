@@ -287,7 +287,7 @@ console.log(friend.getGreeting());                      // "Woof"
 console.log(Object.getPrototypeOf(friend) === dog);     // true
 ```
 
-This code defines two base objects: `person` and `dog`. Both objects have a method `getGreeting()` that outputs something to the console. The object `friend` starts out inheriting from `person`, meaning that `getGreeting()` will output `"Hello"`. When the prototype is changed to by `dog` instead, `person.getGreeting()` outputs `"Woof"` because the original relationship to `person` is broken.
+This code defines two base objects: `person` and `dog`. Both objects have a method `getGreeting()` that outputs something to the console. The object `friend` starts out inheriting from `person`, meaning that `getGreeting()` will output `"Hello"`. When the prototype is changed to be `dog` instead, `person.getGreeting()` outputs `"Woof"` because the original relationship to `person` is broken.
 
 The actual value of an object's prototype is stored in an internal-only property called `[[Prototype]]`. The `Object.getPrototypeOf()` method returns the value stored in `[[Prototype]]` and `Object.setPrototypeOf()` changes the value stored in `[[Prototype]]`. However, these aren't the only ways to work with the value of `[[Prototype]]`.
 
