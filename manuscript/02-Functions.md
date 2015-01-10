@@ -650,6 +650,22 @@ The array methods that accept callback functions such as `sort()`, `map()`, and 
 
 Generally speaking, arrow functions are designed to be used in places where anonymous functions have traditionally been used. They are not really designed to be kept around for long periods of time, hence the inability to use arrow functions as constructors. Arrow functions are best used for callbacks that are passed into other functions, as seen in the examples in this section.
 
+### Lexical arguments Binding
+
+Even though arrow functions don't have their own `arguments` object, it's possible for them to access the `arguments` object from a containing function. That `arguments` object is then available no matter where the arrow function is executed later on. For example:
+
+```js
+function createArrowFunctionReturningFirstArg() {
+    return () => arguments[0];
+}
+
+var arrowFunction = createArrowFunctionReturningFirstArg(5);
+
+console.log(arrowFunction());       // 5
+```
+
+Inside of `createArrowFunctionReturningFirstArg()`, `arguments[0]` is referenced by the created arrow function. That reference contains the first argument passed to `createArrowFunctionReturningFirstArg()`. When the arrow function is later executed, it returns `5`, which was the first argument passed in to `createArrowFunctionReturningFirstArg()`. Even though the arrow function is no longer in the scope of the function that created it, `arguments` remains accessible as a lexical binding.
+
 ### Identifying Arrow Functions
 
 Despite the different syntax, arrow functions are still functions and are identified as such:
