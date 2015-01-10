@@ -170,6 +170,8 @@ In this example, `myObject` receives behavior from `EventTarget.prototype`. This
 
 This pattern became popular enough that ECMAScript 6 added `Object.assign()`, which behaves the same way. The difference in name is to reflect the actual operation that occurs. Since the `mixin()` method uses the assignment operator (`=`), it cannot copy accessor properties to the receiver as accessor properties. The name `Object.assign()` was chosen to reflect this distinction.
 
+I> Similar methods in various libraries may have other names. Some popular alternate names for the same basic functionality are `extend()` and `mix()`.
+
 You can use `Object.assign()` anywhere the `mixin()` function would have been used:
 
 ```js
