@@ -496,7 +496,7 @@ function *createIterator() {
     } catch (ex) {
         second = 6;                     // on error, assign a different value
     }
-    yield second + 3;                   
+    yield second + 3;
 }
 
 let iterator = createIterator();
@@ -594,7 +594,7 @@ function *createNumberIterator() {
     return 3;
 }
 
-function *createRepatingIterator(count) {
+function *createRepeatingIterator(count) {
     for (let i=0; i < count; i++) {
         yield "repeat";
     }
