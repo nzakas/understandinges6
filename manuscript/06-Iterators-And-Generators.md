@@ -8,7 +8,7 @@ Iterators are nothing more than objects with a certain interface. That interface
 
 If you call `next()` after the last value has been returned, the method returns `done` as `true` and `value` contains the return value for the iterator. The *return value* is not considered part of the data set, but rather a final piece of related data or `undefined` if no such data exists. (This concept will become clearer in the generators section later in this chapter.)
 
-With that understanding, it's fairly easy to create an iterator using ECMAScript 5, for example:
+With that understanding, it's fairly easy to create an iterator using ECMAScript 6, for example:
 
 ```js
 function createIterator(items) {
