@@ -13,13 +13,13 @@ With that understanding, it's fairly easy to create an iterator using ECMAScript
 ```js
 function createIterator(items) {
 
-    let i = 0;
+    var i = 0;
 
     return {
         next: function() {
 
-            let done = (i >= items.length);
-            let value = !done ? items[i++] : undefined;
+            var done = (i >= items.length);
+            var value = !done ? items[i++] : undefined;
 
             return {
                 done: done,
@@ -30,7 +30,7 @@ function createIterator(items) {
     };
 }
 
-let iterator = createIterator([1, 2, 3]);
+var iterator = createIterator([1, 2, 3]);
 
 console.log(iterator.next());           // "{ value: 1, done: false }"
 console.log(iterator.next());           // "{ value: 2, done: false }"
