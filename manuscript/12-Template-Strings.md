@@ -214,10 +214,10 @@ let message1 = `Multiline\nstring`,
 
 console.log(message1);          // "Multiline
                                 //  string"
-console.log(message2);          // "Multiline\\nstring"
+console.log(message2);          // "Multiline\nstring"
 ```
 
-In this code, the `\n` in `message1` is interpreted as a newline while the `\n` in `message2` is returned in its raw form of `"\\n"` (two characters, the slash and `n`). Retrieving the raw string information in this way allows for more complex processing (when necessary).
+In this code, the `\n` in `message1` is interpreted as a newline while the `\n` in `message2` is returned in its raw form of `"\n"` (two characters, the slash and `n`). Retrieving the raw string information in this way allows for more complex processing (when necessary).
 
 The raw string information is also passed into template tags. The first argument in a tag function is an array with an extra property called `raw`. The `raw` property is an array containing the raw equivalent of each literal value. So the value in `literals[0]` always has an equivalent `literals.raw[0]` that contains the raw string information. Knowing that, it's possible to mimic `String.raw()` using the following:
 
@@ -239,7 +239,7 @@ function raw(literals, ...substitutions) {
 
 let message = raw`Multiline\nstring`;
 
-console.log(message);           // "Multiline\\nstring"
+console.log(message);           // "Multiline\nstring"
 console.log(message.length);    // 17
 ```
 
