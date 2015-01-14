@@ -138,7 +138,7 @@ This code performs a calculation as part of the template string. The variables `
 
 ## Tagged Templates
 
-To this point, you've seen how template strings can be used for multiline strings and to insert values into strings without using concatenation. The real power of template strings comes from tagged templates. A *template tag* performs a transformation on the template string and returns the final string value. This tag is specified at the start of the template, just before the first ```` character, such as:
+To this point, you've seen how template strings can be used for multiline strings and to insert values into strings without using concatenation. The real power of template strings comes from tagged templates. A *template tag* performs a transformation on the template string and returns the final string value. This tag is specified at the start of the template, just before the first `` ` `` character, such as:
 
 ```js
 let message = tag`Hello world`;
