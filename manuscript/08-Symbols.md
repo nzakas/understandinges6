@@ -201,16 +201,14 @@ function supportsNativeJSON() {
 
 Here, the same characteristic that allowed developers to identify arrays across iframe boundaries also provided a way to tell if `JSON` was the native one or not. A non-native `JSON` object would return `[object Object]` while the native version returned `[object JSON]`. From that point on, this approach became the de facto standard for identifying native objects.
 
-ECMAScript 6 explains this behavior through the `@@toStringTag` symbol. This symbol represents a method on each object that defines what value should be produced when `Object.prototype.toString.call()` is called on it. So the value returned for arrays is explained by having the `@@toStringTag` method return `"Array"`. Likewise, you can define that value for your own objects:
+ECMAScript 6 explains this behavior through the `@@toStringTag` symbol. This symbol represents a property on each object that defines what value should be produced when `Object.prototype.toString.call()` is called on it. So the value returned for arrays is explained by having the `@@toStringTag` property equal `"Array"`. Likewise, you can define that value for your own objects:
 
 ```js
 function Person(name) {
     this.name = name;
 }
 
-Person.prototype[Symbol.toStringTag] = function() {
-    return "Person";
-};
+Person.prototype[Symbol.toStringTag] = "Person";
 
 var me = new Person("Nicholas");
 
@@ -218,16 +216,14 @@ console.log(me.toString());                         // "[object Person]"
 console.log(Object.prototype.toString.call(me));    // "[object Person]"
 ```
 
-In this example, a `@@toStringTag` method is defined on `Person.prototype` to provide the default behavior for creating a string representation. Since `Person.prototype` inherits `Object.prototype.toString()`, the value returned from `@@toStringTag` is also used when calling `me.toString()`. However, you can still define your own `toString()` that provides a different behavior without affecting the use of `Object.prototype.toString.call()`:
+In this example, a `@@toStringTag` property is defined on `Person.prototype` to provide the default behavior for creating a string representation. Since `Person.prototype` inherits `Object.prototype.toString()`, the value returned from `@@toStringTag` is also used when calling `me.toString()`. However, you can still define your own `toString()` that provides a different behavior without affecting the use of `Object.prototype.toString.call()`:
 
 ```js
 function Person(name) {
     this.name = name;
 }
 
-Person.prototype[Symbol.toStringTag] = function() {
-    return "Person";
-};
+Person.prototype[Symbol.toStringTag] = "Person";
 
 Person.prototype.toString = function() {
     return this.name;
@@ -242,6 +238,39 @@ console.log(Object.prototype.toString.call(me));    // "[object Person]"
 This code defines `Person.prototype.toString()` to return the value of the `name` property. Since `Person` instances no longer inherit `Object.prototype.toString()`, calling `me.toString()` exhibits a different behavior.
 
 I> All objects inherit `@@toStringTag` from `Object.prototype` unless otherwise specified. This default method returns `"Object"`.
+
+There is a restriction on which values can be used for `@@toStringTag` on developer-defined objects. If you attempt to use a value that is the same as a built-in object's `@@toStringTag`, then the result will automatically be prepended with a tilde. For example:
+
+```js
+function Person(name) {
+    this.name = name;
+}
+
+Person.prototype[Symbol.toStringTag] = "Array";
+
+Person.prototype.toString = function() {
+    return this.name;
+};
+
+var me = new Person("Nicholas");
+
+console.log(me.toString());                         // "Nicholas"
+console.log(Object.prototype.toString.call(me));    // "[object ~Array]"
+```
+
+Here, the result of calling `Object.prototype.toString()` is `"[object ~Array]"` instead of `"[object Array]"`. The `@@toStringTag` value of `"Array"` is restricted because using it would allow spoofing of built-in arrays and could cause errors in code that uses the tag as a type check. The other restricted tags are `"Arguments"`, `"Null"`, `"Undefined"`, `"Boolean"`, `"Date"`, `"Error"`, `"Function"`, `"Number"`, `"RegExp"`, and `"String"`.
+
+It's possible to change the string tag for native objects by assigning to `@@toStringTag` on their prototype. For example:
+
+```js
+Array.prototype[Symbol.toStringTag] = "Magic";
+
+var values = [];
+
+console.log(Object.prototype.toString.call(values));    // "[object Magic]"
+```
+
+Even though `@@toStringTag` is overwritten for arrays in this example, the call to `Object.prototype.toString()` results in `"[object Magic]"`. While it's recommended not to change built-in objects in this way, there's nothing in the language that forbids it.
 
 ### @@toPrimitive
 
