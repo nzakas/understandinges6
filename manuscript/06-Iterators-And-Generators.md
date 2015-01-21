@@ -47,12 +47,16 @@ ECMAScript 6 makes use of iterators in a number of places to make dealing with c
 
 ## for-of
 
-The first place you'll see iterators in ECMAScript 6 is with the new `for-of` loop. The `for-of` loop works with iterators to return each successive value. The loop itself calls `next()` behind the scenes and exits when the `done` property of the returned object is `true`. For example:
+The first place you'll see iterators in ECMAScript 6 is with the new `for-of` loop. The `for-of` loop needs an iterable which provides an iterator (by using the builtin iterator symbol). The iterator itself returns each successive value. `next()` gets called behind the scenes and exits when the `done` property of the returned object is `true`. For example:
 
 ```js
-let iterator = createIterator([1, 2, 3]);
+let iterable = { 
+    [Symbol.iterator]() { 
+        return createIterator([1, 2, 3]) 
+    }
+};
 
-for (let i of iterator) {
+for (let i of iterable) {
     console.log(i);
 }
 ```
