@@ -601,7 +601,7 @@ A> {:lang="js"}
 A> ~~~~~~~~
 A>  var funcs = [];
 A>
-A>  for (let i=0; i < 10; i++) {}
+A>  for (let i=0; i < 10; i++) {
 A>      funcs.push(function() { console.log(i); });
 A>  }
 A>
