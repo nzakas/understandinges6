@@ -170,6 +170,22 @@ A central theme for both ECMAScript 5 and ECMAScript 6 was exposing and defining
 
 I> Overwriting a method defined with a well-known symbol changes an ordinary object to an exotic object because this changes some internal default behavior.
 
+The well-known symbols are:
+
+* `@@hasInstance` - a method used by `instanceof` to determine an object's inheritance.
+* `@@isConcatSpreadable` - a Boolean value indicating if use with `Array.prototype.concat()` should flatten the collection's elements.
+* `@@iterator` - a method that returns an iterator (see Chapter 7).
+* `@@match` - a method used by `String.prototype.match()` to compare strings.
+* `@@replace` - a method used by `String.prototype.replace()` to replace substrings.
+* `@@search` - a method used by `String.prototype.search()` to locate substrings.
+* `@@species` - the constructor from which derived objects are made.
+* `@@split` - a method used by `String.prototype.split()` to split up strings.
+* `@@toPrimitive` - a method that returns a primitive value representation of the object.
+* `@@toStringTag` - a string used by `Object.prototype.toString()` to create an object description.
+* `@@unscopeables` - an object whose properties are the names of object properties that should not be included in a `with` statement.
+
+Some of the well-known symbols are discussed below while others are discussed throughout the book to keep them in the correct context.
+
 ### @@toStringTag
 
 Once of the most interesting problems in JavaScript has been the availability of multiple global execution environments. This occurs in web browsers when a page includes an iframe, as the page and the iframe each have their own execution environments. In most cases, this isn't a problem, as data can be passed back and forth between the environments with little cause for concern. The problem arises when trying to identify what type of an object you're dealing with.
@@ -294,79 +310,6 @@ TODO
 
 Only applied to `with` statement object records - does not refer to other scopes.
 
-### @@iterator
-
-As you learned in chapter 6, iterators are an important part of ECMAScript 6, and many built-in types have default iterators defined. These default iterators are defined by the `@@iterator` symbol on their prototype. The `for-of` loop uses an object's `@@iterator` property to retrieve an iterator when the given value isn't already one. You can get a reference to the default iterator for arrays using `Symbol.iterator`, such as:
-
-```js
-// retrieve the default generator for arrays
-let arrayGenerator = Array.prototype[Symbol.iterator];
-
-console.log(typeof arrayGenerator);                     // "function"
-console.log(Array.prototype.values === arrayGenerator); // true
-```
-
-In this example, `arrayGenerator` is a generator function used to create the default array iterator. This generator is the same one that is used for `Array.prototype.values`.
-
-The `@@iterator` symbol can also be used to define the default iterator for your objects. For example:
-
-```js
-let collection = {
-    items: [],
-    *[Symbol.iterator]() {
-        yield *this.items.values();
-    }
-
-};
-
-collection.items.push(1);
-collection.items.push(2);
-collection.items.push(3);
-
-for (let x of collection) {
-    console.log(x);
-}
-
-// Output:
-// 1
-// 2
-// 3
-```
-
-This code defines a default iterator for a variable called `collection` using object literal method shorthand and a computed property using `Symbol.iterator`. The generator then delegates to the `values()` iterator of `this.items`. The `for-of` loop then uses the generator to create an iterator and execute the loop.
-
-You can also define a default iterator using classes, such as:
-
-```js
-class Collection {
-
-    constructor() {
-        this.items = [];
-    }
-
-    *[Symbol.iterator]() {
-        yield *this.items.values();
-    }
-}
-
-var collection = new Collection();
-collection.items.push(1);
-collection.items.push(2);
-collection.items.push(3);
-
-for (let x of collection) {
-    console.log(x);
-}
-
-// Output:
-// 1
-// 2
-// 3
-```
-
-This example mirrors the previous one with the exception that a class is used instead of an object literal.
-
-Default iterators can be added to any object by assigning a generator to `Symbol.iterator`. It doesn't matter if the property is an own or prototype property, as `for-of` normal prototype chain lookup applies.
 
 ### @@hasInstance
 

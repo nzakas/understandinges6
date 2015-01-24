@@ -45,30 +45,6 @@ The `createIterator()` function in this example returns an object with a `next()
 
 ECMAScript 6 makes use of iterators in a number of places to make dealing with collections of data easier, so having a good basic understanding allows you to better understand the language as a whole.
 
-## for-of
-
-The first place you'll see iterators in ECMAScript 6 is with the new `for-of` loop. The `for-of` loop works with iterators to return each successive value. The loop itself calls `next()` behind the scenes and exits when the `done` property of the returned object is `true`. For example:
-
-```js
-let iterator = createIterator([1, 2, 3]);
-
-for (let i of iterator) {
-    console.log(i);
-}
-```
-
-This code outputs the following:
-
-```
-1
-2
-3
-```
-
-The `for-of` loop in this example is calling `iterator.next()` and assigning the variable `i` to the value returned on the `value` property. So `i` is first 1, then 2, and finally 3. When `done` is `true`, the loop exits, so `i` is never assigned the value of `undefined`.
-
-W> The `for-of` statement will throw an error when used on a `null` or `undefined` iterator.
-
 ## Generators
 
 You might be thinking that iterators sound interesting but they look like a bunch of work. Indeed, writing iterators so that they adhere to the correct behavior is a bit difficult, which is why ECMAScript 6 provides generators. A *generator* is a special kind of function that returns an iterator. Generator functions are indicated by inserting a star character (`*`) after the `function` keyword (it doesn't matter if the star is directly next to `function` or if there's some whitespace between them). The `yield` keyword is used inside of generators to specify the values that the iterator should return when `next()` is called. So if you want to return three different values for each successive call to `next()`, you can do so as follows:
@@ -112,24 +88,6 @@ function *createIterator(items) {
 
 let iterator = createIterator([1, 2, 3]);
 
-for (let i of iterator) {
-    console.log(i);
-}
-```
-
-In this example, an array is iterated over, yielding each item as the loop progresses. Each time `yield` is encountered, the loop stops, and each time `next()` is called on `iterator`, the loop picks back up where it left off.
-
-Of course, you can still call `iterator.next()` directly:
-
-```js
-function *createIterator(items) {
-    for (let i=0; i < items.length; i++) {
-        yield items[i];
-    }
-}
-
-let iterator = createIterator([1, 2, 3]);
-
 console.log(iterator.next());           // "{ value: 1, done: false }"
 console.log(iterator.next());           // "{ value: 2, done: false }"
 console.log(iterator.next());           // "{ value: 3, done: false }"
@@ -138,6 +96,8 @@ console.log(iterator.next());           // "{ value: undefined, done: true }"
 // for all further calls
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
+
+In this example, an array is used in a `for` loop, yielding each item as the loop progresses. Each time `yield` is encountered, the loop stops, and each time `next()` is called on `iterator`, the loop picks back up where it left off.
 
 Generator functions are an important part of ECMAScript 6, and since they are just functions, they can be used in all the same places.
 
@@ -199,13 +159,151 @@ let iterator = o.createIterator([1, 2, 3]);
 
 This example is functionally equivalent to the previous one, the only difference is the syntax used.
 
+### Generator Class Methods
+
+Similar to objects, you can add generator methods directly to classes using almost the same syntax:
+
+```js
+class MyClass {
+
+    *createIterator(items) {
+        for (let i=0; i < items.length; i++) {
+            yield items[i];
+        }
+    }
+
+}
+
+let o = new MyClass();
+let iterator = o.createIterator([1, 2, 3]);
+```
+
+The syntax is very similar to using shorthand object literal methods, as the asterisk needs to come before the method name.
+
+## Iterables and for-of
+
+Closely related to the concept of an iterator is an iterable. An *iterable* is an object that has a default iterator specified using the `@@iterator` symbol. More specifically, `@@iterator` contains a function that returns an iterator for the given object. All of the collection objects, including arrays, sets, and maps, as well as strings, are iterables and so have a default iterator specified. Iterables are designed to be used with a new addition to ECMAScript: the `for-of` loop.
+
+The `for-of` loop is similar to the other loops in ECMAScript except that it is designed to work with iterables. The loop itself calls `next()` behind the scenes and exits when the `done` property of the returned object is `true`. For example:
+
+```js
+let values = [1, 2, 3];
+
+for (let i of values) {
+    console.log(i);
+}
+```
+
+This code outputs the following:
+
+```
+1
+2
+3
+```
+
+The `for-of` loop in this example is first calling the `@@iterator` method to retrieve an iterator, and then calling `iterator.next()` and assigning the variable `i` to the value returned on the `value` property. So `i` is first 1, then 2, and finally 3. When `done` is `true`, the loop exits, so `i` is never assigned the value of `undefined`.
+
+W> The `for-of` statement will throw an error when used on, a non-iterable, `null`, or `undefined`.
+
+### Accessing the Default Iterator
+
+You can access the default iterator for an object using `Symbol.iterator`, for example:
+
+```js
+let values = [1, 2, 3];
+let iterator = values[Symbol.iterator]();
+
+console.log(iterator.next());           // "{ value: 1, done: false }"
+console.log(iterator.next());           // "{ value: 2, done: false }"
+console.log(iterator.next());           // "{ value: 3, done: false }"
+console.log(iterator.next());           // "{ value: undefined, done: true }"
+```
+
+This code gets the default iterator for `values` and uses that to iterate over the values in the array. Knowing that `Symbol.iterator` specifies the default iterator, it's possible to detect if an object is iterable by using the following:
+
+```js
+function isIterable(object) {
+    return typeof object[Symbol.iterator] === "function";
+}
+
+console.log(isIterable([1, 2, 3]));     // true
+console.log(isIterable("Hello"));       // true
+console.log(isIterable(new Map()));     // true
+console.log(isIterable(new Set()));     // true
+```
+
+The `isIterable()` function simply checks to see if a default iterator exists on the object and is a function. This is similar to the check that the `for-of` loop does before executing.
+
+### Creating Iterables
+
+Developer-defined objects are not iterable by default, but you can make them iterable by using the `@@iterator` symbol. For example:
+
+```js
+let collection = {
+    items: [],
+    *[Symbol.iterator]() {
+        yield *this.items.values();
+    }
+
+};
+
+collection.items.push(1);
+collection.items.push(2);
+collection.items.push(3);
+
+for (let x of collection) {
+    console.log(x);
+}
+
+// Output:
+// 1
+// 2
+// 3
+```
+
+This code defines a default iterator for a variable called `collection` using object literal method shorthand and a computed property using `Symbol.iterator`. The generator then delegates to the `values()` iterator of `this.items`. The `for-of` loop then uses the generator to create an iterator and execute the loop.
+
+You can also define a default iterator using classes, such as:
+
+```js
+class Collection {
+
+    constructor() {
+        this.items = [];
+    }
+
+    *[Symbol.iterator]() {
+        yield *this.items.values();
+    }
+}
+
+var collection = new Collection();
+collection.items.push(1);
+collection.items.push(2);
+collection.items.push(3);
+
+for (let x of collection) {
+    console.log(x);
+}
+
+// Output:
+// 1
+// 2
+// 3
+```
+
+This example mirrors the previous one with the exception that a class is used instead of an object literal.
+
+Default iterators can be added to any object by assigning a generator to `Symbol.iterator`. It doesn't matter if the property is an own or prototype property, as `for-of` normal prototype chain lookup applies.
+
 ## Built-in Iterators
 
 Another way that ECMAScript 6 makes using iterators easier is by making iterators available on many objects by default. You don't actually need to create your own iterators for many of the built-in types because the language has them already. You only need to create iterators when you find that the built-in ones don't serve your purpose.
 
 ### Collection Iterators
 
-The ECMAScript 6 collection objects, arrays, maps, and sets, all have three default iterators to help you navigate data. You can retrieve an iterator for the array by calling one of these methods:
+The ECMAScript 6 collection objects, arrays, maps, and sets, all have three default iterators to help you navigate data. You can retrieve an iterator for a collection by calling one of these methods:
 
 * `entries()` - returns an iterator whose values are a key-value pair.
 * `values()` - returns an iterator whose values are the values of the collection.
@@ -717,7 +815,9 @@ Managing the `task` variable is a bit cumbersome in this example, but it's only 
 
 Iterators are an important part of ECMAScript 6 and are at the root of several important parts of the language. On the surface, iterators provide a simple way to return a sequence of values using a simple API. However, there are far more complex ways to use iterators in ECMAScript 6.
 
-The `for-of` loop uses iterators to return a series of values in a loop. This makes creating loops easier than the traditional `for` loop because you no longer need to track values and control when the loop ends. The `for-of` loop automatically reads all values from the iterator until there are no more and then exits.
+The `@@iterator` symbol is used to define default iterators for objects. Both built-in objects and developer-defined objects can use this symbol to provide a method that returns an iterator. When `@@iterator` is provided, the object is considered an iterable.
+
+The `for-of` loop uses iterables to return a series of values in a loop. This makes creating loops easier than the traditional `for` loop because you no longer need to track values and control when the loop ends. The `for-of` loop automatically reads all values from the iterator until there are no more and then exits.
 
 To make it easier to use `for-of`, many values in ECMAScript 6 have default iterators. All the collection types, arrays, maps, and sets, have iterators designed for easy access to their contents. Strings also have a default iterator so it's easy to iterate over the code points of the string (rather than the code units).
 
