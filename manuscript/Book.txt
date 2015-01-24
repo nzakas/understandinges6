@@ -2,6 +2,6 @@
 01-The-Basics.md
 02-Functions.md
 03-Objects.md
-06-Iterators-And-Generators.md
-08-Symbols.md
+04-Symbols.md
+07-Iterators-And-Generators.md
 12-Template-Strings.md
