@@ -1,12 +1,3 @@
-body {
-  font-family: Georgia, serif;
-  color: #222;
-  line-height: 1.5;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 div#leanpub-toc {
   width: 300px;
   float: left;
