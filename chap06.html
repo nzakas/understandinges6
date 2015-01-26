@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Template Strings</title>
+<link href="stylesheet.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+<div id="leanpub-toc">
+<h2></h2>
+<ol class="toc">
+<ul class='toc no-parts'>
+  <li>
+    <a href='chap00.html#leanpub-auto-introduction'>Introduction</a>
+    <ul>
+      <li>
+        <a href='chap00.html#leanpub-auto-browser-and-nodejs-compatibility'>Browser and Node.js Compatibility</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-who-this-book-is-for'>Who This Book is For</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-overview'>Overview</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-help-and-support'>Help and Support</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap01.html#leanpub-auto-the-basics'>The Basics</a>
+    <ul>
+      <li>
+        <a href='chap01.html#leanpub-auto-better-unicode-support'>Better Unicode Support</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-other-string-changes'>Other String Changes</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-other-regular-expression-changes'>Other Regular Expression Changes</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-objectis'>Object.is()</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-block-bindings'>Block bindings</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-destructuring-assignment'>Destructuring Assignment</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-numbers'>Numbers</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-summary'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap02.html#leanpub-auto-functions'>Functions</a>
+    <ul>
+      <li>
+        <a href='chap02.html#leanpub-auto-default-parameters'>Default Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-rest-parameters'>Rest Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-destructured-parameters'>Destructured Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-the-spread-operator'>The Spread Operator</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-the-name-property'>The name Property</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-block-level-functions'>Block-Level Functions</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-arrow-functions'>Arrow Functions</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-syntax'>Syntax</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-summary-1'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap03.html#leanpub-auto-objects'>Objects</a>
+    <ul>
+      <li>
+        <a href='chap03.html#leanpub-auto-object-categories'>Object Categories</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-object-literal-extensions'>Object Literal Extensions</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-objectassign'>Object.assign()</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-duplicate-object-literal-properties'>Duplicate Object Literal Properties</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-changing-prototypes'>Changing Prototypes</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-super-references'>Super References</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-summary-2'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap04.html#leanpub-auto-symbols'>Symbols</a>
+    <ul>
+      <li>
+        <a href='chap04.html#leanpub-auto-creating-symbols'>Creating Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-identifying-symbols'>Identifying Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-using-symbols'>Using Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-sharing-symbols'>Sharing Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-finding-object-symbols'>Finding Object Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-coercing-symbols-to-strings'>Coercing Symbols to Strings</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-well-known-symbols'>Well-Known Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-summary-3'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap05.html#leanpub-auto-iterators-and-generators'>Iterators and Generators</a>
+    <ul>
+      <li>
+        <a href='chap05.html#leanpub-auto-what-are-iterators'>What are Iterators?</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-generators'>Generators</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-iterables-and-for-of'>Iterables and for-of</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-built-in-iterators'>Built-in Iterators</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-advanced-functionality'>Advanced Functionality</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-summary-4'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap06.html#leanpub-auto-template-strings'>Template Strings</a>
+    <ul>
+      <li>
+        <a href='chap06.html#leanpub-auto-basic-syntax'>Basic Syntax</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-multiline-strings'>Multiline Strings</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-substitutions'>Substitutions</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-tagged-templates'>Tagged Templates</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-summary-5'>Summary</a>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+</ol>
+</div>
+<div id="leanpub-main">
+<h2 id="leanpub-auto-template-strings">Template Strings</h2>
+
+<p>JavaScript’s strings have been fairly limited when compared to those in other languages. Template strings add new syntax to allow the creation of domain-specific languages (DSLs) for working with content in a way that is safer than the solutions we have today. The description on the template string strawman was as follows:</p>
+
+<blockquote>
+  <p>This scheme extends ECMAScript syntax with syntactic sugar to allow libraries to provide DSLs that easily produce, query, and manipulate content from other languages that are immune or resistant to injection attacks such as XSS, SQL Injection, etc.</p>
+</blockquote>
+
+<p>In reality, though, template strings are ECMAScript 6’s answer to several ongoing problems in JavaScript:</p>
+
+<ul><li><strong>Multiline strings</strong> - JavaScript has never had a formal concept of multiline strings.</li>
+  <li><strong>Basic string formatting</strong> - The ability to substitute parts of the string for values contained in variables.</li>
+  <li><strong>HTML escaping</strong> - The ability to transform a string such that it is safe to insert into HTML.</li>
+</ul><p>Rather than trying to add more functionality to JavaScript’s already-existing strings, template strings represent an entirely new approach to solving these problems.</p>
+
+<h3 id="leanpub-auto-basic-syntax">Basic Syntax</h3>
+
+<p>At their simplest, template strings act like regular strings that are delimited by backticks (<code>`</code>) instead of double or single quotes. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">message</code> <code class="o">=</code> <code class="err">`</code><code class="nx">Hello</code> <code class="nx">world</code><code class="o">!</code><code class="err">`</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message</code><code class="p">);</code>               <code class="c1">// "Hello world!"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">typeof</code> <code class="nx">message</code><code class="p">);</code>        <code class="c1">// "string"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message</code><code class="p">.</code><code class="nx">length</code><code class="p">);</code>        <code class="c1">// 12</code>
+</pre></div>
+
+</div>
+
+<p>This code demonstrates that the variable <code>message</code> contains a normal JavaScript string. The template string syntax only is used to create the string value, which is then assigned to <code>message</code>.</p>
+
+<p>If you want to use a backtick in your string, then you need only escape it by using a backslash (<code>\</code>):</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">message</code> <code class="o">=</code> <code class="err">`\`</code><code class="nx">Hello</code><code class="err">\`</code> <code class="nx">world</code><code class="o">!</code><code class="err">`</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message</code><code class="p">);</code>               <code class="c1">// "`Hello` world!"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">typeof</code> <code class="nx">message</code><code class="p">);</code>        <code class="c1">// "string"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message</code><code class="p">.</code><code class="nx">length</code><code class="p">);</code>        <code class="c1">// 14</code>
+</pre></div>
+
+</div>
+
+<p>There’s no need to escape either double or single quotes inside of template strings.</p>
+
+<h3 id="leanpub-auto-multiline-strings">Multiline Strings</h3>
+
+<p>Ever since the first version of JavaScript, developers have longed for a way to create multiline strings in JavaScript. When using double or single quotes, strings must be completely contained on a single line. JavaScript has long had a syntax bug that would allow multiline strings by using a backslash (<code>\</code>) before a newline, such as:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">message</code> <code class="o">=</code> <code class="s2">"Multiline \</code>
+<code class="s2">string"</code><code class="p">;</code>
+</pre></div>
+
+</div>
+
+<p>Despite this working in all major JavaScripte engines, the behavior was defined as a bug and many recommended avoiding its usage.</p>
+
+<p>Other attempts to create multiline strings usually relied on arrays or string concatenation, such as:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">message</code> <code class="o">=</code> <code class="p">[</code>
+    <code class="s2">"Multiline "</code><code class="p">,</code>
+    <code class="s2">"string"</code>
+<code class="p">].</code><code class="nx">join</code><code class="p">(</code><code class="s2">""</code><code class="p">);</code>
+
+<code class="kd">let</code> <code class="nx">message</code> <code class="o">=</code> <code class="s2">"Multiline "</code> <code class="o">+</code>
+    <code class="s2">"string"</code><code class="p">;</code>
+</pre></div>
+
+</div>
+
+<p>All of the ways developers worked around JavaScript’s lack of multiline strings left something to be desired.</p>
+
+<p>Template strings make multiline strings easy because there is no special syntax. Just include a newline where you want and it shows up in the result. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">message</code> <code class="o">=</code> <code class="err">`</code><code class="nx">Multiline</code>
+<code class="nx">string</code><code class="err">`</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message</code><code class="p">);</code>           <code class="c1">// "Multiline</code>
+                                <code class="c1">//  string"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message</code><code class="p">.</code><code class="nx">length</code><code class="p">);</code>    <code class="c1">// 16</code>
+</pre></div>
+
+</div>
+
+<p>All whitespace inside of the backticks is considered to be part of the string, so be careful with indentation. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">message</code> <code class="o">=</code> <code class="err">`</code><code class="nx">Multiline</code>
+               <code class="nx">string</code><code class="err">`</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message</code><code class="p">);</code>           <code class="c1">// "Multiline</code>
+                                <code class="c1">//                 string"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message</code><code class="p">.</code><code class="nx">length</code><code class="p">);</code>    <code class="c1">// 16</code>
+</pre></div>
+
+</div>
+
+<p>In this code, all of the whitespace before the second line of the template string is considered to be a part of the string itself. If making the text line up with proper indentation is important to you, then you consider leaving nothing on the first line of a multiline template string and then indenting after that, such as this:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">html</code> <code class="o">=</code> <code class="err">`</code>
+<code class="o">&lt;</code><code class="nx">div</code><code class="o">&gt;</code>
+    <code class="o">&lt;</code><code class="nx">h1</code><code class="o">&gt;</code><code class="nx">Title</code><code class="o">&lt;</code><code class="err">/h1&gt;</code>
+<code class="o">&lt;</code><code class="err">/div&gt;`.trim();</code>
+</pre></div>
+
+</div>
+
+<p>This code begins the template string on the first line but doesn’t have any text until the second. The HTML tags are indented to look correct and then the <code>trim()</code> method is called to remove the initial (empty) line.</p>
+
+<div class="aside sidebarish">
+  <p>If you prefer, you can also use <code>\n</code> in a template string to indicate where a newline should be inserted:</p>
+  <div class="code-block">
+<div class="highlight"><pre><code class="n">let</code> <code class="n">message</code> <code class="o">=</code> <code class="err">`</code><code class="n">Multiline</code><code class="err">\</code><code class="n">nstring</code><code class="err">`</code><code class="p">;</code>
+
+<code class="n">console</code><code class="p">.</code><code class="n">log</code><code class="p">(</code><code class="n">message</code><code class="p">);</code>           <code class="c1">// "Multiline</code>
+                                <code class="c1">//  string"</code>
+<code class="n">console</code><code class="p">.</code><code class="n">log</code><code class="p">(</code><code class="n">message</code><code class="p">.</code><code class="n">length</code><code class="p">);</code>    <code class="c1">// 16</code>
+</pre></div>
+  
+</div>
+
+</div>
+
+<h3 id="leanpub-auto-substitutions">Substitutions</h3>
+
+<p>To this point, template strings may look like a fancier way of defining normal JavaScript strings. The real difference is with template string substitutions. Substitutions allow you to embed any valid JavaScript expression inside of a template string and have the result be output as part of the string.</p>
+
+<p>Substitutions are delimited by an opening <code>${</code> and a closing <code>}</code>, within which you can use any JavaScript expression. At its simplest, substitutions let you embed local variables directly into the result string, like this:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">name</code> <code class="o">=</code> <code class="s2">"Nicholas"</code><code class="p">,</code>
+    <code class="nx">message</code> <code class="o">=</code> <code class="err">`</code><code class="nx">Hello</code><code class="p">,</code> <code class="nx">$</code><code class="p">{</code><code class="nx">name</code><code class="p">}.</code><code class="err">`</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message</code><code class="p">);</code>       <code class="c1">// "Hello, Nicholas."</code>
+</pre></div>
+
+</div>
+
+<p>The substitution <code>${name}</code> accessed the local variable <code>name</code> to insert it into the string. The <code>message</code> variable then holds the result of the substitution immediately.</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>Template strings can access any variable that is accessible in the scope in which it is defined. Attempting to use an undeclared variable in a template string results in an error being thrown in both strict and non-strict modes.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><p>Since all substitutions are JavaScript expressions, it’s possible to substitute more than just simple variable names. You can easily embed calculations, function calls, and more. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">count</code> <code class="o">=</code> <code class="mi">10</code><code class="p">,</code>
+    <code class="nx">price</code> <code class="o">=</code> <code class="mf">0.25</code><code class="p">,</code>
+    <code class="nx">message</code> <code class="o">=</code> <code class="err">`</code><code class="nx">$</code><code class="p">{</code><code class="nx">count</code><code class="p">}</code> <code class="nx">items</code> <code class="nx">cost</code> <code class="nx">$$</code><code class="p">{(</code><code class="nx">count</code> <code class="o">*</code> <code class="nx">price</code><code class="p">).</code><code class="nx">toFixed</code><code class="p">(</code><code class="mi">2</code><code class="p">)}.</code><code class="err">`</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message</code><code class="p">);</code>       <code class="c1">// "10 items cost $2.50."</code>
+</pre></div>
+
+</div>
+
+<p>This code performs a calculation as part of the template string. The variables <code>count</code> and <code>price</code> are multiplied together to get a result, and then formatted to two decimal places using <code>.toFixed()</code>. The dollar sign before the second substitution is output as-is because it’s not followed by an opening curly brace.</p>
+
+<h3 id="leanpub-auto-tagged-templates">Tagged Templates</h3>
+
+<p>To this point, you’ve seen how template strings can be used for multiline strings and to insert values into strings without using concatenation. The real power of template strings comes from tagged templates. A <em>template tag</em> performs a transformation on the template string and returns the final string value. This tag is specified at the start of the template, just before the first <code>`</code> character, such as:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">message</code> <code class="o">=</code> <code class="nx">tag</code><code class="err">`</code><code class="nx">Hello</code> <code class="nx">world</code><code class="err">`</code><code class="p">;</code>
+</pre></div>
+
+</div>
+
+<p>In this example, <code>tag</code> is the template tag to apply to <code>`Hello world`</code>.</p>
+
+<h4 id="leanpub-auto-defining-tags">Defining Tags</h4>
+
+<p>A tag is simply a function that is called with the processed template string data. The function receives data about the template string as individual pieces that the tag must then combined to create the finished value. The first argument is an array containing the literal strings as they are interpreted by JavaScript. Each subsequent argument is the interpreted value of each substitution. Tag functions are typically defined using rest arguments to make dealing with the data easier:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">tag</code><code class="p">(</code><code class="nx">literals</code><code class="p">,</code> <code class="p">...</code><code class="nx">substitutions</code><code class="p">)</code> <code class="p">{</code>
+    <code class="c1">// return a string</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>To better understand what is passed to tags, consider the following:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">count</code> <code class="o">=</code> <code class="mi">10</code><code class="p">,</code>
+    <code class="nx">price</code> <code class="o">=</code> <code class="mf">0.25</code><code class="p">,</code>
+    <code class="nx">message</code> <code class="o">=</code> <code class="nx">passthru</code><code class="err">`</code><code class="nx">$</code><code class="p">{</code><code class="nx">count</code><code class="p">}</code> <code class="nx">items</code> <code class="nx">cost</code> <code class="nx">$$</code><code class="p">{(</code><code class="nx">count</code> <code class="o">*</code> <code class="nx">price</code><code class="p">).</code><code class="nx">toFixed</code><code class="p">(</code><code class="mi">2</code><code class="p">)}.</code><code class="err">`</code><code class="p">;</code>
+</pre></div>
+
+</div>
+
+<p>If you had a function called <code>passthru()</code>, that function would receive three arguments:</p>
+
+<ol class="numeric"><li><code>literals</code>, containing:
+    <ul><li><code>""</code> - the empty string before the first substitution</li>
+      <li><code>" items cost $"</code> - the string after the first substitution and before the second</li>
+      <li><code>"."</code> - the string after the second substitution</li>
+    </ul></li>
+  <li><code>10</code> - the interpreted value for <code>count</code> (this becomes <code>substitutions[0]</code>)</li>
+  <li><code>"2.50"</code> - the interpreted value for <code>(count * price).toFixed(2)</code> (this becomes <code>substitutions[2]</code>)</li>
+</ol><p>Note that the first item in <code>literals</code> is an empty string. This is to ensure that <code>literals[0]</code> is always the start of the string, just like <code>literals[literals.length - 1]</code> is always the end of the string. There is always one fewer substitution than literal, which is to say that <code>substitutions.length === literals.length - 1</code> all the time.</p>
+
+<p>Using this pattern, the <code>literals</code> and <code>substitutions</code> arrays can be interweaved to create the result. The first item in <code>literals</code> comes first, then the first item in <code>substitutions</code>, and so on, until the string has been completed. So to mimic the default behavior of template, you need only define a function that performs this operation:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">passthru</code><code class="p">(</code><code class="nx">literals</code><code class="p">,</code> <code class="p">...</code><code class="nx">substitutions</code><code class="p">)</code> <code class="p">{</code>
+    <code class="kd">let</code> <code class="nx">result</code> <code class="o">=</code> <code class="s2">""</code><code class="p">;</code>
+
+    <code class="c1">// run the loop only for the substitution count</code>
+    <code class="k">for</code> <code class="p">(</code><code class="kd">let</code> <code class="nx">i</code> <code class="o">=</code> <code class="mi">0</code><code class="p">;</code> <code class="nx">i</code> <code class="o">&lt;</code> <code class="nx">substitutions</code><code class="p">.</code><code class="nx">length</code><code class="p">;</code> <code class="nx">i</code><code class="o">++</code><code class="p">)</code> <code class="p">{</code>
+        <code class="nx">result</code> <code class="o">+=</code> <code class="nx">literals</code><code class="p">[</code><code class="nx">i</code><code class="p">];</code>
+        <code class="nx">result</code> <code class="o">+=</code> <code class="nx">substitutions</code><code class="p">[</code><code class="nx">i</code><code class="p">];</code>
+    <code class="p">}</code>
+
+    <code class="c1">// add the last literal</code>
+    <code class="nx">result</code> <code class="o">+=</code> <code class="nx">literals</code><code class="p">[</code><code class="nx">literals</code><code class="p">.</code><code class="nx">length</code> <code class="o">-</code> <code class="mi">1</code><code class="p">];</code>
+
+    <code class="k">return</code> <code class="nx">result</code><code class="p">;</code>
+<code class="p">}</code>
+
+<code class="kd">let</code> <code class="nx">count</code> <code class="o">=</code> <code class="mi">10</code><code class="p">,</code>
+    <code class="nx">price</code> <code class="o">=</code> <code class="mf">0.25</code><code class="p">,</code>
+    <code class="nx">message</code> <code class="o">=</code> <code class="nx">passthru</code><code class="err">`</code><code class="nx">$</code><code class="p">{</code><code class="nx">count</code><code class="p">}</code> <code class="nx">items</code> <code class="nx">cost</code> <code class="nx">$$</code><code class="p">{(</code><code class="nx">count</code> <code class="o">*</code> <code class="nx">price</code><code class="p">).</code><code class="nx">toFixed</code><code class="p">(</code><code class="mi">2</code><code class="p">)}.</code><code class="err">`</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message</code><code class="p">);</code>       <code class="c1">// "10 items cost $2.50."</code>
+</pre></div>
+
+</div>
+
+<p>This example defines a <code>passthru</code> tag that performs the same transformation as the default template string behavior. The only trick is to use <code>substitutions.length</code> for the loop rather than <code>literals.length</code> to avoid accidentally going past the end of <code>substitutions</code>. This works because the relationship between <code>literals</code> and <code>substitutions</code> is well-defined.</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>The values contained in <code>substitutions</code> are not necessarily strings. If an expression is evaluated to be a number, as in the previous example, then the numeric value is passed in. It’s part of the tag’s job to determine how such values should be output in the result.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h4 id="leanpub-auto-using-raw-values">Using Raw Values</h4>
+
+<p>Template tags also have access to raw string information, which primarily means access to character escapes before they are transformed into their character equivalents. The simplest way to work with raw string values is to the built-in <code>String.raw()</code> tag. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">message1</code> <code class="o">=</code> <code class="err">`</code><code class="nx">Multiline</code><code class="err">\</code><code class="nx">nstring</code><code class="err">`</code><code class="p">,</code>
+    <code class="nx">message2</code> <code class="o">=</code> <code class="nb">String</code><code class="p">.</code><code class="nx">raw</code><code class="err">`</code><code class="nx">Multiline</code><code class="err">\</code><code class="nx">nstring</code><code class="err">`</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message1</code><code class="p">);</code>          <code class="c1">// "Multiline</code>
+                                <code class="c1">//  string"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message2</code><code class="p">);</code>          <code class="c1">// "Multiline\\nstring"</code>
+</pre></div>
+
+</div>
+
+<p>In this code, the <code>\n</code> in <code>message1</code> is interpreted as a newline while the <code>\n</code> in <code>message2</code> is returned in its raw form of <code>"\\n"</code> (two characters, the slash and <code>n</code>). Retrieving the raw string information in this way allows for more complex processing (when necessary).</p>
+
+<p>The raw string information is also passed into template tags. The first argument in a tag function is an array with an extra property called <code>raw</code>. The <code>raw</code> property is an array containing the raw equivalent of each literal value. So the value in <code>literals[0]</code> always has an equivalent <code>literals.raw[0]</code> that contains the raw string information. Knowing that, it’s possible to mimic <code>String.raw()</code> using the following:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">raw</code><code class="p">(</code><code class="nx">literals</code><code class="p">,</code> <code class="p">...</code><code class="nx">substitutions</code><code class="p">)</code> <code class="p">{</code>
+    <code class="kd">let</code> <code class="nx">result</code> <code class="o">=</code> <code class="s2">""</code><code class="p">;</code>
+
+    <code class="c1">// run the loop only for the substitution count</code>
+    <code class="k">for</code> <code class="p">(</code><code class="kd">let</code> <code class="nx">i</code> <code class="o">=</code> <code class="mi">0</code><code class="p">;</code> <code class="nx">i</code> <code class="o">&lt;</code> <code class="nx">substitutions</code><code class="p">.</code><code class="nx">length</code><code class="p">;</code> <code class="nx">i</code><code class="o">++</code><code class="p">)</code> <code class="p">{</code>
+        <code class="nx">result</code> <code class="o">+=</code> <code class="nx">literals</code><code class="p">.</code><code class="nx">raw</code><code class="p">[</code><code class="nx">i</code><code class="p">];</code>      <code class="c1">// use raw values instead</code>
+        <code class="nx">result</code> <code class="o">+=</code> <code class="nx">substitutions</code><code class="p">[</code><code class="nx">i</code><code class="p">];</code>
+    <code class="p">}</code>
+
+    <code class="c1">// add the last literal</code>
+    <code class="nx">result</code> <code class="o">+=</code> <code class="nx">literals</code><code class="p">.</code><code class="nx">raw</code><code class="p">[</code><code class="nx">literals</code><code class="p">.</code><code class="nx">length</code> <code class="o">-</code> <code class="mi">1</code><code class="p">];</code>
+
+    <code class="k">return</code> <code class="nx">result</code><code class="p">;</code>
+<code class="p">}</code>
+
+<code class="kd">let</code> <code class="nx">message</code> <code class="o">=</code> <code class="nx">raw</code><code class="err">`</code><code class="nx">Multiline</code><code class="err">\</code><code class="nx">nstring</code><code class="err">`</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message</code><code class="p">);</code>           <code class="c1">// "Multiline\\nstring"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">message</code><code class="p">.</code><code class="nx">length</code><code class="p">);</code>    <code class="c1">// 17</code>
+</pre></div>
+
+</div>
+
+<p>This example uses <code>literals.raw</code> instead of <code>literals</code> to output the string result. That means any character escapes, including Unicode code point escapes, will be returned in their raw form.</p>
+
+<h3 id="leanpub-auto-summary-5">Summary</h3>
+
+<p>Template strings are an important addition to ECMAScript 6 that allows the creating of domain-specific languages (DSLs) to make creating strings easier. The ability to embed variables directly into template strings means that developers have a safer tool than string concatenation for composing long strings with variables.</p>
+
+<p>Built-in support for multiline strings also makes template strings a useful upgrade over normal JavaScript strings, which have never had this ability. Despite allowing newlines directly inside the template string, you can still use <code>\n</code> and other character escape sequences.</p>
+
+<p>Template tags are the most important part of this feature for creating DSLs. Tags are functions that receive the pieces of the template string as arguments. You can then use that data to return an appropriate string value. The data provided includes literals, their raw equivalents, and any substitution values. These pieces of information can then be used to determine the correct output for the tag.</p>
+
+<p>ECMAScript 6 has only one built-in tag, which is <code>String.raw()</code>. This tag simply returns the template string in its raw form, with character escape sequences in their original form rather than transforming them into their character equivalents.</p>
+</div>
+</body>
+</html>

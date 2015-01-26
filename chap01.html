@@ -1,0 +1,1545 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>The Basics</title>
+<link href="stylesheet.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+<div id="leanpub-toc">
+<h2></h2>
+<ol class="toc">
+<ul class='toc no-parts'>
+  <li>
+    <a href='chap00.html#leanpub-auto-introduction'>Introduction</a>
+    <ul>
+      <li>
+        <a href='chap00.html#leanpub-auto-browser-and-nodejs-compatibility'>Browser and Node.js Compatibility</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-who-this-book-is-for'>Who This Book is For</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-overview'>Overview</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-help-and-support'>Help and Support</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap01.html#leanpub-auto-the-basics'>The Basics</a>
+    <ul>
+      <li>
+        <a href='chap01.html#leanpub-auto-better-unicode-support'>Better Unicode Support</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-other-string-changes'>Other String Changes</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-other-regular-expression-changes'>Other Regular Expression Changes</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-objectis'>Object.is()</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-block-bindings'>Block bindings</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-destructuring-assignment'>Destructuring Assignment</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-numbers'>Numbers</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-summary'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap02.html#leanpub-auto-functions'>Functions</a>
+    <ul>
+      <li>
+        <a href='chap02.html#leanpub-auto-default-parameters'>Default Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-rest-parameters'>Rest Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-destructured-parameters'>Destructured Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-the-spread-operator'>The Spread Operator</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-the-name-property'>The name Property</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-block-level-functions'>Block-Level Functions</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-arrow-functions'>Arrow Functions</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-syntax'>Syntax</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-summary-1'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap03.html#leanpub-auto-objects'>Objects</a>
+    <ul>
+      <li>
+        <a href='chap03.html#leanpub-auto-object-categories'>Object Categories</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-object-literal-extensions'>Object Literal Extensions</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-objectassign'>Object.assign()</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-duplicate-object-literal-properties'>Duplicate Object Literal Properties</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-changing-prototypes'>Changing Prototypes</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-super-references'>Super References</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-summary-2'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap04.html#leanpub-auto-symbols'>Symbols</a>
+    <ul>
+      <li>
+        <a href='chap04.html#leanpub-auto-creating-symbols'>Creating Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-identifying-symbols'>Identifying Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-using-symbols'>Using Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-sharing-symbols'>Sharing Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-finding-object-symbols'>Finding Object Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-coercing-symbols-to-strings'>Coercing Symbols to Strings</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-well-known-symbols'>Well-Known Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-summary-3'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap05.html#leanpub-auto-iterators-and-generators'>Iterators and Generators</a>
+    <ul>
+      <li>
+        <a href='chap05.html#leanpub-auto-what-are-iterators'>What are Iterators?</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-generators'>Generators</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-iterables-and-for-of'>Iterables and for-of</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-built-in-iterators'>Built-in Iterators</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-advanced-functionality'>Advanced Functionality</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-summary-4'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap06.html#leanpub-auto-template-strings'>Template Strings</a>
+    <ul>
+      <li>
+        <a href='chap06.html#leanpub-auto-basic-syntax'>Basic Syntax</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-multiline-strings'>Multiline Strings</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-substitutions'>Substitutions</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-tagged-templates'>Tagged Templates</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-summary-5'>Summary</a>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+</ol>
+</div>
+<div id="leanpub-main">
+<h2 id="leanpub-auto-the-basics">The Basics</h2>
+
+<p>ECMAScript 6 makes a large number of changes on top of ECMAScript 5. Some of the changes are larger, such as adding new types or syntax, while others are quite small, providing incremental improvements on top of the language. This chapter covers those incremental improvements that likely won’t gain a lot of attention but provide some important functionality that may make certain types of problems easier to solve.</p>
+
+<h3 id="leanpub-auto-better-unicode-support">Better Unicode Support</h3>
+
+<p>Prior to ECMAScript 6, JavaScript strings were based solely on the idea of 16-bit character encodings. All string properties and methods, such as <code>length</code> and <code>charAt()</code>, were based around the idea that every 16-bit sequence represented a single character. ECMAScript 5 allowed JavaScript engines to decide which of two encodings to use, either UCS-2 or UTF-16 (both encoding using 16-bit <em>code units</em>, making all observable operations the same). While it’s true that all of the world’s characters used to fit into 16 bits at one point in time, that is no longer the case.</p>
+
+<p>Keeping within 16 bits wasn’t possible for Unicode’s stated goal of providing a globally unique identifier to every character in the world. These globally unique identifiers, called <em>code points</em>, are simply numbers starting at 0 (you might think of these as character codes, but there is subtle difference). A character encoding is responsible for encoding a code point into code units that are internally consistent. While UCS-2 had a one-to-one mapping of code point to code unit, UTF-16 is more variable.</p>
+
+<p>The first 2^16 code points are represented as single 16-bit code units in UTF-16. This is called the <em>Basic Multilingual Plane</em> (BMP). Everything beyond that range is considered to be in a <em>supplementary plane</em>, where the code points can no longer be represented in just 16-bits. UTF-16 solves this problem by introducing <em>surrogate pairs</em> in which a single code point is represented by two 16-bit code units. That means any single character in a string can be either one code unit (for BMP, total of 16 bits) or two (for supplementary plane characters, total of 32 bits).</p>
+
+<p>ECMAScript 5 kept all operations as working on 16-bit code units, meaning that you could get unexpected results from strings containing surrogate pairs. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">text</code> <code class="o">=</code> <code class="s2">"𠮷"</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">text</code><code class="p">.</code><code class="nx">length</code><code class="p">);</code>           <code class="c1">// 2</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="sr">/^.$/</code><code class="p">.</code><code class="nx">test</code><code class="p">(</code><code class="nx">text</code><code class="p">));</code>      <code class="c1">// false</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">text</code><code class="p">.</code><code class="nx">charAt</code><code class="p">(</code><code class="mi">0</code><code class="p">));</code>        <code class="c1">// ""</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">text</code><code class="p">.</code><code class="nx">charAt</code><code class="p">(</code><code class="mi">1</code><code class="p">));</code>        <code class="c1">// ""</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">text</code><code class="p">.</code><code class="nx">charCodeAt</code><code class="p">(</code><code class="mi">0</code><code class="p">));</code>    <code class="c1">// 55362</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">text</code><code class="p">.</code><code class="nx">charCodeAt</code><code class="p">(</code><code class="mi">1</code><code class="p">));</code>    <code class="c1">// 57271</code>
+</pre></div>
+
+</div>
+
+<p>In this example, a single Unicode character is represented using surrogate pairs, and as such, the JavaScript string operations treat the string as having two 16-bit characters. That means <code>length</code> is 2, a regular expression trying to match a single character fails, and <code>charAt()</code> is unable to return a valid character string. The <code>charCodeAt()</code> method returns the appropriate 16-bit number for each code unit, but that is the closest you could get to the real value in ECMAScript 5.</p>
+
+<p>ECMAScript 6 enforces encoding of strings in UTF-16. Standardizing on this character encoding means that the language can now support functionality designed to work specifically with surrogate pairs.</p>
+
+<h4 id="leanpub-auto-the-codepointat-method">The codePointAt() Method</h4>
+
+<p>The first example of fully supporting UTF-16 is the <code>codePointAt()</code> method, which can be used to retrieve the Unicode code point that maps to a given position in a string. This method accepts the code unit position (not the character position) and returns an integer value:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">text</code> <code class="o">=</code> <code class="s2">"𠮷a"</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">text</code><code class="p">.</code><code class="nx">charCodeAt</code><code class="p">(</code><code class="mi">0</code><code class="p">));</code>    <code class="c1">// 55362</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">text</code><code class="p">.</code><code class="nx">charCodeAt</code><code class="p">(</code><code class="mi">1</code><code class="p">));</code>    <code class="c1">// 57271</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">text</code><code class="p">.</code><code class="nx">charCodeAt</code><code class="p">(</code><code class="mi">2</code><code class="p">));</code>    <code class="c1">// 97</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">text</code><code class="p">.</code><code class="nx">codePointAt</code><code class="p">(</code><code class="mi">0</code><code class="p">));</code>   <code class="c1">// 134071</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">text</code><code class="p">.</code><code class="nx">codePointAt</code><code class="p">(</code><code class="mi">1</code><code class="p">));</code>   <code class="c1">// 57271</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">text</code><code class="p">.</code><code class="nx">codePointAt</code><code class="p">(</code><code class="mi">2</code><code class="p">));</code>   <code class="c1">// 97</code>
+</pre></div>
+
+</div>
+
+<p>The <code>codePointAt()</code> method works in the same manner as <code>charCodeAt()</code> except for non-BMP characters. The first character in <code>text</code> is non-BMP and is therefore comprised of two code units, meaning the entire length of the string is 3 rather than 2. The <code>charAt()</code> method returns only the first code unit for position 0 whereas <code>codePointAt()</code> returns the full code point even though it spans multiple code units. Both methods return the same value for positions 1 (the second code unit of the first character) and 2 (the <code>"a"</code>).</p>
+
+<p>This method is the easiest way to determine if a given character is represented by one or two code points:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">is32Bit</code><code class="p">(</code><code class="nx">c</code><code class="p">)</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="nx">c</code><code class="p">.</code><code class="nx">codePointAt</code><code class="p">(</code><code class="mi">0</code><code class="p">)</code> <code class="o">&gt;</code> <code class="mh">0xFFFF</code><code class="p">;</code>
+<code class="p">}</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">is32Bit</code><code class="p">(</code><code class="s2">"𠮷"</code><code class="p">));</code>         <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">is32Bit</code><code class="p">(</code><code class="s2">"a"</code><code class="p">));</code>          <code class="c1">// false</code>
+</pre></div>
+
+</div>
+
+<p>The upper bound of 16-bit characters is represented in hexadecimal as <code>FFFF</code>, so any code point above that number must be represented by two code units.</p>
+
+<h4 id="leanpub-auto-stringfromcodepoint">String.fromCodePoint()</h4>
+
+<p>When ECMAScript provides a way to do something, it also tends to provide a way to do the reverse. You can use <code>codePointAt()</code> to retrieve the code point for a character in a string while <code>String.fromCodePoint()</code> produces a single-character string for the given code point. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">String</code><code class="p">.</code><code class="nx">fromCodePoint</code><code class="p">(</code><code class="mi">134071</code><code class="p">));</code>  <code class="c1">// "𠮷"</code>
+</pre></div>
+
+</div>
+
+<p>You can think of <code>String.fromCodePoint()</code> as a more complete version of <code>String.fromCharCode()</code>. Each method has the same result for all characters in the BMP; the only difference is with characters outside of that range.</p>
+
+<h4 id="leanpub-auto-escaping-non-bmp-characters">Escaping Non-BMP Characters</h4>
+
+<p>ECMAScript 5 allows strings to contain 16-bit Unicode characters represented by an <em>escape sequence</em>. The escape sequence is the <code>\u</code> followed by four hexadecimal values. For example, the escape sequence <code>\u0061</code> represents the letter <code>"a"</code>:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="s2">"\u0061"</code><code class="p">);</code>      <code class="c1">// "a"</code>
+</pre></div>
+
+</div>
+
+<p>If you try to use an escape sequence with a number past <code>FFFF</code>, the upper bound of the BMP, then you can get some surprising results:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="s2">"\u20BB7"</code><code class="p">);</code>     <code class="c1">// "7"</code>
+</pre></div>
+
+</div>
+
+<p>Since Unicode escape sequences were defined as always having exactly four hexadecimal characters, ECMAScript evaluates <code>\u20BB7</code> as two characters: <code>\u20BB</code> and <code>"7"</code>. The first character is unprintable and the second is the number 7.</p>
+
+<p>ECMAScript 6 solves this problem by introducing an extended Unicode escape sequence where the hexadecimal numbers are contained within curly braces. This allows any number of hexadecimal characters to specify a single character:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="s2">"\u{20BB7}"</code><code class="p">);</code>     <code class="c1">// "𠮷"</code>
+</pre></div>
+
+</div>
+
+<p>Using the extended escape sequence, the correct character is contained in the string.</p>
+
+<table class="warning sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_warning.png" alt="warning" width="50px" /></td>
+    <td>
+      <p>Make sure that you use this new escape sequence only in an ECMAScript 6 environment. In all other environments, doing so causes a syntax error. You may want to check and see if the environment supports the extended escape sequence using a function such as:</p>
+
+  <div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">supportsExtendedEscape</code><code class="p">()</code> <code class="p">{</code>
+    <code class="k">try</code> <code class="p">{</code>
+        <code class="nb">eval</code><code class="p">(</code><code class="s2">"'\\u{00FF1}'"</code><code class="p">);</code>
+        <code class="k">return</code> <code class="kc">true</code><code class="p">;</code>
+    <code class="p">}</code> <code class="k">catch</code> <code class="p">(</code><code class="nx">ex</code><code class="p">)</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="kc">false</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">}</code>
+</pre></div>
+  
+</div>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h4 id="leanpub-auto-the-normalize-method">The normalize() Method</h4>
+
+<p>Another interesting aspect of Unicode is that different characters may be considered equivalent for the purposes of sorting or other comparison-based operations. There are two ways to define these relationships. First, <em>canonical equivalence</em> means that two sequences of code points are considered interchangeable in all respects. That even means that a combination of two characters can be canonically equivalent to one character. The second relationship is <em>compatibility</em>, meaning that two sequences of code points having different appearances but can be used interchangeably in certain situations.</p>
+
+<p>The important thing to understand is that due to these relationships, it’s possible to have two strings that represent fundamentally the same text and yet have them contain different code point sequences. For example, the character “æ” and the string “ae” may be used interchangeably even though they are different code points. These two strings would therefore be unequal in JavaScript unless they are normalized in some way.</p>
+
+<p>ECMAScript 6 supports the four Unicode normalization forms through a new <code>normalize()</code> method on strings. This method optionally accepts a single parameter, one of <code>"NFC"</code> (default), <code>"NFD"</code>, <code>"NFKC"</code>, or <code>"NFKD"</code>. It’s beyond the scope of this book to explain the differences between these four forms. Just keep in mind that, in order to be used, you must normalize both strings that are being compared to the same form. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">normalized</code> <code class="o">=</code> <code class="nx">values</code><code class="p">.</code><code class="nx">map</code><code class="p">(</code><code class="kd">function</code><code class="p">(</code><code class="nx">text</code><code class="p">)</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="nx">text</code><code class="p">.</code><code class="nx">normalize</code><code class="p">();</code>
+<code class="p">});</code>
+
+<code class="nx">normalized</code><code class="p">.</code><code class="nx">sort</code><code class="p">(</code><code class="kd">function</code><code class="p">(</code><code class="nx">first</code><code class="p">,</code> <code class="nx">second</code><code class="p">)</code> <code class="p">{</code>
+    <code class="k">if</code> <code class="p">(</code><code class="nx">first</code> <code class="o">&lt;</code> <code class="nx">second</code><code class="p">)</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="o">-</code><code class="mi">1</code><code class="p">;</code>
+    <code class="p">}</code> <code class="k">else</code> <code class="k">if</code> <code class="p">(</code><code class="nx">first</code> <code class="o">===</code> <code class="nx">second</code><code class="p">)</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="mi">0</code><code class="p">;</code>
+    <code class="p">}</code> <code class="k">else</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="mi">1</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">});</code>
+</pre></div>
+
+</div>
+
+<p>In this code, the strings in a <code>values</code> array are converted into a normalized form so that the array can be sorted appropriately. You can accomplish the sort on the original array by calling <code>normalize()</code> as part of the comparator:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">values</code><code class="p">.</code><code class="nx">sort</code><code class="p">(</code><code class="kd">function</code><code class="p">(</code><code class="nx">first</code><code class="p">,</code> <code class="nx">second</code><code class="p">)</code> <code class="p">{</code>
+    <code class="kd">var</code> <code class="nx">firstNormalized</code> <code class="o">=</code> <code class="nx">first</code><code class="p">.</code><code class="nx">normalize</code><code class="p">(),</code>
+        <code class="nx">secondNormalized</code> <code class="o">=</code> <code class="nx">second</code><code class="p">.</code><code class="nx">normalize</code><code class="p">();</code>
+
+    <code class="k">if</code> <code class="p">(</code><code class="nx">firstNormalized</code> <code class="o">&lt;</code> <code class="nx">secondNormalized</code><code class="p">)</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="o">-</code><code class="mi">1</code><code class="p">;</code>
+    <code class="p">}</code> <code class="k">else</code> <code class="k">if</code> <code class="p">(</code><code class="nx">firstNormalized</code> <code class="o">===</code> <code class="nx">secondNormalized</code><code class="p">)</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="mi">0</code><code class="p">;</code>
+    <code class="p">}</code> <code class="k">else</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="mi">1</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">});</code>
+</pre></div>
+
+</div>
+
+<p>Once again, the most important thing to remember is that both values must be normalized in the same way. These examples have used the default, NFC, but you can just as easily specify one of the others:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">values</code><code class="p">.</code><code class="nx">sort</code><code class="p">(</code><code class="kd">function</code><code class="p">(</code><code class="nx">first</code><code class="p">,</code> <code class="nx">second</code><code class="p">)</code> <code class="p">{</code>
+    <code class="kd">var</code> <code class="nx">firstNormalized</code> <code class="o">=</code> <code class="nx">first</code><code class="p">.</code><code class="nx">normalize</code><code class="p">(</code><code class="s2">"NFD"</code><code class="p">),</code>
+        <code class="nx">secondNormalized</code> <code class="o">=</code> <code class="nx">second</code><code class="p">.</code><code class="nx">normalize</code><code class="p">(</code><code class="s2">"NFD"</code><code class="p">);</code>
+
+    <code class="k">if</code> <code class="p">(</code><code class="nx">firstNormalized</code> <code class="o">&lt;</code> <code class="nx">secondNormalized</code><code class="p">)</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="o">-</code><code class="mi">1</code><code class="p">;</code>
+    <code class="p">}</code> <code class="k">else</code> <code class="k">if</code> <code class="p">(</code><code class="nx">firstNormalized</code> <code class="o">===</code> <code class="nx">secondNormalized</code><code class="p">)</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="mi">0</code><code class="p">;</code>
+    <code class="p">}</code> <code class="k">else</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="mi">1</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">});</code>
+</pre></div>
+
+</div>
+
+<p>If you’ve never worried about Unicode normalization before, then you probably won’t have much use for this method. However, knowing that it is available will help should you ever end up working on an internationalized application.</p>
+
+<h4 id="leanpub-auto-the-regular-expression-u-flag">The Regular Expression u Flag</h4>
+
+<p>Many common string operations are accomplished by using regular expressions. However, as noted earlier, regular expressions also work on the basis of 16-bit code units each representing a single character. That’s why the single character match in the earlier example didn’t work. To address this problem, ECMAScript 6 defines a new flag for regular expressions: <code>u</code> for “Unicode”.</p>
+
+<p>When a regular expression has the <code>u</code> flag set, it switches modes to work on characters and not code units. That means the regular expression will no longer get confused about surrogate pairs in strings and can behave as expected. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">text</code> <code class="o">=</code> <code class="s2">"𠮷"</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">text</code><code class="p">.</code><code class="nx">length</code><code class="p">);</code>           <code class="c1">// 2</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="sr">/^.$/</code><code class="p">.</code><code class="nx">test</code><code class="p">(</code><code class="nx">text</code><code class="p">));</code>      <code class="c1">// false</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="err">/^.$/u.test(text));     // true</code>
+</pre></div>
+
+</div>
+
+<p>Adding the <code>u</code> flag allows the regular expression to correctly match the string by characters. Unfortunately, ECMAScript 6 does not have a way of determining how many code points are present in a string; fortunately, regular expressions can be used to figure it out:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">codePointLength</code><code class="p">(</code><code class="nx">text</code><code class="p">)</code> <code class="p">{</code>
+    <code class="kd">var</code> <code class="nx">result</code> <code class="o">=</code> <code class="nx">text</code><code class="p">.</code><code class="nx">match</code><code class="p">(</code><code class="err">/[\s\S]/gu);</code>
+    <code class="k">return</code> <code class="nx">result</code> <code class="o">?</code> <code class="nx">result</code><code class="p">.</code><code class="nx">length</code> <code class="o">:</code> <code class="mi">0</code><code class="p">;</code>
+<code class="p">}</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">codePointLength</code><code class="p">(</code><code class="s2">"abc"</code><code class="p">));</code>    <code class="c1">// 3</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">codePointLength</code><code class="p">(</code><code class="s2">"𠮷bc"</code><code class="p">));</code>   <code class="c1">// 3</code>
+</pre></div>
+
+</div>
+
+<p>The regular expression in this example matches both whitespace and non-whitespace characters, and is applied globally with Unicode enabled. The <code>result</code> contains an array of matches when there’s at least one match, so the array length ends up being the number of code points in the string.</p>
+
+<table class="warning sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_warning.png" alt="warning" width="50px" /></td>
+    <td>
+      <p>Although this approach works, it’s not very fast, especially when applied to long strings. Try to minimize counting code points whenever possible. Hopefully ECMAScript 7 will bring a more performant means by which to count code points.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><p>Since the <code>u</code> flag is a syntax change, attempting to use it in non-compliant JavaScript engines means a syntax error is thrown. The safest way to determine if the <code>u</code> flag is supported is with a function:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">hasRegExpU</code><code class="p">()</code> <code class="p">{</code>
+    <code class="k">try</code> <code class="p">{</code>
+        <code class="kd">var</code> <code class="nx">pattern</code> <code class="o">=</code> <code class="k">new</code> <code class="nb">RegExp</code><code class="p">(</code><code class="s2">"."</code><code class="p">,</code> <code class="s2">"u"</code><code class="p">);</code>
+        <code class="k">return</code> <code class="kc">true</code><code class="p">;</code>
+    <code class="p">}</code> <code class="k">catch</code> <code class="p">(</code><code class="nx">ex</code><code class="p">)</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="kc">false</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>This function uses the <code>RegExp</code> constructor to pass in the <code>u</code> flag as an argument. This is valid syntax even in older JavaScript engines, however, the constructor will throw an error if <code>u</code> isn’t supported.</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>If your code needs to still work in older JavaScript engines, it’s best to use the <code>RegExp</code> constructor exclusively when using the <code>u</code> flag. This will prevent syntax errors and allow you to optionally detect and use the <code>u</code> flag without aborting execution.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h3 id="leanpub-auto-other-string-changes">Other String Changes</h3>
+
+<p>JavaScript strings have always lagged behind similar features of other languages. It was only in ECMAScript 5 that strings finally gained a <code>trim()</code> method, and ECMAScript 6 continues extending strings with new functionality.</p>
+
+<h4 id="leanpub-auto-includes-startswith-endswith">includes(), startsWith(), endsWith()</h4>
+
+<p>Developers have used <code>indexOf()</code> as a way to identify strings inside of other strings since JavaScript was first introduced. ECMAScript 6 adds three new methods whose purpose is to identify strings inside of other strings:</p>
+
+<ul><li><code>includes()</code> - returns true if the given text is found anywhere within the string or false if not.</li>
+  <li><code>startsWith()</code> - returns true if the given text is found at the beginning of the string or false if not.</li>
+  <li><code>endsWith()</code> - returns true if the given text is found at the end of the string or false if not.</li>
+</ul><p>Each of these methods accepts two arguments: the text to search for and an optional location from which to start the search. When the second argument is omitted, <code>includes()</code> and <code>startsWith()</code> start search from the beginning of the string while <code>endsWith()</code> starts from the end. In effect, the second argument results in less of the string being searched. Here are some examples:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">msg</code> <code class="o">=</code> <code class="s2">"Hello world!"</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">msg</code><code class="p">.</code><code class="nx">startsWith</code><code class="p">(</code><code class="s2">"Hello"</code><code class="p">));</code>       <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">msg</code><code class="p">.</code><code class="nx">endsWith</code><code class="p">(</code><code class="s2">"!"</code><code class="p">));</code>             <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">msg</code><code class="p">.</code><code class="nx">includes</code><code class="p">(</code><code class="s2">"o"</code><code class="p">));</code>             <code class="c1">// true</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">msg</code><code class="p">.</code><code class="nx">startsWith</code><code class="p">(</code><code class="s2">"o"</code><code class="p">));</code>           <code class="c1">// false</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">msg</code><code class="p">.</code><code class="nx">endsWith</code><code class="p">(</code><code class="s2">"world!"</code><code class="p">));</code>        <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">msg</code><code class="p">.</code><code class="nx">includes</code><code class="p">(</code><code class="s2">"x"</code><code class="p">));</code>             <code class="c1">// false</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">msg</code><code class="p">.</code><code class="nx">startsWith</code><code class="p">(</code><code class="s2">"o"</code><code class="p">,</code> <code class="mi">4</code><code class="p">));</code>        <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">msg</code><code class="p">.</code><code class="nx">endsWith</code><code class="p">(</code><code class="s2">"o"</code><code class="p">,</code> <code class="mi">8</code><code class="p">));</code>          <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">msg</code><code class="p">.</code><code class="nx">includes</code><code class="p">(</code><code class="s2">"o"</code><code class="p">,</code> <code class="mi">8</code><code class="p">));</code>          <code class="c1">// false</code>
+</pre></div>
+
+</div>
+
+<p>These three methods make it much easier to identify substrings without needing to worry about identifying their exact position.</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>All of these methods return a boolean value. If you need to find the position of a string within another, use <code>indexOf()</code> or <code>lastIndexOf()</code>.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><table class="warning sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_warning.png" alt="warning" width="50px" /></td>
+    <td>
+      <p>The <code>startsWith()</code>, <code>endsWith()</code>, and <code>includes()</code> methods will throw an error if you pass a regular expression instead of a string. This stands in contrast to <code>indexOf()</code> and <code>lastIndexOf()</code>, which both convert a regular expression argument into a string and then search for that string.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h4 id="leanpub-auto-repeat">repeat()</h4>
+
+<p>ECMAScript 6 also adds a <code>repeat()</code> method to strings. This method accepts a single argument, which is the number of times to repeat the string, and returns a new string that has the original string repeated the specified number of times. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="s2">"x"</code><code class="p">.</code><code class="nx">repeat</code><code class="p">(</code><code class="mi">3</code><code class="p">));</code>         <code class="c1">// "xxx"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="s2">"hello"</code><code class="p">.</code><code class="nx">repeat</code><code class="p">(</code><code class="mi">2</code><code class="p">));</code>     <code class="c1">// "hellohello"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="s2">"abc"</code><code class="p">.</code><code class="nx">repeat</code><code class="p">(</code><code class="mi">4</code><code class="p">));</code>       <code class="c1">// "abcabcabcabc"</code>
+</pre></div>
+
+</div>
+
+<p>This method is really a convenience function above all else, which can be especially useful when dealing with text manipulation. One example where this functionality comes in useful is with code formatting utilities where you need to create indentation levels:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="c1">// indent using a specified number of spaces</code>
+<code class="kd">var</code> <code class="nx">indent</code> <code class="o">=</code> <code class="s2">" "</code><code class="p">.</code><code class="nx">repeat</code><code class="p">(</code><code class="nx">size</code><code class="p">),</code>
+    <code class="nx">indentLevel</code> <code class="o">=</code> <code class="mi">0</code><code class="p">;</code>
+
+<code class="c1">// whenever you increase the indent</code>
+<code class="kd">var</code> <code class="nx">newIndent</code> <code class="o">=</code> <code class="nx">indent</code><code class="p">.</code><code class="nx">repeat</code><code class="p">(</code><code class="o">++</code><code class="nx">indentLevel</code><code class="p">);</code>
+</pre></div>
+
+</div>
+
+<h3 id="leanpub-auto-other-regular-expression-changes">Other Regular Expression Changes</h3>
+
+<p>Regular expressions are an important part of working with strings in JavaScript, and like many parts of the language, haven’t really changed very much in recent versions. ECMAScript 6, however, made several improvements to regular expressions to go along with the updates to strings.</p>
+
+<h4 id="leanpub-auto-the-regular-expression-y-flag">The Regular Expression y Flag</h4>
+
+<p>ECMAScript 6 standardized the <code>y</code> flag after it had been implemented in Firefox as a proprietary extension to regular expressions. The <code>y</code> (sticky) flag indicates that the next match should be made starting with the value of <code>lastIndex</code> on the regular expression.</p>
+
+<p>The <code>lastIndex</code> property indicates the position at which to start the match of a string and is set to <code>0</code> by default, meaning matches always start at the beginning of a string. You can, however, overwrite <code>lastIndex</code> to have it start from somewhere else:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">pattern</code> <code class="o">=</code> <code class="sr">/hello\d\s?/g</code><code class="p">,</code>
+    <code class="nx">text</code> <code class="o">=</code> <code class="s2">"hello1 hello2 hello3"</code><code class="p">,</code>
+    <code class="nx">result</code> <code class="o">=</code> <code class="nx">pattern</code><code class="p">.</code><code class="nx">exec</code><code class="p">(</code><code class="nx">text</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">result</code><code class="p">[</code><code class="mi">0</code><code class="p">]);</code>     <code class="c1">// "hello1 "</code>
+
+<code class="nx">pattern</code><code class="p">.</code><code class="nx">lastIndex</code> <code class="o">=</code> <code class="mi">7</code><code class="p">;</code>
+<code class="nx">result</code> <code class="o">=</code> <code class="nx">pattern</code><code class="p">.</code><code class="nx">exec</code><code class="p">(</code><code class="nx">text</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">result</code><code class="p">[</code><code class="mi">0</code><code class="p">]);</code>     <code class="c1">// "hello2 "</code>
+</pre></div>
+
+</div>
+
+<p>In this example, the regular expression matches the string <code>"hello"</code> followed by a number and optionally a whitespace character. The <code>g</code> flag is important as it allows the regular expression to use <code>lastIndex</code> when set (without it, matches always start at <code>0</code> regardless of the <code>lastIndex</code> value). The first call to <code>exec()</code> results in matching “hello1” first while the second call, with a <code>lastIndex</code> of 7, matches “hello2” first.</p>
+
+<p>The sticky flag tells the regular expression to save the index of the next character after the last match in <code>lastIndex</code> whenever an operation is performed (in the previous example, 7 is the location of next character after “hello1 “). If an operation results in no match then <code>lastIndex</code> is set back to 0.</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">pattern</code> <code class="o">=</code> <code class="err">/hello\d\s?/y,</code>
+    <code class="nx">text</code> <code class="o">=</code> <code class="s2">"hello1 hello2 hello3"</code><code class="p">,</code>
+    <code class="nx">result</code> <code class="o">=</code> <code class="nx">pattern</code><code class="p">.</code><code class="nx">exec</code><code class="p">(</code><code class="nx">text</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">result</code><code class="p">[</code><code class="mi">0</code><code class="p">]);</code>             <code class="c1">// "hello1 "</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">pattern</code><code class="p">.</code><code class="nx">lastIndex</code><code class="p">);</code>     <code class="c1">// 7</code>
+
+<code class="nx">result</code> <code class="o">=</code> <code class="nx">pattern</code><code class="p">.</code><code class="nx">exec</code><code class="p">(</code><code class="nx">text</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">result</code><code class="p">[</code><code class="mi">0</code><code class="p">]);</code>             <code class="c1">// "hello2 "</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">pattern</code><code class="p">.</code><code class="nx">lastIndex</code><code class="p">);</code>     <code class="c1">// 14</code>
+</pre></div>
+
+</div>
+
+<p>Here, the same pattern is used but with the sticky flag instead of the global flag. The value of <code>lastIndex</code> changed to 7 after the first call to <code>exec()</code> and to 14 after the second call. Since the sticky flag is updating <code>lastIndex</code> for you, there’s no need to keep track and manually update it yourself.</p>
+
+<p>Perhaps the most important thing to understand about the sticky flag is that sticky regular expressions have an implied <code>^</code> at the beginning, indicating that the pattern should match from the beginning of the input. For example, if the previous example is changed to not match the whitespace character, there are different results:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">pattern</code> <code class="o">=</code> <code class="err">/hello\d/y,</code>
+    <code class="nx">text</code> <code class="o">=</code> <code class="s2">"hello1 hello2 hello3"</code><code class="p">,</code>
+    <code class="nx">result</code> <code class="o">=</code> <code class="nx">pattern</code><code class="p">.</code><code class="nx">exec</code><code class="p">(</code><code class="nx">text</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">result</code><code class="p">[</code><code class="mi">0</code><code class="p">]);</code>             <code class="c1">// "hello1"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">pattern</code><code class="p">.</code><code class="nx">lastIndex</code><code class="p">);</code>     <code class="c1">// 6</code>
+
+<code class="nx">result</code> <code class="o">=</code> <code class="nx">pattern</code><code class="p">.</code><code class="nx">exec</code><code class="p">(</code><code class="nx">text</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">result</code><code class="p">);</code>                <code class="c1">// null</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">pattern</code><code class="p">.</code><code class="nx">lastIndex</code><code class="p">);</code>     <code class="c1">// 0</code>
+</pre></div>
+
+</div>
+
+<p>Without matching the whitespace character, the <code>lastIndex</code> is set to 6 after the first call to <code>exec()</code>. That means the regular expression will be evaluating the string as if it were this:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="s2">" hello2 hello3"</code>
+</pre></div>
+
+</div>
+
+<p>Since there is an implied <code>^</code> at the beginning of the regular expression pattern, the pattern starts by matching <code>"h"</code> against the space and sees that they are not equivalent. The matching stops there and <code>null</code> is returned. The <code>lastIndex</code> property is reset to 0.</p>
+
+<p>As with other regular expression flags, you can detect the presence of <code>y</code> by using a property. The <code>sticky</code> property is set to true with the sticky flag is present and false if not:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">pattern</code> <code class="o">=</code> <code class="err">/hello\d/y;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">pattern</code><code class="p">.</code><code class="nx">sticky</code><code class="p">);</code>    <code class="c1">// true</code>
+</pre></div>
+
+</div>
+
+<p>The <code>sticky</code> property is read-only based on the presence of the flag and so cannot be changed in code.</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>The <code>lastIndex</code> property is only honored when calling methods on the regular expression object such as <code>exec()</code> and <code>test()</code>. Passing the regular expression to a string method, such as <code>match()</code>, will not result in the sticky behavior.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><p>Similar to the <code>u</code> flag, the <code>y</code> flag is a syntax change, so it will cause a syntax error in older JavaScript engines. You can use the same approach to detect support:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">hasRegExpY</code><code class="p">()</code> <code class="p">{</code>
+    <code class="k">try</code> <code class="p">{</code>
+        <code class="kd">var</code> <code class="nx">pattern</code> <code class="o">=</code> <code class="k">new</code> <code class="nb">RegExp</code><code class="p">(</code><code class="s2">"."</code><code class="p">,</code> <code class="s2">"y"</code><code class="p">);</code>
+        <code class="k">return</code> <code class="kc">true</code><code class="p">;</code>
+    <code class="p">}</code> <code class="k">catch</code> <code class="p">(</code><code class="nx">ex</code><code class="p">)</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="kc">false</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>Also similar to <code>u</code>, if you need to use <code>y</code> in code that runs in older JavaScript engines, be sure to use the <code>RegExp</code> constructor when defining those regular expressions to avoid a syntax error.</p>
+
+<h4 id="leanpub-auto-duplicating-regular-expressions">Duplicating Regular Expressions</h4>
+
+<p>In ECMAScript 5, you can duplicate regular expressions by passing them into the <code>RegExp</code> constructor, such as:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">re1</code> <code class="o">=</code> <code class="sr">/ab/i</code><code class="p">,</code>
+    <code class="nx">re2</code> <code class="o">=</code> <code class="k">new</code> <code class="nb">RegExp</code><code class="p">(</code><code class="nx">re1</code><code class="p">);</code>
+</pre></div>
+
+</div>
+
+<p>However, if you provide the second argument to <code>RegExp</code>, which specifies the flags for the regular expression, then an error is thrown:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">re1</code> <code class="o">=</code> <code class="sr">/ab/i</code><code class="p">,</code>
+
+    <code class="c1">// throws an error in ES5, okay in ES6</code>
+    <code class="nx">re2</code> <code class="o">=</code> <code class="k">new</code> <code class="nb">RegExp</code><code class="p">(</code><code class="nx">re1</code><code class="p">,</code> <code class="s2">"g"</code><code class="p">);</code>
+</pre></div>
+
+</div>
+
+<p>If you execute this code in an ECMAScript 5 environment, you’ll get an error stating that the second argument cannot be used when the first argument is a regular expression. ECMAScript 6 changed this behavior such that the second argument is allowed and will override whichever flags are present on the first argument. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">re1</code> <code class="o">=</code> <code class="sr">/ab/i</code><code class="p">,</code>
+
+    <code class="c1">// throws an error in ES5, okay in ES6</code>
+    <code class="nx">re2</code> <code class="o">=</code> <code class="k">new</code> <code class="nb">RegExp</code><code class="p">(</code><code class="nx">re1</code><code class="p">,</code> <code class="s2">"g"</code><code class="p">);</code>
+
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">re1</code><code class="p">.</code><code class="nx">toString</code><code class="p">());</code>            <code class="c1">// "/ab/i"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">re2</code><code class="p">.</code><code class="nx">toString</code><code class="p">());</code>            <code class="c1">// "/ab/g"</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">re1</code><code class="p">.</code><code class="nx">test</code><code class="p">(</code><code class="s2">"ab"</code><code class="p">));</code>            <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">re2</code><code class="p">.</code><code class="nx">test</code><code class="p">(</code><code class="s2">"ab"</code><code class="p">));</code>            <code class="c1">// true</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">re1</code><code class="p">.</code><code class="nx">test</code><code class="p">(</code><code class="s2">"AB"</code><code class="p">));</code>            <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">re2</code><code class="p">.</code><code class="nx">test</code><code class="p">(</code><code class="s2">"AB"</code><code class="p">));</code>            <code class="c1">// false</code>
+</pre></div>
+
+</div>
+
+<p>In this code, <code>re1</code> has the case-insensitive <code>i</code> flag present while <code>re2</code> has only the global <code>g</code> flag. The <code>RegExp</code> constructor duplicated the pattern from <code>re1</code> and then substituted <code>g</code> for <code>i</code>. If the second argument was missing then <code>re2</code> would have the same flags as <code>re1</code>.</p>
+
+<h4 id="leanpub-auto-the-flags-property">The <code>flags</code> Property</h4>
+
+<p>In ECMAScript 5, it’s possible to get the text of the regular expression by using the <code>source</code> property, but to get the flag string requires parsing the output of <code>toString()</code>, such as:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">getFlags</code><code class="p">(</code><code class="nx">re</code><code class="p">)</code> <code class="p">{</code>
+    <code class="kd">var</code> <code class="nx">text</code> <code class="o">=</code> <code class="nx">re</code><code class="p">.</code><code class="nx">toString</code><code class="p">();</code>
+    <code class="k">return</code> <code class="nx">text</code><code class="p">.</code><code class="nx">substring</code><code class="p">(</code><code class="nx">text</code><code class="p">.</code><code class="nx">lastIndexOf</code><code class="p">(</code><code class="s2">"/"</code><code class="p">)</code> <code class="o">+</code> <code class="mi">1</code><code class="p">,</code> <code class="nx">text</code><code class="p">.</code><code class="nx">length</code><code class="p">);</code>
+<code class="p">}</code>
+
+<code class="c1">// toString() is "/ab/g"</code>
+<code class="kd">var</code> <code class="nx">re</code> <code class="o">=</code> <code class="sr">/ab/g</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">getFlags</code><code class="p">(</code><code class="nx">re</code><code class="p">));</code>          <code class="c1">// "g"</code>
+</pre></div>
+
+</div>
+
+<p>ECMAScript 6 adds a <code>flags</code> property to go along with <code>source</code>. Both properties are prototype accessor properties with only a getter assigned (making them read-only). The addition of <code>flags</code> makes it easier to inspect regular expressions for both debugging and inheritance purposes.</p>
+
+<p>A late addition to ECMAScript 6, the <code>flags</code> property returns the string representation of any flags applied to a regular expression. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">re</code> <code class="o">=</code> <code class="sr">/ab/g</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">re</code><code class="p">.</code><code class="nx">source</code><code class="p">);</code>     <code class="c1">// "ab"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">re</code><code class="p">.</code><code class="nx">flags</code><code class="p">);</code>      <code class="c1">// "g"</code>
+</pre></div>
+
+</div>
+
+<p>Using <code>source</code> and <code>flags</code> together allow you to extract just the pieces of the regular expression that are necessary without needing to parse the regular expression string directly.</p>
+
+<h3 id="leanpub-auto-objectis">Object.is()</h3>
+
+<p>When you want to compare two values, you’re probably used to using either the equals operator (<code>==</code>) or the identically equals operator (<code>===</code>). Many prefer to use the latter to avoid type coercion during the comparison. However, even the identically equals operator isn’t entirely accurate. For example, the values +0 and -0 are considered equal by <code>===</code> even though they are represented differently in the JavaScript engine. Also <code>NaN === NaN</code> returns <code>false</code>, which necessitates using <code>isNaN()</code> to detect <code>NaN</code> properly.</p>
+
+<p>ECMAScript 6 introduces <code>Object.is()</code> to make up for the remaining quirks of the identically equals operator. This method accepts two arguments and returns <code>true</code> if the values are equivalent. Two values are considered equivalent when they are of the same type and have the same value. In many cases, <code>Object.is()</code> works the same as <code>===</code>. The only differences are that +0 and -0 are considered not equivalent and <code>NaN</code> is considered equivalent to <code>NaN</code>. Here are some examples:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="o">+</code><code class="mi">0</code> <code class="o">==</code> <code class="o">-</code><code class="mi">0</code><code class="p">);</code>              <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="o">+</code><code class="mi">0</code> <code class="o">===</code> <code class="o">-</code><code class="mi">0</code><code class="p">);</code>             <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Object</code><code class="p">.</code><code class="nx">is</code><code class="p">(</code><code class="o">+</code><code class="mi">0</code><code class="p">,</code> <code class="o">-</code><code class="mi">0</code><code class="p">));</code>     <code class="c1">// false</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="kc">NaN</code> <code class="o">==</code> <code class="kc">NaN</code><code class="p">);</code>            <code class="c1">// false</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="kc">NaN</code> <code class="o">===</code> <code class="kc">NaN</code><code class="p">);</code>           <code class="c1">// false</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Object</code><code class="p">.</code><code class="nx">is</code><code class="p">(</code><code class="kc">NaN</code><code class="p">,</code> <code class="kc">NaN</code><code class="p">));</code>   <code class="c1">// true</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="mi">5</code> <code class="o">==</code> <code class="mi">5</code><code class="p">);</code>                <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="mi">5</code> <code class="o">==</code> <code class="s2">"5"</code><code class="p">);</code>              <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="mi">5</code> <code class="o">===</code> <code class="mi">5</code><code class="p">);</code>               <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="mi">5</code> <code class="o">===</code> <code class="s2">"5"</code><code class="p">);</code>             <code class="c1">// false</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Object</code><code class="p">.</code><code class="nx">is</code><code class="p">(</code><code class="mi">5</code><code class="p">,</code> <code class="mi">5</code><code class="p">));</code>       <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Object</code><code class="p">.</code><code class="nx">is</code><code class="p">(</code><code class="mi">5</code><code class="p">,</code> <code class="s2">"5"</code><code class="p">));</code>     <code class="c1">// false</code>
+</pre></div>
+
+</div>
+
+<p>In most cases you will probably still want to use <code>==</code> or <code>===</code> for comparing values, as special cases covered by <code>Object.is()</code> may not affect you directly.</p>
+
+<h3 id="leanpub-auto-block-bindings">Block bindings</h3>
+
+<p>Traditionally, one of the tricky parts of JavaScript has been the way that <code>var</code> declarations work. In most C-based languages, variables are created at the spot where the declaration occurs. In JavaScript, however, this is not the case. Variables declared using <code>var</code> are <em>hoisted</em> to the top of the function (or global scope) regardless of where the actual declaration occurs. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">getValue</code><code class="p">(</code><code class="nx">condition</code><code class="p">)</code> <code class="p">{</code>
+
+    <code class="k">if</code> <code class="p">(</code><code class="nx">condition</code><code class="p">)</code> <code class="p">{</code>
+        <code class="kd">var</code> <code class="nx">value</code> <code class="o">=</code> <code class="s2">"blue"</code><code class="p">;</code>
+
+        <code class="c1">// other code</code>
+
+        <code class="k">return</code> <code class="nx">value</code><code class="p">;</code>
+    <code class="p">}</code> <code class="k">else</code> <code class="p">{</code>
+
+        <code class="c1">// value exists here with a value of undefined</code>
+
+        <code class="k">return</code> <code class="kc">null</code><code class="p">;</code>
+    <code class="p">}</code>
+
+    <code class="c1">// value exists here with a value of undefined</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>If you are unfamiliar with JavaScript, you might expect that the variable <code>value</code> is only defined if <code>condition</code> evaluates to true. In fact, the variable <code>value</code> is declared regardless. The JavaScript engine changes the function to look like this:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">getValue</code><code class="p">(</code><code class="nx">condition</code><code class="p">)</code> <code class="p">{</code>
+
+    <code class="kd">var</code> <code class="nx">value</code><code class="p">;</code>
+
+    <code class="k">if</code> <code class="p">(</code><code class="nx">condition</code><code class="p">)</code> <code class="p">{</code>
+        <code class="nx">value</code> <code class="o">=</code> <code class="s2">"blue"</code><code class="p">;</code>
+
+        <code class="c1">// other code</code>
+
+        <code class="k">return</code> <code class="nx">value</code><code class="p">;</code>
+    <code class="p">}</code> <code class="k">else</code> <code class="p">{</code>
+
+        <code class="k">return</code> <code class="kc">null</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>The declaration of <code>value</code> is moved to the top (hoisted) while the initialization remains in the same spot. That means the variable <code>value</code> is actually still accessible from within the <code>else</code> clause, it just has a value of <code>undefined</code> because it hasn’t been initialized.</p>
+
+<p>It often takes new JavaScript developers some time to get used to declaration hoisting and this unique behavior can end up causing bugs. For this reason, ECMAScript 6 introduces block level scoping options to make the control of variable lifecycle a little more powerful.</p>
+
+<h4 id="leanpub-auto-let-declarations">Let declarations</h4>
+
+<p>The <code>let</code> declaration syntax is the same as for <code>var</code>. You can basically replace <code>var</code> with <code>let</code> to declare a variable but keep its scope to the current code block. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">getValue</code><code class="p">(</code><code class="nx">condition</code><code class="p">)</code> <code class="p">{</code>
+
+    <code class="k">if</code> <code class="p">(</code><code class="nx">condition</code><code class="p">)</code> <code class="p">{</code>
+        <code class="kd">let</code> <code class="nx">value</code> <code class="o">=</code> <code class="s2">"blue"</code><code class="p">;</code>
+
+        <code class="c1">// other code</code>
+
+        <code class="k">return</code> <code class="nx">value</code><code class="p">;</code>
+    <code class="p">}</code> <code class="k">else</code> <code class="p">{</code>
+
+        <code class="c1">// value doesn't exist here</code>
+
+        <code class="k">return</code> <code class="kc">null</code><code class="p">;</code>
+    <code class="p">}</code>
+
+    <code class="c1">// value doesn't exist here</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>This function now behaves much closer to other C-based languages. The variable <code>value</code> is declared using <code>let</code> instead of <code>var</code>. That means the declaration is not hoisted to the top, and the variable <code>value</code> is destroyed once execution has flowed out of the <code>if</code> block. If <code>condition</code> evaluates to false, then <code>value</code> is never declared or initialized.</p>
+
+<p>Perhaps one of the areas where developers most want block level scoping of variables is with <code>for</code> loops. It’s not uncommon to see code such as this:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="k">for</code> <code class="p">(</code><code class="kd">var</code> <code class="nx">i</code><code class="o">=</code><code class="mi">0</code><code class="p">;</code> <code class="nx">i</code> <code class="o">&lt;</code> <code class="nx">items</code><code class="p">.</code><code class="nx">length</code><code class="p">;</code> <code class="nx">i</code><code class="o">++</code><code class="p">)</code> <code class="p">{</code>
+    <code class="nx">process</code><code class="p">(</code><code class="nx">items</code><code class="p">[</code><code class="nx">i</code><code class="p">]);</code>
+<code class="p">}</code>
+
+<code class="c1">// i is still accessible here and is equal to items.length</code>
+</pre></div>
+
+</div>
+
+<p>In other languages, where block level scoping is the default, code like this works as intended. In JavaScript, the variable <code>i</code> is still accessible after the loop is completed because the <code>var</code> declaration was hoisted. Using <code>let</code> allows you to get the intended behavior:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="k">for</code> <code class="p">(</code><code class="kd">let</code> <code class="nx">i</code><code class="o">=</code><code class="mi">0</code><code class="p">;</code> <code class="nx">i</code> <code class="o">&lt;</code> <code class="nx">items</code><code class="p">.</code><code class="nx">length</code><code class="p">;</code> <code class="nx">i</code><code class="o">++</code><code class="p">)</code> <code class="p">{</code>
+    <code class="nx">process</code><code class="p">(</code><code class="nx">items</code><code class="p">[</code><code class="nx">i</code><code class="p">]);</code>
+<code class="p">}</code>
+
+<code class="c1">// i is not accessible here</code>
+</pre></div>
+
+</div>
+
+<p>In this example, the variable <code>i</code> only exists within the <code>for</code> loop. Once the loop is complete, the variable is destroyed and is no longer accessible elsewhere.</p>
+
+<div class="aside sidebarish">
+  <h4 id="leanpub-auto-using-let-in-loops">Using let in loops</h4>
+
+  <p>The behavior of <code>let</code> inside of loops is slightly different than with other blocks. Instead of creating a variable that is used with each iteration of the loop, each iteration actually gets its own variable to use. This is to solve an old problem with JavaScript loops. Consider the following:</p>
+
+  <div class="code-block">
+<div class="highlight"><pre> <code class="kd">var</code> <code class="nx">funcs</code> <code class="o">=</code> <code class="p">[];</code>
+
+ <code class="k">for</code> <code class="p">(</code><code class="kd">var</code> <code class="nx">i</code><code class="o">=</code><code class="mi">0</code><code class="p">;</code> <code class="nx">i</code> <code class="o">&lt;</code> <code class="mi">10</code><code class="p">;</code> <code class="nx">i</code><code class="o">++</code><code class="p">)</code> <code class="p">{</code>
+     <code class="nx">funcs</code><code class="p">.</code><code class="nx">push</code><code class="p">(</code><code class="kd">function</code><code class="p">()</code> <code class="p">{</code> <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">i</code><code class="p">);</code> <code class="p">});</code>
+ <code class="p">}</code>
+
+ <code class="nx">funcs</code><code class="p">.</code><code class="nx">forEach</code><code class="p">(</code><code class="kd">function</code><code class="p">(</code><code class="nx">func</code><code class="p">)</code> <code class="p">{</code>
+     <code class="nx">func</code><code class="p">();</code>     <code class="c1">// outputs the number "10" ten times</code>
+ <code class="p">});</code>
+</pre></div>
+  
+</div>
+
+  <p>This code will output the number <code>10</code> ten times in a row. That’s because the variable <code>i</code> is shared across each iteration of the loop, meaning the closures created inside the loop all hold a reference to the same variable. The variable <code>i</code> has a value of <code>10</code> once the loop completes, and so that’s the value each function outputs.</p>
+
+  <p>To fix this problem, developers use immediately-invoked function expressions (IIFEs) inside of loops to force a new copy of the variable to be created:</p>
+
+  <div class="code-block">
+<div class="highlight"><pre> <code class="kd">var</code> <code class="nx">funcs</code> <code class="o">=</code> <code class="p">[];</code>
+
+ <code class="k">for</code> <code class="p">(</code><code class="kd">var</code> <code class="nx">i</code><code class="o">=</code><code class="mi">0</code><code class="p">;</code> <code class="nx">i</code> <code class="o">&lt;</code> <code class="mi">10</code><code class="p">;</code> <code class="nx">i</code><code class="o">++</code><code class="p">)</code> <code class="p">{</code>
+     <code class="nx">funcs</code><code class="p">.</code><code class="nx">push</code><code class="p">((</code><code class="kd">function</code><code class="p">(</code><code class="nx">value</code><code class="p">)</code> <code class="p">{</code>
+         <code class="k">return</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code>
+             <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">value</code><code class="p">);</code>
+         <code class="p">}</code>
+     <code class="p">}(</code><code class="nx">i</code><code class="p">)));</code>
+ <code class="p">}</code>
+
+ <code class="nx">funcs</code><code class="p">.</code><code class="nx">forEach</code><code class="p">(</code><code class="kd">function</code><code class="p">(</code><code class="nx">func</code><code class="p">)</code> <code class="p">{</code>
+     <code class="nx">func</code><code class="p">();</code>     <code class="c1">// outputs 0, then 1, then 2, up to 9</code>
+ <code class="p">});</code>
+</pre></div>
+  
+</div>
+
+  <p>This version of the example uses an IIFE inside of the loop. The <code>i</code> variable is passed to the IIFE, which creates its own copy and stores it as <code>value</code>. This is the value used of the function for that iteration, so calling each function returns the expected value.</p>
+
+  <p>A <code>let</code> declaration does this for you without the IIFE. Each iteration through the loop results in a new variable being created and initialized to the value of the variable with the same name from the previous iteration. That means you can simplify the process by using this code:</p>
+
+  <div class="code-block">
+<div class="highlight"><pre> <code class="kd">var</code> <code class="nx">funcs</code> <code class="o">=</code> <code class="p">[];</code>
+
+ <code class="k">for</code> <code class="p">(</code><code class="kd">let</code> <code class="nx">i</code><code class="o">=</code><code class="mi">0</code><code class="p">;</code> <code class="nx">i</code> <code class="o">&lt;</code> <code class="mi">10</code><code class="p">;</code> <code class="nx">i</code><code class="o">++</code><code class="p">)</code> <code class="p">{</code>
+     <code class="nx">funcs</code><code class="p">.</code><code class="nx">push</code><code class="p">(</code><code class="kd">function</code><code class="p">()</code> <code class="p">{</code> <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">i</code><code class="p">);</code> <code class="p">});</code>
+ <code class="p">}</code>
+
+ <code class="nx">funcs</code><code class="p">.</code><code class="nx">forEach</code><code class="p">(</code><code class="kd">function</code><code class="p">(</code><code class="nx">func</code><code class="p">)</code> <code class="p">{</code>
+     <code class="nx">func</code><code class="p">();</code>     <code class="c1">// outputs 0, then 1, then 2, up to 9</code>
+ <code class="p">})</code>
+</pre></div>
+  
+</div>
+
+  <p>This code works exactly like the code that used <code>var</code> and an IIFE but is, arguably, cleaner.</p>
+
+</div>
+
+<p>Unlike <code>var</code>, <code>let</code> has no hoisting characteristics. A variable declared with <code>let</code> cannot be accessed until after the <code>let</code> statement. Attempting to do so results in a reference error:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="k">if</code> <code class="p">(</code><code class="nx">condition</code><code class="p">)</code> <code class="p">{</code>
+    <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">value</code><code class="p">);</code>     <code class="c1">// ReferenceError!</code>
+    <code class="kd">let</code> <code class="nx">value</code> <code class="o">=</code> <code class="s2">"blue"</code><code class="p">;</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>In this code, the variable <code>value</code> is defined and initialized using <code>let</code>, but that statement is never executed because the previous line throws an error. The same is true anytime you attempt to use a <code>let</code> variable inside of the same block prior to it being defined. Even the normally safe-to-use <code>typeof</code> operator isn’t safe:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="k">if</code> <code class="p">(</code><code class="nx">condition</code><code class="p">)</code> <code class="p">{</code>
+    <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">typeof</code> <code class="nx">value</code><code class="p">);</code>     <code class="c1">// ReferenceError!</code>
+    <code class="kd">let</code> <code class="nx">value</code> <code class="o">=</code> <code class="s2">"blue"</code><code class="p">;</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>Here, <code>typeof value</code> throws the same error as the previous example. You cannot use a <code>let</code> variable before its declaration within the same block. However, you can use <code>typeof</code> outside of the block:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">typeof</code> <code class="nx">value</code><code class="p">);</code>     <code class="c1">// "undefined"</code>
+
+<code class="k">if</code> <code class="p">(</code><code class="nx">condition</code><code class="p">)</code> <code class="p">{</code>
+    <code class="kd">let</code> <code class="nx">value</code> <code class="o">=</code> <code class="s2">"blue"</code><code class="p">;</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>This example has the <code>typeof</code> operator applied outside of the block in which <code>value</code> is declared. That means there is no <code>value</code> binding and <code>typeof</code> simply returns <code>"undefined"</code>.</p>
+
+<p>If an identifier has already been defined in the block, then using the identifier in a <code>let</code> declaration causes an error to be thrown. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">count</code> <code class="o">=</code> <code class="mi">30</code><code class="p">;</code>
+
+<code class="c1">// Syntax error</code>
+<code class="kd">let</code> <code class="nx">count</code> <code class="o">=</code> <code class="mi">40</code><code class="p">;</code>
+</pre></div>
+
+</div>
+
+<p>In this example, <code>count</code> is declared twice, once with <code>var</code> and once with <code>let</code>. Because <code>let</code> will not redefine an identifier that already exists in the same scope, the declaration throws an error. No error is thrown if a <code>let</code> declaration creates a new variable in a scope with the same name as a variable in the containing scope, such as:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">count</code> <code class="o">=</code> <code class="mi">30</code><code class="p">;</code>
+
+<code class="c1">// Does not throw an error</code>
+<code class="k">if</code> <code class="p">(</code><code class="nx">condition</code><code class="p">)</code> <code class="p">{</code>
+
+    <code class="kd">let</code> <code class="nx">count</code> <code class="o">=</code> <code class="mi">40</code><code class="p">;</code>
+
+    <code class="c1">// more code</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>Here, the <code>let</code> declaration will not throw an error because it is creating a new variable called <code>count</code> within the <code>if</code> statement. This new variable shadows the global <code>count</code>, preventing access to it from within the <code>if</code> block.</p>
+
+<div class="aside sidebarish">
+  <h4 id="leanpub-auto-global-let-declarations">Global let Declarations</h4>
+
+  <p>There is the potential for naming collisions when using <code>let</code> in the global scope because the global object has predefined properties. Using <code>let</code> to define a variable that shares a name with a property of the global object can produce an error because global object properties may be nonconfigurable. Since <code>let</code> doesn’t allow redefinition of the same identifier in the same scope, it’s not possible to shadow nonconfigurable global properties. Attempting to do so will result in an error. For example:</p>
+
+  <div class="code-block">
+<div class="highlight"><pre> <code class="kd">let</code> <code class="nb">RegExp</code> <code class="o">=</code> <code class="s2">"Hello!"</code><code class="p">;</code>          <code class="c1">// ok</code>
+ <code class="kd">let</code> <code class="kc">undefined</code> <code class="o">=</code> <code class="s2">"Hello!"</code><code class="p">;</code>       <code class="c1">// throws error</code>
+</pre></div>
+  
+</div>
+
+  <p>The first line of this example redefines the global <code>RegExp</code> as a string. Even though this would be problematic, there is no error thrown. The second line throws an error because <code>undefined</code> is a nonconfigurable own property of the global object. Since it’s definition is locked down by the environment, the <code>let</code> declaration is illegal.</p>
+
+  <p>It’s unusal to use <code>let</code> in the global scope, but if you do, it’s important to understand this situation.</p>
+
+</div>
+
+<p>The intent of <code>let</code> is to replace <code>var</code> long term, as the former behaves more like variable declarations in other languages. If you are writing JavaScript that will execute only in an ECMAScript 6 or higher environment, you may want to try using <code>let</code> exclusively and leaving <code>var</code> for other scripts that require backwards compatibility.</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>Since <code>let</code> declarations are <em>not</em> hoisted to the top of the enclosing block, you may want to always place <code>let</code> declarations first in the block so that they are available to the entire block.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h4 id="leanpub-auto-constant-declarations">Constant declarations</h4>
+
+<p>Another new way to define variables is to use the <code>const</code> declaration syntax. Variables declared using <code>const</code> are considered to be <em>constants</em>, so the value cannot be changed once set. For this reason, every <code>const</code> variable must be initialized. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="c1">// Valid constant</code>
+<code class="kr">const</code> <code class="nx">MAX_ITEMS</code> <code class="o">=</code> <code class="mi">30</code><code class="p">;</code>
+
+<code class="c1">// Syntax error: missing initialization</code>
+<code class="kr">const</code> <code class="nx">NAME</code><code class="p">;</code>
+</pre></div>
+
+</div>
+
+<p>Constants are also block-level declarations, similar to <code>let</code>. That means constants are destroyed once execution flows out of the block in which they were declared and declarations are hoisted to the top of the block. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="k">if</code> <code class="p">(</code><code class="nx">condition</code><code class="p">)</code> <code class="p">{</code>
+    <code class="kr">const</code> <code class="nx">MAX_ITEMS</code> <code class="o">=</code> <code class="mi">5</code><code class="p">;</code>
+
+    <code class="c1">// more code</code>
+<code class="p">}</code>
+
+<code class="c1">// MAX_ITEMS isn't accessible here</code>
+</pre></div>
+
+</div>
+
+<p>In this code, the constant <code>MAX_ITEMS</code> is declared within an <code>if</code> statement. Once the statement finishes executing, <code>MAX_ITEMS</code> is destroyed and is not accessible outside of that block.</p>
+
+<p>Also similar to <code>let</code>, an error is thrown whenever a <code>const</code> declaration is made with an identifier for an already-defined variable in the same scope. It doesn’t matter if that variable was declared using <code>var</code> (for global or function scope) or <code>let</code> (for block scope). For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">message</code> <code class="o">=</code> <code class="s2">"Hello!"</code><code class="p">;</code>
+<code class="kd">let</code> <code class="nx">age</code> <code class="o">=</code> <code class="mi">25</code><code class="p">;</code>
+
+<code class="c1">// Each of these would cause an error given the previous declarations</code>
+<code class="kr">const</code> <code class="nx">message</code> <code class="o">=</code> <code class="s2">"Goodbye!"</code><code class="p">;</code>
+<code class="kr">const</code> <code class="nx">age</code> <code class="o">=</code> <code class="mi">30</code><code class="p">;</code>
+</pre></div>
+
+</div>
+
+<p>The big difference between <code>let</code> and <code>const</code> is that attempting to assign to a previously defined constant will throw an error in both strict and non-strict modes:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kr">const</code> <code class="nx">MAX_ITEMS</code> <code class="o">=</code> <code class="mi">5</code><code class="p">;</code>
+
+<code class="nx">MAX_ITEMS</code> <code class="o">=</code> <code class="mi">6</code><code class="p">;</code>      <code class="c1">// throws error</code>
+</pre></div>
+
+</div>
+
+<table class="warning sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_warning.png" alt="warning" width="50px" /></td>
+    <td>
+      <p>Several browsers implement pre-ECMAScript 6 versions of <code>const</code>. Implementations range from being simply a synonym for <code>var</code> (allowing the value to be overwritten) to actually defining constants but only in the global or function scope. For this reason, be especially careful with using <code>const</code> in a production system. It may not be providing you with the functionality you expect.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h3 id="leanpub-auto-destructuring-assignment">Destructuring Assignment</h3>
+
+<p>JavaScript developers spend a lot of time pulling data out of objects and arrays. It’s not uncommon to see code such as this:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">options</code> <code class="o">=</code> <code class="p">{</code>
+        <code class="nx">repeat</code><code class="o">:</code> <code class="kc">true</code><code class="p">,</code>
+        <code class="nx">save</code><code class="o">:</code> <code class="kc">false</code>
+    <code class="p">};</code>
+
+<code class="c1">// later</code>
+
+<code class="kd">var</code> <code class="nx">localRepeat</code> <code class="o">=</code> <code class="nx">options</code><code class="p">.</code><code class="nx">repeat</code><code class="p">,</code>
+    <code class="nx">localSave</code> <code class="o">=</code> <code class="nx">options</code><code class="p">.</code><code class="nx">save</code><code class="p">;</code>
+</pre></div>
+
+</div>
+
+<p>Frequently, object properties are stored into local variables for more succinct code and easier access. ECMAScript 6 makes this easy by introducing <em>destructuring assignment</em>, which systematically goes through an object or array and stores specified pieces of data into local variables.</p>
+
+<table class="warning sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_warning.png" alt="warning" width="50px" /></td>
+    <td>
+      <p>If the right side value of a destructuring assignment evaluates to <code>null</code> or <code>undefined</code>, an error is thrown.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h4 id="leanpub-auto-object-destructuring">Object Destructuring</h4>
+
+<p>Object destructuring assignment syntax uses an object literal on the left side of an assignment operation. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">options</code> <code class="o">=</code> <code class="p">{</code>
+        <code class="nx">repeat</code><code class="o">:</code> <code class="kc">true</code><code class="p">,</code>
+        <code class="nx">save</code><code class="o">:</code> <code class="kc">false</code>
+    <code class="p">};</code>
+
+<code class="c1">// later</code>
+
+<code class="kd">var</code> <code class="p">{</code> <code class="nx">repeat</code><code class="o">:</code> <code class="nx">localRepeat</code><code class="p">,</code> <code class="nx">save</code><code class="o">:</code> <code class="nx">localSave</code> <code class="p">}</code> <code class="o">=</code> <code class="nx">options</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">localRepeat</code><code class="p">);</code>       <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">localSave</code><code class="p">);</code>         <code class="c1">// false</code>
+</pre></div>
+
+</div>
+
+<p>In this code, the value of <code>options.repeat</code> is stored in a variable called <code>localRepeat</code> and the value of <code>options.save</code> is stored in a variable called <code>localSave</code>. These are both specified using the object literal syntax where the key is the property to find on <code>options</code> and the value is the variable in which to store the property value.</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>If the property with the given name doesn’t exist on the object, then the local variable gets a value of <code>undefined</code>.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><p>If you want to use the property name as the local variable name, you can omit the colon and the identifier, such as:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">options</code> <code class="o">=</code> <code class="p">{</code>
+        <code class="nx">repeat</code><code class="o">:</code> <code class="kc">true</code><code class="p">,</code>
+        <code class="nx">save</code><code class="o">:</code> <code class="kc">false</code>
+    <code class="p">};</code>
+
+<code class="c1">// later</code>
+
+<code class="kd">var</code> <code class="p">{</code> <code class="nx">repeat</code><code class="p">,</code> <code class="nx">save</code> <code class="p">}</code> <code class="o">=</code> <code class="nx">options</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">repeat</code><code class="p">);</code>        <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">save</code><code class="p">);</code>          <code class="c1">// false</code>
+</pre></div>
+
+</div>
+
+<p>Here, two local variables called <code>repeat</code> and <code>save</code> are created. They are initialized with the value of <code>options.repeat</code> and <code>options.save</code>, respectively. This shorthand is helpful when there’s no need to have different variable names.</p>
+
+<p>Destructuring can also handled nested objects, such as the following:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">options</code> <code class="o">=</code> <code class="p">{</code>
+        <code class="nx">repeat</code><code class="o">:</code> <code class="kc">true</code><code class="p">,</code>
+        <code class="nx">save</code><code class="o">:</code> <code class="kc">false</code><code class="p">,</code>
+        <code class="nx">rules</code><code class="o">:</code> <code class="p">{</code>
+            <code class="nx">custom</code><code class="o">:</code> <code class="mi">10</code><code class="p">,</code>
+        <code class="p">}</code>
+    <code class="p">};</code>
+
+<code class="c1">// later</code>
+
+<code class="kd">var</code> <code class="p">{</code> <code class="nx">repeat</code><code class="p">,</code> <code class="nx">save</code><code class="p">,</code> <code class="nx">rules</code><code class="o">:</code> <code class="p">{</code> <code class="nx">custom</code> <code class="p">}}</code> <code class="o">=</code> <code class="nx">options</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">repeat</code><code class="p">);</code>        <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">save</code><code class="p">);</code>          <code class="c1">// false</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">custom</code><code class="p">);</code>        <code class="c1">// 10</code>
+</pre></div>
+
+</div>
+
+<p>In this example, the <code>custom</code> property is embedded in another object. The extra set of curly braces allows you to descend into a nested object and pull out its properties.</p>
+
+<div class="aside sidebarish">
+  <h5 id="leanpub-auto-syntax-gotcha">Syntax Gotcha</h5>
+
+  <p>If you try use destructuring assignment without a <code>var</code>, <code>let</code>, or <code>const</code>, you may be surprised by the result:</p>
+
+  <div class="code-block">
+<div class="highlight"><pre><code class="c1">// syntax error</code>
+<code class="p">{</code> <code class="nx">repeat</code><code class="p">,</code> <code class="nx">save</code><code class="p">,</code> <code class="nx">rules</code><code class="o">:</code> <code class="p">{</code> <code class="nx">custom</code> <code class="p">}}</code> <code class="o">=</code> <code class="nx">options</code><code class="p">;</code>
+</pre></div>
+  
+</div>
+
+  <p>This causes a syntax error because the opening curly brace is normally the beginning of a block and blocks can’t be part of assignment expressions.</p>
+
+  <p>The solution is to wrap the left side literal in parentheses:</p>
+
+  <div class="code-block">
+<div class="highlight"><pre><code class="c1">// no syntax error</code>
+<code class="p">({</code> <code class="nx">repeat</code><code class="p">,</code> <code class="nx">save</code><code class="p">,</code> <code class="nx">rules</code><code class="o">:</code> <code class="p">{</code> <code class="nx">custom</code> <code class="p">}})</code> <code class="o">=</code> <code class="nx">options</code><code class="p">;</code>
+</pre></div>
+  
+</div>
+
+  <p>This now works without any problems.</p>
+
+</div>
+
+<h4 id="leanpub-auto-array-destructuring">Array Destructuring</h4>
+
+<p>Similarly, you can destructure arrays using array literal syntax on the left side of an assignment operation. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">colors</code> <code class="o">=</code> <code class="p">[</code> <code class="s2">"red"</code><code class="p">,</code> <code class="s2">"green"</code><code class="p">,</code> <code class="s2">"blue"</code> <code class="p">];</code>
+
+<code class="c1">// later</code>
+
+<code class="kd">var</code> <code class="p">[</code> <code class="nx">firstColor</code><code class="p">,</code> <code class="nx">secondColor</code> <code class="p">]</code> <code class="o">=</code> <code class="nx">colors</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">firstColor</code><code class="p">);</code>        <code class="c1">// "red"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">secondColor</code><code class="p">);</code>       <code class="c1">// "green"</code>
+</pre></div>
+
+</div>
+
+<p>In this example, array destructuring pulls out the first and second values in the <code>colors</code> array. Keep in mind that the array itself isn’t changed in any way.</p>
+
+<p>Similar to object destructuring, you can also nest array destructuring. Just use another set of square brackets to descend into a subarray:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">colors</code> <code class="o">=</code> <code class="p">[</code> <code class="s2">"red"</code><code class="p">,</code> <code class="p">[</code> <code class="s2">"green"</code><code class="p">,</code> <code class="s2">"lightgreen"</code> <code class="p">],</code> <code class="s2">"blue"</code> <code class="p">];</code>
+
+<code class="c1">// later</code>
+
+<code class="kd">var</code> <code class="p">[</code> <code class="nx">firstColor</code><code class="p">,</code> <code class="p">[</code> <code class="nx">secondColor</code> <code class="p">]</code> <code class="p">]</code> <code class="o">=</code> <code class="nx">colors</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">firstColor</code><code class="p">);</code>        <code class="c1">// "red"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">secondColor</code><code class="p">);</code>       <code class="c1">// "green"</code>
+</pre></div>
+
+</div>
+
+<p>Here, the <code>secondColor</code> variable refers to the <code>"green"</code> value inside of the <code>colors</code> array. That item is contained within a second array, so the extra square brackets around <code>secondColor</code> in the destructuring assignment is necessary.</p>
+
+<h4 id="leanpub-auto-mixed-destructuring">Mixed Destructuring</h4>
+
+<p>It’s possible to mix objects and arrays together in a destructuring assignment expression using a mix of object and array literals. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">options</code> <code class="o">=</code> <code class="p">{</code>
+        <code class="nx">repeat</code><code class="o">:</code> <code class="kc">true</code><code class="p">,</code>
+        <code class="nx">save</code><code class="o">:</code> <code class="kc">false</code><code class="p">,</code>
+        <code class="nx">colors</code><code class="o">:</code> <code class="p">[</code> <code class="s2">"red"</code><code class="p">,</code> <code class="s2">"green"</code><code class="p">,</code> <code class="s2">"blue"</code> <code class="p">]</code>
+    <code class="p">};</code>
+
+<code class="kd">var</code> <code class="p">{</code> <code class="nx">repeat</code><code class="p">,</code> <code class="nx">save</code><code class="p">,</code> <code class="nx">colors</code><code class="o">:</code> <code class="p">[</code> <code class="nx">firstColor</code><code class="p">,</code> <code class="nx">secondColor</code> <code class="p">]}</code> <code class="o">=</code> <code class="nx">options</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">repeat</code><code class="p">);</code>            <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">save</code><code class="p">);</code>              <code class="c1">// false</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">firstColor</code><code class="p">);</code>        <code class="c1">// "red"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">secondColor</code><code class="p">);</code>       <code class="c1">// "green"</code>
+</pre></div>
+
+</div>
+
+<p>This example extracts two property values, <code>repeat</code> and <code>save</code>, and then two items from the <code>colors</code> array, <code>firstColor</code> and <code>secondColor</code>. Of course, you could also choose to retrieve the entire array:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">options</code> <code class="o">=</code> <code class="p">{</code>
+        <code class="nx">repeat</code><code class="o">:</code> <code class="kc">true</code><code class="p">,</code>
+        <code class="nx">save</code><code class="o">:</code> <code class="kc">false</code><code class="p">,</code>
+        <code class="nx">colors</code><code class="o">:</code> <code class="p">[</code> <code class="s2">"red"</code><code class="p">,</code> <code class="s2">"green"</code><code class="p">,</code> <code class="s2">"blue"</code> <code class="p">]</code>
+    <code class="p">};</code>
+
+<code class="kd">var</code> <code class="p">{</code> <code class="nx">repeat</code><code class="p">,</code> <code class="nx">save</code><code class="p">,</code> <code class="nx">colors</code> <code class="p">}</code> <code class="o">=</code> <code class="nx">options</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">repeat</code><code class="p">);</code>                        <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">save</code><code class="p">);</code>                          <code class="c1">// false</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">colors</code><code class="p">);</code>                        <code class="c1">// "red,green,blue"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">colors</code> <code class="o">===</code> <code class="nx">options</code><code class="p">.</code><code class="nx">colors</code><code class="p">);</code>     <code class="c1">// true</code>
+</pre></div>
+
+</div>
+
+<p>This modified example retrieves <code>options.colors</code> and stores it in the <code>colors</code> variable. Notice that <code>colors</code> is a direct reference to <code>options.colors</code> and not a copy.</p>
+
+<p>Mixed destructuring is very useful for pulling values out of JSON configuration structures without navigating the entire structure.</p>
+
+<h3 id="leanpub-auto-numbers">Numbers</h3>
+
+<p>JavaScript numbers can be particularly complex due to the dual usage of a single type for both integers and floats. Numbers are stored in the IEEE 754 double precision floating point format, and that same format is used to represent both types of numbers. As one of the foundational data types of JavaScript (along with strings and booleans), numbers are quite important to JavaScript developers. Given the new emphasis on gaming and graphics in JavaScript, ECMAScript 6 sought to make working with numbers easier and more powerful.</p>
+
+<h4 id="leanpub-auto-octal-and-binary-literals">Octal and Binary Literals</h4>
+
+<p>ECMAScript 5 sought to simplify some common numerical errors by removing the previously-included octal integer literal notation in two places: <code>parseInt()</code> and strict mode. In ECMAScript 3 and earlier, octal numbers were represented with a leading <code>0</code> followed by any number of digits. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="c1">// ECMAScript 3</code>
+<code class="kd">var</code> <code class="nx">number</code> <code class="o">=</code> <code class="mi">071</code><code class="p">;</code>       <code class="c1">// 57 in decimal</code>
+
+<code class="kd">var</code> <code class="nx">value1</code> <code class="o">=</code> <code class="nb">parseInt</code><code class="p">(</code><code class="s2">"71"</code><code class="p">);</code>    <code class="c1">// 71</code>
+<code class="kd">var</code> <code class="nx">value2</code> <code class="o">=</code> <code class="nb">parseInt</code><code class="p">(</code><code class="s2">"071"</code><code class="p">);</code>   <code class="c1">// 57</code>
+</pre></div>
+
+</div>
+
+<p>Many developers were confused by this version of octal literal numbers, and many mistakes were made as a result of misunderstanding the effects of a leading zero in various places. The most egregious was in <code>parseInt()</code>, where a leading zero meant the value would be treated as an octal rather than a decimal. This led to one of Douglas Crockford’s first JSLint rules: always use the second argument of <code>parseInt()</code> to specify how the string should be interpreted.</p>
+
+<p>ECMAScript 5 cut down on the use of octal numbers. First, <code>parseInt()</code> was changed so that it ignores leading zeros in the first argument when there is no second argument. This means a number cannot accidentally be treated as octal anymore. The second change was to eliminate octal literal notation in strict mode. Attempting to use an octal literal in strict mode results in a syntax error.</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="c1">// ECMAScript 5</code>
+<code class="kd">var</code> <code class="nx">number</code> <code class="o">=</code> <code class="mi">071</code><code class="p">;</code>       <code class="c1">// 57 in decimal</code>
+
+<code class="kd">var</code> <code class="nx">value1</code> <code class="o">=</code> <code class="nb">parseInt</code><code class="p">(</code><code class="s2">"71"</code><code class="p">);</code>        <code class="c1">// 71</code>
+<code class="kd">var</code> <code class="nx">value2</code> <code class="o">=</code> <code class="nb">parseInt</code><code class="p">(</code><code class="s2">"071"</code><code class="p">);</code>       <code class="c1">// 71</code>
+<code class="kd">var</code> <code class="nx">value3</code> <code class="o">=</code> <code class="nb">parseInt</code><code class="p">(</code><code class="s2">"071"</code><code class="p">,</code> <code class="mi">8</code><code class="p">);</code>    <code class="c1">// 57</code>
+
+<code class="kd">function</code> <code class="nx">getValue</code><code class="p">()</code> <code class="p">{</code>
+    <code class="s2">"use strict"</code><code class="p">;</code>
+    <code class="k">return</code> <code class="mi">071</code><code class="p">;</code>     <code class="c1">// syntax error</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>By making these two changes, ECMAScript 5 sought to eliminate a lot of the confusion and errors associated with octal literals.</p>
+
+<p>ECMAScript 6 took things a step further by reintroducing an octal literal notation, along with a binary literal notation. Both of these notations take a hint for the hexadecimal literal notation of prepending <code>0x</code> or <code>0X</code> to a value. The new octal literal format begins with <code>0o</code> or <code>0O</code> while the new binary literal format begins with <code>0b</code> or <code>0B</code>. Each literal type must be followed by one or more digits, 0-7 for octal, 0-1 for binary. Here’s an example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="c1">// ECMAScript 6</code>
+<code class="kd">var</code> <code class="nx">value1</code> <code class="o">=</code> <code class="mi">0</code><code class="nx">o71</code><code class="p">;</code>      <code class="c1">// 57 in decimal</code>
+<code class="kd">var</code> <code class="nx">value2</code> <code class="o">=</code> <code class="mi">0</code><code class="nx">b101</code><code class="p">;</code>     <code class="c1">// 5 in decimal</code>
+</pre></div>
+
+</div>
+
+<p>Adding these two literal types allows JavaScript developers to quickly and easily include numeric values in binary, octal, decimal, and hexadecimal formats, which is very important in certain types of mathematical operations.</p>
+
+<p>The <code>parseInt()</code> method doesn’t handle strings that look like octal or binary literals:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">parseInt</code><code class="p">(</code><code class="s2">"0o71"</code><code class="p">));</code>      <code class="c1">// 0</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">parseInt</code><code class="p">(</code><code class="s2">"0b101"</code><code class="p">));</code>     <code class="c1">// 0</code>
+</pre></div>
+
+</div>
+
+<p>However, the <code>Number()</code> function will convert a string containing octal or binary literals correctly:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Number</code><code class="p">(</code><code class="s2">"0o71"</code><code class="p">));</code>      <code class="c1">// 57</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Number</code><code class="p">(</code><code class="s2">"0b101"</code><code class="p">));</code>     <code class="c1">// 5</code>
+</pre></div>
+
+</div>
+
+<p>When using octal or binary literal in strings, be sure to understand your use case and use the most appropriate method for converting them into numeric values.</p>
+
+<h4 id="leanpub-auto-isfinite-and-isnan">isFinite() and isNaN()</h4>
+
+<p>JavaScript has long had a couple of global methods for identifying certain types of numbers:</p>
+
+<ul><li><code>isFinite()</code> determines if a value represents a finite number (not <code>Infinity</code> or <code>-Infinity</code>)</li>
+  <li><code>isNaN()</code> determines if a value is <code>NaN</code> (since <code>NaN</code> is the only value that is not equal to itself)</li>
+</ul><p>Although intended to work with numbers, these methods are capable of inferring a numeric value from any value that is passed in. That means both methods can return incorrect results when passed a value that isn’t a number. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">isFinite</code><code class="p">(</code><code class="mi">25</code><code class="p">));</code>      <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">isFinite</code><code class="p">(</code><code class="s2">"25"</code><code class="p">));</code>    <code class="c1">// true</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">isNaN</code><code class="p">(</code><code class="kc">NaN</code><code class="p">));</code>        <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">isNaN</code><code class="p">(</code><code class="s2">"NaN"</code><code class="p">));</code>      <code class="c1">// true</code>
+</pre></div>
+
+</div>
+
+<p>Both <code>isFinite()</code> and <code>isNaN()</code> pass their arguments through <code>Number()</code> to get a numeric value and then perform their comparisons on that numeric value rather than the original. This confusing outcome can lead to errors when value types are not checked before being used with one of these methods.</p>
+
+<p>ECMAScript 6 adds two new methods that perform the same comparison but only for number values: <code>Number.isFinite()</code> and <code>Number.isNaN()</code>. These methods always return <code>false</code> when passed a non-number value and return the same values as their global counterparts when passed a number value:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">isFinite</code><code class="p">(</code><code class="mi">25</code><code class="p">));</code>              <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">isFinite</code><code class="p">(</code><code class="s2">"25"</code><code class="p">));</code>            <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Number</code><code class="p">.</code><code class="nb">isFinite</code><code class="p">(</code><code class="mi">25</code><code class="p">));</code>       <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Number</code><code class="p">.</code><code class="nb">isFinite</code><code class="p">(</code><code class="s2">"25"</code><code class="p">));</code>     <code class="c1">// false</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">isNaN</code><code class="p">(</code><code class="kc">NaN</code><code class="p">));</code>                <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">isNaN</code><code class="p">(</code><code class="s2">"NaN"</code><code class="p">));</code>              <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Number</code><code class="p">.</code><code class="nb">isNaN</code><code class="p">(</code><code class="kc">NaN</code><code class="p">));</code>         <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Number</code><code class="p">.</code><code class="nb">isNaN</code><code class="p">(</code><code class="s2">"NaN"</code><code class="p">));</code>       <code class="c1">// false</code>
+</pre></div>
+
+</div>
+
+<p>In this code, <code>Number.isFinite("25")</code> returns <code>false</code> even though <code>isFinite("25")</code> returns <code>true</code>; likewise <code>Number.isNaN("NaN") returns </code>false<code> even though </code>isNaN(“NaN”)<code> returns </code>true`.</p>
+
+<p>These two new methods are aimed at eliminating certain types of errors that can be caused when non-number values are used with <code>isFinite()</code> and <code>isNaN()</code> without dramatically changing the language.</p>
+
+<h4 id="leanpub-auto-parseint-and-parsefloat">parseInt() and parseFloat()</h4>
+
+<p>The global functions <code>parseInt()</code> and <code>parseFloat()</code> now also reside at <code>Number.parseInt()</code> and <code>Number.parseFloat()</code>. These functions behave exactly the same as the global functions of the same name. The only purpose in making this move is to categorize purely global functions that clearly relate to a specific data type. Since these functions both create numbers from strings, they are now on <code>Number</code> along with the other functions that relate to numbers.</p>
+
+<h4 id="leanpub-auto-working-with-integers">Working with Integers</h4>
+
+<p>A lot of confusion has been caused over the years related to JavaScript’s single number type that is used to represent both integers and floats. The language goes through great pains to ensure that developers don’t need to worry about the details, but problems still leak through from time to time. ECMAScript 6 seeks to address this by making it easier to identify and work with integers.</p>
+
+<h5 id="leanpub-auto-identifying-integers">Identifying Integers</h5>
+
+<p>The first addition is <code>Number.isInteger()</code>, which allows you to determine if a value represents an integer in JavaScript. Since integers and floats are stored differently, the JavaScript engine looks at the underlying representation of the value to make this determination. That means numbers that look like floats might actually be stored as integers and therefore return <code>true</code> from <code>Number.isInteger()</code>. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Number</code><code class="p">.</code><code class="nx">isInteger</code><code class="p">(</code><code class="mi">25</code><code class="p">));</code>      <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Number</code><code class="p">.</code><code class="nx">isInteger</code><code class="p">(</code><code class="mf">25.0</code><code class="p">));</code>    <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Number</code><code class="p">.</code><code class="nx">isInteger</code><code class="p">(</code><code class="mf">25.1</code><code class="p">));</code>    <code class="c1">// false</code>
+</pre></div>
+
+</div>
+
+<p>In this code, <code>Number.isInteger()</code> returns <code>true</code> for both <code>25</code> and <code>25.0</code> even though the latter looks like a float. Simply adding a decimal point to a number doesn’t automatically make it a float in JavaScript. Since <code>25.0</code> is really just <code>25</code>, it is stored as an integer. The number <code>25.1</code>, however, is stored as a float because there is a fraction value.</p>
+
+<h5 id="leanpub-auto-safe-integers">Safe Integers</h5>
+
+<p>However, all is not so simple with integers. JavaScript can only accurately represent integers between -2<sup>53</sup> and 2<sup>53</sup>, and outside of this “safe” range, binary representations end up reused for multiple numeric values. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Math</code><code class="p">.</code><code class="nx">pow</code><code class="p">(</code><code class="mi">2</code><code class="p">,</code> <code class="mi">53</code><code class="p">));</code>      <code class="c1">// 9007199254740992</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Math</code><code class="p">.</code><code class="nx">pow</code><code class="p">(</code><code class="mi">2</code><code class="p">,</code> <code class="mi">53</code><code class="p">)</code> <code class="o">+</code> <code class="mi">1</code><code class="p">);</code>  <code class="c1">// 9007199254740992</code>
+</pre></div>
+
+</div>
+
+<p>This example doesn’t contain a typo, two different numbers end up represented by the same JavaScript integer. The effect becomes more prevalent the further the value is outside of the safe range.</p>
+
+<p>ECMAScript 6 introduces <code>Number.isSafeInteger()</code> to better identify integers that can accurately be represented in the language. There is also <code>Number.MAX_SAFE_INTEGER</code> and <code>Number.MIN_SAFE_INTEGER</code> that represent the upper and lower bounds of the same range, respectively. The <code>Number.isSafeInteger()</code> method ensures that a value is an integer and falls within the safe range of integer values:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">inside</code> <code class="o">=</code> <code class="nb">Number</code><code class="p">.</code><code class="nx">MAX_SAFE_INTEGER</code><code class="p">,</code>
+    <code class="nx">outside</code> <code class="o">=</code> <code class="nx">inside</code> <code class="o">+</code> <code class="mi">1</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Number</code><code class="p">.</code><code class="nx">isInteger</code><code class="p">(</code><code class="nx">inside</code><code class="p">));</code>          <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Number</code><code class="p">.</code><code class="nx">isSafeInteger</code><code class="p">(</code><code class="nx">inside</code><code class="p">));</code>      <code class="c1">// true</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Number</code><code class="p">.</code><code class="nx">isInteger</code><code class="p">(</code><code class="nx">outside</code><code class="p">));</code>         <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Number</code><code class="p">.</code><code class="nx">isSafeInteger</code><code class="p">(</code><code class="nx">outside</code><code class="p">));</code>     <code class="c1">// false</code>
+</pre></div>
+
+</div>
+
+<p>The number <code>inside</code> is the largest safe integer, so it returns <code>true</code> for both <code>Number.isInteger()</code> and <code>Number.isSafeInteger()</code>. The number <code>outside</code> is the first questionable integer value, so it is no longer considered safe even though it’s still an integer.</p>
+
+<p>Most of the time, you only want to deal with safe integers when doing integer arithmetic or comparisons in JavaScript, so it’s a good idea to use <code>Number.isSafeInteger()</code> as part of input validation.</p>
+
+<h4 id="leanpub-auto-new-math-methods">New Math Methods</h4>
+
+<p>The aforementioned new emphasis on gaming and graphics in JavaScript led to the realization that many mathematical calculations could be done more efficiently by a JavaScript engine than with pure JavaScript code. Optimization strategies like asm.js, which works on a subset of JavaScript to improve performance, need more information to perform calculations in the fastest way possible. It’s important, for instance, to know whether the numbers should be treated as 32-bit integers or as 64-bit floats.</p>
+
+<p>As a result, ECMAScript 6 adds several new methods to the <code>Math</code> object. These new methods are important for improving the speed of common mathematical calculations, and therefore, improving the speed of applications that must perform many calculations (such as graphics programs). The new methods are listed below.</p>
+
+<table style="width: 80%;">
+  <thead>
+    <tr><th>Method</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>Math.acosh(x)</code></td>
+      <td>Returns the inverse hyperbolic cosine of <code>x</code>.</td>
+    </tr>
+    <tr><td><code>Math.asinh(x)</code></td>
+      <td>Returns the inverse hyperbolic sine of <code>x</code>.</td>
+    </tr>
+    <tr><td><code>Math.atanh(x)</code></td>
+      <td>Returns the inverse hyperbolic tangent of <code>x</code></td>
+    </tr>
+    <tr><td><code>Math.cbrt(x)</code></td>
+      <td>Returns the cubed root of <code>x</code>.</td>
+    </tr>
+    <tr><td><code>Math.clz32(x)</code></td>
+      <td>Returns the number of leading zero bits in the 32-bit integer representation of <code>x</code>.</td>
+    </tr>
+    <tr><td><code>Math.cosh(x)</code></td>
+      <td>Returns the hyperbolic cosine of <code>x</code>.</td>
+    </tr>
+    <tr><td><code>Math.expm1(x)</code></td>
+      <td>Returns the result of subtracting 1 from the exponential function of <code>x</code></td>
+    </tr>
+    <tr><td><code>Math.fround(x)</code></td>
+      <td>Returns the nearest single-precision float of <code>x</code>.</td>
+    </tr>
+    <tr><td><code>Math.hypot(...values)</code></td>
+      <td>Returns the square root of the sum of the squares of each argument.</td>
+    </tr>
+    <tr><td><code>Math.imul(x, y)</code></td>
+      <td>Returns the result of performing true 32-bit multiplication of the two arguments.</td>
+    </tr>
+    <tr><td><code>Math.log1p(x)</code></td>
+      <td>Returns the natural logarithm of <code>1 + x</code>.</td>
+    </tr>
+    <tr><td><code>Math.log10(x)</code></td>
+      <td>Returns the base 10 logarithm of <code>x</code>.</td>
+    </tr>
+    <tr><td><code>Math.log2(x)</code></td>
+      <td>Returns the base 2 logarithm of <code>x</code>.</td>
+    </tr>
+    <tr><td><code>Math.sign(x)</code></td>
+      <td>Returns -1 if the <code>x</code> is negative, 0 if <code>x</code> is +0 or -0, or 1 if <code>x</code> is positive.</td>
+    </tr>
+    <tr><td><code>Math.sinh(x)</code></td>
+      <td>Returns the hyperbolic sine of <code>x</code>.</td>
+    </tr>
+    <tr><td><code>Math.tanh(x)</code></td>
+      <td>Returns the hyperbolic tangent of <code>x</code>.</td>
+    </tr>
+    <tr><td><code>Math.trunc(x)</code></td>
+      <td>Removes fraction digits from a float and returns an integer.</td>
+    </tr>
+  </tbody>
+</table><p>It’s beyond the scope of this book to explain each new method and what it does in detail. However, if you are looking for a reasonably common calculation, be sure to check the new <code>Math</code> methods before implementing it yourself.</p>
+
+<h3 id="leanpub-auto-summary">Summary</h3>
+
+<p>ECMAScript 6 makes a lot of changes, both large and small, to JavaScript. Some of the smaller changes detailed in this chapter will likely be overlooked by many but they are just as important to the evolution of the language as the big changes.</p>
+
+<p>Full Unicode support allows JavaScript to start dealing with UTF-16 characters in logical ways. The ability to transfer between code point and character via <code>codePointAt()</code> and <code>String.fromCodePoint()</code> is an important step for string manipulation. The addition of the regular expression <code>u</code> flag makes it possible to operate on code points instead of 16-bit characters, and the <code>normalize()</code> method allows for more appropriate string comparisons.</p>
+
+<p>Additional methods for working with strings were added, allowing you to more easily identify substrings no matter where they are found, and more functionality was added to regular expressions. The <code>Object.is()</code> method performs strict equality on any value, effectively becoming a safer version of <code>===</code> when dealing with special JavaScript values.</p>
+
+<p>The <code>let</code> and <code>const</code> block bindings introduce lexical scoping to JavaScript. These declarations are not hoisted and only exist within the block in which they are declared. That means behavior that is more like other languages and less likely to cause unintentional errors, as variables can now be declared exactly where they are needed. It’s expected that the majority of JavaScript code going forward will use <code>let</code> and <code>const</code> exclusively, effectively making <code>var</code> a deprecated part of the language.</p>
+
+<p>ECMAScript 6 makes it easier to work with numbers through the introduction of new syntax and new methods. The binary and octal literal forms allow you to embed numbers directly into source code while keeping the most appropriate representation visible. <code>Number.isFinite()</code> and <code>Number.isNaN()</code> are introduced as safer versions of their respective global methods, which lacked type coercion. You can more easily identify integers using <code>Number.isInteger()</code> and <code>Number.isSafeInteger()</code>, as well as perform more mathematical operations thanks to new methods on <code>Math</code>.</p>
+
+<p>Though many of these changes are small, they will make a significant difference in the lives of JavaScript developers for years to come. Each change addresses a particular concern that can otherwise require a lot of custom code to address. By building this functionality into the language, developers can focus on writing the code for their product rather than low-level utilities.</p>
+</div>
+</body>
+</html>

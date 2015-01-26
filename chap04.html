@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Symbols</title>
+<link href="stylesheet.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+<div id="leanpub-toc">
+<h2></h2>
+<ol class="toc">
+<ul class='toc no-parts'>
+  <li>
+    <a href='chap00.html#leanpub-auto-introduction'>Introduction</a>
+    <ul>
+      <li>
+        <a href='chap00.html#leanpub-auto-browser-and-nodejs-compatibility'>Browser and Node.js Compatibility</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-who-this-book-is-for'>Who This Book is For</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-overview'>Overview</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-help-and-support'>Help and Support</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap01.html#leanpub-auto-the-basics'>The Basics</a>
+    <ul>
+      <li>
+        <a href='chap01.html#leanpub-auto-better-unicode-support'>Better Unicode Support</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-other-string-changes'>Other String Changes</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-other-regular-expression-changes'>Other Regular Expression Changes</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-objectis'>Object.is()</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-block-bindings'>Block bindings</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-destructuring-assignment'>Destructuring Assignment</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-numbers'>Numbers</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-summary'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap02.html#leanpub-auto-functions'>Functions</a>
+    <ul>
+      <li>
+        <a href='chap02.html#leanpub-auto-default-parameters'>Default Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-rest-parameters'>Rest Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-destructured-parameters'>Destructured Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-the-spread-operator'>The Spread Operator</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-the-name-property'>The name Property</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-block-level-functions'>Block-Level Functions</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-arrow-functions'>Arrow Functions</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-syntax'>Syntax</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-summary-1'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap03.html#leanpub-auto-objects'>Objects</a>
+    <ul>
+      <li>
+        <a href='chap03.html#leanpub-auto-object-categories'>Object Categories</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-object-literal-extensions'>Object Literal Extensions</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-objectassign'>Object.assign()</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-duplicate-object-literal-properties'>Duplicate Object Literal Properties</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-changing-prototypes'>Changing Prototypes</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-super-references'>Super References</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-summary-2'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap04.html#leanpub-auto-symbols'>Symbols</a>
+    <ul>
+      <li>
+        <a href='chap04.html#leanpub-auto-creating-symbols'>Creating Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-identifying-symbols'>Identifying Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-using-symbols'>Using Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-sharing-symbols'>Sharing Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-finding-object-symbols'>Finding Object Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-coercing-symbols-to-strings'>Coercing Symbols to Strings</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-well-known-symbols'>Well-Known Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-summary-3'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap05.html#leanpub-auto-iterators-and-generators'>Iterators and Generators</a>
+    <ul>
+      <li>
+        <a href='chap05.html#leanpub-auto-what-are-iterators'>What are Iterators?</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-generators'>Generators</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-iterables-and-for-of'>Iterables and for-of</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-built-in-iterators'>Built-in Iterators</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-advanced-functionality'>Advanced Functionality</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-summary-4'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap06.html#leanpub-auto-template-strings'>Template Strings</a>
+    <ul>
+      <li>
+        <a href='chap06.html#leanpub-auto-basic-syntax'>Basic Syntax</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-multiline-strings'>Multiline Strings</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-substitutions'>Substitutions</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-tagged-templates'>Tagged Templates</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-summary-5'>Summary</a>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+</ol>
+</div>
+<div id="leanpub-main">
+<h2 id="leanpub-auto-symbols">Symbols</h2>
+
+<table class="warning sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_warning.png" alt="warning" width="50px" /></td>
+    <td>
+      <p>This chapter is a work-in-progress. As such, it may have more typos or content errors than others.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><p>ECMAScript 6 symbols began as a way to create private object members, a feature JavaScript developers have long wanted. The focus was around creating properties that were not identified by string names. Any property with a string name was easy picking to access regardless of the obscurity of the name. The initial “private names” feature aimed to create non-string property names. That way, normal techniques for detecting these private names wouldn’t work.</p>
+
+<p>The private names proposal eventually evolved into ECMAScript 6 symbols. While the implementation details remained the same (non-string values for property identifiers), TC-39 dropped the requirement that these properties be private. Instead, the properties would be categorized separately, being non-enumerable by default but still discoverable.</p>
+
+<p>Symbols are actually a new kind of primitive value, joining strings, numbers, booleans, <code>null</code>, and <code>undefined</code>. They are unique among JavaScript primitives in that they do not have a literal form. The ECMAScript 6 standard uses a special notation to indicate symbols, prefixing the identifier with <code>@@</code>, such as <code>@@create</code>. This book uses this same convention for ease of understanding.</p>
+
+<table class="warning sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_warning.png" alt="warning" width="50px" /></td>
+    <td>
+      <p>Despite the notation, symbols do not exactly map to strings beginning with “@@”. Don’t try to use string values where symbols are required.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h3 id="leanpub-auto-creating-symbols">Creating Symbols</h3>
+
+<p>You can create a symbol by using the <code>Symbol</code> function, such as:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">firstName</code> <code class="o">=</code> <code class="nx">Symbol</code><code class="p">();</code>
+<code class="kd">var</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{};</code>
+
+<code class="nx">person</code><code class="p">[</code><code class="nx">firstName</code><code class="p">]</code> <code class="o">=</code> <code class="s2">"Nicholas"</code><code class="p">;</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">[</code><code class="nx">firstName</code><code class="p">]);</code>     <code class="c1">// "Nicholas"</code>
+</pre></div>
+
+</div>
+
+<p>In this example, the symbol <code>firstName</code> is created and used to assign a new property on <code>person</code>. That symbol must be used each time you want to access that same property. It’s a good idea to name the symbol variable appropriately so you can easily tell what the symbol represents.</p>
+
+<table class="warning sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_warning.png" alt="warning" width="50px" /></td>
+    <td>
+      <p>Because symbols are primitive values, <code>new Symbol()</code> throws an error when called. It’s not possible to create an instance of <code>Symbol</code>, which also differentiates it from <code>String</code>, <code>Number</code>, and <code>Boolean</code>.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><p>The <code>Symbol</code> function accepts an optional argument that is the description of the symbol. The description itself cannot be used to access the property but is used for debugging purposes. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">firstName</code> <code class="o">=</code> <code class="nx">Symbol</code><code class="p">(</code><code class="s2">"first name"</code><code class="p">);</code>
+<code class="kd">var</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{};</code>
+
+<code class="nx">person</code><code class="p">[</code><code class="nx">firstName</code><code class="p">]</code> <code class="o">=</code> <code class="s2">"Nicholas"</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="s2">"first name"</code> <code class="k">in</code> <code class="nx">person</code><code class="p">);</code>        <code class="c1">// false</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">[</code><code class="nx">firstName</code><code class="p">]);</code>             <code class="c1">// "Nicholas"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">firstName</code><code class="p">);</code>                     <code class="c1">// "Symbol(first name)"</code>
+</pre></div>
+
+</div>
+
+<p>A symbol’s description is stored internally in a property called <code>[[Description]]</code>. This property is read whenever the symbol’s <code>toString()</code> method is called either explicitly or implicitly (as in this example). It is not otherwise possible to access <code>[[Description]]</code> directly from code. It’s recommended to always provide a description to make both reading and debugging code using symbols easier.</p>
+
+<h3 id="leanpub-auto-identifying-symbols">Identifying Symbols</h3>
+
+<p>Since symbols are primitive values, you can use the <code>typeof</code> operator to identify them. ECMAScript 6 extends <code>typeof</code> to return <code>"symbol"</code> when used on a symbol. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">symbol</code> <code class="o">=</code> <code class="nx">Symbol</code><code class="p">(</code><code class="s2">"test symbol"</code><code class="p">);</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">typeof</code> <code class="nx">symbol</code><code class="p">);</code>         <code class="c1">// "symbol"</code>
+</pre></div>
+
+</div>
+
+<p>While there are other indirect ways of determining whether a variable is a symbol, <code>typeof</code> is the most accurate and preferred way of doing so.</p>
+
+<h3 id="leanpub-auto-using-symbols">Using Symbols</h3>
+
+<p>You can use symbols anywhere you would use a computed property name. You’ve already seen the use of bracket notation in the previous sections, but you can use symbols in computed object literal property names as well as with <code>Object.defineProperty()</code>, and <code>Object.defineProperties()</code>, such as:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">firstName</code> <code class="o">=</code> <code class="nx">Symbol</code><code class="p">(</code><code class="s2">"first name"</code><code class="p">);</code>
+<code class="kd">var</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="p">[</code><code class="nx">firstName</code><code class="p">]</code><code class="o">:</code> <code class="s2">"Nicholas"</code>
+<code class="p">};</code>
+
+<code class="c1">// make the property read only</code>
+<code class="nb">Object</code><code class="p">.</code><code class="nx">defineProperty</code><code class="p">(</code><code class="nx">person</code><code class="p">,</code> <code class="nx">firstName</code><code class="p">,</code> <code class="p">{</code> <code class="nx">writable</code><code class="o">:</code> <code class="kc">false</code> <code class="p">});</code>
+
+<code class="kd">var</code> <code class="nx">lastName</code> <code class="o">=</code> <code class="nx">Symbol</code><code class="p">(</code><code class="s2">"last name"</code><code class="p">);</code>
+
+<code class="nb">Object</code><code class="p">.</code><code class="nx">defineProperties</code><code class="p">(</code><code class="nx">person</code><code class="p">,</code> <code class="p">{</code>
+    <code class="p">[</code><code class="nx">lastName</code><code class="p">]</code><code class="o">:</code> <code class="p">{</code>
+        <code class="nx">value</code><code class="o">:</code> <code class="s2">"Zakas"</code><code class="p">,</code>
+        <code class="nx">writable</code><code class="o">:</code> <code class="kc">false</code>
+    <code class="p">}</code>
+<code class="p">});</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">[</code><code class="nx">firstName</code><code class="p">]);</code>     <code class="c1">// "Nicholas"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">[</code><code class="nx">lastName</code><code class="p">]);</code>      <code class="c1">// "Zakas"</code>
+</pre></div>
+
+</div>
+
+<p>With computed property names in object literals, symbols are very easy to work with.</p>
+
+<h3 id="leanpub-auto-sharing-symbols">Sharing Symbols</h3>
+
+<p>You may find that you want different parts of your code to use the same symbols. For example, suppose you have two different object types in your application that should use the same symbol property to represent a unique identifier. Keeping track of symbols across files or large codebases can be difficult and error-prone. That’s why ECMAScript 6 provides a global symbol registry that you can access at any point in time.</p>
+
+<p>When you want to create a symbol to be shared, use the <code>Symbol.for()</code> method instead of calling <code>Symbol()</code>. The <code>Symbol.for()</code> method accepts a single parameter, which is a string identifier for the symbol you want to create (this value doubles as the description). For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">uid</code> <code class="o">=</code> <code class="nx">Symbol</code><code class="p">.</code><code class="k">for</code><code class="p">(</code><code class="s2">"uid"</code><code class="p">);</code>
+<code class="kd">var</code> <code class="nx">object</code> <code class="o">=</code> <code class="p">{};</code>
+
+<code class="nx">object</code><code class="p">[</code><code class="nx">uid</code><code class="p">]</code> <code class="o">=</code> <code class="s2">"12345"</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">object</code><code class="p">[</code><code class="nx">uid</code><code class="p">]);</code>       <code class="c1">// "12345"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">uid</code><code class="p">);</code>               <code class="c1">// "Symbol(uid)"</code>
+</pre></div>
+
+</div>
+
+<p>The <code>Symbol.for()</code> method first searches the global symbol registry to see if a symbol with the key <code>"uid"</code> exists. If so, then it returns the already existing symbol. If no such symbol exists, then a new symbol is created and registered into the global symbol registry using the specified key. The new symbol is then returned. That means subsequent calls to <code>Symbol.for()</code> using the same key will return the same symbol:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">uid</code> <code class="o">=</code> <code class="nx">Symbol</code><code class="p">.</code><code class="k">for</code><code class="p">(</code><code class="s2">"uid"</code><code class="p">);</code>
+<code class="kd">var</code> <code class="nx">object</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="p">[</code><code class="nx">uid</code><code class="p">]</code><code class="o">:</code> <code class="s2">"12345"</code>
+<code class="p">};</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">object</code><code class="p">[</code><code class="nx">uid</code><code class="p">]);</code>       <code class="c1">// "12345"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">uid</code><code class="p">);</code>               <code class="c1">// "Symbol(uid)"</code>
+
+<code class="kd">var</code> <code class="nx">uid2</code> <code class="o">=</code> <code class="nx">Symbol</code><code class="p">.</code><code class="k">for</code><code class="p">(</code><code class="s2">"uid"</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">uid</code> <code class="o">===</code> <code class="nx">uid2</code><code class="p">);</code>      <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">object</code><code class="p">[</code><code class="nx">uid2</code><code class="p">]);</code>      <code class="c1">// "12345"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">uid2</code><code class="p">);</code>              <code class="c1">// "Symbol(uid)"</code>
+</pre></div>
+
+</div>
+
+<p>In this example, <code>uid</code> and <code>uid2</code> contain the same symbol and so they can be used interchangeably. The first call to <code>Symbol.for()</code> creates the symbol and second call retrieves the symbol from the global symbol registry.</p>
+
+<p>Another unique aspect of shared symbols is that you can retrieve the key associated with a symbol in the global symbol registry by using <code>Symbol.keyFor()</code>, for example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">uid</code> <code class="o">=</code> <code class="nx">Symbol</code><code class="p">.</code><code class="k">for</code><code class="p">(</code><code class="s2">"uid"</code><code class="p">);</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">Symbol</code><code class="p">.</code><code class="nx">keyFor</code><code class="p">(</code><code class="nx">uid</code><code class="p">));</code>    <code class="c1">// "uid"</code>
+
+<code class="kd">var</code> <code class="nx">uid2</code> <code class="o">=</code> <code class="nx">Symbol</code><code class="p">.</code><code class="k">for</code><code class="p">(</code><code class="s2">"uid"</code><code class="p">);</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">Symbol</code><code class="p">.</code><code class="nx">keyFor</code><code class="p">(</code><code class="nx">uid2</code><code class="p">));</code>   <code class="c1">// "uid"</code>
+
+<code class="kd">var</code> <code class="nx">uid3</code> <code class="o">=</code> <code class="nx">Symbol</code><code class="p">(</code><code class="s2">"uid"</code><code class="p">);</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">Symbol</code><code class="p">.</code><code class="nx">keyFor</code><code class="p">(</code><code class="nx">uid3</code><code class="p">));</code>   <code class="c1">// undefined</code>
+</pre></div>
+
+</div>
+
+<p>Notice that both <code>uid</code> and <code>uid2</code> return the key <code>"uid"</code>. The symbol <code>uid3</code> doesn’t exist in the global symbol registry, so it has no key associated with it and <code>Symbol.keyFor()</code> returns <code>undefined</code>.</p>
+
+<table class="warning sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_warning.png" alt="warning" width="50px" /></td>
+    <td>
+      <p>The global symbol registry is a shared environment, just like the global scope. That means you can’t make assumptions about what is or is not already present in that environment. You should use namespacing of symbol keys to reduce the likelihood of naming collisions when using third-party components. For example, jQuery might prefix all keys with <code>"jquery."</code>, such as <code>"jquery.element"</code>.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h3 id="leanpub-auto-finding-object-symbols">Finding Object Symbols</h3>
+
+<p>Similar to other properties on objects, you can access symbol properties using the <code>Object.getOwnPropertySymbols()</code> method. This method works exactly the same as <code>Object.getOwnPropertyNames()</code> except that the returned values are symbols rather than strings. Since symbols technically aren’t property names, they are omitted from the result of <code>Object.getOwnPropertyNames()</code>.</p>
+
+<p>The return value of <code>Object.getOwnPropertySymbols()</code> is an array of symbols that represent own properties. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">uid</code> <code class="o">=</code> <code class="nx">Symbol</code><code class="p">.</code><code class="k">for</code><code class="p">(</code><code class="s2">"uid"</code><code class="p">);</code>
+<code class="kd">var</code> <code class="nx">object</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="p">[</code><code class="nx">uid</code><code class="p">]</code><code class="o">:</code> <code class="s2">"12345"</code>
+<code class="p">};</code>
+
+<code class="kd">var</code> <code class="nx">symbols</code> <code class="o">=</code> <code class="nb">Object</code><code class="p">.</code><code class="nx">getOwnPropertySymbols</code><code class="p">(</code><code class="nx">object</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">symbols</code><code class="p">.</code><code class="nx">length</code><code class="p">);</code>        <code class="c1">// 1</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">symbols</code><code class="p">[</code><code class="mi">0</code><code class="p">]);</code>            <code class="c1">// "Symbol(uid)"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">object</code><code class="p">[</code><code class="nx">symbols</code><code class="p">[</code><code class="mi">0</code><code class="p">]]);</code>    <code class="c1">// "12345"</code>
+</pre></div>
+
+</div>
+
+<p>In this code, <code>object</code> has a single symbol property. The array returned from <code>Object.getOwnPropertySymbols()</code> is an array containing just that symbol.</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>All objects start off with zero own symbol properties (although they do have some inherited symbol properties).</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h3 id="leanpub-auto-coercing-symbols-to-strings">Coercing Symbols to Strings</h3>
+
+<p>TODO</p>
+
+<p>String(symbol) works but symbol + “” throws</p>
+
+<h3 id="leanpub-auto-well-known-symbols">Well-Known Symbols</h3>
+
+<p>In addition to the symbols you defined, there are some predefined symbols as well (called <em>well-known</em> symbols in the specification). These symbols represent common behaviors in JavaScript that were previously considered internal-only operations. Each well-known symbol is represented by a property on <code>Symbol</code>, such as <code>Symbol.create</code> for the <code>@@create</code> symbol.</p>
+
+<p>A central theme for both ECMAScript 5 and ECMAScript 6 was exposing and defining some of the “magic” parts of JavaScript - the parts that couldn’t be emulated by a developer. ECMAScript 6 follows this tradition by exposing even more of the previously internal-only logic of the language. It does so primarily through the use of symbol prototype properties that define the basic behavior of certain objects.</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>Overwriting a method defined with a well-known symbol changes an ordinary object to an exotic object because this changes some internal default behavior.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><p>The well-known symbols are:</p>
+
+<ul><li><code>@@hasInstance</code> - a method used by <code>instanceof</code> to determine an object’s inheritance.</li>
+  <li><code>@@isConcatSpreadable</code> - a Boolean value indicating if use with <code>Array.prototype.concat()</code> should flatten the collection’s elements.</li>
+  <li><code>@@iterator</code> - a method that returns an iterator (see Chapter 7).</li>
+  <li><code>@@match</code> - a method used by <code>String.prototype.match()</code> to compare strings.</li>
+  <li><code>@@replace</code> - a method used by <code>String.prototype.replace()</code> to replace substrings.</li>
+  <li><code>@@search</code> - a method used by <code>String.prototype.search()</code> to locate substrings.</li>
+  <li><code>@@species</code> - the constructor from which derived objects are made.</li>
+  <li><code>@@split</code> - a method used by <code>String.prototype.split()</code> to split up strings.</li>
+  <li><code>@@toPrimitive</code> - a method that returns a primitive value representation of the object.</li>
+  <li><code>@@toStringTag</code> - a string used by <code>Object.prototype.toString()</code> to create an object description.</li>
+  <li><code>@@unscopeables</code> - an object whose properties are the names of object properties that should not be included in a <code>with</code> statement.</li>
+</ul><p>Some of the well-known symbols are discussed below while others are discussed throughout the book to keep them in the correct context.</p>
+
+<h4 id="leanpub-auto-tostringtag">@@toStringTag</h4>
+
+<p>Once of the most interesting problems in JavaScript has been the availability of multiple global execution environments. This occurs in web browsers when a page includes an iframe, as the page and the iframe each have their own execution environments. In most cases, this isn’t a problem, as data can be passed back and forth between the environments with little cause for concern. The problem arises when trying to identify what type of an object you’re dealing with.</p>
+
+<p>The canonical example of this is passing an array from the iframe into the containing page or vice-versa. Now in a different execution environment, <code>instanceof Array</code> returns <code>false</code> because the array was created with a constructor from a different environment.</p>
+
+<p>Developers soon found a good way to identify arrays. It was discovered that by calling the standard <code>toString()</code> method on the object, a predictable string was always returned. Thus, many JavaScript libraries began including a function that works similar to this:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">isArray</code><code class="p">(</code><code class="nx">value</code><code class="p">)</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="nb">Object</code><code class="p">.</code><code class="nx">prototype</code><code class="p">.</code><code class="nx">toString</code><code class="p">.</code><code class="nx">call</code><code class="p">(</code><code class="nx">value</code><code class="p">)</code> <code class="o">===</code> <code class="s2">"[object Array]"</code><code class="p">;</code>
+<code class="p">}</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">isArray</code><code class="p">([]));</code>   <code class="c1">// true</code>
+</pre></div>
+
+</div>
+
+<p>This may look a bit roundabout, but in reality it was found to work quite well in all browsers. The <code>toString()</code> method on arrays isn’t very useful for this purpose because it returns a string representation of the items it contains. The <code>toString()</code> method on <code>Object.prototype</code>, however, had this quirk where it included some internally-defined name in the result. By using this method on an object, you could retrieve what the JavaScript environment thought the data type was.</p>
+
+<p>Developers quickly realized that since there was no way to change this behavior, it was possible to use the same approach to distinguish between native objects and those created by developers. The most important case of this was the ECMAScript 5 <code>JSON</code> object.</p>
+
+<p>Prior to ECMAScript 5, many used Douglas Crockford’s <code>json2.js</code>, which created a global <code>JSON</code> object. As browsers started to implement the <code>JSON</code> global object, it became necessary to tell whether the global <code>JSON</code> was provided by the JavaScript environment itself or through some other library. Using the same technique, many created functions like this:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">supportsNativeJSON</code><code class="p">()</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="k">typeof</code> <code class="nx">JSON</code> <code class="o">!==</code> <code class="s2">"undefined"</code> <code class="o">&amp;&amp;</code>
+        <code class="nb">Object</code><code class="p">.</code><code class="nx">prototype</code><code class="p">.</code><code class="nx">toString</code><code class="p">.</code><code class="nx">call</code><code class="p">(</code><code class="nx">JSON</code><code class="p">)</code> <code class="o">===</code> <code class="s2">"[object JSON]"</code><code class="p">;</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>Here, the same characteristic that allowed developers to identify arrays across iframe boundaries also provided a way to tell if <code>JSON</code> was the native one or not. A non-native <code>JSON</code> object would return <code>[object Object]</code> while the native version returned <code>[object JSON]</code>. From that point on, this approach became the de facto standard for identifying native objects.</p>
+
+<p>ECMAScript 6 explains this behavior through the <code>@@toStringTag</code> symbol. This symbol represents a property on each object that defines what value should be produced when <code>Object.prototype.toString.call()</code> is called on it. So the value returned for arrays is explained by having the <code>@@toStringTag</code> property equal <code>"Array"</code>. Likewise, you can define that value for your own objects:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">Person</code><code class="p">(</code><code class="nx">name</code><code class="p">)</code> <code class="p">{</code>
+    <code class="k">this</code><code class="p">.</code><code class="nx">name</code> <code class="o">=</code> <code class="nx">name</code><code class="p">;</code>
+<code class="p">}</code>
+
+<code class="nx">Person</code><code class="p">.</code><code class="nx">prototype</code><code class="p">[</code><code class="nx">Symbol</code><code class="p">.</code><code class="nx">toStringTag</code><code class="p">]</code> <code class="o">=</code> <code class="s2">"Person"</code><code class="p">;</code>
+
+<code class="kd">var</code> <code class="nx">me</code> <code class="o">=</code> <code class="k">new</code> <code class="nx">Person</code><code class="p">(</code><code class="s2">"Nicholas"</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">me</code><code class="p">.</code><code class="nx">toString</code><code class="p">());</code>                         <code class="c1">// "[object Person]"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Object</code><code class="p">.</code><code class="nx">prototype</code><code class="p">.</code><code class="nx">toString</code><code class="p">.</code><code class="nx">call</code><code class="p">(</code><code class="nx">me</code><code class="p">));</code>    <code class="c1">// "[object Person]"</code>
+</pre></div>
+
+</div>
+
+<p>In this example, a <code>@@toStringTag</code> property is defined on <code>Person.prototype</code> to provide the default behavior for creating a string representation. Since <code>Person.prototype</code> inherits <code>Object.prototype.toString()</code>, the value returned from <code>@@toStringTag</code> is also used when calling <code>me.toString()</code>. However, you can still define your own <code>toString()</code> that provides a different behavior without affecting the use of <code>Object.prototype.toString.call()</code>:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">Person</code><code class="p">(</code><code class="nx">name</code><code class="p">)</code> <code class="p">{</code>
+    <code class="k">this</code><code class="p">.</code><code class="nx">name</code> <code class="o">=</code> <code class="nx">name</code><code class="p">;</code>
+<code class="p">}</code>
+
+<code class="nx">Person</code><code class="p">.</code><code class="nx">prototype</code><code class="p">[</code><code class="nx">Symbol</code><code class="p">.</code><code class="nx">toStringTag</code><code class="p">]</code> <code class="o">=</code> <code class="s2">"Person"</code><code class="p">;</code>
+
+<code class="nx">Person</code><code class="p">.</code><code class="nx">prototype</code><code class="p">.</code><code class="nx">toString</code> <code class="o">=</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="k">this</code><code class="p">.</code><code class="nx">name</code><code class="p">;</code>
+<code class="p">};</code>
+
+<code class="kd">var</code> <code class="nx">me</code> <code class="o">=</code> <code class="k">new</code> <code class="nx">Person</code><code class="p">(</code><code class="s2">"Nicholas"</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">me</code><code class="p">.</code><code class="nx">toString</code><code class="p">());</code>                         <code class="c1">// "Nicholas"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Object</code><code class="p">.</code><code class="nx">prototype</code><code class="p">.</code><code class="nx">toString</code><code class="p">.</code><code class="nx">call</code><code class="p">(</code><code class="nx">me</code><code class="p">));</code>    <code class="c1">// "[object Person]"</code>
+</pre></div>
+
+</div>
+
+<p>This code defines <code>Person.prototype.toString()</code> to return the value of the <code>name</code> property. Since <code>Person</code> instances no longer inherit <code>Object.prototype.toString()</code>, calling <code>me.toString()</code> exhibits a different behavior.</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>All objects inherit <code>@@toStringTag</code> from <code>Object.prototype</code> unless otherwise specified. This default method returns <code>"Object"</code>.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><p>There is a restriction on which values can be used for <code>@@toStringTag</code> on developer-defined objects. If you attempt to use a value that is the same as a built-in object’s <code>@@toStringTag</code>, then the result will automatically be prepended with a tilde. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">Person</code><code class="p">(</code><code class="nx">name</code><code class="p">)</code> <code class="p">{</code>
+    <code class="k">this</code><code class="p">.</code><code class="nx">name</code> <code class="o">=</code> <code class="nx">name</code><code class="p">;</code>
+<code class="p">}</code>
+
+<code class="nx">Person</code><code class="p">.</code><code class="nx">prototype</code><code class="p">[</code><code class="nx">Symbol</code><code class="p">.</code><code class="nx">toStringTag</code><code class="p">]</code> <code class="o">=</code> <code class="s2">"Array"</code><code class="p">;</code>
+
+<code class="nx">Person</code><code class="p">.</code><code class="nx">prototype</code><code class="p">.</code><code class="nx">toString</code> <code class="o">=</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="k">this</code><code class="p">.</code><code class="nx">name</code><code class="p">;</code>
+<code class="p">};</code>
+
+<code class="kd">var</code> <code class="nx">me</code> <code class="o">=</code> <code class="k">new</code> <code class="nx">Person</code><code class="p">(</code><code class="s2">"Nicholas"</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">me</code><code class="p">.</code><code class="nx">toString</code><code class="p">());</code>                         <code class="c1">// "Nicholas"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Object</code><code class="p">.</code><code class="nx">prototype</code><code class="p">.</code><code class="nx">toString</code><code class="p">.</code><code class="nx">call</code><code class="p">(</code><code class="nx">me</code><code class="p">));</code>    <code class="c1">// "[object ~Array]"</code>
+</pre></div>
+
+</div>
+
+<p>Here, the result of calling <code>Object.prototype.toString()</code> is <code>"[object ~Array]"</code> instead of <code>"[object Array]"</code>. The <code>@@toStringTag</code> value of <code>"Array"</code> is restricted because using it would allow spoofing of built-in arrays and could cause errors in code that uses the tag as a type check. The other restricted tags are <code>"Arguments"</code>, <code>"Null"</code>, <code>"Undefined"</code>, <code>"Boolean"</code>, <code>"Date"</code>, <code>"Error"</code>, <code>"Function"</code>, <code>"Number"</code>, <code>"RegExp"</code>, and <code>"String"</code>.</p>
+
+<p>It’s possible to change the string tag for native objects by assigning to <code>@@toStringTag</code> on their prototype. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="nb">Array</code><code class="p">.</code><code class="nx">prototype</code><code class="p">[</code><code class="nx">Symbol</code><code class="p">.</code><code class="nx">toStringTag</code><code class="p">]</code> <code class="o">=</code> <code class="s2">"Magic"</code><code class="p">;</code>
+
+<code class="kd">var</code> <code class="nx">values</code> <code class="o">=</code> <code class="p">[];</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Object</code><code class="p">.</code><code class="nx">prototype</code><code class="p">.</code><code class="nx">toString</code><code class="p">.</code><code class="nx">call</code><code class="p">(</code><code class="nx">values</code><code class="p">));</code>    <code class="c1">// "[object Magic]"</code>
+</pre></div>
+
+</div>
+
+<p>Even though <code>@@toStringTag</code> is overwritten for arrays in this example, the call to <code>Object.prototype.toString()</code> results in <code>"[object Magic]"</code>. While it’s recommended not to change built-in objects in this way, there’s nothing in the language that forbids it.</p>
+
+<h4 id="leanpub-auto-toprimitive">@@toPrimitive</h4>
+
+<p>JavaScript frequently attempts to convert objects into primitive values implicitly when certain operations are applied. For instance, when you compare a string to an object using double equals (<code>==</code>), the object is converted into a primitive value before comparing. Exactly what value should be used was previously an internal operation that is exposed in ECMAScript 6 through the <code>@@toPrimitive</code> method.</p>
+
+<p>The <code>@@toPrimitive</code> method is defined on the prototype of each standard type and prescribes the exact behavior. When a primitive conversion is needed, <code>@@toPrimitive</code> is called with a single argument, referred to as <code>hint</code> in the specification. The <code>hint</code> argument is <code>"default"</code>, specifying that the operation has no preference as to the type, <code>"string"</code>, indicating a string should be returned, or <code>"number"</code>, if a number is necessary to perform the operation. Most standard objects treat <code>"default"</code> as equivalent to <code>"number"</code> (except for <code>Date</code>, which treats <code>"default"</code> as <code>"string"</code>).</p>
+
+<p>TODO</p>
+
+<h4 id="leanpub-auto-isconcatspreadable">@@isConcatSpreadable</h4>
+
+<p>TODO</p>
+
+<h4 id="leanpub-auto-species">@@species</h4>
+
+<p>TODO</p>
+
+<h4 id="leanpub-auto-unscopeables">@@unscopeables</h4>
+
+<p>TODO</p>
+
+<p>Only applied to <code>with</code> statement object records - does not refer to other scopes.</p>
+
+<h4 id="leanpub-auto-hasinstance">@@hasInstance</h4>
+
+<p>TODO</p>
+
+<h3 id="leanpub-auto-summary-3">Summary</h3>
+
+<p>TODO</p>
+</div>
+</body>
+</html>

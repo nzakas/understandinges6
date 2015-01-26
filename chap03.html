@@ -1,0 +1,805 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Objects</title>
+<link href="stylesheet.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+<div id="leanpub-toc">
+<h2></h2>
+<ol class="toc">
+<ul class='toc no-parts'>
+  <li>
+    <a href='chap00.html#leanpub-auto-introduction'>Introduction</a>
+    <ul>
+      <li>
+        <a href='chap00.html#leanpub-auto-browser-and-nodejs-compatibility'>Browser and Node.js Compatibility</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-who-this-book-is-for'>Who This Book is For</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-overview'>Overview</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-help-and-support'>Help and Support</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap01.html#leanpub-auto-the-basics'>The Basics</a>
+    <ul>
+      <li>
+        <a href='chap01.html#leanpub-auto-better-unicode-support'>Better Unicode Support</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-other-string-changes'>Other String Changes</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-other-regular-expression-changes'>Other Regular Expression Changes</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-objectis'>Object.is()</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-block-bindings'>Block bindings</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-destructuring-assignment'>Destructuring Assignment</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-numbers'>Numbers</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-summary'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap02.html#leanpub-auto-functions'>Functions</a>
+    <ul>
+      <li>
+        <a href='chap02.html#leanpub-auto-default-parameters'>Default Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-rest-parameters'>Rest Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-destructured-parameters'>Destructured Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-the-spread-operator'>The Spread Operator</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-the-name-property'>The name Property</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-block-level-functions'>Block-Level Functions</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-arrow-functions'>Arrow Functions</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-syntax'>Syntax</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-summary-1'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap03.html#leanpub-auto-objects'>Objects</a>
+    <ul>
+      <li>
+        <a href='chap03.html#leanpub-auto-object-categories'>Object Categories</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-object-literal-extensions'>Object Literal Extensions</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-objectassign'>Object.assign()</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-duplicate-object-literal-properties'>Duplicate Object Literal Properties</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-changing-prototypes'>Changing Prototypes</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-super-references'>Super References</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-summary-2'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap04.html#leanpub-auto-symbols'>Symbols</a>
+    <ul>
+      <li>
+        <a href='chap04.html#leanpub-auto-creating-symbols'>Creating Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-identifying-symbols'>Identifying Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-using-symbols'>Using Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-sharing-symbols'>Sharing Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-finding-object-symbols'>Finding Object Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-coercing-symbols-to-strings'>Coercing Symbols to Strings</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-well-known-symbols'>Well-Known Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-summary-3'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap05.html#leanpub-auto-iterators-and-generators'>Iterators and Generators</a>
+    <ul>
+      <li>
+        <a href='chap05.html#leanpub-auto-what-are-iterators'>What are Iterators?</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-generators'>Generators</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-iterables-and-for-of'>Iterables and for-of</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-built-in-iterators'>Built-in Iterators</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-advanced-functionality'>Advanced Functionality</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-summary-4'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap06.html#leanpub-auto-template-strings'>Template Strings</a>
+    <ul>
+      <li>
+        <a href='chap06.html#leanpub-auto-basic-syntax'>Basic Syntax</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-multiline-strings'>Multiline Strings</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-substitutions'>Substitutions</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-tagged-templates'>Tagged Templates</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-summary-5'>Summary</a>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+</ol>
+</div>
+<div id="leanpub-main">
+<h2 id="leanpub-auto-objects">Objects</h2>
+
+<p>A lot of ECMAScript 6 focused on improving the utility of objects. The focus makes sense given that nearly every value in JavaScript is represented by some type of object. Additionally, the number of objects used in an average Javascript program continues to increase, meaning that developers are writing more objects all the time. With more objects comes the necessity to use them more effectively.</p>
+
+<p>ECMAScript 6 improves objects in a number of ways, from simple syntax to new ways of manipulating and interacting with objects.</p>
+
+<h3 id="leanpub-auto-object-categories">Object Categories</h3>
+
+<p>The ECMAScript 6 specification introduced some new terminology to help distinguish between categories of objects. JavaScript has long been littered with a mix of terminology used to describe objects found in the standard as opposed to those that are added by execution environments such as the browser. ECMAScript 6 takes the time to clearly define each category of object, and it’s important to understand this terminology to have a good understanding of the language as a whole. The object categories are:</p>
+
+<ul><li><em>Ordinary objects</em> are objects that have all of the default internal behaviors for objects in JavaScript.</li>
+  <li><em>Exotic objects</em> are objects whose internal behavior is different than the default in some way.</li>
+  <li><em>Standard objects</em> are objects defined by ECMAScript 6, such as <code>Array</code>, <code>Date</code>, etc. Standard objects may be ordinary or exotic.</li>
+  <li><em>Built-in objects</em> are objects that are present in a JavaScript execution environment when a script begins to execute. All standard objects are built-in objects.</li>
+</ul><p>These terms are used throughout the book to explain the various objects defined by ECMAScript 6.</p>
+
+<h3 id="leanpub-auto-object-literal-extensions">Object Literal Extensions</h3>
+
+<p>One of the most popular patterns in JavaScript is the object literal. It’s the syntax upon which JSON is built and can be seen in nearly every JavaScript file on the Internet. The reason for the popularity is clear: a succinct syntax for creating objects that otherwise would take several lines of code to accomplish. ECMAScript 6 recognized the popularity of the object literal and extends the syntax in several ways to make object literals more powerful and even more succinct.</p>
+
+<h4 id="leanpub-auto-property-initializer-shorthand">Property Initializer Shorthand</h4>
+
+<p>In ECMAScript 5 and earlier, object literals were simply collections of name-value pairs. That meant there could be some duplication when property values are being initialized. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">createPerson</code><code class="p">(</code><code class="nx">name</code><code class="p">,</code> <code class="nx">age</code><code class="p">)</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="p">{</code>
+        <code class="nx">name</code><code class="o">:</code> <code class="nx">name</code><code class="p">,</code>
+        <code class="nx">age</code><code class="o">:</code> <code class="nx">age</code>
+    <code class="p">};</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>The <code>createPerson()</code> function creates an object whose property names are the same as the function parameter names. The result is what appears to be duplication of <code>name</code> and <code>age</code> even though each represents a different aspect of the process.</p>
+
+<p>In ECMAScript 6, you can eliminate the duplication that exists around property names and local variables by using the property initializer shorthand. When the property name is going to be the same as the local variable name, you can simply include the name without a colon and value. For example, <code>createPerson()</code> can be rewritten as follows:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">createPerson</code><code class="p">(</code><code class="nx">name</code><code class="p">,</code> <code class="nx">age</code><code class="p">)</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="p">{</code>
+        <code class="nx">name</code><code class="p">,</code>
+        <code class="nx">age</code>
+    <code class="p">};</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>When a property in an object literal only has a name and no value, the JavaScript engine looks into the surrounding scope for a variable of the same name. If found, that value is assigned to the same name on the object literal. So in this example, the object literal property <code>name</code> is assigned the value of the local variable <code>name</code>.</p>
+
+<p>The purpose of this extension is to make object literal initialization even more succinct than it already was. Assigning a property with the same name as a local variable is a very common pattern in JavaScript and so this extension is a welcome addition.</p>
+
+<h4 id="leanpub-auto-method-initializer-shorthand">Method Initializer Shorthand</h4>
+
+<p>ECMAScript 6 also improves syntax for assigning methods to object literals. In ECMAScript 5 and earlier, you must specify a name and then the full function definition to add a method to an object. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">name</code><code class="o">:</code> <code class="s2">"Nicholas"</code><code class="p">,</code>
+    <code class="nx">sayName</code><code class="o">:</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code>
+        <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">this</code><code class="p">.</code><code class="nx">name</code><code class="p">);</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+</pre></div>
+
+</div>
+
+<p>In ECMAScript 6, the syntax is made more succinct by eliminating the colon and the <code>function</code> keyword. You can then rewrite the previous example as:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">name</code><code class="o">:</code> <code class="s2">"Nicholas"</code><code class="p">,</code>
+    <code class="nx">sayName</code><code class="p">()</code> <code class="p">{</code>
+        <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">this</code><code class="p">.</code><code class="nx">name</code><code class="p">);</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+</pre></div>
+
+</div>
+
+<p>This shorthand syntax creates a method on the <code>person</code> object just as the previous example did. There is no difference aside from saving you some keystrokes, so <code>sayName()</code> is assigned an anonymous function expression and has all of the same characteristics as the function defined in the previous example.</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>The <code>name</code> property of a method created using this shorthand is the name used before the parentheses. In the previous example, the <code>name</code> property for <code>person.sayName()</code> is <code>"sayName"</code>.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h4 id="leanpub-auto-computed-property-names">Computed Property Names</h4>
+
+<p>JavaScript objects have long had computed property names through the use of square brackets instead of dot notation. The square brackets allow you to specify property names using variables and string literals that may contain characters that would be a syntax error if used in an identifier. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{},</code>
+    <code class="nx">lastName</code> <code class="o">=</code> <code class="s2">"last name"</code><code class="p">;</code>
+
+<code class="nx">person</code><code class="p">[</code><code class="s2">"first name"</code><code class="p">]</code> <code class="o">=</code> <code class="s2">"Nicholas"</code><code class="p">;</code>
+<code class="nx">person</code><code class="p">[</code><code class="nx">lastName</code><code class="p">]</code> <code class="o">=</code> <code class="s2">"Zakas"</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">[</code><code class="s2">"first name"</code><code class="p">]);</code>      <code class="c1">// "Nicholas"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">[</code><code class="nx">lastName</code><code class="p">]);</code>          <code class="c1">// "Zakas"</code>
+</pre></div>
+
+</div>
+
+<p>Both of the property names in this example have a space, making it impossible to reference those names using dot notation. However, bracket notation allows any string value to be used as a property name.</p>
+
+<p>In ECMAScript 5, you could use string literals as property names in object literals, such as:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="s2">"first name"</code><code class="o">:</code> <code class="s2">"Nicholas"</code>
+<code class="p">};</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">[</code><code class="s2">"first name"</code><code class="p">]);</code>      <code class="c1">// "Nicholas"</code>
+</pre></div>
+
+</div>
+
+<p>If you could provide the string literal inside of the object literal property definition then you were all set. If, however, the property name was contained in a variable or had to be calculated, then there was no way to define that property using an object literal.</p>
+
+<p>ECMAScript 6 adds computed property names to object literal syntax by using the same square bracket notation that has been used to reference computed property names in object instances. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">lastName</code> <code class="o">=</code> <code class="s2">"last name"</code><code class="p">;</code>
+
+<code class="kd">var</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="s2">"first name"</code><code class="o">:</code> <code class="s2">"Nicholas"</code><code class="p">,</code>
+    <code class="p">[</code><code class="nx">lastName</code><code class="p">]</code><code class="o">:</code> <code class="s2">"Zakas"</code>
+<code class="p">};</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">[</code><code class="s2">"first name"</code><code class="p">]);</code>      <code class="c1">// "Nicholas"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">[</code><code class="nx">lastName</code><code class="p">]);</code>          <code class="c1">// "Zakas"</code>
+</pre></div>
+
+</div>
+
+<p>The square brackets inside of the object literal indicate that the property name is computed, so its contents are evaluated as a string. That means you can also include expressions such as:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">suffix</code> <code class="o">=</code> <code class="s2">" name"</code><code class="p">;</code>
+
+<code class="kd">var</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="p">[</code><code class="s2">"first"</code> <code class="o">+</code> <code class="nx">suffix</code><code class="p">]</code><code class="o">:</code> <code class="s2">"Nicholas"</code><code class="p">,</code>
+    <code class="p">[</code><code class="s2">"last"</code> <code class="o">+</code> <code class="nx">suffix</code><code class="p">]</code><code class="o">:</code> <code class="s2">"Zakas"</code>
+<code class="p">};</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">[</code><code class="s2">"first name"</code><code class="p">]);</code>      <code class="c1">// "Nicholas"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">[</code><code class="s2">"last name"</code><code class="p">]);</code>       <code class="c1">// "Zakas"</code>
+</pre></div>
+
+</div>
+
+<p>Anything you would put inside of square brackets while using bracket notation on object instances will also work for computed property names inside of object literals.</p>
+
+<h3 id="leanpub-auto-objectassign">Object.assign()</h3>
+
+<p>One of the most popular patterns for object composition is <em>mixins</em>, in which one object receives properties and methods from another object. Many JavaScript libraries have a mixin method similar to this:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">mixin</code><code class="p">(</code><code class="nx">receiver</code><code class="p">,</code> <code class="nx">supplier</code><code class="p">)</code> <code class="p">{</code>
+    <code class="nb">Object</code><code class="p">.</code><code class="nx">keys</code><code class="p">(</code><code class="nx">supplier</code><code class="p">).</code><code class="nx">forEach</code><code class="p">(</code><code class="kd">function</code><code class="p">(</code><code class="nx">key</code><code class="p">)</code> <code class="p">{</code>
+        <code class="nx">receiver</code><code class="p">[</code><code class="nx">key</code><code class="p">]</code> <code class="o">=</code> <code class="nx">supplier</code><code class="p">[</code><code class="nx">key</code><code class="p">];</code>
+    <code class="p">});</code>
+
+    <code class="k">return</code> <code class="nx">receiver</code><code class="p">;</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>The <code>mixin()</code> function iterates over the own properties of <code>supplier</code> and copies them onto <code>receiver</code>. This allows the <code>receiver</code> to gain new behaviors without inheritance. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">EventTarget</code><code class="p">()</code> <code class="p">{</code> <code class="cm">/*...*/</code> <code class="p">}</code>
+<code class="nx">EventTarget</code><code class="p">.</code><code class="nx">prototype</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">constructor</code><code class="o">:</code> <code class="nx">EventTarget</code><code class="p">,</code>
+    <code class="nx">emit</code><code class="o">:</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code> <code class="cm">/*...*/</code> <code class="p">},</code>
+    <code class="nx">on</code><code class="o">:</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code> <code class="cm">/*...*/</code> <code class="p">}</code>
+<code class="p">};</code>
+
+<code class="kd">var</code> <code class="nx">myObject</code> <code class="o">=</code> <code class="p">{};</code>
+<code class="nx">mixin</code><code class="p">(</code><code class="nx">myObject</code><code class="p">,</code> <code class="nx">EventTarget</code><code class="p">.</code><code class="nx">prototype</code><code class="p">);</code>
+
+<code class="nx">myObject</code><code class="p">.</code><code class="nx">emit</code><code class="p">(</code><code class="s2">"somethingChanged"</code><code class="p">);</code>
+</pre></div>
+
+</div>
+
+<p>In this example, <code>myObject</code> receives behavior from <code>EventTarget.prototype</code>. This gives <code>myObject</code> the ability to publish events and let others subscribe to them using <code>emit()</code> and <code>on()</code>, respectively.</p>
+
+<p>This pattern became popular enough that ECMAScript 6 added <code>Object.assign()</code>, which behaves the same way. The difference in name is to reflect the actual operation that occurs. Since the <code>mixin()</code> method uses the assignment operator (<code>=</code>), it cannot copy accessor properties to the receiver as accessor properties. The name <code>Object.assign()</code> was chosen to reflect this distinction.</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>Similar methods in various libraries may have other names. Some popular alternate names for the same basic functionality are <code>extend()</code> and <code>mix()</code>.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><p>You can use <code>Object.assign()</code> anywhere the <code>mixin()</code> function would have been used:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">EventTarget</code><code class="p">()</code> <code class="p">{</code> <code class="cm">/*...*/</code> <code class="p">}</code>
+<code class="nx">EventTarget</code><code class="p">.</code><code class="nx">prototype</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">constructor</code><code class="o">:</code> <code class="nx">EventTarget</code><code class="p">,</code>
+    <code class="nx">emit</code><code class="o">:</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code> <code class="cm">/*...*/</code> <code class="p">},</code>
+    <code class="nx">on</code><code class="o">:</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code> <code class="cm">/*...*/</code> <code class="p">}</code>
+<code class="p">}</code>
+
+<code class="kd">var</code> <code class="nx">myObject</code> <code class="o">=</code> <code class="p">{}</code>
+<code class="nb">Object</code><code class="p">.</code><code class="nx">assign</code><code class="p">(</code><code class="nx">myObject</code><code class="p">,</code> <code class="nx">EventTarget</code><code class="p">.</code><code class="nx">prototype</code><code class="p">);</code>
+
+<code class="nx">myObject</code><code class="p">.</code><code class="nx">emit</code><code class="p">(</code><code class="s2">"somethingChanged"</code><code class="p">);</code>
+</pre></div>
+
+</div>
+
+<p>The <code>Object.assign()</code> method accepts any number of suppliers, and the receiver receives the properties in the order in which the suppliers are specified. That means the second supplier might overwrite a value from the first supplier on the receiver. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">receiver</code> <code class="o">=</code> <code class="p">{};</code>
+
+<code class="nb">Object</code><code class="p">.</code><code class="nx">assign</code><code class="p">(</code><code class="nx">receiver</code><code class="p">,</code> <code class="p">{</code>
+        <code class="nx">type</code><code class="o">:</code> <code class="s2">"js"</code><code class="p">,</code>
+        <code class="nx">name</code><code class="o">:</code> <code class="s2">"file.js"</code>
+    <code class="p">},</code> <code class="p">{</code>
+        <code class="nx">type</code><code class="o">:</code> <code class="s2">"css"</code>
+    <code class="p">}</code>
+<code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">receiver</code><code class="p">.</code><code class="nx">type</code><code class="p">);</code>     <code class="c1">// "css"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">receiver</code><code class="p">.</code><code class="nx">name</code><code class="p">);</code>     <code class="c1">// "file.js"</code>
+</pre></div>
+
+</div>
+
+<p>The value of <code>receiver.type</code> is <code>"css"</code> because the second supplier overwrote the value of the first.</p>
+
+<p>The <code>Object.assign()</code> method isn’t a big addition to ECMAScript 6, but it does formalize a common function that is found in many JavaScript libraries.</p>
+
+<div class="aside sidebarish">
+  <h4 id="leanpub-auto-working-with-accessor-properties">Working with Accessor Properties</h4>
+
+  <p>Keep in mind that you cannot create accessor properties on the receiver by using a supplier with accessor properties. Since <code>Object.assign()</code> uses the assignment operator, an accessor property on a supplier will become a data property on the receiver. For example:</p>
+
+  <div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">receiver</code> <code class="o">=</code> <code class="p">{},</code>
+    <code class="nx">supplier</code> <code class="o">=</code> <code class="p">{</code>
+        <code class="nx">get</code> <code class="nx">name</code><code class="p">()</code> <code class="p">{</code>
+            <code class="k">return</code> <code class="s2">"file.js"</code>
+        <code class="p">}</code>
+    <code class="p">};</code>
+
+<code class="nb">Object</code><code class="p">.</code><code class="nx">assign</code><code class="p">(</code><code class="nx">receiver</code><code class="p">,</code> <code class="nx">supplier</code><code class="p">);</code>
+
+<code class="kd">var</code> <code class="nx">descriptor</code> <code class="o">=</code> <code class="nb">Object</code><code class="p">.</code><code class="nx">getOwnPropertyDescriptor</code><code class="p">(</code><code class="nx">receiver</code><code class="p">,</code> <code class="s2">"name"</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">descriptor</code><code class="p">.</code><code class="nx">value</code><code class="p">);</code>      <code class="c1">// "file.js"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">descriptor</code><code class="p">.</code><code class="nx">get</code><code class="p">);</code>        <code class="c1">// undefined</code>
+</pre></div>
+  
+</div>
+
+  <p>In this code, the <code>supplier</code> has an accessor property called <code>name</code>. After using <code>Object.assign()</code>, <code>receiver.name</code> exists as a data property with the value of <code>"file.js"</code>. That’s because <code>supplier.name</code> returned “file.js” at the time <code>Object.assign()</code> was called.</p>
+
+</div>
+
+<h3 id="leanpub-auto-duplicate-object-literal-properties">Duplicate Object Literal Properties</h3>
+
+<p>ECMAScript 5 strict mode introduced a check for duplicate object literal properties that would throw an error if a duplicate was found. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">name</code><code class="o">:</code> <code class="s2">"Nicholas"</code><code class="p">,</code>
+    <code class="nx">name</code><code class="o">:</code> <code class="s2">"Greg"</code>        <code class="c1">// syntax error in ES5 strict mode</code>
+<code class="p">};</code>
+</pre></div>
+
+</div>
+
+<p>When running in ECMAScript 5 strict mode, this example results in a syntax error on the second <code>name</code> property.</p>
+
+<p>In ECMAScript 6, the duplicate property check has been removed. Both strict and nonstrict mode code no longer check for duplicate properties and instead take the last property of the given name as the actual value.</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">name</code><code class="o">:</code> <code class="s2">"Nicholas"</code><code class="p">,</code>
+    <code class="nx">name</code><code class="o">:</code> <code class="s2">"Greg"</code>        <code class="c1">// not an error in ES6</code>
+<code class="p">};</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">.</code><code class="nx">name</code><code class="p">);</code>       <code class="c1">// "Greg"</code>
+</pre></div>
+
+</div>
+
+<p>In this example, the value of <code>person.name</code> is <code>"Greg"</code> because that was the last value assigned to the property.</p>
+
+<h3 id="leanpub-auto-changing-prototypes">Changing Prototypes</h3>
+
+<p>Prototypes are the foundation of inheritance and JavaScript and so ECMAScript 6 continues to make prototypes more powerful. ECMAScript 5 added the <code>Object.getPrototypeOf()</code> method for retrieving the prototype of any given object. ECMAScript 6 adds the reverse operation, <code>Object.setPrototypeOf()</code>, which allows you to change the prototype of any given object.</p>
+
+<p>Normally, the prototype of an object is specified at the time of its creation, either by using a constructor or via <code>Object.create()</code>. Prior to ECMAScript 6, there was no standard way to change an object’s prototype after it had already been created. In a way, <code>Object.setPrototypeOf()</code> changes one of the biggest assumptions about objects in JavaScript to this point, which is that an object’s prototype remains unchanged after creation.</p>
+
+<p>The <code>Object.setPrototypeOf()</code> method accepts two arguments, the object whose prototype should be changed and the object that should become the first argument’s prototype. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">getGreeting</code><code class="p">()</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="s2">"Hello"</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+
+<code class="kd">let</code> <code class="nx">dog</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">getGreeting</code><code class="p">()</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="s2">"Woof"</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+
+<code class="c1">// prototype is person</code>
+<code class="kd">let</code> <code class="nx">friend</code> <code class="o">=</code> <code class="nb">Object</code><code class="p">.</code><code class="nx">create</code><code class="p">(</code><code class="nx">person</code><code class="p">);</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">friend</code><code class="p">.</code><code class="nx">getGreeting</code><code class="p">());</code>                      <code class="c1">// "Hello"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Object</code><code class="p">.</code><code class="nx">getPrototypeOf</code><code class="p">(</code><code class="nx">friend</code><code class="p">)</code> <code class="o">===</code> <code class="nx">person</code><code class="p">);</code>  <code class="c1">// true</code>
+
+<code class="c1">// set prototype to dog</code>
+<code class="nb">Object</code><code class="p">.</code><code class="nx">setPrototypeOf</code><code class="p">(</code><code class="nx">friend</code><code class="p">,</code> <code class="nx">dog</code><code class="p">);</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">friend</code><code class="p">.</code><code class="nx">getGreeting</code><code class="p">());</code>                      <code class="c1">// "Woof"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Object</code><code class="p">.</code><code class="nx">getPrototypeOf</code><code class="p">(</code><code class="nx">friend</code><code class="p">)</code> <code class="o">===</code> <code class="nx">dog</code><code class="p">);</code>     <code class="c1">// true</code>
+</pre></div>
+
+</div>
+
+<p>This code defines two base objects: <code>person</code> and <code>dog</code>. Both objects have a method <code>getGreeting()</code> that outputs something to the console. The object <code>friend</code> starts out inheriting from <code>person</code>, meaning that <code>getGreeting()</code> will output <code>"Hello"</code>. When the prototype is changed to be <code>dog</code> instead, <code>person.getGreeting()</code> outputs <code>"Woof"</code> because the original relationship to <code>person</code> is broken.</p>
+
+<p>The actual value of an object’s prototype is stored in an internal-only property called <code>[[Prototype]]</code>. The <code>Object.getPrototypeOf()</code> method returns the value stored in <code>[[Prototype]]</code> and <code>Object.setPrototypeOf()</code> changes the value stored in <code>[[Prototype]]</code>. However, these aren’t the only ways to work with the value of <code>[[Prototype]]</code>.</p>
+
+<p>Even before ECMAScript 5 was finished, several JavaScript engines already implemented a custom property called <code>__proto__</code> that could be used to both get and set the prototype of an object. Effectively, <code>__proto__</code> was an early precursor to both <code>Object.getPrototypeOf()</code> and <code>Object.setPrototypeOf()</code>. It was unrealistic to expect all of the JavaScript engines to remove this property, so ECMAScript 6 formalized the behavior of <code>__proto__</code>.</p>
+
+<p>In ECMAScript 6 engines, <code>Object.prototype.__proto__</code> is defined as an accessor property whose <code>get</code> method calls <code>Object.getPrototypeOf()</code> and whose <code>set</code> method calls <code>Object.setPrototypeOf()</code>. This means that there is no real difference between using <code>__proto__</code> and the other methods except that <code>__proto__</code> allows you to set the prototype of an object literal directly. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">getGreeting</code><code class="p">()</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="s2">"Hello"</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+
+<code class="kd">let</code> <code class="nx">dog</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">getGreeting</code><code class="p">()</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="s2">"Woof"</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+
+<code class="c1">// prototype is person</code>
+<code class="kd">let</code> <code class="nx">friend</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">__proto__</code><code class="o">:</code> <code class="nx">person</code>
+<code class="p">};</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">friend</code><code class="p">.</code><code class="nx">getGreeting</code><code class="p">());</code>                      <code class="c1">// "Hello"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Object</code><code class="p">.</code><code class="nx">getPrototypeOf</code><code class="p">(</code><code class="nx">friend</code><code class="p">)</code> <code class="o">===</code> <code class="nx">person</code><code class="p">);</code>  <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">friend</code><code class="p">.</code><code class="nx">__proto__</code> <code class="o">===</code> <code class="nx">person</code><code class="p">);</code>               <code class="c1">// true</code>
+
+<code class="c1">// set prototype to dog</code>
+<code class="nx">friend</code><code class="p">.</code><code class="nx">__proto__</code> <code class="o">=</code> <code class="nx">dog</code><code class="p">;</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">friend</code><code class="p">.</code><code class="nx">getGreeting</code><code class="p">());</code>                      <code class="c1">// "Woof"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">friend</code><code class="p">.</code><code class="nx">__proto__</code> <code class="o">===</code> <code class="nx">dog</code><code class="p">);</code>                  <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Object</code><code class="p">.</code><code class="nx">getPrototypeOf</code><code class="p">(</code><code class="nx">friend</code><code class="p">)</code> <code class="o">===</code> <code class="nx">dog</code><code class="p">);</code>     <code class="c1">// true</code>
+</pre></div>
+
+</div>
+
+<p>This example is functionally equivalent to the previous. The call to <code>Object.create()</code> has been replaced with an object literal that assigns a value to <code>__proto__</code>. The only real difference between creating an object using <code>Object.create()</code> or an object literal with <code>__proto__</code> is that the former requires you to specify full property descriptors for any additional object properties while the latter is just a standard object literal.</p>
+
+<table class="warning sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_warning.png" alt="warning" width="50px" /></td>
+    <td>
+      <p>The <code>__proto__</code> property is special in a number of ways:</p>
+
+  <ol class="numeric"><li>You can only specify it once in an object literal. If you specify two <code>__proto__</code> properties, then an error is thrown. This is the only object literal property that has this restriction.</li>
+    <li>The computed form <code>["__proto__"]</code> acts like a regular property and does not set or return the current object’s prototype. All rules related to object literal properties apply in this form, as opposed to the non-computed form, for which there are exceptions.</li>
+  </ol><p>It’s best to be careful when using <code>__proto__</code> to make sure you don’t get caught by these differences.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h3 id="leanpub-auto-super-references">Super References</h3>
+
+<p>As previously mentioned, prototypes are very important for JavaScript and a lot of work went into making them easier to use in ECMAScript 6. Among the improvements is the introduction of <code>super</code> references to more easily access functionality on an object’s prototype. For example, if you want to override a method on an object instance such that it also calls the prototype method of the same name, you would need to do the following in ECMAScript 5:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">getGreeting</code><code class="p">()</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="s2">"Hello"</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+
+<code class="kd">let</code> <code class="nx">dog</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">getGreeting</code><code class="p">()</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="s2">"Woof"</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+
+<code class="c1">// prototype is person</code>
+<code class="kd">let</code> <code class="nx">friend</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">__proto__</code><code class="o">:</code> <code class="nx">person</code><code class="p">,</code>
+    <code class="nx">getGreeting</code><code class="p">()</code> <code class="p">{</code>
+        <code class="c1">// same as this.__proto__.getGreeting.call(this)</code>
+        <code class="k">return</code> <code class="nb">Object</code><code class="p">.</code><code class="nx">getPrototypeOf</code><code class="p">(</code><code class="k">this</code><code class="p">).</code><code class="nx">getGreeting</code><code class="p">.</code><code class="nx">call</code><code class="p">(</code><code class="k">this</code><code class="p">)</code> <code class="o">+</code> <code class="s2">", hi!"</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">friend</code><code class="p">.</code><code class="nx">getGreeting</code><code class="p">());</code>                      <code class="c1">// "Hello, hi!"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Object</code><code class="p">.</code><code class="nx">getPrototypeOf</code><code class="p">(</code><code class="nx">friend</code><code class="p">)</code> <code class="o">===</code> <code class="nx">person</code><code class="p">);</code>  <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">friend</code><code class="p">.</code><code class="nx">__proto__</code> <code class="o">===</code> <code class="nx">person</code><code class="p">);</code>               <code class="c1">// true</code>
+
+<code class="c1">// set prototype to dog</code>
+<code class="nx">friend</code><code class="p">.</code><code class="nx">__proto__</code> <code class="o">=</code> <code class="nx">dog</code><code class="p">;</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">friend</code><code class="p">.</code><code class="nx">getGreeting</code><code class="p">());</code>                      <code class="c1">// "Woof, hi!"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">friend</code><code class="p">.</code><code class="nx">__proto__</code> <code class="o">===</code> <code class="nx">dog</code><code class="p">);</code>                  <code class="c1">// true</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Object</code><code class="p">.</code><code class="nx">getPrototypeOf</code><code class="p">(</code><code class="nx">friend</code><code class="p">)</code> <code class="o">===</code> <code class="nx">dog</code><code class="p">);</code>     <code class="c1">// true</code>
+</pre></div>
+
+</div>
+
+<p>In this example, <code>getGreeting()</code> on <code>friend</code> calls the prototype method of the same name. The <code>Object.getPrototypeOf()</code> method is used to ensure the method is always getting the accurate prototype and then an additional string is appended. The additional <code>.call(this)</code> ensures that the <code>this</code> value inside the prototype method is set correctly.</p>
+
+<p>Needing to remember to use <code>Object.getPrototypeOf()</code> and <code>.call(this)</code> to call a method on the prototype is a bit involved, so ECMAScript 6 introduced <code>super</code>.</p>
+
+<p>At it’s simplest, <code>super</code> acts as a pointer to the current object’s prototype, effectively acting like <code>Object.getPrototypeOf(this)</code>. So you can simplify the <code>getGreeting()</code> method by rewriting it as:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">friend</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">__proto__</code><code class="o">:</code> <code class="nx">person</code><code class="p">,</code>
+    <code class="nx">getGreeting</code><code class="p">()</code> <code class="p">{</code>
+        <code class="c1">// same as Object.getPrototypeOf(this).getGreeting.call(this)</code>
+        <code class="c1">// or this.__proto__.getGreeting.call(this)</code>
+        <code class="k">return</code> <code class="kr">super</code><code class="p">.</code><code class="nx">getGreeting</code><code class="p">()</code> <code class="o">+</code> <code class="s2">", hi!"</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+</pre></div>
+
+</div>
+
+<p>The call to <code>super.getGreeting.call(this)</code> is the same as <code>Object.getPrototypeOf(this).getGreeting.call(this)</code> or <code>this.__proto__.getGreeting.call(this)</code>. Similarly, you can call any method on an object’s prototype by using a <code>super</code> reference.</p>
+
+<p>If you’re calling a prototype method with the exact same name, then you can also call <code>super</code> as a function, for example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">friend</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">__proto__</code><code class="o">:</code> <code class="nx">person</code><code class="p">,</code>
+    <code class="nx">getGreeting</code><code class="p">()</code> <code class="p">{</code>
+        <code class="c1">// same as Object.getPrototypeOf(this).getGreeting.call(this)</code>
+        <code class="c1">// or this.__proto__.getGreeting.call(this)</code>
+        <code class="c1">// or super.getGreeting()</code>
+        <code class="k">return</code> <code class="kr">super</code><code class="p">()</code> <code class="o">+</code> <code class="s2">", hi!"</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+</pre></div>
+
+</div>
+
+<p>Calling <code>super</code> in this manner tells the JavaScript engine that you want to use the prototype method with the same name as the current method. So <code>super()</code> actually does a lookup using the containing function’s <code>name</code> property (discussed in Chapter 2) to find the correct method.</p>
+
+<table class="warning sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_warning.png" alt="warning" width="50px" /></td>
+    <td>
+      <p><code>super</code> references can only be used inside of functions and cannot be used in the global scope. Attempting to use <code>super</code> in the global scope results in a syntax error.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h4 id="leanpub-auto-methods">Methods</h4>
+
+<p>Prior to ECMAScript 6, there was no formal definition of a “method” - methods were just object properties that contained functions instead of data. ECMAScript 6 formally defines a method as a function that has an internal <code>[[HomeObject]]</code> property containing the object to which the method belongs. Consider the following:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{</code>
+
+    <code class="c1">// method</code>
+    <code class="nx">getGreeting</code><code class="p">()</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="s2">"Hello"</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+
+<code class="c1">// not a method</code>
+<code class="kd">function</code> <code class="nx">shareGreeting</code><code class="p">()</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="s2">"Hi!"</code><code class="p">;</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>This example defines <code>person</code> with a single method called <code>getGreeting()</code>. The <code>[[HomeObject]]</code> for <code>getGreeting()</code> is <code>person</code> by virtue of assigning the function directly to an object. The <code>shareGreeting()</code> function, on the other hand, has no <code>[[HomeObject]]</code> specified because it wasn’t assigned to an object when it was created. In most cases this difference isn’t important, but it becomes very important when using <code>super</code>.</p>
+
+<p>Any reference to <code>super</code> uses the <code>[[HomeObject]]</code> to determine what to do. The first step is to call <code>Object.getPrototypeOf()</code> on the <code>[[HomeObject]]</code> to retrieve a reference to the prototype. Then, the prototype is searched for a function with the same name as the executing function. Last, the <code>this</code>-binding is set and the method is called. If a function has no <code>[[HomeObject]]</code>, or has a different one than expected, then this process won’t work. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">getGreeting</code><code class="p">()</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="s2">"Hello"</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+
+<code class="c1">// prototype is person</code>
+<code class="kd">let</code> <code class="nx">friend</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">__proto__</code><code class="o">:</code> <code class="nx">person</code><code class="p">,</code>
+    <code class="nx">getGreeting</code><code class="p">()</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="kr">super</code><code class="p">()</code> <code class="o">+</code> <code class="s2">", hi!"</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+
+<code class="kd">function</code> <code class="nx">getGlobalGreeting</code><code class="p">()</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="kr">super</code><code class="p">.</code><code class="nx">getGreeting</code><code class="p">()</code> <code class="o">+</code> <code class="s2">", yo!"</code><code class="p">;</code>
+<code class="p">}</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">friend</code><code class="p">.</code><code class="nx">getGreeting</code><code class="p">());</code>  <code class="c1">// "Hello, hi!"</code>
+
+<code class="nx">getGlobalGreeting</code><code class="p">();</code>                      <code class="c1">// throws error</code>
+</pre></div>
+
+</div>
+
+<p>Calling <code>friend.getGreeting()</code> returns a string while calling <code>getGlobalGreeting()</code> throws an error for improper use of <code>super</code>. Since the <code>getGlobalGreeting()</code> function has no <code>[[HomeObject]]</code>, it’s not possible to perform a lookup. Interestingly, the situation doesn’t change if <code>getGlobalGreeting()</code> is later assigned as a method on <code>friend</code>:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="c1">// prototype is person</code>
+<code class="kd">let</code> <code class="nx">friend</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">__proto__</code><code class="o">:</code> <code class="nx">person</code><code class="p">,</code>
+    <code class="nx">getGreeting</code><code class="p">()</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="kr">super</code><code class="p">()</code> <code class="o">+</code> <code class="s2">", hi!"</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+
+<code class="kd">function</code> <code class="nx">getGlobalGreeting</code><code class="p">()</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="kr">super</code><code class="p">.</code><code class="nx">getGreeting</code><code class="p">()</code> <code class="o">+</code> <code class="s2">", yo!"</code><code class="p">;</code>
+<code class="p">}</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">friend</code><code class="p">.</code><code class="nx">getGreeting</code><code class="p">());</code>  <code class="c1">// "Hello, hi!"</code>
+
+<code class="c1">// assign getGreeting to the global function</code>
+<code class="nx">friend</code><code class="p">.</code><code class="nx">getGreeting</code> <code class="o">=</code> <code class="nx">getGlobalGreeting</code><code class="p">;</code>
+
+<code class="nx">friend</code><code class="p">.</code><code class="nx">getGreeting</code><code class="p">();</code>               <code class="c1">// throws error</code>
+</pre></div>
+
+</div>
+
+<p>Here the global <code>getGlobalGreeting()</code> function is used to overwrite the previously-defined <code>getGreeting()</code> method on <code>friend</code>. Calling <code>friend.getGreeting()</code> at that point results in an error as well. The value of <code>[[HomeObject]]</code> is only set when the function is first created, so even assigning onto an object doesn’t fix the problem. Fortunately, ECMAScript 6 has a solution.</p>
+
+<p>Every function has a <code>toMethod()</code> method that allows you to create a new version of the same function that has its <code>[[HomeObject]]</code> set to a specific object. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="c1">// prototype is person</code>
+<code class="kd">let</code> <code class="nx">friend</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">__proto__</code><code class="o">:</code> <code class="nx">person</code><code class="p">,</code>
+    <code class="nx">getGreeting</code><code class="p">()</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="kr">super</code><code class="p">()</code> <code class="o">+</code> <code class="s2">", hi!"</code><code class="p">;</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+
+<code class="kd">function</code> <code class="nx">getGlobalGreeting</code><code class="p">()</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="kr">super</code><code class="p">.</code><code class="nx">getGreeting</code><code class="p">()</code> <code class="o">+</code> <code class="s2">", yo!"</code><code class="p">;</code>
+<code class="p">}</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">friend</code><code class="p">.</code><code class="nx">getGreeting</code><code class="p">());</code>  <code class="c1">// "Hello, hi!"</code>
+
+<code class="c1">// assign getGreeting to the global function</code>
+<code class="kd">var</code> <code class="nx">getFriendlyGreeting</code> <code class="o">=</code> <code class="nx">getGlobalGreeting</code><code class="p">.</code><code class="nx">toMethod</code><code class="p">(</code><code class="nx">friend</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">getFriendlyGreeting</code><code class="p">());</code>  <code class="c1">// "Hello, yo!"</code>
+</pre></div>
+
+</div>
+
+<p>This code uses <code>toMethod()</code> to create a new copy of <code>getGlobalGreeting()</code> whose <code>[[HomeObject]]</code> is set to <code>friend</code> and is called <code>getFriendlyGreeting()</code>. That means the <code>super</code> reference inside of the function will now work and return the correct value. Keep in mind that the original <code>getGlobalGreeting()</code> still has no <code>[[HomeObject]]</code>. Instead, a new copy of the function was created and stored in <code>getFriendlyGreeting()</code>. The <code>getFriendlyGreeting()</code> method can properly look up <code>super</code> even though it’s not called as a method of <code>friend</code>.</p>
+
+<table class="warning sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_warning.png" alt="warning" width="50px" /></td>
+    <td>
+      <p>This is an important distinction between <code>this</code> and <code>super</code>. While <code>this</code> is evaluated at runtime, <code>super</code> is influenced by where the function was created. The value of <code>[[HomeObject]]</code> doesn’t change after a method is created, so passing around functions with <code>super</code> references can be very confusing. In most cases, it’s a good idea to not remove or add methods after an object has been created. The <code>toMethod()</code> method is there if you really want to use it, but it’s best to avoid doing so unless absolutely necessary.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h3 id="leanpub-auto-summary-2">Summary</h3>
+
+<p>Objects are at the center of programming in JavaScript, and ECMAScript 6 has made some helpful changes to objects that both make them easier to deal with and more powerful.</p>
+
+<p>ECMAScript 6 makes several changes to object literals. Shorthand property definitions make it easier to assign properties whose names are the same as in-scope variables. Computed property names allow you to specify non-literal values as property names, which is something you’ve already been able to do in other areas of the language. Shorthand methods let you type a lot fewer characters in order to define methods on object literals by completely omitting the <code>function</code> keyword and colon. A loosening of the strict mode check for duplicate object literal property names was introduced as well, meaning you can now have two properties with the same name in a single object literal without an error being thrown.</p>
+
+<p>The <code>Object.assign()</code> method makes it easier to change multiple properties on a single object at once. This can be very useful if you use the mixin pattern.</p>
+
+<p>It’s now possible to modify an object’s prototype after it’s already created using <code>Object.setPrototypeOf()</code>. ECMAScript 6 also defines the behavior of the <code>__proto__</code> property, which is an accessor property whose getter calls <code>Object.getPrototypeOf()</code> and whose setter calls ‘Object.setPrototypeOf()`.</p>
+
+<p>The <code>super</code> keyword can now be used to call methods on an object’s prototype. It can be used either standalone as a method, such as <code>super()</code>, or as a reference to the prototype itself, such as <code>super.getGreeting()</code>. In both cases, the <code>this</code>-binding is setup automatically to work with the current value of <code>this</code>. You can change how <code>super</code> is evaluated inside of a function by calling <code>toMethod()</code> and specifying a new <code>[[HomeObject]]</code>. This method returns a new copy of the function whose <code>[[HomeObject]]</code> is the argument that was passed in.</p>
+</div>
+</body>
+</html>

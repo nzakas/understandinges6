@@ -1,0 +1,1017 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Functions</title>
+<link href="stylesheet.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+<div id="leanpub-toc">
+<h2></h2>
+<ol class="toc">
+<ul class='toc no-parts'>
+  <li>
+    <a href='chap00.html#leanpub-auto-introduction'>Introduction</a>
+    <ul>
+      <li>
+        <a href='chap00.html#leanpub-auto-browser-and-nodejs-compatibility'>Browser and Node.js Compatibility</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-who-this-book-is-for'>Who This Book is For</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-overview'>Overview</a>
+      </li>
+      <li>
+        <a href='chap00.html#leanpub-auto-help-and-support'>Help and Support</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap01.html#leanpub-auto-the-basics'>The Basics</a>
+    <ul>
+      <li>
+        <a href='chap01.html#leanpub-auto-better-unicode-support'>Better Unicode Support</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-other-string-changes'>Other String Changes</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-other-regular-expression-changes'>Other Regular Expression Changes</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-objectis'>Object.is()</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-block-bindings'>Block bindings</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-destructuring-assignment'>Destructuring Assignment</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-numbers'>Numbers</a>
+      </li>
+      <li>
+        <a href='chap01.html#leanpub-auto-summary'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap02.html#leanpub-auto-functions'>Functions</a>
+    <ul>
+      <li>
+        <a href='chap02.html#leanpub-auto-default-parameters'>Default Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-rest-parameters'>Rest Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-destructured-parameters'>Destructured Parameters</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-the-spread-operator'>The Spread Operator</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-the-name-property'>The name Property</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-block-level-functions'>Block-Level Functions</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-arrow-functions'>Arrow Functions</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-syntax'>Syntax</a>
+      </li>
+      <li>
+        <a href='chap02.html#leanpub-auto-summary-1'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap03.html#leanpub-auto-objects'>Objects</a>
+    <ul>
+      <li>
+        <a href='chap03.html#leanpub-auto-object-categories'>Object Categories</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-object-literal-extensions'>Object Literal Extensions</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-objectassign'>Object.assign()</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-duplicate-object-literal-properties'>Duplicate Object Literal Properties</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-changing-prototypes'>Changing Prototypes</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-super-references'>Super References</a>
+      </li>
+      <li>
+        <a href='chap03.html#leanpub-auto-summary-2'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap04.html#leanpub-auto-symbols'>Symbols</a>
+    <ul>
+      <li>
+        <a href='chap04.html#leanpub-auto-creating-symbols'>Creating Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-identifying-symbols'>Identifying Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-using-symbols'>Using Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-sharing-symbols'>Sharing Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-finding-object-symbols'>Finding Object Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-coercing-symbols-to-strings'>Coercing Symbols to Strings</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-well-known-symbols'>Well-Known Symbols</a>
+      </li>
+      <li>
+        <a href='chap04.html#leanpub-auto-summary-3'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap05.html#leanpub-auto-iterators-and-generators'>Iterators and Generators</a>
+    <ul>
+      <li>
+        <a href='chap05.html#leanpub-auto-what-are-iterators'>What are Iterators?</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-generators'>Generators</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-iterables-and-for-of'>Iterables and for-of</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-built-in-iterators'>Built-in Iterators</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-advanced-functionality'>Advanced Functionality</a>
+      </li>
+      <li>
+        <a href='chap05.html#leanpub-auto-summary-4'>Summary</a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href='chap06.html#leanpub-auto-template-strings'>Template Strings</a>
+    <ul>
+      <li>
+        <a href='chap06.html#leanpub-auto-basic-syntax'>Basic Syntax</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-multiline-strings'>Multiline Strings</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-substitutions'>Substitutions</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-tagged-templates'>Tagged Templates</a>
+      </li>
+      <li>
+        <a href='chap06.html#leanpub-auto-summary-5'>Summary</a>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+</ol>
+</div>
+<div id="leanpub-main">
+<h2 id="leanpub-auto-functions">Functions</h2>
+
+<p>Functions are an important part of any programming language, and JavaScript functions hadn’t changed much since the language was first introduced. This left a backlog of problems and nuanced behavior that made it easy to make mistakes or require more code just to achieve a very common behavior.</p>
+
+<p>ECMAScript 6 functions made a big leap forward, taking into account years of complaints and asks from JavaScript developers. The result is a number of incremental improvements on top of ECMAScript 5 functions that make programming in JavaScript less error-prone and more powerful than ever before.</p>
+
+<h3 id="leanpub-auto-default-parameters">Default Parameters</h3>
+
+<p>Functions in JavaScript are unique in that they allow any number of parameters to be passed regardless of the number of declared parameters in the function definition. This allows you to define functions that can handle different number of parameters, often by just filling in default values when ones are provided. In ECMAScript 5 and earlier, you would likely use the following pattern to accomplish this:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">makeRequest</code><code class="p">(</code><code class="nx">url</code><code class="p">,</code> <code class="nx">timeout</code><code class="p">,</code> <code class="nx">callback</code><code class="p">)</code> <code class="p">{</code>
+
+    <code class="nx">timeout</code> <code class="o">=</code> <code class="nx">timeout</code> <code class="o">||</code> <code class="mi">2000</code><code class="p">;</code>
+    <code class="nx">callback</code> <code class="o">=</code> <code class="nx">callback</code> <code class="o">||</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{};</code>
+
+    <code class="c1">// the rest of the function</code>
+
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>In this example, both <code>timeout</code> and <code>callback</code> are actually optional because they are given a default value if not provided. The logical OR operator (<code>||</code>) always returns the second operand when the first is falsy. Since named function parameters that are not explicitly provided are set to <code>undefined</code>, the logical OR operator is frequently used to provide default values for missing parameters. There is a flaw with this approach, however, in that a valid value for <code>timeout</code> might actually be <code>0</code>, but this would replace it with <code>2000</code> because <code>0</code> is falsy.</p>
+
+<p>Other ways of determining if any parameters are missing include checking <code>arguments.length</code> for the number of parameters that were passed or directly inspecting each parameter to see if it is not <code>undefined</code>.</p>
+
+<p>ECMAScript 6 makes it easier to provide default values for parameters by providing initializations that are used when the parameter isn’t formally passed. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">makeRequest</code><code class="p">(</code><code class="nx">url</code><code class="p">,</code> <code class="nx">timeout</code> <code class="o">=</code> <code class="mi">2000</code><code class="p">,</code> <code class="nx">callback</code> <code class="o">=</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{})</code> <code class="p">{</code>
+
+    <code class="c1">// the rest of the function</code>
+
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>Here, only the first parameter is expected to be passed all the time. The other two parameters have default values, which makes the body of the function much smaller because you don’t need to add any code to check for a missing value. When <code>makeRequest()</code> is called with all three parameters, then the defaults are not used. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="c1">// uses default timeout and callback</code>
+<code class="nx">makeRequest</code><code class="p">(</code><code class="s2">"/foo"</code><code class="p">);</code>
+
+<code class="c1">// uses default callback</code>
+<code class="nx">makeRequest</code><code class="p">(</code><code class="s2">"/foo"</code><code class="p">,</code> <code class="mi">500</code><code class="p">);</code>
+
+<code class="c1">// doesn't use defaults</code>
+<code class="nx">makeRequest</code><code class="p">(</code><code class="s2">"/foo"</code><code class="p">,</code> <code class="mi">500</code><code class="p">,</code> <code class="kd">function</code><code class="p">(</code><code class="nx">body</code><code class="p">)</code> <code class="p">{</code>
+    <code class="nx">doSomething</code><code class="p">(</code><code class="nx">body</code><code class="p">);</code>
+<code class="p">});</code>
+</pre></div>
+
+</div>
+
+<p>Any parameters with a default value are considered to be optional parameters while those without a default value are considered to be required parameters.</p>
+
+<p>It’s possible to specify default values for any arguments, including those that appear before arguments without default values. For example, this is fine:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">makeRequest</code><code class="p">(</code><code class="nx">url</code><code class="p">,</code> <code class="nx">timeout</code> <code class="o">=</code> <code class="mi">2000</code><code class="p">,</code> <code class="nx">callback</code><code class="p">)</code> <code class="p">{</code>
+
+    <code class="c1">// the rest of the function</code>
+
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>In this case, the default value for <code>timeout</code> will only be used if there is no second argument passed in or if the second argument is explicitly passed in as <code>undefined</code>. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="c1">// uses default timeout</code>
+<code class="nx">makeRequest</code><code class="p">(</code><code class="s2">"/foo"</code><code class="p">,</code> <code class="kc">undefined</code><code class="p">,</code> <code class="kd">function</code><code class="p">(</code><code class="nx">body</code><code class="p">)</code> <code class="p">{</code>
+    <code class="nx">doSomething</code><code class="p">(</code><code class="nx">body</code><code class="p">);</code>
+<code class="p">});</code>
+
+<code class="c1">// uses default timeout</code>
+<code class="nx">makeRequest</code><code class="p">(</code><code class="s2">"/foo"</code><code class="p">);</code>
+
+<code class="c1">// doesn't use default timeout</code>
+<code class="nx">makeRequest</code><code class="p">(</code><code class="s2">"/foo"</code><code class="p">,</code> <code class="kc">null</code><code class="p">,</code> <code class="kd">function</code><code class="p">(</code><code class="nx">body</code><code class="p">)</code> <code class="p">{</code>
+    <code class="nx">doSomething</code><code class="p">(</code><code class="nx">body</code><code class="p">);</code>
+<code class="p">});</code>
+</pre></div>
+
+</div>
+
+<p>In the case of default parameter values, the value of <code>null</code> is considered to be valid and the default value will not be used.</p>
+
+<p>Perhaps the most interesting feature of default parameter arguments is that the default value need not be a primitive value. You can, for example, execute a function to retrieve the default parameter:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">getCallback</code><code class="p">()</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code>
+        <code class="c1">// some code</code>
+    <code class="p">};</code>
+<code class="p">}</code>
+
+<code class="kd">function</code> <code class="nx">makeRequest</code><code class="p">(</code><code class="nx">url</code><code class="p">,</code> <code class="nx">timeout</code> <code class="o">=</code> <code class="mi">2000</code><code class="p">,</code> <code class="nx">callback</code> <code class="o">=</code> <code class="nx">getCallback</code><code class="p">())</code> <code class="p">{</code>
+
+    <code class="c1">// the rest of the function</code>
+
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>Here, if the last argument isn’t provided, the function <code>getCallback()</code> is called to retrieve the correct default value. This opens up a lot of interesting possibilities to dynamically inject information into functions.</p>
+
+<h3 id="leanpub-auto-rest-parameters">Rest Parameters</h3>
+
+<p>Since JavaScript functions can be passed any number of parameters, it’s not always necessary to define each parameter specifically. Early on, JavaScript provided the <code>arguments</code> object as a way of inspecting all function parameters that were passed without necessarily defining each one individually. While that worked fine in most cases, it can become a little cumbersome to work with. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">sum</code><code class="p">(</code><code class="nx">first</code><code class="p">)</code> <code class="p">{</code>
+    <code class="kd">let</code> <code class="nx">result</code> <code class="o">=</code> <code class="nx">first</code><code class="p">,</code>
+        <code class="nx">i</code> <code class="o">=</code> <code class="mi">1</code><code class="p">,</code>
+        <code class="nx">len</code> <code class="o">=</code> <code class="nx">arguments</code><code class="p">.</code><code class="nx">length</code><code class="p">;</code>
+
+    <code class="k">while</code> <code class="p">(</code><code class="nx">i</code> <code class="o">&lt;</code> <code class="nx">len</code><code class="p">)</code> <code class="p">{</code>
+        <code class="nx">result</code> <code class="o">+=</code> <code class="nx">arguments</code><code class="p">[</code><code class="nx">i</code><code class="p">];</code>
+        <code class="nx">i</code><code class="o">++</code><code class="p">;</code>
+    <code class="p">}</code>
+
+    <code class="k">return</code> <code class="nx">result</code><code class="p">;</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>This function adds together all of the parameters that are passed to it so you can call <code>sum(1)</code> or <code>sum(1,2,3,4)</code> and it will still work. There are couple of things to notice about this function. First, it’s not at all obvious that the function is capable of handling more than one parameter. You could add in several more named parameters, but you would always fall short of indicating that this function can take any number of parameters. Second, because the first parameter is named and used directly, you have to start looking in the <code>arguments</code> object at index 1 instead of starting at index 0. Remembering to use the appropriate indices with <code>arguments</code> isn’t necessarily difficult, but it’s one more thing to keep track of. ECMAScript 6 introduces rest parameters to help with these issues.</p>
+
+<p>Rest parameters are indicated by three dots (<code>...</code>) preceding a named parameter. That named parameter then becomes an <code>Array</code> containing the rest of the parameters (which is why these are called “rest” parameters). For example, <code>sum()</code> can be rewritten using rest parameters like this:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">sum</code><code class="p">(</code><code class="nx">first</code><code class="p">,</code> <code class="p">...</code><code class="nx">numbers</code><code class="p">)</code> <code class="p">{</code>
+    <code class="kd">let</code> <code class="nx">result</code> <code class="o">=</code> <code class="nx">first</code><code class="p">,</code>
+        <code class="nx">i</code> <code class="o">=</code> <code class="mi">0</code><code class="p">,</code>
+        <code class="nx">len</code> <code class="o">=</code> <code class="nx">numbers</code><code class="p">.</code><code class="nx">length</code><code class="p">;</code>
+
+    <code class="k">while</code> <code class="p">(</code><code class="nx">i</code> <code class="o">&lt;</code> <code class="nx">len</code><code class="p">)</code> <code class="p">{</code>
+        <code class="nx">result</code> <code class="o">+=</code> <code class="nx">numbers</code><code class="p">[</code><code class="nx">i</code><code class="p">];</code>
+        <code class="nx">i</code><code class="o">++</code><code class="p">;</code>
+    <code class="p">}</code>
+
+    <code class="k">return</code> <code class="nx">result</code><code class="p">;</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>In this version of the function, <code>numbers</code> is a rest parameter that contains all parameters after the first one (unlike <code>arguments</code>, which contains all parameters including the first one). That means you can iterate over <code>numbers</code> from beginning to end without worry. As a bonus, you can tell by looking at the function that it is capable of handling any number of parameters.</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>The <code>sum()</code> method doesn’t actually need any named parameters. You could, in theory, use only rest parameters and have it continue to work exactly the same. However, in that case, the rest parameters would effectively be the same as <code>arguments</code>, so you’re not really getting any additional benefit.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><p>The only restriction on rest parameters is that no other named arguments can follow in the function declaration. For example, this causes syntax error:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="c1">// Syntax error: Can't have a named parameter after rest parameters</code>
+<code class="kd">function</code> <code class="nx">sum</code><code class="p">(</code><code class="nx">first</code><code class="p">,</code> <code class="p">...</code><code class="nx">numbers</code><code class="p">,</code> <code class="nx">last</code><code class="p">)</code> <code class="p">{</code>
+    <code class="kd">let</code> <code class="nx">result</code> <code class="o">=</code> <code class="nx">first</code><code class="p">,</code>
+        <code class="nx">i</code> <code class="o">=</code> <code class="mi">0</code><code class="p">,</code>
+        <code class="nx">len</code> <code class="o">=</code> <code class="nx">numbers</code><code class="p">.</code><code class="nx">length</code><code class="p">;</code>
+
+    <code class="k">while</code> <code class="p">(</code><code class="nx">i</code> <code class="o">&lt;</code> <code class="nx">len</code><code class="p">)</code> <code class="p">{</code>
+        <code class="nx">result</code> <code class="o">+=</code> <code class="nx">numbers</code><code class="p">[</code><code class="nx">i</code><code class="p">];</code>
+        <code class="nx">i</code><code class="o">++</code><code class="p">;</code>
+    <code class="p">}</code>
+
+    <code class="k">return</code> <code class="nx">result</code><code class="p">;</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>Here, the parameter <code>last</code> follows the rest parameter <code>numbers</code> and causes a syntax error.</p>
+
+<p>Rest parameters were designed to replace <code>arguments</code> in ECMAScript. Originally ECMAScript 4 did away with <code>arguments</code> and added rest parameters to allow for an unlimited number of arguments to be passed to functions. Even though ECMAScript 4 never came into being, the idea was kept around and reintroduced in ECMAScript 6 despite <code>arguments</code> not being removed from the language.</p>
+
+<h3 id="leanpub-auto-destructured-parameters">Destructured Parameters</h3>
+
+<p>In Chapter 1, you learned about destructuring assignment. Destructuring can also be used outside of the context of an assignment expression and perhaps the most interesting such case is with destructured parameters.</p>
+
+<p>It’s common for functions that take a large number of optional parameters to use an options object as one or more parameters. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">setCookie</code><code class="p">(</code><code class="nx">name</code><code class="p">,</code> <code class="nx">value</code><code class="p">,</code> <code class="nx">options</code><code class="p">)</code> <code class="p">{</code>
+
+    <code class="nx">options</code> <code class="o">=</code> <code class="nx">options</code> <code class="o">||</code> <code class="p">{};</code>
+
+    <code class="kd">var</code> <code class="nx">secure</code> <code class="o">=</code> <code class="nx">options</code><code class="p">.</code><code class="nx">secure</code><code class="p">,</code>
+        <code class="nx">path</code> <code class="o">=</code> <code class="nx">options</code><code class="p">.</code><code class="nx">path</code><code class="p">,</code>
+        <code class="nx">domain</code> <code class="o">=</code> <code class="nx">options</code><code class="p">.</code><code class="nx">domain</code><code class="p">,</code>
+        <code class="nx">expires</code> <code class="o">=</code> <code class="nx">options</code><code class="p">.</code><code class="nx">expires</code><code class="p">;</code>
+
+    <code class="c1">// ...</code>
+<code class="p">}</code>
+
+<code class="nx">setCookie</code><code class="p">(</code><code class="s2">"type"</code><code class="p">,</code> <code class="s2">"js"</code><code class="p">,</code> <code class="p">{</code>
+    <code class="nx">secure</code><code class="o">:</code> <code class="kc">true</code><code class="p">,</code>
+    <code class="nx">expires</code><code class="o">:</code> <code class="mi">60000</code>
+<code class="p">});</code>
+</pre></div>
+
+</div>
+
+<p>There are many <code>setCookie()</code> functions in JavaScript libraries that look similar to this. The <code>name</code> and <code>value</code> are required but everything else is not. And since there is no priority order for the other data, it makes sense to have an options object with named properties rather than extra named parameters. This approach is okay, although it makes the expected input for the function a bit opaque.</p>
+
+<p>Using destructured parameters, the previous function can be rewritten as follows:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">setCookie</code><code class="p">(</code><code class="nx">name</code><code class="p">,</code> <code class="nx">value</code><code class="p">,</code> <code class="p">{</code> <code class="nx">secure</code><code class="p">,</code> <code class="nx">path</code><code class="p">,</code> <code class="nx">domain</code><code class="p">,</code> <code class="nx">expires</code> <code class="p">})</code> <code class="p">{</code>
+
+    <code class="c1">// ...</code>
+<code class="p">}</code>
+
+<code class="nx">setCookie</code><code class="p">(</code><code class="s2">"type"</code><code class="p">,</code> <code class="s2">"js"</code><code class="p">,</code> <code class="p">{</code>
+    <code class="nx">secure</code><code class="o">:</code> <code class="kc">true</code><code class="p">,</code>
+    <code class="nx">expires</code><code class="o">:</code> <code class="mi">60000</code>
+<code class="p">});</code>
+</pre></div>
+
+</div>
+
+<p>The behavior of this function is similar to the previous example, the biggest difference is the third argument uses destructuring to pull out the necessary data. Doing so makes it clear which parameters are really expected, and the destructured parameters also act like regular parameters in that they are set to <code>undefined</code> if they are not passed.</p>
+
+<p>One quirk of this pattern is that the destructured parameters throw an error when the argument isn’t provided. If <code>setCookie()</code> is called with just two arguments, it results in a runtime error:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="c1">// Error!</code>
+<code class="nx">setCookie</code><code class="p">(</code><code class="s2">"type"</code><code class="p">,</code> <code class="s2">"js"</code><code class="p">);</code>
+</pre></div>
+
+</div>
+
+<p>This code throws an error because the third argument is missing (<code>undefined</code>). To understand why this is an error, it helps to understand that destructured parameters are really just a shorthand for destructured assignment. The JavaScript engine is actually doing this:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">setCookie</code><code class="p">(</code><code class="nx">name</code><code class="p">,</code> <code class="nx">value</code><code class="p">,</code> <code class="nx">options</code><code class="p">)</code> <code class="p">{</code>
+
+    <code class="kd">var</code> <code class="p">{</code> <code class="nx">secure</code><code class="p">,</code> <code class="nx">path</code><code class="p">,</code> <code class="nx">domain</code><code class="p">,</code> <code class="nx">expires</code> <code class="p">}</code> <code class="o">=</code> <code class="nx">options</code><code class="p">;</code>
+
+    <code class="c1">// ...</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>Since destructuring assignment throws an error when the right side expression evaluates to <code>null</code> or <code>undefined</code>, the same is true when the third argument isn’t passed.</p>
+
+<p>You can work around this behavior by providing a default value for the destructured parameter:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">setCookie</code><code class="p">(</code><code class="nx">name</code><code class="p">,</code> <code class="nx">value</code><code class="p">,</code> <code class="p">{</code> <code class="nx">secure</code><code class="p">,</code> <code class="nx">path</code><code class="p">,</code> <code class="nx">domain</code><code class="p">,</code> <code class="nx">expires</code> <code class="p">}</code> <code class="o">=</code> <code class="p">{})</code> <code class="p">{</code>
+
+    <code class="c1">// ...</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>This example now works exactly the same as the first example in this section. Providing the default value for the destructured parameter means that <code>secure</code>, <code>path</code>, <code>domain</code>, and <code>expires</code> will all be <code>undefined</code> if the third argument to <code>setCookie()</code> isn’t provided.</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>It’s recommended to always provide the default value for destructured parameters to avoid all errors that are unique to their usage.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h3 id="leanpub-auto-the-spread-operator">The Spread Operator</h3>
+
+<p>Closely related to rest parameters is the spread operator. Whereas rest parameters allow you to specify that multiple independent arguments should be combined into an array, the spread operator allows you to specify an array that should be split and have its items passed in as separate arguments to a function. Consider the <code>Math.max()</code> method, which accepts any number of arguments and returns the one with the highest value. It’s basic usage is as follows:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">value1</code> <code class="o">=</code> <code class="mi">25</code><code class="p">,</code>
+    <code class="nx">value2</code> <code class="o">=</code> <code class="mi">50</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Math</code><code class="p">.</code><code class="nx">max</code><code class="p">(</code><code class="nx">value1</code><code class="p">,</code> <code class="nx">value2</code><code class="p">));</code>      <code class="c1">// 50</code>
+</pre></div>
+
+</div>
+
+<p>When you’re dealing with just two values, as in this example, <code>Math.max()</code> is very easy to use. The two values are passed in and the higher value is returned. But what if you have been tracking values in an array, and now you want to find the highest value? The <code>Math.max()</code> method doesn’t allow you to pass in an array, so in ECMAScript 5 and earlier, you’d be stuck either searching the array yourself or using <code>apply()</code>:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">values</code> <code class="o">=</code> <code class="p">[</code><code class="mi">25</code><code class="p">,</code> <code class="mi">50</code><code class="p">,</code> <code class="mi">75</code><code class="p">,</code> <code class="mi">100</code><code class="p">]</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Math</code><code class="p">.</code><code class="nx">max</code><code class="p">.</code><code class="nx">apply</code><code class="p">(</code><code class="nb">Math</code><code class="p">,</code> <code class="nx">values</code><code class="p">));</code>  <code class="c1">// 100</code>
+</pre></div>
+
+</div>
+
+<p>While possible, using <code>apply()</code> in this manner is a bit confusing - it actually seems to obfuscate the true meaning of the code with additional syntax.</p>
+
+<p>The ECMAScript 6 spread operator makes this case very simple. Instead of calling <code>apply()</code>, you can pass in the array and prefix it with the same <code>...</code> pattern that is used with rest parameters. The JavaScript engine then splits up the array into individual arguments and passes them in:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">values</code> <code class="o">=</code> <code class="p">[</code><code class="mi">25</code><code class="p">,</code> <code class="mi">50</code><code class="p">,</code> <code class="mi">75</code><code class="p">,</code> <code class="mi">100</code><code class="p">]</code>
+
+<code class="c1">// equivalent to</code>
+<code class="c1">// console.log(Math.max(25, 50, 75, 100));</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Math</code><code class="p">.</code><code class="nx">max</code><code class="p">(...</code><code class="nx">values</code><code class="p">));</code>           <code class="c1">// 100</code>
+</pre></div>
+
+</div>
+
+<p>Now the call to <code>Math.max()</code> looks a bit more conventional and avoids the complexity of specifying a <code>this</code>-binding for a simple mathematical operation.</p>
+
+<p>You can mix and match the spread operator with other arguments as well. Suppose you want the smallest number returned from <code>Math.max()</code> to be 0 (just in case negative numbers sneak into the array). You can pass that argument separately and still use the spread operator for the other arguments:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">values</code> <code class="o">=</code> <code class="p">[</code><code class="o">-</code><code class="mi">25</code><code class="p">,</code> <code class="o">-</code><code class="mi">50</code><code class="p">,</code> <code class="o">-</code><code class="mi">75</code><code class="p">,</code> <code class="o">-</code><code class="mi">100</code><code class="p">]</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nb">Math</code><code class="p">.</code><code class="nx">max</code><code class="p">(...</code><code class="nx">values</code><code class="p">,</code> <code class="mi">0</code><code class="p">));</code>        <code class="c1">// 0</code>
+</pre></div>
+
+</div>
+
+<p>In this example, the last argument passed to <code>Math.max()</code> is <code>0</code>, which comes after the other arguments are passed in using the spread operator.</p>
+
+<p>The spread operator for argument passing makes using arrays for function arguments much easier. You’ll likely find it to be a suitable replacement for the <code>apply()</code> method in most circumstances.</p>
+
+<h3 id="leanpub-auto-the-name-property">The name Property</h3>
+
+<p>Identifying functions can be challenging in JavaScript given the various ways a function can be defined. Additionally, the prevalence of anonymous function expressions makes debugging a bit more difficult, often resulting in stack traces that are hard to read and decipher. For these reasons, ECMAScript 6 adds the <code>name</code> property to all functions.</p>
+
+<p>All functions in an ECMAScript 6 program will have an appropriate value for their <code>name</code> property while all others will have an empty string. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">doSomething</code><code class="p">()</code> <code class="p">{</code>
+    <code class="c1">// ...</code>
+<code class="p">}</code>
+
+<code class="kd">var</code> <code class="nx">doAnotherThing</code> <code class="o">=</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code>
+    <code class="c1">// ...</code>
+<code class="p">};</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">doSomething</code><code class="p">.</code><code class="nx">name</code><code class="p">);</code>          <code class="c1">// "doSomething"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">doAnotherThing</code><code class="p">.</code><code class="nx">name</code><code class="p">);</code>       <code class="c1">// "doAnotherThing"</code>
+</pre></div>
+
+</div>
+
+<p>In this code, <code>doSomething()</code> has a <code>name</code> property equal to <code>"doSomething"</code> because it’s a function declaration. The anonymous function expression <code>doAnotherThing()</code> has a <code>name</code> of <code>"doAnotherThing"</code> due to the variable to which it is assigned.</p>
+
+<p>While function declarations and function expressions as in the last example are easy to find an appropiate name for, ECMAScript 6 goes further to ensure that all functions have appropriate names:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">doSomething</code> <code class="o">=</code> <code class="kd">function</code> <code class="nx">doSomethingElse</code><code class="p">()</code> <code class="p">{</code>
+    <code class="c1">// ...</code>
+<code class="p">};</code>
+
+<code class="kd">var</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">{</code>
+    <code class="nx">get</code> <code class="nx">firstName</code><code class="p">()</code> <code class="p">{</code>
+        <code class="k">return</code> <code class="s2">"Nicholas"</code>
+    <code class="p">},</code>
+    <code class="nx">sayName</code><code class="o">:</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code>
+        <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">this</code><code class="p">.</code><code class="nx">name</code><code class="p">);</code>
+    <code class="p">}</code>
+<code class="p">}</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">doSomething</code><code class="p">.</code><code class="nx">name</code><code class="p">);</code>      <code class="c1">// "doSomethingElse"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">.</code><code class="nx">sayName</code><code class="p">.</code><code class="nx">name</code><code class="p">);</code>   <code class="c1">// "sayName"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">.</code><code class="nx">firstName</code><code class="p">.</code><code class="nx">name</code><code class="p">);</code> <code class="c1">// "get firstName"</code>
+</pre></div>
+
+</div>
+
+<p>In this example, <code>doSomething.name</code> is <code>"doSomethingElse"</code> because the function expression itself has a name and that name takes priority over the variable to which the function was assigned. The <code>name</code> property of <code>person.sayName()</code> is <code>"sayName"</code>, as the value was interpreted from the object literal. Similarly, <code>person.firstName</code> is actually a getter function, so its name is <code>"get firstName"</code> to indicate this difference (setter functions are prefixed with <code>"set"</code> as well).</p>
+
+<p>There are a couple of other special cases for function names. Functions created using <code>bind()</code> will have their name prefixed with <code>"bound"</code> and functions created using the <code>Function</code> constructor have a name of <code>"anonymous"</code>:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">doSomething</code> <code class="o">=</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code>
+    <code class="c1">// ...</code>
+<code class="p">};</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">doSomething</code><code class="p">.</code><code class="nx">bind</code><code class="p">().</code><code class="nx">name</code><code class="p">);</code>   <code class="c1">// "bound doSomething"</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">((</code><code class="k">new</code> <code class="nb">Function</code><code class="p">()).</code><code class="nx">name</code><code class="p">);</code>     <code class="c1">// "anonymous"</code>
+</pre></div>
+
+</div>
+
+<p>The <code>name</code> of a bound function will always be the <code>name</code> of the function being bound prefixed with the <code>"bound "</code>, so the bound version of <code>doSomething()</code> is <code>"bound doSomething"</code>.</p>
+
+<h3 id="leanpub-auto-block-level-functions">Block-Level Functions</h3>
+
+<p>In ECMAScript 3 and earlier, a function declaration occurring inside of a block (a <em>block-level function</em>) was technically a syntax error, but many browsers still supported it. Unfortunately, each browser that allowed the syntax behaved in a slightly different way, so it is considered a best practice to avoid function declarations inside of blocks (the best alternative is to use a function expression).</p>
+
+<p>In an attempt to reign in this incompatible behavior, ECMAScript 5 strict mode introduced an error whenever a function declaration was used inside of a block. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="s2">"use strict"</code><code class="p">;</code>
+
+<code class="k">if</code> <code class="p">(</code><code class="kc">true</code><code class="p">)</code> <code class="p">{</code>
+
+    <code class="c1">// Throws a syntax error in ES5, not so in ES6</code>
+    <code class="kd">function</code> <code class="nx">doSomething</code><code class="p">()</code> <code class="p">{</code>
+        <code class="c1">// ...</code>
+    <code class="p">}</code>
+<code class="p">}</code>
+</pre></div>
+
+</div>
+
+<p>In ECMAScript 5, this code throws a syntax error. In ECMAScript 6, the <code>doSomething()</code> function is considered a block-level declaration and can be accessed and called within the same block in which it was defined. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="s2">"use strict"</code><code class="p">;</code>
+
+<code class="k">if</code> <code class="p">(</code><code class="kc">true</code><code class="p">)</code> <code class="p">{</code>
+
+    <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">typeof</code> <code class="nx">doSomething</code><code class="p">);</code>        <code class="c1">// "function"</code>
+
+    <code class="kd">function</code> <code class="nx">doSomething</code><code class="p">()</code> <code class="p">{</code>
+        <code class="c1">// ...</code>
+    <code class="p">}</code>
+
+    <code class="nx">doSomething</code><code class="p">();</code>
+<code class="p">}</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">typeof</code> <code class="nx">doSomething</code><code class="p">);</code>            <code class="c1">// "undefined"</code>
+</pre></div>
+
+</div>
+
+<p>Block level functions are hoisted to the top of the block in which they are defined, so <code>typeof doSomething</code> returns <code>"function"</code> even though it appears before the function declaration in the code. Once the <code>if</code> block is finished executing, <code>doSomething()</code> no longer exists.</p>
+
+<p>Block level functions are a similar to <code>let</code> function expressions in that the function definition is removed once execution flows out of the block in which it’s defined. The key difference is that block level functions are hoisted to the top of the containing block while <code>let</code> function expressions are not hoisted. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="s2">"use strict"</code><code class="p">;</code>
+
+<code class="k">if</code> <code class="p">(</code><code class="kc">true</code><code class="p">)</code> <code class="p">{</code>
+
+    <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">typeof</code> <code class="nx">doSomething</code><code class="p">);</code>        <code class="c1">// throws error</code>
+
+    <code class="kd">let</code> <code class="nx">doSomething</code> <code class="o">=</code> <code class="kd">function</code> <code class="p">()</code> <code class="p">{</code>
+        <code class="c1">// ...</code>
+    <code class="p">}</code>
+
+    <code class="nx">doSomething</code><code class="p">();</code>
+<code class="p">}</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">typeof</code> <code class="nx">doSomething</code><code class="p">);</code>
+</pre></div>
+
+</div>
+
+<p>Here, code execution stops when <code>typeof doSomething</code> is executed because the <code>let</code> statement hasn’t been executed yet.</p>
+
+<p>Whether you want to use block level functions or <code>let</code> expressions depends on whether or not you want the hoisting behavior.</p>
+
+<p>ECMAScript 6 also allows block-level functions in nonstrict mode, but the behavior is slightly different. Instead of hoisting these declarations to the top of the block, they are hoisted all the way to the containing function or global environment. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="c1">// ECMAScript 6 behavior</code>
+<code class="k">if</code> <code class="p">(</code><code class="kc">true</code><code class="p">)</code> <code class="p">{</code>
+
+    <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">typeof</code> <code class="nx">doSomething</code><code class="p">);</code>        <code class="c1">// "function"</code>
+
+    <code class="kd">function</code> <code class="nx">doSomething</code><code class="p">()</code> <code class="p">{</code>
+        <code class="c1">// ...</code>
+    <code class="p">}</code>
+
+    <code class="nx">doSomething</code><code class="p">();</code>
+<code class="p">}</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">typeof</code> <code class="nx">doSomething</code><code class="p">);</code>            <code class="c1">// "function"</code>
+</pre></div>
+
+</div>
+
+<p>In this example, <code>doSomething()</code> is hoisted into the global scope so that it still exists outside of the <code>if</code> block. ECMAScript 6 standardized this behavior to remove the incompatible browser behaviors that previously existed. ECMAScript 6 runtimes will all behave in the same way.</p>
+
+<h3 id="leanpub-auto-arrow-functions">Arrow Functions</h3>
+
+<p>One of the most interesting new parts of ECMAScript 6 are arrow functions. Arrow functions are, as the name suggests, functions defined with a new syntax that uses an “arrow” (<code>=&gt;</code>). However, arrow functions behave differently than traditional JavaScript functions in a number of important ways:</p>
+
+<ul><li><strong>Lexical <code>this</code> binding</strong> - The value of <code>this</code> inside of the function is determined by where the arrow function is defined not where it is used.</li>
+  <li><strong>Not <code>new</code>able</strong> - Arrow functions cannot be used as constructors and will throw an error when used with <code>new</code>.</li>
+  <li><strong>Can’t change <code>this</code></strong> - The value of <code>this</code> inside of the function can’t be changed, it remains the same value throughout the entire lifecycle of the function.</li>
+  <li><strong>No <code>arguments</code> object</strong> - You can’t access arguments through the <code>arguments</code> object, you must use named arguments or other ES6 features such as rest arguments.</li>
+</ul><p>There are a few reasons why these differences exist. First and foremost, <code>this</code> binding is a common source of error in JavaScript. It’s very easy to lose track of the <code>this</code> value inside of a function, which can result in unintended consequences. Second, by limiting arrow functions to simply executing code with a single <code>this</code> value, JavaScript engines can more easily optimize these operations (as opposed to regular functions, which might be used as a constructor or otherwise modified).</p>
+
+<table class="information sidebarish">
+  <tbody>
+    <tr><td class="sidebar-icon">
+      <img class="sidebar-image" src="images/leanpub_info-circle.png" alt="information" width="50px" /></td>
+    <td>
+      <p>Arrow functions also have a <code>name</code> property that follows the same rule as other functions.</p>
+
+    </td>
+  </tr>
+  </tbody>
+</table><h3 id="leanpub-auto-syntax">Syntax</h3>
+
+<p>The syntax for arrow functions comes in many flavors depending upon what you are trying to accomplish. All variations begin with function arguments, followed by the arrow, followed by the body of the function. Both the arguments and the body can take different forms depending on usage. For example, the following arrow function takes a single argument and simply returns it:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">reflect</code> <code class="o">=</code> <code class="nx">value</code> <code class="o">=&gt;</code> <code class="nx">value</code><code class="p">;</code>
+
+<code class="c1">// effectively equivalent to:</code>
+
+<code class="kd">var</code> <code class="nx">reflect</code> <code class="o">=</code> <code class="kd">function</code><code class="p">(</code><code class="nx">value</code><code class="p">)</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="nx">value</code><code class="p">;</code>
+<code class="p">};</code>
+</pre></div>
+
+</div>
+
+<p>When there is only one argument for an arrow function, that one argument can be used directly without any further syntax. The arrow comes next and the expression to the right of the arrow is evaluated and returned. Even though there is no explicit <code>return</code> statement, this arrow function will return the first argument that is passed in.</p>
+
+<p>If you are passing in more than one argument, then you must include parentheses around those arguments. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">sum</code> <code class="o">=</code> <code class="p">(</code><code class="nx">num1</code><code class="p">,</code> <code class="nx">num2</code><code class="p">)</code> <code class="o">=&gt;</code> <code class="nx">num1</code> <code class="o">+</code> <code class="nx">num2</code><code class="p">;</code>
+
+<code class="c1">// effectively equivalent to:</code>
+
+<code class="kd">var</code> <code class="nx">sum</code> <code class="o">=</code> <code class="kd">function</code><code class="p">(</code><code class="nx">num1</code><code class="p">,</code> <code class="nx">num2</code><code class="p">)</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="nx">num1</code> <code class="o">+</code> <code class="nx">num2</code><code class="p">;</code>
+<code class="p">};</code>
+</pre></div>
+
+</div>
+
+<p>The <code>sum()</code> function simply adds two arguments together and returns the result. The only difference is that the arguments are enclosed in parentheses with a comma separating them (same as traditional functions).</p>
+
+<p>If there are no arguments to the function, then you must include an empty set of parentheses:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">getName</code> <code class="o">=</code> <code class="p">()</code> <code class="o">=&gt;</code> <code class="s2">"Nicholas"</code><code class="p">;</code>
+
+<code class="c1">// effectively equivalent to:</code>
+
+<code class="kd">var</code> <code class="nx">getName</code> <code class="o">=</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="s2">"Nicholas"</code><code class="p">;</code>
+<code class="p">};</code>
+</pre></div>
+
+</div>
+
+<p>When you want to provide a more traditional function body, perhaps consisting of more than one expression, then you need to wrap the function body in braces and explicitly define a return value, such as:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">sum</code> <code class="o">=</code> <code class="p">(</code><code class="nx">num1</code><code class="p">,</code> <code class="nx">num2</code><code class="p">)</code> <code class="o">=&gt;</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="nx">num1</code> <code class="o">+</code> <code class="nx">num2</code><code class="p">;</code>
+<code class="p">};</code>
+
+<code class="c1">// effectively equivalent to:</code>
+
+<code class="kd">var</code> <code class="nx">sum</code> <code class="o">=</code> <code class="kd">function</code><code class="p">(</code><code class="nx">num1</code><code class="p">,</code> <code class="nx">num2</code><code class="p">)</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="nx">num1</code> <code class="o">+</code> <code class="nx">num2</code><code class="p">;</code>
+<code class="p">};</code>
+</pre></div>
+
+</div>
+
+<p>You can more or less treat the inside of the curly braces as the same as in a traditional function with the exception that <code>arguments</code> is not available.</p>
+
+<p>If you want to create a function that does nothing, then you need to include curly braces:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">doNothing</code> <code class="o">=</code> <code class="p">()</code> <code class="o">=&gt;</code> <code class="p">{};</code>
+
+<code class="c1">// effectively equivalent to:</code>
+
+<code class="kd">var</code> <code class="nx">doNothing</code> <code class="o">=</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{};</code>
+</pre></div>
+
+</div>
+
+<p>Because curly braces are used to denote the function’s body, an arrow function that wants to return an object literal outside of a function body must wrap the literal in parentheses. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">getTempItem</code> <code class="o">=</code> <code class="nx">id</code> <code class="o">=&gt;</code> <code class="p">({</code> <code class="nx">id</code><code class="o">:</code> <code class="nx">id</code><code class="p">,</code> <code class="nx">name</code><code class="o">:</code> <code class="s2">"Temp"</code> <code class="p">});</code>
+
+<code class="c1">// effectively equivalent to:</code>
+
+<code class="kd">var</code> <code class="nx">getTempItem</code> <code class="o">=</code> <code class="kd">function</code><code class="p">(</code><code class="nx">id</code><code class="p">)</code> <code class="p">{</code>
+
+    <code class="k">return</code> <code class="p">{</code>
+        <code class="nx">id</code><code class="o">:</code> <code class="nx">id</code><code class="p">,</code>
+        <code class="nx">name</code><code class="o">:</code> <code class="s2">"Temp"</code>
+    <code class="p">};</code>
+<code class="p">};</code>
+</pre></div>
+
+</div>
+
+<p>Wrapping the object literal in parentheses signals that the braces are an object literal instead of the function body.</p>
+
+<h4 id="leanpub-auto-immediately-invoked-function-expressions-iifes">Immediately-Invoked Function Expressions (IIFEs)</h4>
+
+<p>A popular use of functions in JavaScript is immediately-invoked function expressions (IIFEs). IIFEs allow you to define an anonymous function and call it immediately without saving a reference. This pattern comes in handy when you want to create a scope that is shielded from the rest of a program. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">(</code><code class="kd">function</code><code class="p">(</code><code class="nx">name</code><code class="p">)</code> <code class="p">{</code>
+
+    <code class="k">return</code> <code class="p">{</code>
+        <code class="nx">getName</code><code class="p">()</code> <code class="p">{</code>
+            <code class="k">return</code> <code class="nx">name</code><code class="p">;</code>
+        <code class="p">}</code>
+    <code class="p">};</code>
+
+<code class="p">}(</code><code class="s2">"Nicholas"</code><code class="p">));</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">.</code><code class="nx">getName</code><code class="p">());</code>      <code class="c1">// "Nicholas"</code>
+</pre></div>
+
+</div>
+
+<p>In this code, the IIFE is used to create an object with a <code>getName()</code> method. The method uses the <code>name</code> argument as the return value, effectively making <code>name</code> a private member of the returned object.</p>
+
+<p>You can accomplish the same thing using arrow functions so long as you wrap the arrow function in parentheses:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">let</code> <code class="nx">person</code> <code class="o">=</code> <code class="p">((</code><code class="nx">name</code><code class="p">)</code> <code class="o">=&gt;</code> <code class="p">{</code>
+
+    <code class="k">return</code> <code class="p">{</code>
+        <code class="nx">getName</code><code class="p">()</code> <code class="p">{</code>
+            <code class="k">return</code> <code class="nx">name</code><code class="p">;</code>
+        <code class="p">}</code>
+    <code class="p">};</code>
+
+<code class="p">})(</code><code class="s2">"Nicholas"</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">person</code><code class="p">.</code><code class="nx">getName</code><code class="p">());</code>      <code class="c1">// "Nicholas"</code>
+</pre></div>
+
+</div>
+
+<p>Note that the location of the parentheses in this example is different from the previous. The previous example using the <code>function</code> keyword wraps parentheses around the entire expression, including passing the argument <code>"Nicholas"</code> to the function. This example has the parentheses around just the arrow function and then passes the argument.</p>
+
+<h4 id="leanpub-auto-lexical-this-binding">Lexical this Binding</h4>
+
+<p>One of the most common areas of error in JavaScript is the binding of <code>this</code> inside of functions. Since the value of <code>this</code> can change inside of a single function depending on the context in which it’s called, it’s possible to mistakenly affect one object when you meant to affect another. Consider the following example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">PageHandler</code> <code class="o">=</code> <code class="p">{</code>
+
+    <code class="nx">id</code><code class="o">:</code> <code class="s2">"123456"</code><code class="p">,</code>
+
+    <code class="nx">init</code><code class="o">:</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code>
+        <code class="nb">document</code><code class="p">.</code><code class="nx">addEventListener</code><code class="p">(</code><code class="s2">"click"</code><code class="p">,</code> <code class="kd">function</code><code class="p">(</code><code class="nx">event</code><code class="p">)</code> <code class="p">{</code>
+            <code class="k">this</code><code class="p">.</code><code class="nx">doSomething</code><code class="p">(</code><code class="nx">event</code><code class="p">.</code><code class="nx">type</code><code class="p">);</code>     <code class="c1">// error</code>
+        <code class="p">},</code> <code class="kc">false</code><code class="p">);</code>
+    <code class="p">},</code>
+
+    <code class="nx">doSomething</code><code class="o">:</code> <code class="kd">function</code><code class="p">(</code><code class="nx">type</code><code class="p">)</code> <code class="p">{</code>
+        <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="s2">"Handling "</code> <code class="o">+</code> <code class="nx">type</code>  <code class="o">+</code> <code class="s2">" for "</code> <code class="o">+</code> <code class="k">this</code><code class="p">.</code><code class="nx">id</code><code class="p">);</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+</pre></div>
+
+</div>
+
+<p>In this code, the object <code>PageHandler</code> is designed to handle interactions on the page. The <code>init()</code> method is called to set up the interactions and that method in turn assigns an event handler to call <code>this.doSomething()</code>. However, this code doesn’t work as intended. The call to <code>this.doSomething()</code> is broken because <code>this</code> is a reference to the element object (in this case <code>document</code>) that was the target of the event, instead of being bound to <code>PageHandler</code>. If you tried to run this code, you will get an error when the event handler fires because <code>this.doSomething()</code> doesn’t exist on the target <code>document</code> object.</p>
+
+<p>You can bind the value of <code>this</code> to <code>PageHandler</code> explicitly using the <code>bind()</code> method on the function:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">PageHandler</code> <code class="o">=</code> <code class="p">{</code>
+
+    <code class="nx">id</code><code class="o">:</code> <code class="s2">"123456"</code><code class="p">,</code>
+
+    <code class="nx">init</code><code class="o">:</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code>
+        <code class="nb">document</code><code class="p">.</code><code class="nx">addEventListener</code><code class="p">(</code><code class="s2">"click"</code><code class="p">,</code> <code class="p">(</code><code class="kd">function</code><code class="p">(</code><code class="nx">event</code><code class="p">)</code> <code class="p">{</code>
+            <code class="k">this</code><code class="p">.</code><code class="nx">doSomething</code><code class="p">(</code><code class="nx">event</code><code class="p">.</code><code class="nx">type</code><code class="p">);</code>     <code class="c1">// no error</code>
+        <code class="p">}).</code><code class="nx">bind</code><code class="p">(</code><code class="k">this</code><code class="p">),</code> <code class="kc">false</code><code class="p">);</code>
+    <code class="p">},</code>
+
+    <code class="nx">doSomething</code><code class="o">:</code> <code class="kd">function</code><code class="p">(</code><code class="nx">type</code><code class="p">)</code> <code class="p">{</code>
+        <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="s2">"Handling "</code> <code class="o">+</code> <code class="nx">type</code>  <code class="o">+</code> <code class="s2">" for "</code> <code class="o">+</code> <code class="k">this</code><code class="p">.</code><code class="nx">id</code><code class="p">);</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+</pre></div>
+
+</div>
+
+<p>Now the code works as expected, but may look a little bit strange. By calling <code>bind(this)</code>, you’re actually creating a new function whose <code>this</code> is bound to the current <code>this</code>, which is <code>PageHandler</code>. The code now works as you would expect even though you had to create an extra function to get the job done.</p>
+
+<p>Arrow functions have implicit <code>this</code> binding, which means that the value of <code>this</code> inside of an arrow function is always the same as the value of <code>this</code> in the scope in which the arrow function was defined. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">PageHandler</code> <code class="o">=</code> <code class="p">{</code>
+
+    <code class="nx">id</code><code class="o">:</code> <code class="s2">"123456"</code><code class="p">,</code>
+
+    <code class="nx">init</code><code class="o">:</code> <code class="kd">function</code><code class="p">()</code> <code class="p">{</code>
+        <code class="nb">document</code><code class="p">.</code><code class="nx">addEventListener</code><code class="p">(</code><code class="s2">"click"</code><code class="p">,</code>
+                <code class="nx">event</code> <code class="o">=&gt;</code> <code class="k">this</code><code class="p">.</code><code class="nx">doSomething</code><code class="p">(</code><code class="nx">event</code><code class="p">.</code><code class="nx">type</code><code class="p">),</code> <code class="kc">false</code><code class="p">);</code>
+    <code class="p">},</code>
+
+    <code class="nx">doSomething</code><code class="o">:</code> <code class="kd">function</code><code class="p">(</code><code class="nx">type</code><code class="p">)</code> <code class="p">{</code>
+        <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="s2">"Handling "</code> <code class="o">+</code> <code class="nx">type</code>  <code class="o">+</code> <code class="s2">" for "</code> <code class="o">+</code> <code class="k">this</code><code class="p">.</code><code class="nx">id</code><code class="p">);</code>
+    <code class="p">}</code>
+<code class="p">};</code>
+</pre></div>
+
+</div>
+
+<p>The event handler in this example is an arrow function that calls <code>this.doSomething()</code>. The value of <code>this</code> is the same as it is within <code>init()</code>, so this version of the example works similarly to the one using <code>bind()</code>. Even though the <code>doSomething()</code> method doesn’t return a value, it is still the only statement executed necessary for the function body and so there is no need to include braces.</p>
+
+<p>Arrow functions are designed to be “throwaway” functions and so cannot be used to define new types. This is evident by the missing <code>prototype</code> property that regular functions have. If you try to use the <code>new</code> operator with an arrow function, you’ll get an error:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">MyType</code> <code class="o">=</code> <code class="p">()</code> <code class="o">=&gt;</code> <code class="p">{},</code>
+    <code class="nx">object</code> <code class="o">=</code> <code class="k">new</code> <code class="nx">MyType</code><code class="p">();</code>  <code class="c1">// error - you can't use arrow functions with 'ne\</code>
+<code class="nx">w</code><code class="err">'</code>
+</pre></div>
+
+</div>
+
+<p>Also, since the <code>this</code> value is statically bound to the arrow function, you cannot change the value of <code>this</code> using <code>call()</code>, <code>apply()</code>, or <code>bind()</code>.</p>
+
+<p>The concise syntax for arrow functions makes them ideal for use with array processing. For example, if you want to sort an array using a custom comparator, you typically write something like this:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">result</code> <code class="o">=</code> <code class="nx">values</code><code class="p">.</code><code class="nx">sort</code><code class="p">(</code><code class="kd">function</code><code class="p">(</code><code class="nx">a</code><code class="p">,</code> <code class="nx">b</code><code class="p">)</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="nx">a</code> <code class="o">-</code> <code class="nx">b</code><code class="p">;</code>
+<code class="p">});</code>
+</pre></div>
+
+</div>
+
+<p>That’s a lot of syntax for a very simple procedure. Compare that to the more terse arrow function version:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">result</code> <code class="o">=</code> <code class="nx">values</code><code class="p">.</code><code class="nx">sort</code><code class="p">((</code><code class="nx">a</code><code class="p">,</code> <code class="nx">b</code><code class="p">)</code> <code class="o">=&gt;</code> <code class="nx">a</code> <code class="o">-</code> <code class="nx">b</code><code class="p">);</code>
+</pre></div>
+
+</div>
+
+<p>The array methods that accept callback functions such as <code>sort()</code>, <code>map()</code>, and <code>reduce()</code> all can benefit from simpler syntax with arrow functions to change what would appear to be more complex processes into simpler code.</p>
+
+<p>Generally speaking, arrow functions are designed to be used in places where anonymous functions have traditionally been used. They are not really designed to be kept around for long periods of time, hence the inability to use arrow functions as constructors. Arrow functions are best used for callbacks that are passed into other functions, as seen in the examples in this section.</p>
+
+<h4 id="leanpub-auto-lexical-arguments-binding">Lexical arguments Binding</h4>
+
+<p>Even though arrow functions don’t have their own <code>arguments</code> object, it’s possible for them to access the <code>arguments</code> object from a containing function. That <code>arguments</code> object is then available no matter where the arrow function is executed later on. For example:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">function</code> <code class="nx">createArrowFunctionReturningFirstArg</code><code class="p">()</code> <code class="p">{</code>
+    <code class="k">return</code> <code class="p">()</code> <code class="o">=&gt;</code> <code class="nx">arguments</code><code class="p">[</code><code class="mi">0</code><code class="p">];</code>
+<code class="p">}</code>
+
+<code class="kd">var</code> <code class="nx">arrowFunction</code> <code class="o">=</code> <code class="nx">createArrowFunctionReturningFirstArg</code><code class="p">(</code><code class="mi">5</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">arrowFunction</code><code class="p">());</code>       <code class="c1">// 5</code>
+</pre></div>
+
+</div>
+
+<p>Inside of <code>createArrowFunctionReturningFirstArg()</code>, <code>arguments[0]</code> is referenced by the created arrow function. That reference contains the first argument passed to <code>createArrowFunctionReturningFirstArg()</code>. When the arrow function is later executed, it returns <code>5</code>, which was the first argument passed in to <code>createArrowFunctionReturningFirstArg()</code>. Even though the arrow function is no longer in the scope of the function that created it, <code>arguments</code> remains accessible as a lexical binding.</p>
+
+<h4 id="leanpub-auto-identifying-arrow-functions">Identifying Arrow Functions</h4>
+
+<p>Despite the different syntax, arrow functions are still functions and are identified as such:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">comparator</code> <code class="o">=</code> <code class="p">(</code><code class="nx">a</code><code class="p">,</code> <code class="nx">b</code><code class="p">)</code> <code class="o">=&gt;</code> <code class="nx">a</code> <code class="o">-</code> <code class="nx">b</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="k">typeof</code> <code class="nx">comparator</code><code class="p">);</code>                 <code class="c1">// "function"</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">comparator</code> <code class="k">instanceof</code> <code class="nb">Function</code><code class="p">);</code>    <code class="c1">// true</code>
+</pre></div>
+
+</div>
+
+<p>Both <code>typeof</code> and <code>instanceof</code> behave the same with arrow functions as they do with other functions.</p>
+
+<p>Also like other functions, you can still use <code>call()</code>, <code>apply()</code>, and <code>bind()</code>, although the <code>this</code>-binding of the function will not be affected. Here are some examples:</p>
+
+<div class="code-block">
+<div class="highlight"><pre><code class="kd">var</code> <code class="nx">sum</code> <code class="o">=</code> <code class="p">(</code><code class="nx">num1</code><code class="p">,</code> <code class="nx">num2</code><code class="p">)</code> <code class="o">=&gt;</code> <code class="nx">num1</code> <code class="o">+</code> <code class="nx">num2</code><code class="p">;</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">sum</code><code class="p">.</code><code class="nx">call</code><code class="p">(</code><code class="kc">null</code><code class="p">,</code> <code class="mi">1</code><code class="p">,</code> <code class="mi">2</code><code class="p">));</code>      <code class="c1">// 3</code>
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">sum</code><code class="p">.</code><code class="nx">apply</code><code class="p">(</code><code class="kc">null</code><code class="p">,</code> <code class="p">[</code><code class="mi">1</code><code class="p">,</code> <code class="mi">2</code><code class="p">]));</code>   <code class="c1">// 3</code>
+
+<code class="kd">var</code> <code class="nx">boundSum</code> <code class="o">=</code> <code class="nx">sum</code><code class="p">.</code><code class="nx">bind</code><code class="p">(</code><code class="kc">null</code><code class="p">,</code> <code class="mi">1</code><code class="p">,</code> <code class="mi">2</code><code class="p">);</code>
+
+<code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">boundSum</code><code class="p">());</code>                <code class="c1">// 3</code>
+</pre></div>
+
+</div>
+
+<p>In this example, the <code>sum()</code> function is called using <code>call()</code> and <code>apply()</code> to pass arguments as you would with any function. The <code>bind()</code> method is used to create <code>boundSum()</code>, which has its two arguments bound to <code>1</code> and <code>2</code> so that they don’t need to be passed directly.</p>
+
+<p>Arrow functions are appropriate to use anywhere you’re currently using an anonymous function expression, such as with callbacks.</p>
+
+<h3 id="leanpub-auto-summary-1">Summary</h3>
+
+<p>Functions haven’t undergone a huge change in ECMAScript 6, but rather, a series of incremental changes that make them easier to work with.</p>
+
+<p>Default function parameters allow you to easily specify what value to use when a particular argument isn’t passed. Prior to ECMAScript 6, this would require some extra code inside of the function to both check for the presence of arguments and assign a different value.</p>
+
+<p>Rest parameters allow you to specify an array into which all remaining parameters should be placed. Using a real array and letting you indicate which parameters to include makes rest parameters a much more flexible solution than <code>arguments</code>.</p>
+
+<p>Destructured parameters use the destructuring syntax to make options objects more transparent when used as function parameters. The actual data you’re interested in can be listed out along with other named parameters.</p>
+
+<p>The spread operator is a companion to rest parameters, allowing you to destructure an array into separate parameters when calling a function. Prior to ECMAScript 6, the only ways to pass individual parameters that were contained in an array were either manually specifying each parameter or using <code>apply()</code>. With the spread operator, you can easily pass an array to any function without worrying about the <code>this</code> binding of the function.</p>
+
+<p>The addition of the <code>name</code> property helps to more easily identify functions for debugging and evaluation purposes. Additionally, ECMAScript 6 formally defines the behavior of block-level functions so they are no longer a syntax error in strict mode.</p>
+
+<p>The biggest change to functions in ECMAScript 6 was the addition of arrow functions. Arrow functions are designed to be used in places where anonymous function expressions have traditionally been used. Arrow functions have a more concise syntax, lexical <code>this</code> binding, and no <code>arguments</code> object. Additionally, arrow functions can’t change their <code>this</code> binding and so can’t be used as constructors.</p>
+</div>
+</body>
+</html>
