@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
 <title>The Basics</title>
+<meta charset="utf-8">
 <link href="stylesheet.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
@@ -316,7 +315,7 @@
     <code class="p">}</code>
 <code class="p">}</code>
 </pre></div>
-  
+
 </div>
 
     </td>
@@ -876,7 +875,7 @@
      <code class="nx">func</code><code class="p">();</code>     <code class="c1">// outputs the number "10" ten times</code>
  <code class="p">});</code>
 </pre></div>
-  
+
 </div>
 
   <p>This code will output the number <code>10</code> ten times in a row. That’s because the variable <code>i</code> is shared across each iteration of the loop, meaning the closures created inside the loop all hold a reference to the same variable. The variable <code>i</code> has a value of <code>10</code> once the loop completes, and so that’s the value each function outputs.</p>
@@ -898,7 +897,7 @@
      <code class="nx">func</code><code class="p">();</code>     <code class="c1">// outputs 0, then 1, then 2, up to 9</code>
  <code class="p">});</code>
 </pre></div>
-  
+
 </div>
 
   <p>This version of the example uses an IIFE inside of the loop. The <code>i</code> variable is passed to the IIFE, which creates its own copy and stores it as <code>value</code>. This is the value used of the function for that iteration, so calling each function returns the expected value.</p>
@@ -916,7 +915,7 @@
      <code class="nx">func</code><code class="p">();</code>     <code class="c1">// outputs 0, then 1, then 2, up to 9</code>
  <code class="p">})</code>
 </pre></div>
-  
+
 </div>
 
   <p>This code works exactly like the code that used <code>var</code> and an IIFE but is, arguably, cleaner.</p>
@@ -997,7 +996,7 @@
 <div class="highlight"><pre> <code class="kd">let</code> <code class="nb">RegExp</code> <code class="o">=</code> <code class="s2">"Hello!"</code><code class="p">;</code>          <code class="c1">// ok</code>
  <code class="kd">let</code> <code class="kc">undefined</code> <code class="o">=</code> <code class="s2">"Hello!"</code><code class="p">;</code>       <code class="c1">// throws error</code>
 </pre></div>
-  
+
 </div>
 
   <p>The first line of this example redefines the global <code>RegExp</code> as a string. Even though this would be problematic, there is no error thrown. The second line throws an error because <code>undefined</code> is a nonconfigurable own property of the global object. Since it’s definition is locked down by the environment, the <code>let</code> declaration is illegal.</p>
@@ -1196,7 +1195,7 @@
 <div class="highlight"><pre><code class="c1">// syntax error</code>
 <code class="p">{</code> <code class="nx">repeat</code><code class="p">,</code> <code class="nx">save</code><code class="p">,</code> <code class="nx">rules</code><code class="o">:</code> <code class="p">{</code> <code class="nx">custom</code> <code class="p">}}</code> <code class="o">=</code> <code class="nx">options</code><code class="p">;</code>
 </pre></div>
-  
+
 </div>
 
   <p>This causes a syntax error because the opening curly brace is normally the beginning of a block and blocks can’t be part of assignment expressions.</p>
@@ -1207,7 +1206,7 @@
 <div class="highlight"><pre><code class="c1">// no syntax error</code>
 <code class="p">({</code> <code class="nx">repeat</code><code class="p">,</code> <code class="nx">save</code><code class="p">,</code> <code class="nx">rules</code><code class="o">:</code> <code class="p">{</code> <code class="nx">custom</code> <code class="p">}})</code> <code class="o">=</code> <code class="nx">options</code><code class="p">;</code>
 </pre></div>
-  
+
 </div>
 
   <p>This now works without any problems.</p>

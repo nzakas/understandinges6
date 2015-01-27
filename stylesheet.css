@@ -1,18 +1,29 @@
+body {
+  font-family: Georgia, serif;
+  color: #222;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  direction: ltr;
+}
+
 div#leanpub-toc {
   width: 300px;
   float: left;
+  line-height: 1.5;
+  margin-left: 2em;
 }
 
 div#leanpub-main {
   width: 700px;
   float: left;
+  margin-left: 2em;
 }
 
-// Book ToC
-// ----------------------
-
+/* Book ToC */
 .toc {
   list-style: none;
+  padding: 0;
 }
 .toc li {
   list-style: none;
@@ -64,23 +75,23 @@ h1, h2, h3, h4, h5, h6, h7 {
 }
 
 /* Parts */
-h1 { 
+h1 {
    font-size: 4em;
    line-height: .8em;
    font-variant: small-caps;
-   margin-top: 20%; 
+   margin-top: 20%;
    text-align: center;
    padding: 0;
    font-weight: normal;
 }
 
 /* Chapters */
-h2 { 
+h2 {
    margin-bottom: 1em;
 }
 
 /* Sections */
-h3 { 
+h3 {
    margin-top: 1em;
    margin-bottom: 0.25em;
 }
@@ -93,15 +104,16 @@ h5 { margin-top: 1em;
    margin-bottom: 0.25em;
  }
 
-h6 { 
+h6 {
    margin: 0;
  }
 
 /* general text */
 
-p { 
-  text-indent: 0em; 
+p {
+  text-indent: 0em;
   margin-top: 0.5em;
+  line-height: 1.5;
 }
 
 .hanging-indent p {
@@ -127,7 +139,7 @@ div.sidebarish h1, div.sidebarish h2, div.sidebarish h3, div.sidebarish h4 {
   vertical-align: center;
 }
 
-div.sidebarish   { 
+div.sidebarish   {
   margin: 50px 0px 50px 10px;
   padding-left: 60px;
 }
@@ -149,10 +161,6 @@ pre {
    margin-top: 0.5em;
    margin-bottom: 0.5em;
    font-family: Courier, monospace;
-}
-
-body {
-  direction: ltr;
 }
 
 /* image equations */
