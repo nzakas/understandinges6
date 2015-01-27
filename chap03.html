@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
 <title>Objects</title>
+<meta charset="utf-8">
 <link href="stylesheet.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
@@ -461,7 +460,7 @@
 <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">descriptor</code><code class="p">.</code><code class="nx">value</code><code class="p">);</code>      <code class="c1">// "file.js"</code>
 <code class="nx">console</code><code class="p">.</code><code class="nx">log</code><code class="p">(</code><code class="nx">descriptor</code><code class="p">.</code><code class="nx">get</code><code class="p">);</code>        <code class="c1">// undefined</code>
 </pre></div>
-  
+
 </div>
 
   <p>In this code, the <code>supplier</code> has an accessor property called <code>name</code>. After using <code>Object.assign()</code>, <code>receiver.name</code> exists as a data property with the value of <code>"file.js"</code>. That’s because <code>supplier.name</code> returned “file.js” at the time <code>Object.assign()</code> was called.</p>
