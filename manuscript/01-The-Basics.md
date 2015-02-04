@@ -6,7 +6,7 @@ ECMAScript 6 makes a large number of changes on top of ECMAScript 5. Some of the
 
 Prior to ECMAScript 6, JavaScript strings were based solely on the idea of 16-bit character encodings. All string properties and methods, such as `length` and `charAt()`, were based around the idea that every 16-bit sequence represented a single character. ECMAScript 5 allowed JavaScript engines to decide which of two encodings to use, either UCS-2 or UTF-16 (both encodings use 16-bit *code units*, making all observable operations the same). While it's true that all of the world's characters used to fit into 16 bits at one point in time, that is no longer the case.
 
-Keeping within 16 bits wasn't possible for Unicode's stated goal of providing a globally unique identifier to every character in the world. These globally unique identifiers, called *code points*, are simply numbers starting at 0 (you might think of these as character codes, but there is subtle difference). A character encoding is responsible for encoding a code point into code units that are internally consistent. While UCS-2 had a one-to-one mapping of code point to code unit, UTF-16 is more variable.
+Keeping within 16 bits wasn't possible for Unicode's stated goal of providing a globally unique identifier to every character in the world. These globally unique identifiers, called *code points*, are simply numbers starting at 0 (you might think of these as character codes, though there is a subtle difference). A character encoding is responsible for encoding a code point into code units that are internally consistent. While UCS-2 had a one-to-one mapping of code point to code unit, UTF-16 is more variable.
 
 The first 2^16 code points are represented as single 16-bit code units in UTF-16. This is called the *Basic Multilingual Plane* (BMP). Everything beyond that range is considered to be in a *supplementary plane*, where the code points can no longer be represented in just 16-bits. UTF-16 solves this problem by introducing *surrogate pairs* in which a single code point is represented by two 16-bit code units. That means any single character in a string can be either one code unit (for BMP, total of 16 bits) or two (for supplementary plane characters, total of 32 bits).
 
@@ -43,7 +43,7 @@ console.log(text.codePointAt(1));   // 57271
 console.log(text.codePointAt(2));   // 97
 ```
 
-The `codePointAt()` method works in the same manner as `charCodeAt()` except for non-BMP characters. The first character in `text` is non-BMP and is therefore comprised of two code units, meaning the entire length of the string is 3 rather than 2. The `charAt()` method returns only the first code unit for position 0 whereas `codePointAt()` returns the full code point even though it spans multiple code units. Both methods return the same value for positions 1 (the second code unit of the first character) and 2 (the `"a"`).
+The `codePointAt()` method works in the same manner as `charCodeAt()` except for non-BMP characters. The first character in `text` is non-BMP and is therefore comprised of two code units, meaning the entire length of the string is 3 rather than 2. The `charCodeAt()` method returns only the first code unit for position 0 whereas `codePointAt()` returns the full code point even though it spans multiple code units. Both methods return the same value for positions 1 (the second code unit of the first character) and 2 (the `"a"`).
 
 This method is the easiest way to determine if a given character is represented by one or two code points:
 
@@ -60,7 +60,7 @@ The upper bound of 16-bit characters is represented in hexadecimal as `FFFF`, so
 
 ### String.fromCodePoint()
 
-When ECMAScript provides a way to do something, it also tends to provide a way to do the reverse. You can use `codePointAt()` to retrieve the code point for a character in a string while `String.fromCodePoint()` produces a single-character string for the given code point. For example:
+When ECMAScript provides a way to do something, it also tends to provide a way to do the reverse. You can use `codePointAt()` to retrieve the code point for a character in a string, while `String.fromCodePoint()` produces a single-character string for the given code point. For example:
 
 ```js
 console.log(String.fromCodePoint(134071));  // "𠮷"
@@ -112,7 +112,7 @@ Another interesting aspect of Unicode is that different characters may be consid
 
 The important thing to understand is that due to these relationships, it's possible to have two strings that represent fundamentally the same text and yet have them contain different code point sequences. For example, the character "æ" and the string "ae" may be used interchangeably even though they are different code points. These two strings would therefore be unequal in JavaScript unless they are normalized in some way.
 
-ECMAScript 6 supports the four Unicode normalization forms through a new `normalize()` method on strings. This method optionally accepts a single parameter, one of `"NFC"` (default), `"NFD"`, `"NFKC"`, or `"NFKD"`. It's beyond the scope of this book to explain the differences between these four forms. Just keep in mind that, in order to be used, you must normalize both strings that are being compared to the same form. For example:
+ECMAScript 6 supports the four Unicode normalization forms through a new `normalize()` method on strings. This method optionally accepts a single parameter, one of `"NFC"` (default), `"NFD"`, `"NFKC"`, or `"NFKD"`. It's beyond the scope of this book to explain the differences between these four forms. Just keep in mind that, when comparing strings, both strings must be normalized to the same form. For example:
 
 ```js
 var normalized = values.map(function(text) {
@@ -164,7 +164,7 @@ values.sort(function(first, second) {
 });
 ```
 
-If you've never worried about Unicode normalization before, then you probably won't have much use for this method. However, knowing that it is available will help should you ever end up working on an internationalized application.
+If you've never worried about Unicode normalization before, then you probably won't have much use for this method. However, knowing that it is available will help, should you ever end up working on an internationalized application.
 
 ### The Regular Expression u Flag
 
@@ -180,7 +180,7 @@ console.log(/^.$/.test(text));      // false
 console.log(/^.$/u.test(text));     // true
 ```
 
-Adding the `u` flag allows the regular expression to correctly match the string by characters. Unfortunately, ECMAScript 6 does not have a way of determining how many code points are present in a string; fortunately, regular expressions can be used to figure it out:
+Adding the `u` flag allows the regular expression to correctly match the string by characters. Unfortunately, ECMAScript 6 does not natively have a way of determining how many code points are present in a string; fortunately, regular expressions with the `u` flag can be used to figure it out:
 
 ```js
 function codePointLength(text) {
@@ -211,7 +211,7 @@ function hasRegExpU() {
 
 This function uses the `RegExp` constructor to pass in the `u` flag as an argument. This is valid syntax even in older JavaScript engines, however, the constructor will throw an error if `u` isn't supported.
 
-I> If your code needs to still work in older JavaScript engines, it's best to use the `RegExp` constructor exclusively when using the `u` flag. This will prevent syntax errors and allow you to optionally detect and use the `u` flag without aborting execution.
+I> If your code still needs to work in older JavaScript engines, it's best to use the `RegExp` constructor exclusively when using the `u` flag. This will prevent syntax errors and allow you to optionally detect and use the `u` flag without aborting execution.
 
 ## Other String Changes
 
@@ -272,7 +272,7 @@ var newIndent = indent.repeat(++indentLevel);
 
 ## Other Regular Expression Changes
 
-Regular expressions are an important part of working with strings in JavaScript, and like many parts of the language, haven't really changed very much in recent versions. ECMAScript 6, however, made several improvements to regular expressions to go along with the updates to strings.
+Regular expressions are an important part of working with strings in JavaScript, and like many parts of the language, haven't really changed very much in recent versions. ECMAScript 6, however, makes several improvements to regular expressions to go along with the updates to strings.
 
 ### The Regular Expression y Flag
 
@@ -621,7 +621,7 @@ if (condition) {
 }
 ```
 
-In this code, the variable `value` is defined and initialized using `let`, but that statement is never executed because the previous line throws an error. The same is true anytime you attempt to use a `let` variable inside of the same block prior to it being defined. Even the normally safe-to-use `typeof` operator isn't safe:
+In this code, the variable `value` is defined and initialized using `let`, but that statement is never executed because the previous line throws an error. The same is true anytime you attempt to use a variable declared with `let` inside of the same block prior to it being defined. Even the normally safe-to-use `typeof` operator isn't safe:
 
 ```js
 if (condition) {
@@ -681,7 +681,7 @@ A> The first line of this example redefines the global `RegExp` as a string. Eve
 A>
 A> It's unusal to use `let` in the global scope, but if you do, it's important to understand this situation.
 
-The intent of `let` is to replace `var` long term, as the former behaves more like variable declarations in other languages. If you are writing JavaScript that will execute only in an ECMAScript 6 or higher environment, you may want to try using `let` exclusively and leaving `var` for other scripts that require backwards compatibility.
+The long term intent is for `let` to replace `var`, as the former behaves more like variable declarations in other languages. If you are writing JavaScript that will execute only in an ECMAScript 6 or higher environment, you may want to try using `let` exclusively and leaving `var` for other scripts that require backwards compatibility.
 
 I> Since `let` declarations are *not* hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block so that they are available to the entire block.
 
@@ -697,7 +697,7 @@ const MAX_ITEMS = 30;
 const NAME;
 ```
 
-Constants are also block-level declarations, similar to `let`. That means constants are destroyed once execution flows out of the block in which they were declared and declarations are hoisted to the top of the block. For example:
+Constants are also block-level declarations, similar to `let`. That means constants are destroyed once execution flows out of the block in which they were declared, and declarations are not hoisted to the top of the block. For example:
 
 ```js
 if (condition) {
@@ -818,19 +818,21 @@ A> #### Syntax Gotcha
 A>
 A> If you try use destructuring assignment without a `var`, `let`, or `const`, you may be surprised by the result:
 A>
-A> ```js
+A> {:lang="js"}
+A> ~~~~~~~~
 A> // syntax error
 A> { repeat, save, rules: { custom }} = options;
-A> ```
+A> ~~~~~~~~
 A>
 A> This causes a syntax error because the opening curly brace is normally the beginning of a block and blocks can't be part of assignment expressions.
 A>
 A> The solution is to wrap the left side literal in parentheses:
 A>
-A> ```js
+A> {:lang="js"}
+A> ~~~~~~~~
 A> // no syntax error
 A> ({ repeat, save, rules: { custom }}) = options;
-A> ```
+A> ~~~~~~~~
 A>
 A> This now works without any problems.
 
@@ -942,7 +944,7 @@ function getValue() {
 
 By making these two changes, ECMAScript 5 sought to eliminate a lot of the confusion and errors associated with octal literals.
 
-ECMAScript 6 took things a step further by reintroducing an octal literal notation, along with a binary literal notation. Both of these notations take a hint for the hexadecimal literal notation of prepending `0x` or `0X` to a value. The new octal literal format begins with `0o` or `0O` while the new binary literal format begins with `0b` or `0B`. Each literal type must be followed by one or more digits, 0-7 for octal, 0-1 for binary. Here's an example:
+ECMAScript 6 took things a step further by reintroducing an octal literal notation, along with a binary literal notation. Both of these notations take a hint from the hexadecimal literal notation of prepending `0x` or `0X` to a value. The new octal literal format begins with `0o` or `0O` while the new binary literal format begins with `0b` or `0B`. Each literal type must be followed by one or more digits, 0-7 for octal, 0-1 for binary. Here's an example:
 
 ```js
 // ECMAScript 6
@@ -1091,6 +1093,6 @@ Additional methods for working with strings were added, allowing you to more eas
 
 The `let` and `const` block bindings introduce lexical scoping to JavaScript. These declarations are not hoisted and only exist within the block in which they are declared. That means behavior that is more like other languages and less likely to cause unintentional errors, as variables can now be declared exactly where they are needed. It's expected that the majority of JavaScript code going forward will use `let` and `const` exclusively, effectively making `var` a deprecated part of the language.
 
-ECMAScript 6 makes it easier to work with numbers through the introduction of new syntax and new methods. The binary and octal literal forms allow you to embed numbers directly into source code while keeping the most appropriate representation visible. `Number.isFinite()` and `Number.isNaN()` are introduced as safer versions of their respective global methods, which lacked type coercion. You can more easily identify integers using `Number.isInteger()` and `Number.isSafeInteger()`, as well as perform more mathematical operations thanks to new methods on `Math`.
+ECMAScript 6 makes it easier to work with numbers through the introduction of new syntax and new methods. The binary and octal literal forms allow you to embed numbers directly into source code while keeping the most appropriate representation visible. `Number.isFinite()` and `Number.isNaN()` are introduced as safer versions of their respective global methods. You can more easily identify integers using `Number.isInteger()` and `Number.isSafeInteger()`, as well as perform more mathematical operations thanks to new methods on `Math`.
 
 Though many of these changes are small, they will make a significant difference in the lives of JavaScript developers for years to come. Each change addresses a particular concern that can otherwise require a lot of custom code to address. By building this functionality into the language, developers can focus on writing the code for their product rather than low-level utilities.
