@@ -6,7 +6,7 @@ ECMAScript 6 functions made a big leap forward, taking into account years of com
 
 ## Default Parameters
 
-Functions in JavaScript are unique in that they allow any number of parameters to be passed regardless of the number of declared parameters in the function definition. This allows you to define functions that can handle different number of parameters, often by just filling in default values when ones are provided. In ECMAScript 5 and earlier, you would likely use the following pattern to accomplish this:
+Functions in JavaScript are unique in that they allow any number of parameters to be passed regardless of the number of declared parameters in the function definition. This allows you to define functions that can handle different number of parameters, often by just filling in default values when ones aren't provided. In ECMAScript 5 and earlier, you would likely use the following pattern to accomplish this:
 
 ```js
 function makeRequest(url, timeout, callback) {
@@ -79,7 +79,7 @@ makeRequest("/foo", null, function(body) {
 
 In the case of default parameter values, the value of `null` is considered to be valid and the default value will not be used.
 
-Perhaps the most interesting feature of default parameter arguments is that the default value need not be a primitive value. You can, for example, execute a function to retrieve the default parameter:
+Perhaps the most interesting feature of default parameter values is that the default value need not be a primitive value. You can, for example, execute a function to retrieve the default parameter:
 
 ```js
 function getCallback() {
@@ -137,7 +137,7 @@ function sum(first, ...numbers) {
 
 In this version of the function, `numbers` is a rest parameter that contains all parameters after the first one (unlike `arguments`, which contains all parameters including the first one). That means you can iterate over `numbers` from beginning to end without worry. As a bonus, you can tell by looking at the function that it is capable of handling any number of parameters.
 
-I> The `sum()` method doesn't actually need any named parameters. You could, in theory, use only rest parameters and have it continue to work exactly the same. However, in that case, the rest parameters would effectively be the same as `arguments`, so you're not really getting any additional benefit.
+I> The `sum()` method doesn't actually need any named parameters. You could, in theory, use only rest parameters and have it continue to work exactly the same. However, in that case, the rest parameters would effectively be the same as `arguments`, so the only benefit you gain is that the rest parameters would be an actual array, as opposed to `arguments`, which is just an array-like object.
 
 The only restriction on rest parameters is that no other named arguments can follow in the function declaration. For example, this causes syntax error:
 
@@ -235,7 +235,7 @@ function setCookie(name, value, { secure, path, domain, expires } = {}) {
 
 This example now works exactly the same as the first example in this section. Providing the default value for the destructured parameter means that `secure`, `path`, `domain`, and `expires` will all be `undefined` if the third argument to `setCookie()` isn't provided.
 
-I> It's recommended to always provide the default value for destructured parameters to avoid all errors that are unique to their usage.
+I> It's recommended to always provide the default value for destructured parameters to avoid these types of errors.
 
 ## The Spread Operator
 
@@ -303,7 +303,7 @@ console.log(doAnotherThing.name);       // "doAnotherThing"
 
 In this code, `doSomething()` has a `name` property equal to `"doSomething"` because it's a function declaration. The anonymous function expression `doAnotherThing()` has a `name` of `"doAnotherThing"` due to the variable to which it is assigned.
 
-While function declarations and function expressions as in the last example are easy to find an appropiate name for, ECMAScript 6 goes further to ensure that all functions have appropriate names:
+While appropriate names for function declarations and function expressions, as in the last example, are easy to find, ECMAScript 6 goes further to ensure that all functions have appropriate names:
 
 ```js
 var doSomething = function doSomethingElse() {
@@ -395,7 +395,7 @@ if (true) {
     doSomething();
 }
 
-console.log(typeof doSomething);
+console.log(typeof doSomething);            // If code execution could get here: "undefined"
 ```
 
 Here, code execution stops when `typeof doSomething` is executed because the `let` statement hasn't been executed yet.
