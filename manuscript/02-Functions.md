@@ -395,7 +395,7 @@ if (true) {
     doSomething();
 }
 
-console.log(typeof doSomething);            // If code execution could get here: "undefined"
+console.log(typeof doSomething);
 ```
 
 Here, code execution stops when `typeof doSomething` is executed because the `let` statement hasn't been executed yet.
