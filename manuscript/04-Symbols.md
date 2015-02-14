@@ -253,9 +253,9 @@ console.log(Object.prototype.toString.call(me));    // "[object Person]"
 
 This code defines `Person.prototype.toString()` to return the value of the `name` property. Since `Person` instances no longer inherit `Object.prototype.toString()`, calling `me.toString()` exhibits a different behavior.
 
-I> All objects inherit `@@toStringTag` from `Object.prototype` unless otherwise specified. This default method returns `"Object"`.
+I> All objects inherit `@@toStringTag` from `Object.prototype` unless otherwise specified. This default property value is `"Object"`.
 
-There is a restriction on which values can be used for `@@toStringTag` on developer-defined objects. If you attempt to use a value that is the same as a built-in object's `@@toStringTag`, then the result will automatically be prepended with a tilde. For example:
+There is no restriction on which values can be used for `@@toStringTag` on developer-defined objects. For example, there's nothing preventing you from using `"Array"` as the value of `@@toStringTag`, such as:
 
 ```js
 function Person(name) {
@@ -271,10 +271,10 @@ Person.prototype.toString = function() {
 var me = new Person("Nicholas");
 
 console.log(me.toString());                         // "Nicholas"
-console.log(Object.prototype.toString.call(me));    // "[object ~Array]"
+console.log(Object.prototype.toString.call(me));    // "[object Array]"
 ```
 
-Here, the result of calling `Object.prototype.toString()` is `"[object ~Array]"` instead of `"[object Array]"`. The `@@toStringTag` value of `"Array"` is restricted because using it would allow spoofing of built-in arrays and could cause errors in code that uses the tag as a type check. The other restricted tags are `"Arguments"`, `"Null"`, `"Undefined"`, `"Boolean"`, `"Date"`, `"Error"`, `"Function"`, `"Number"`, `"RegExp"`, and `"String"`.
+Here, the result of calling `Object.prototype.toString()` is `"[object Array]"`, which is the same as you would get from an actual array. This highlights the fact that `Object.prototype.toString()` is no longer a completely reliable way of identifying an object's type.
 
 It's possible to change the string tag for native objects by assigning to `@@toStringTag` on their prototype. For example:
 
