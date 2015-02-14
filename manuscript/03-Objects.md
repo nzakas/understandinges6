@@ -478,34 +478,7 @@ friend.getGreeting = getGlobalGreeting;
 friend.getGreeting();               // throws error
 ```
 
-Here the global `getGlobalGreeting()` function is used to overwrite the previously-defined `getGreeting()` method on `friend`. Calling `friend.getGreeting()` at that point results in an error as well. The value of `[[HomeObject]]` is only set when the function is first created, so even assigning onto an object doesn't fix the problem. Fortunately, ECMAScript 6 has a solution.
-
-Every function has a `toMethod()` method that allows you to create a new version of the same function that has its `[[HomeObject]]` set to a specific object. For example:
-
-```js
-// prototype is person
-let friend = {
-    __proto__: person,
-    getGreeting() {
-        return super() + ", hi!";
-    }
-};
-
-function getGlobalGreeting() {
-    return super.getGreeting() + ", yo!";
-}
-
-console.log(friend.getGreeting());  // "Hello, hi!"
-
-// assign getGreeting to the global function
-var getFriendlyGreeting = getGlobalGreeting.toMethod(friend);
-
-console.log(getFriendlyGreeting());  // "Hello, yo!"
-```
-
-This code uses `toMethod()` to create a new copy of `getGlobalGreeting()` whose `[[HomeObject]]` is set to `friend` and is called `getFriendlyGreeting()`. That means the `super` reference inside of the function will now work and return the correct value. Keep in mind that the original `getGlobalGreeting()` still has no `[[HomeObject]]`. Instead, a new copy of the function was created and stored in `getFriendlyGreeting()`. The `getFriendlyGreeting()` method can properly look up `super` even though it's not called as a method of `friend`.
-
-W> This is an important distinction between `this` and `super`. While `this` is evaluated at runtime, `super` is influenced by where the function was created. The value of `[[HomeObject]]` doesn't change after a method is created, so passing around functions with `super` references can be very confusing. In most cases, it's a good idea to not remove or add methods after an object has been created. The `toMethod()` method is there if you really want to use it, but it's best to avoid doing so unless absolutely necessary.
+Here the global `getGlobalGreeting()` function is used to overwrite the previously-defined `getGreeting()` method on `friend`. Calling `friend.getGreeting()` at that point results in an error as well. The value of `[[HomeObject]]` is only set when the function is first created, so even assigning onto an object doesn't fix the problem.
 
 ## Summary
 
