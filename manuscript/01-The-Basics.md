@@ -621,7 +621,11 @@ if (condition) {
 }
 ```
 
-In this code, the variable `value` is defined and initialized using `let`, but that statement is never executed because the previous line throws an error. The same is true anytime you attempt to use a variable declared with `let` inside of the same block prior to it being defined. Even the normally safe-to-use `typeof` operator isn't safe:
+In this code, the variable `value` is defined and initialized using `let`, but that statement is never executed because the previous line throws an error. The issue is that `value` exists in what has become known as the *temporal dead zone* (TDZ). The TDZ is never named explicitly in the specification, but is a term often used to describe the non-hoisting behavior of `let`.
+
+When a JavaScript parser looks through the upcoming block to find variable declarations, it results in either hoisting the declaration (for `var`) or placing the declaration in the TDZ. Any attempt to access a variable in the TDZ results in a runtime error. Only once execution flows to the variable declaration is that variable removed from the TDZ and therefore safe to use.
+
+The same is true anytime you attempt to use a variable declared with `let` inside of the same block prior to it being defined. Even the normally safe-to-use `typeof` operator isn't safe:
 
 ```js
 if (condition) {
@@ -640,7 +644,7 @@ if (condition) {
 }
 ```
 
-This example has the `typeof` operator applied outside of the block in which `value` is declared. That means there is no `value` binding and `typeof` simply returns `"undefined"`.
+The variable `value` isn't in the TDZ when the `typeof` operation executes because it occurs outside of the block in which `value` is declared. That means there is no `value` binding and `typeof` simply returns `"undefined"`.
 
 If an identifier has already been defined in the block, then using the identifier in a `let` declaration causes an error to be thrown. For example:
 
