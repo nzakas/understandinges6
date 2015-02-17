@@ -1,6 +1,6 @@
 # Objects
 
-A lot of ECMAScript 6 focused on improving the utility of objects. The focus makes sense given that nearly every value in JavaScript is represented by some type of object. Additionally, the number of objects used in an average Javascript program continues to increase, meaning that developers are writing more objects all the time. With more objects comes the necessity to use them more effectively.
+A lot of ECMAScript 6 focused on improving the utility of objects. The focus makes sense given that nearly every value in JavaScript is represented by some type of object. Additionally, the number of objects used in an average JavaScript program continues to increase, meaning that developers are writing more objects all the time. With more objects comes the necessity to use them more effectively.
 
 ECMAScript 6 improves objects in a number of ways, from simple syntax to new ways of manipulating and interacting with objects.
 
@@ -488,6 +488,6 @@ ECMAScript 6 makes several changes to object literals. Shorthand property defini
 
 The `Object.assign()` method makes it easier to change multiple properties on a single object at once. This can be very useful if you use the mixin pattern.
 
-It's now possible to modify an object's prototype after it's already created using `Object.setPrototypeOf()`. ECMAScript 6 also defines the behavior of the `__proto__` property, which is an accessor property whose getter calls `Object.getPrototypeOf()` and whose setter calls 'Object.setPrototypeOf()`.
+It's now possible to modify an object's prototype after it's already created using `Object.setPrototypeOf()`. ECMAScript 6 also defines the behavior of the `__proto__` property, which is an accessor property whose getter calls `Object.getPrototypeOf()` and whose setter calls `Object.setPrototypeOf()`.
 
 The `super` keyword can now be used to call methods on an object's prototype. It can be used either standalone as a method, such as `super()`, or as a reference to the prototype itself, such as `super.getGreeting()`. In both cases, the `this`-binding is setup automatically to work with the current value of `this`. You can change how `super` is evaluated inside of a function by calling `toMethod()` and specifying a new `[[HomeObject]]`. This method returns a new copy of the function whose `[[HomeObject]]` is the argument that was passed in.
