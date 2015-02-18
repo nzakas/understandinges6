@@ -388,7 +388,7 @@ let friend = {
 };
 ```
 
-The call to `super.getGreeting.call(this)` is the same as `Object.getPrototypeOf(this).getGreeting.call(this)` or `this.__proto__.getGreeting.call(this)`. Similarly, you can call any method on an object's prototype by using a `super` reference.
+The call to `super.getGreeting()` is the same as `Object.getPrototypeOf(this).getGreeting.call(this)` or `this.__proto__.getGreeting.call(this)`. Similarly, you can call any method on an object's prototype by using a `super` reference.
 
 If you're calling a prototype method with the exact same name, then you can also call `super` as a function, for example:
 
