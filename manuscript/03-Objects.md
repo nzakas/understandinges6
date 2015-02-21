@@ -259,7 +259,7 @@ In this example, the value of `person.name` is `"Greg"` because that was the las
 
 ## Changing Prototypes
 
-Prototypes are the foundation of inheritance and JavaScript and so ECMAScript 6 continues to make prototypes more powerful. ECMAScript 5 added the `Object.getPrototypeOf()` method for retrieving the prototype of any given object. ECMAScript 6 adds the reverse operation, `Object.setPrototypeOf()`, which allows you to change the prototype of any given object.
+Prototypes are the foundation of inheritance in JavaScript, and so ECMAScript 6 continues to make prototypes more powerful. ECMAScript 5 added the `Object.getPrototypeOf()` method for retrieving the prototype of any given object. ECMAScript 6 adds the reverse operation, `Object.setPrototypeOf()`, which allows you to change the prototype of any given object.
 
 Normally, the prototype of an object is specified at the time of its creation, either by using a constructor or via `Object.create()`. Prior to ECMAScript 6, there was no standard way to change an object's prototype after it had already been created. In a way, `Object.setPrototypeOf()` changes one of the biggest assumptions about objects in JavaScript to this point, which is that an object's prototype remains unchanged after creation.
 
@@ -289,7 +289,7 @@ console.log(friend.getGreeting());                      // "Woof"
 console.log(Object.getPrototypeOf(friend) === dog);     // true
 ```
 
-This code defines two base objects: `person` and `dog`. Both objects have a method `getGreeting()` that outputs something to the console. The object `friend` starts out inheriting from `person`, meaning that `getGreeting()` will output `"Hello"`. When the prototype is changed to be `dog` instead, `person.getGreeting()` outputs `"Woof"` because the original relationship to `person` is broken.
+This code defines two base objects: `person` and `dog`. Both objects have a method `getGreeting()` that returns a string. The object `friend` starts out inheriting from `person`, meaning that `getGreeting()` will output `"Hello"`. When the prototype is changed to be `dog` instead, `person.getGreeting()` outputs `"Woof"` because the original relationship to `person` is broken.
 
 The actual value of an object's prototype is stored in an internal-only property called `[[Prototype]]`. The `Object.getPrototypeOf()` method returns the value stored in `[[Prototype]]` and `Object.setPrototypeOf()` changes the value stored in `[[Prototype]]`. However, these aren't the only ways to work with the value of `[[Prototype]]`.
 
@@ -484,7 +484,7 @@ Here the global `getGlobalGreeting()` function is used to overwrite the previous
 
 Objects are at the center of programming in JavaScript, and ECMAScript 6 has made some helpful changes to objects that both make them easier to deal with and more powerful.
 
-ECMAScript 6 makes several changes to object literals. Shorthand property definitions make it easier to assign properties whose names are the same as in-scope variables. Computed property names allow you to specify non-literal values as property names, which is something you've already been able to do in other areas of the language. Shorthand methods let you type a lot fewer characters in order to define methods on object literals by completely omitting the `function` keyword and colon. A loosening of the strict mode check for duplicate object literal property names was introduced as well, meaning you can now have two properties with the same name in a single object literal without an error being thrown.
+ECMAScript 6 makes several changes to object literals. Shorthand property definitions make it easier to assign properties whose names are the same as in-scope variables. Computed property names allow you to specify non-literal values as property names, which is something you've already been able to do in other areas of the language. Shorthand methods let you type a lot fewer characters in order to define methods on object literals by completely omitting the colon and `function` keyword. A loosening of the strict mode check for duplicate object literal property names was introduced as well, meaning you can now have two properties with the same name in a single object literal without an error being thrown.
 
 The `Object.assign()` method makes it easier to change multiple properties on a single object at once. This can be very useful if you use the mixin pattern.
 
