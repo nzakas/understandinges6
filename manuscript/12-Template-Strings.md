@@ -82,7 +82,7 @@ let message = `Multiline
 
 console.log(message);           // "Multiline
                                 //                 string"
-console.log(message.length);    // 16
+console.log(message.length);    // 31
 ```
 
 In this code, all of the whitespace before the second line of the template string is considered to be a part of the string itself. If making the text line up with proper indentation is important to you, then you consider leaving nothing on the first line of a multiline template string and then indenting after that, such as this:
