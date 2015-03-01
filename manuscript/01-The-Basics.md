@@ -681,9 +681,9 @@ A>  let RegExp = "Hello!";          // ok
 A>  let undefined = "Hello!";       // throws error
 A> ~~~~~~~~
 A>
-A> The first line of this example redefines the global `RegExp` as a string. Even though this would be problematic, there is no error thrown. The second line throws an error because `undefined` is a nonconfigurable own property of the global object. Since it's definition is locked down by the environment, the `let` declaration is illegal.
+A> The first line of this example redefines the global `RegExp` as a string. Even though this would be problematic, there is no error thrown. The second line throws an error because `undefined` is a nonconfigurable own property of the global object. Since its definition is locked down by the environment, the `let` declaration is illegal.
 A>
-A> It's unusal to use `let` in the global scope, but if you do, it's important to understand this situation.
+A> It's unusual to use `let` in the global scope, but if you do, it's important to understand this situation.
 
 The long term intent is for `let` to replace `var`, as the former behaves more like variable declarations in other languages. If you are writing JavaScript that will execute only in an ECMAScript 6 or higher environment, you may want to try using `let` exclusively and leaving `var` for other scripts that require backwards compatibility.
 
@@ -796,7 +796,7 @@ console.log(save);          // false
 
 Here, two local variables called `repeat` and `save` are created. They are initialized with the value of `options.repeat` and `options.save`, respectively. This shorthand is helpful when there's no need to have different variable names.
 
-Destructuring can also handled nested objects, such as the following:
+Destructuring can also handle nested objects, such as the following:
 
 ```js
 var options = {
@@ -1007,7 +1007,7 @@ console.log(Number.isNaN(NaN));         // true
 console.log(Number.isNaN("NaN"));       // false
 ```
 
-In this code, `Number.isFinite("25")` returns `false` even though `isFinite("25")` returns `true`; likewise `Number.isNaN("NaN") returns `false` even though `isNaN("NaN")` returns `true`.
+In this code, `Number.isFinite("25")` returns `false` even though `isFinite("25")` returns `true`; likewise `Number.isNaN("NaN")` returns `false` even though `isNaN("NaN")` returns `true`.
 
 These two new methods are aimed at eliminating certain types of errors that can be caused when non-number values are used with `isFinite()` and `isNaN()` without dramatically changing the language.
 
