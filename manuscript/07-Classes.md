@@ -24,3 +24,5 @@ new.target
 
 
 super() throws error in non-derived class constructors
+
+anonymous class
