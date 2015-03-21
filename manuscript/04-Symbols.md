@@ -24,7 +24,7 @@ console.log(person[firstName]);     // "Nicholas"
 
 In this example, the symbol `firstName` is created and used to assign a new property on `person`. That symbol must be used each time you want to access that same property. It's a good idea to name the symbol variable appropriately so you can easily tell what the symbol represents.
 
-W> Because symbols are primitive values, `new Symbol()` throws an error when called. It's not possible to create an instance of `Symbol`, which also differentiates it from `String`, `Number`, and `Boolean`.
+W> Because symbols are primitive values, `new Symbol()` throws an error when called. It is possible to create an instance of `Symbol` via `new Object(yourSymbol)`, but it's unclear when this capability would be useful.
 
 The `Symbol` function accepts an optional argument that is the description of the symbol. The description itself cannot be used to access the property but is used for debugging purposes. For example:
 
