@@ -213,6 +213,39 @@ This function uses the `RegExp` constructor to pass in the `u` flag as an argume
 
 I> If your code still needs to work in older JavaScript engines, it's best to use the `RegExp` constructor exclusively when using the `u` flag. This will prevent syntax errors and allow you to optionally detect and use the `u` flag without aborting execution.
 
+### Unicode Identifiers
+
+Better Unicode support in ECMAScript 6 also means changes to what characters may be used for an identifier. In ECMAScript 5, it was already possible to use Unicode escape sequences for identifiers, such as:
+
+```js
+// Valid in ECMAScript 5 and 6
+var \u0061 = "abc";
+
+console.log(\u0061);        // "abc"
+
+// equivalent to
+// console.log(a);          // "abc"
+```
+
+In ECMAScript 6, you can also use Unicode code point escape sequences as identifiers:
+
+```js
+// Valid in ECMAScript 5 and 6
+var \u{61} = "abc";
+
+console.log(\u{61});        // "abc"
+
+// equivalent to
+// console.log(a);          // "abc"
+```
+
+Additionally, ECMAScript 6 formally specifies valid identifiers in terms of [Unicode Standard Annex #31: Unicode Identifier and Pattern Syntax](http://unicode.org/reports/tr31/):
+
+1. The first character must be `$`, `_`, or any Unicode symbol with a derived core property of `ID_Start`.
+1. Each subsequent character must be `$`, `_`, `\u200c` (zero-width non-joiner), `\u200d` (zero-width joiner), or any Unicode symbol with a derived core property of `ID_Continue`.
+
+The `ID_Start` and `ID_Continue` derived core properties are defined in Unicode Identifier and Pattern Syntax as a way to identifier symbols that are appropriate for use in identifiers such as variables and domain names (the specification is not specific to JavaScript).
+
 ## Other String Changes
 
 JavaScript strings have always lagged behind similar features of other languages. It was only in ECMAScript 5 that strings finally gained a `trim()` method, and ECMAScript 6 continues extending strings with new functionality.
@@ -340,10 +373,10 @@ console.log(stickyPattern.lastIndex);   // 14
 
 The value of `lastIndex` changed to 7 after the first call to `exec()` and to 14 after the second call for both the sticky and global patterns.
 
-There are also a few other subtle details to the sticky flag:
+There are also a couple other subtle details to the sticky flag:
 
 1. The `lastIndex` property is only honored when calling methods on the regular expression object such as `exec()` and `test()`. Passing the regular expression to a string method, such as `match()`, will not result in the sticky behavior.
-1. When using the `^` character to match the start of a string, sticky regular expressions will only match from the start of the string (or start of line in multiline mode) regardless of the `lastIndex` value. So using `^` effectively removes the stickiness.
+1. When using the `^` character to match the start of a string, sticky regular expressions will only match from the start of the string (or start of line in multiline mode). So long as `lastIndex` is 0, the `^` makes a sticky regular expression no different from a non-sticky one. If `lastIndex` is greater than 0, the sticky regular expression will never match
 
 As with other regular expression flags, you can detect the presence of `y` by using a property. The `sticky` property is set to true with the sticky flag is present and false if not:
 
