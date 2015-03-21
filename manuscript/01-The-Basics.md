@@ -244,7 +244,7 @@ Additionally, ECMAScript 6 formally specifies valid identifiers in terms of [Uni
 1. The first character must be `$`, `_`, or any Unicode symbol with a derived core property of `ID_Start`.
 1. Each subsequent character must be `$`, `_`, `\u200c` (zero-width non-joiner), `\u200d` (zero-width joiner), or any Unicode symbol with a derived core property of `ID_Continue`.
 
-The `ID_Start` and `ID_Continue` derived core properties are defined in Unicode Identifier and Pattern Syntax as a way to identifier symbols that are appropriate for use in identifiers such as variables and domain names (the specification is not specific to JavaScript).
+The `ID_Start` and `ID_Continue` derived core properties are defined in Unicode Identifier and Pattern Syntax as a way to identify symbols that are appropriate for use in identifiers such as variables and domain names (the specification is not specific to JavaScript).
 
 ## Other String Changes
 
