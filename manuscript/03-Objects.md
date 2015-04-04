@@ -390,22 +390,6 @@ let friend = {
 
 The call to `super.getGreeting()` is the same as `Object.getPrototypeOf(this).getGreeting.call(this)` or `this.__proto__.getGreeting.call(this)`. Similarly, you can call any method on an object's prototype by using a `super` reference.
 
-If you're calling a prototype method with the exact same name, then you can also call `super` as a function, for example:
-
-```js
-let friend = {
-    __proto__: person,
-    getGreeting() {
-        // same as Object.getPrototypeOf(this).getGreeting.call(this)
-        // or this.__proto__.getGreeting.call(this)
-        // or super.getGreeting()
-        return super() + ", hi!";
-    }
-};
-```
-
-Calling `super` in this manner tells the JavaScript engine that you want to use the prototype method with the same name as the current method. So `super()` actually does a lookup using the containing function's `name` property (discussed in Chapter 2) to find the correct method.
-
 W> `super` references can only be used inside of functions and cannot be used in the global scope. Attempting to use `super` in the global scope results in a syntax error.
 
 ### Methods
