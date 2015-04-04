@@ -3,5 +3,6 @@
 02-Functions.md
 03-Objects.md
 04-Symbols.md
+07-Classes.md
 08-Iterators-And-Generators.md
 12-Template-Strings.md
