@@ -73,7 +73,7 @@ var person = {
 };
 ```
 
-This shorthand syntax creates a method on the `person` object just as the previous example did. There is no difference aside from saving you some keystrokes, so `sayName()` is assigned an anonymous function expression and has all of the same characteristics as the function defined in the previous example.
+This shorthand syntax, also called *concise method* syntax, creates a method on the `person` object just as the previous example did. There is no difference aside from saving you some keystrokes, so `sayName()` is assigned an anonymous function expression and has all of the same characteristics as the function defined in the previous example.
 
 I> The `name` property of a method created using this shorthand is the name used before the parentheses. In the previous example, the `name` property for `person.sayName()` is `"sayName"`.
 
@@ -390,7 +390,7 @@ let friend = {
 
 The call to `super.getGreeting()` is the same as `Object.getPrototypeOf(this).getGreeting.call(this)` or `this.__proto__.getGreeting.call(this)`. Similarly, you can call any method on an object's prototype by using a `super` reference.
 
-W> `super` references can only be used inside of functions and cannot be used in the global scope. Attempting to use `super` in the global scope results in a syntax error.
+W> `super` references can only be used inside of concise methods and cannot be used in other functions or the global scope. Attempting to use `super` outside of concise methods results in a syntax error.
 
 ### Methods
 
