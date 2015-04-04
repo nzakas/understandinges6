@@ -106,10 +106,6 @@ Since it only matters if the property was used before and not how many times it 
 
 Another downside of using object properties for this type of operation is that property names are always converted to strings. So you can't have an object with the property name of `5`, you can only have one with the property name of `"5"`. That also means you can't easily keep track of objects in the same manner because the objects get converted to strings when assigned as a property name. Sets, on the other hand, can contain any type of data without fear of conversion into another type.
 
-### Browser Support
-
-Both Firefox and Chrome have implemented `Set`, however, in Chrome you need to manually enable ECMAScript 6 features: go to `chrome://flags` and enable "Experimental JavaScript Features". Both implementations are incomplete. Neither browser implements set iteration using `for-of` and Chrome's implementation is missing the `size()` method.
-
 ## Maps
 
 Maps are also a familiar topic  for those coming from other languages.  The basic idea is to map a value to a unique key in such a way that you can retrieve that value at any point in time by using the key. In JavaScript, developers have traditionally used regular objects as a replacement for maps. In fact, JSON is based on the premise that objects represent key-value pairs. However, the same limitation that affects objects used as sets also affects objects used as maps: the inability to have non-string keys.
@@ -234,15 +230,66 @@ When using objects as maps, it was always a concern that properties from the pro
 
 The iteration features of maps allow you to focus on just the data  without worrying about extra pieces of information slipping into your code. This is another big benefit of maps over regular objects for storing key-value pairs.
 
-### Browser Support
+## Weaksets
 
-Both Firefox and Chrome have implemented `Map`, however, in Chrome you need to manually enable ECMAScript 6 features: go to `chrome://flags` and enable "Experimental JavaScript Features". Both implementations are incomplete. Neither browser implements any of the generator methods for use with `for-of` and Chrome's implementation is missing the `size` method (which is part of the ECMAScript 6 draft specification).
+Weaksets are a type of set that only stores object references, and as such, also cannot store duplicates. The key difference is that weaksets hold only a *weak reference* to each object, which means the reference stored in the weakset will not prevent garbage collection if it is the only remaining reference. Weaksets have the same methods as sets, `add()`, `has()`, and `delete()`. Here's an example:
+
+```js
+var set = new WeakSet(),
+    obj = {};
+
+// add the object to the set
+set.add(obj);
+
+console.log(set.has(obj));      // true
+
+set.delete(obj);
+
+console.log(set.has(obj));      // false
+```
+
+On the surface, using a weakset looks a lot like using a regular set. You can add, remove, and check for references in the weakset. You can also seed a weakset with values by passing an iterable to the constructor:
+
+```js
+var obj1 = {},
+    obj2 = {},
+    set = new WeakSet([obj1, obj2]);
+
+console.log(set.has(obj1));     // true
+console.log(set.has(obj2));     // true
+);      // false
+```
+
+In this example, an array is passed to the `WeakSet` constructor. Since this array contains two objects, those objects are added into the weakset. Keep in mind that an error is thrown if the array contained any non-object values.
+
+The biggest difference from regular sets is the weak reference held to the object value. Here's an example of what that means:
+
+```js
+var set = new WeakSet(),
+    obj = {};
+
+// add the object to the set
+set.add(obj);
+
+console.log(set.has(obj));      // true
+
+// remove the last strong reference to obj, also removes from weakset
+obj = null;
+```
+
+After this code executes, the reference to `obj` in the weakset has also been removed. It is not possible to verify its removal because you would need one reference to that object to pass to `has()`. This can make testing weaksets a little confusing, however, you can trust that the reference has been properly removed by the JavaScript engine.
+
+From these examples, you can see that weaksets are virtually identical to sets. The key differences are:
+
+1. The `add()`, `has()`, and `delete()` methods throw an error when passed a non-object.
+1. Weaksets are not iterables and therefore cannot be used in a `for-of` loop.
+1. Weaksets do not expose any iterators (such as `keys()` and `values()`), so there is no way to programmatically determine the contents of a weakset.
 
 ## Weakmaps
 
 Weakmaps are similar to regular maps in that they map a value to a unique key. That key can later be used to retrieve the value it identifies. Weakmaps are different because the key must be an object and cannot be a primitive value. This may seem like a strange constraint, but it's actually the core of what makes weakmaps different and useful.
 
-A weakmap holds only a weak reference to a key, which means the reference inside of the weakmap doesn't prevent garbage collection of that object. When the object is destroyed by the garbage collector, the weakmap automatically removes the key-value pair identified by that object. The canonical example for using weakmaps is to create an object related to a particular DOM element. For example, jQuery maintains a cache of objects internally, one for each DOM element that has been referenced. Using a weakmap would allow jQuery to automatically free up memory associated with a DOM element when it is removed from the document.
+A weakmap holds only a weak reference to a key in the same way weaksets hold a weak reference to a value. When the object is destroyed by the garbage collector, the weakmap automatically removes the key-value pair identified by that object. The canonical example for using weakmaps is to create an object related to a particular DOM element. For example, jQuery maintains a cache of objects internally, one for each DOM element that has been referenced. Using a weakmap would allow jQuery to automatically free up memory associated with a DOM element when it is removed from the document.
 
 The ECMAScript 6 `WeakMap` type is an unordered list of key-value pairs where the key must be a non-null object and the value can be of any type. The interface for `WeakMap` is very similar to that of `Map` in that `set()` and `get()` are used to add and retrieve data respectively:
 
