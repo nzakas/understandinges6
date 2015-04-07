@@ -184,7 +184,7 @@ When you want to work with all of the data in the map, you have several options.
         console.log("Key: %s, Value: %s", item[0], item[1]);
     }
 
-When iterating over keys or values, you receive a single value each time through the loop. When iterating over items, you receive an array whose first item is the key and the second item is the value.
+When iterating over keys or values, you receive a single value each time through the loop. When iterating over entries, you receive an array whose first item is the key and the second item is the value.
 
 Another way to iterate over items is to use the `forEach()` method. This method works in a similar manner to `forEach()` on arrays. You pass in a function that gets called with three arguments: the value, the key, and the map itself. For example:
 
