@@ -47,7 +47,7 @@ let message = "Multiline \
 string";
 ```
 
-Despite this working in all major JavaScripte engines, the behavior was defined as a bug and many recommended avoiding its usage.
+Despite this working in all major JavaScript engines, the behavior was defined as a bug and many recommended avoiding its usage.
 
 Other attempts to create multiline strings usually relied on arrays or string concatenation, such as:
 
