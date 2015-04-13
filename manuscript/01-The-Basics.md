@@ -92,19 +92,18 @@ console.log("\u{20BB7}");     // "𠮷"
 
 Using the extended escape sequence, the correct character is contained in the string.
 
-W> Make sure that you use this new escape sequence only in an ECMAScript 6 environment. In all other environments, doing so causes a syntax error. You may want to check and see if the environment supports the extended escape sequence using a function such as:
-W>
-W> {lang=js}
-W> ~~~~~~~~
-W> function supportsExtendedEscape() {
-W>     try {
-W>         eval("'\\u{00FF1}'");
-W>         return true;
-W>     } catch (ex) {
-W>         return false;
-W>     }
-W> }
-W> ~~~~~~~~
+Make sure that you use this new escape sequence only in an ECMAScript 6 environment. In all other environments, doing so causes a syntax error. You may want to check and see if the environment supports the extended escape sequence using a function such as:
+
+```js
+function supportsExtendedEscape() {
+    try {
+        eval("'\\u{00FF1}'");
+        return true;
+    } catch (ex) {
+        return false;
+    }
+}
+```
 
 ### The normalize() Method
 
@@ -708,23 +707,23 @@ if (condition) {
 
 Here, the `let` declaration will not throw an error because it is creating a new variable called `count` within the `if` statement. This new variable shadows the global `count`, preventing access to it from within the `if` block.
 
-A> ### Global let Declarations
-A>
-A> There is the potential for naming collisions when using `let` in the global scope because the global object has predefined properties. Using `let` to define a variable that shares a name with a property of the global object can produce an error because global object properties may be nonconfigurable. Since `let` doesn't allow redefinition of the same identifier in the same scope, it's not possible to shadow nonconfigurable global properties. Attempting to do so will result in an error. For example:
-A>
-A> {:lang="js"}
-A> ~~~~~~~~
-A>  let RegExp = "Hello!";          // ok
-A>  let undefined = "Hello!";       // throws error
-A> ~~~~~~~~
-A>
-A> The first line of this example redefines the global `RegExp` as a string. Even though this would be problematic, there is no error thrown. The second line throws an error because `undefined` is a nonconfigurable own property of the global object. Since its definition is locked down by the environment, the `let` declaration is illegal.
-A>
-A> It's unusual to use `let` in the global scope, but if you do, it's important to understand this situation.
+### Global let Declarations
+
+There is the potential for naming collisions when using `let` in the global scope because the global object has predefined properties. Using `let` to define a variable that shares a name with a property of the global object can produce an error because global object properties may be nonconfigurable. Since `let` doesn't allow redefinition of the same identifier in the same scope, it's not possible to shadow nonconfigurable global properties. Attempting to do so will result in an error. For example:
+
+```js
+
+  let RegExp = "Hello!";          // ok
+  let undefined = "Hello!";       // throws error
+```
+
+The first line of this example redefines the global `RegExp` as a string. Even though this would be problematic, there is no error thrown. The second line throws an error because `undefined` is a nonconfigurable own property of the global object. Since its definition is locked down by the environment, the `let` declaration is illegal.
+
+It's unusual to use `let` in the global scope, but if you do, it's important to understand this situation.
 
 The long term intent is for `let` to replace `var`, as the former behaves more like variable declarations in other languages. If you are writing JavaScript that will execute only in an ECMAScript 6 or higher environment, you may want to try using `let` exclusively and leaving `var` for other scripts that require backwards compatibility.
 
-I> Since `let` declarations are *not* hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block so that they are available to the entire block.
+Since `let` declarations are *not* hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block so that they are available to the entire block.
 
 ### Constant declarations
 
@@ -791,7 +790,7 @@ var localRepeat = options.repeat,
 
 Frequently, object properties are stored into local variables for more succinct code and easier access. ECMAScript 6 makes this easy by introducing *destructuring assignment*, which systematically goes through an object or array and stores specified pieces of data into local variables.
 
-W> If the right side value of a destructuring assignment evaluates to `null` or `undefined`, an error is thrown.
+If the right side value of a destructuring assignment evaluates to `null` or `undefined`, an error is thrown.
 
 ### Object Destructuring
 
@@ -813,7 +812,7 @@ console.log(localSave);         // false
 
 In this code, the value of `options.repeat` is stored in a variable called `localRepeat` and the value of `options.save` is stored in a variable called `localSave`. These are both specified using the object literal syntax where the key is the property to find on `options` and the value is the variable in which to store the property value.
 
-I> If the property with the given name doesn't exist on the object, then the local variable gets a value of `undefined`.
+If the property with the given name doesn't exist on the object, then the local variable gets a value of `undefined`.
 
 If you want to use the property name as the local variable name, you can omit the colon and the identifier, such as:
 
@@ -855,27 +854,22 @@ console.log(custom);        // 10
 
 In this example, the `custom` property is embedded in another object. The extra set of curly braces allows you to descend into a nested object and pull out its properties.
 
-A> #### Syntax Gotcha
-A>
-A> If you try use destructuring assignment without a `var`, `let`, or `const`, you may be surprised by the result:
-A>
-A> {:lang="js"}
-A> ~~~~~~~~
-A> // syntax error
-A> { repeat, save, rules: { custom }} = options;
-A> ~~~~~~~~
-A>
-A> This causes a syntax error because the opening curly brace is normally the beginning of a block and blocks can't be part of assignment expressions.
-A>
-A> The solution is to wrap the left side literal in parentheses:
-A>
-A> {:lang="js"}
-A> ~~~~~~~~
-A> // no syntax error
-A> ({ repeat, save, rules: { custom }}) = options;
-A> ~~~~~~~~
-A>
-A> This now works without any problems.
+#### Syntax Gotcha
+If you try use destructuring assignment without a `var`, `let`, or `const`, you may be surprised by the result:
+
+```js
+ // syntax error
+ { repeat, save, rules: { custom }} = options;
+```
+
+This causes a syntax error because the opening curly brace is normally the beginning of a block and blocks can't be part of assignment expressions.
+The solution is to wrap the left side literal in parentheses:
+
+```js
+  // no syntax error
+  ({ repeat, save, rules: { custom }}) = options;
+```
+This now works without any problems.
 
 ### Array Destructuring
 
