@@ -171,7 +171,7 @@ If you had a function called `passthru()`, that function would receive three arg
     * `" items cost $"` - the string after the first substitution and before the second
     * `"."` - the string after the second substitution
 1. `10` - the interpreted value for `count` (this becomes `substitutions[0]`)
-1. `"2.50"` - the interpreted value for `(count * price).toFixed(2)` (this becomes `substitutions[2]`)
+1. `"2.50"` - the interpreted value for `(count * price).toFixed(2)` (this becomes `substitutions[1]`)
 
 Note that the first item in `literals` is an empty string. This is to ensure that `literals[0]` is always the start of the string, just like `literals[literals.length - 1]` is always the end of the string. There is always one fewer substitution than literal, which is to say that `substitutions.length === literals.length - 1` all the time.
 
