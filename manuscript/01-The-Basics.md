@@ -344,7 +344,7 @@ The sticky flag saves the index of the next character after the last match in `l
 ```js
 var text = "hello1 hello2 hello3",
     pattern = /hello\d\s?/,
-    result = pattern.exec(text);
+    result = pattern.exec(text),
     globalPattern = /hello\d\s?/g,
     globalResult = globalPattern.exec(text),
     stickyPattern = /hello\d\s?/y,
