@@ -870,12 +870,12 @@ A> ~~~~~~~~
 A>
 A> This causes a syntax error because the opening curly brace is normally the beginning of a block and blocks can't be part of assignment expressions.
 A>
-A> The solution is to wrap the left side literal in parentheses:
+A> The solution is to wrap the entire expression in parentheses:
 A>
 A> {:lang="js"}
 A> ~~~~~~~~
 A> // no syntax error
-A> ({ repeat, save, rules: { custom }}) = options;
+A> ({ repeat, save, rules: { custom }} = options);
 A> ~~~~~~~~
 A>
 A> This now works without any problems.
