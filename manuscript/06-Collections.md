@@ -6,13 +6,13 @@ For most of JavaScript's history, there has been only one type of collection, re
 
 Sets are nothing new if you come from languages such as Java, Ruby, or Python but have been missing from JavaScript. A set is in an ordered list of values that cannot contain duplicates. You typically don't access items in the set like you would items in an array; instead, it's much more common to check the set to see if a value is present.
 
-ECMAScript 6 introduces the `Set` type as a set implementation for JavaScript. You can add values to a set by using the `add()` method and see how many items are in the set using `size()`:
+ECMAScript 6 introduces the `Set` type as a set implementation for JavaScript. You can add values to a set by using the `add()` method and see how many items are in the set using `size`:
 
     var items = new Set();
     items.add(5);
     items.add("5");
 
-    console.log(items.size());    // 2
+    console.log(items.size);    // 2
 
 ECMAScript 6 sets do not coerce values in determining whether or not two values are the same. So, a set can contain both the number `5` and the string `"5"` (internally, the comparison is done using `Object.is()`). If the `add()` method is called more than once with the same value, all calls after the first one are effectively ignored:
 
@@ -21,12 +21,12 @@ ECMAScript 6 sets do not coerce values in determining whether or not two values 
     items.add("5");
     items.add(5);     // oops, duplicate - this is ignored
 
-    console.log(items.size());    // 2
+    console.log(items.size);    // 2
 
 You can initialize the set using an array, and the `Set` constructor will ensure that only unique values are used:
 
     var items = new Set([1, 2, 3, 4, 5, 5, 5, 5]);
-    console.log(items.size());    // 5
+    console.log(items.size);    // 5
 
 In this example, an array with feed items is used to initialize the set. The number `5` only appears once in the set even though it appears four times in the array. This functionality makes it easy to convert existing code or JSON structures to use sets.
 
