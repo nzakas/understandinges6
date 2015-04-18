@@ -340,6 +340,80 @@ console.log((new Function()).name);     // "anonymous"
 
 The `name` of a bound function will always be the `name` of the function being bound prefixed with the `"bound "`, so the bound version of `doSomething()` is `"bound doSomething"`.
 
+## new.target, [[Call]], and [[Construct]]
+
+In ECMAScript 5 and earlier, functions serve the double purpose of being callable with or without `new`. When used with `new`, the `this` value inside of a function is a new object and that new object is returned. For example:
+
+```js
+function Person(name) {
+    this.name = name;
+}
+
+var person = new Person("Nicholas");
+var notAPerson = Person("Nicholas");
+
+console.log(person);        // "[Object object]"
+console.log(notAPerson);    // "undefined"
+```
+
+Calling `Person()` without `new` results in `undefined` (and a `name` property being set on the global object in non-strict mode). It's fairly obvious from the code that the intent is to use `Person` with `new` to create a new object. The confusion over the dual roles of functions led to some changes in ECMAScript 6.
+
+First, the specification defines two different internal-only methods that every function has: `[[Call]]` and `[[Construct]]`. When a function is called without `new`, the `[[Call]]` method is executed, which essentially executes the body of the function as it appears in the code. When a function is called with `new`, that's when the `[[Construct]]` method is called. The `[[Construct]]` method is responsible for creating a new object, called the *new target*, and then executing the function body with `this` set to the new target. Functions that have a `[[Construct]]` method are called *constructors*.
+
+I> Keep in mind that not all functions have `[[Construct]]`, and therefore not all function can be called with `new`. Arrow functions, discussed later in this chapter, do not have a `[[Construct]]` method.
+
+The most popular way to determine if a function was called with `new` in ECMAScript 5 is to use `instanceof`, for example:
+
+```js
+function Person(name) {
+    if (this instanceof Person) {
+        this.name = name;   // using new
+    } else {
+        throw new Error("You must use new with Person.")
+    }
+}
+
+var person = new Person("Nicholas");
+var notAPerson = Person("Nicholas");  // throws error
+```
+
+Here, the `this` value is checked to see if it's an instance of the constructor, and if so, it continues as normal. If `this` isn't an instance of `Person`, then an error is thrown. This works because the `[[Construct]]` method creates a new instance of `Person` and assigns it to `this`. Unfortunately, this approach is not completely reliable because `this` can be an instance of `Person` without using `new`, for example:
+
+```js
+function Person(name) {
+    if (this instanceof Person) {
+        this.name = name;   // using new
+    } else {
+        throw new Error("You must use new with Person.")
+    }
+}
+
+var person = new Person("Nicholas");
+var notAPerson = Person.call(person, "Michael");    // works!
+```
+
+The call to `Person.call()` passes the `person` variable as the first argument, which means `this` is set to `person` inside of the `Person` function. To the function, there's no way to distinguish this from being called with `new`.
+
+To solve this problem, ECMAScript 6 introduces the `new.target` *metaproperty*. When a function's `[[Construct]]` method is called, `new.target` is filled with the newly created object instance that will become `this` inside the function body. If `[[Call]]` is executed, then `new.target` is `undefined`. That means you can now safely detect if a function is called with `new` by checking that `new.target` is defined:
+
+```js
+function Person(name) {
+    if (typeof new.target !== "undefined") {
+        this.name = name;   // using new
+    } else {
+        throw new Error("You must use new with Person.")
+    }
+}
+
+var person = new Person("Nicholas");
+var notAPerson = Person.call(person, "Michael");    // error!
+```
+
+By using `new.target` instead of `this instanceof Person`, the `Person` constructor is now correctly throwing an error when used without `new`.
+
+W> Using `new.target` outside of a function is a syntax error.
+
+
 ## Block-Level Functions
 
 In ECMAScript 3 and earlier, a function declaration occurring inside of a block (a *block-level function*) was technically a syntax error, but many browsers still supported it. Unfortunately, each browser that allowed the syntax behaved in a slightly different way, so it is considered a best practice to avoid function declarations inside of blocks (the best alternative is to use a function expression).
@@ -427,7 +501,7 @@ In this example, `doSomething()` is hoisted into the global scope so that it sti
 One of the most interesting new parts of ECMAScript 6 are arrow functions. Arrow functions are, as the name suggests, functions defined with a new syntax that uses an "arrow" (`=>`). However, arrow functions behave differently than traditional JavaScript functions in a number of important ways:
 
 * **Lexical `this` binding** - The value of `this` inside of the function is determined by where the arrow function is defined not where it is used.
-* **Not `new`able** - Arrow functions cannot be used as constructors and will throw an error when used with `new`.
+* **Not `new`able** - Arrow functions do not have a `[[Construct]]` method and therefore cannot be used as constructors. Arrow functions throw an error when used with `new`.
 * **Can't change `this`** - The value of `this` inside of the function can't be changed, it remains the same value throughout the entire lifecycle of the function.
 * **No `arguments` object** - You can't access arguments through the `arguments` object, you must use named arguments or other ES6 features such as rest arguments.
 
@@ -709,5 +783,7 @@ Destructured parameters use the destructuring syntax to make options objects mor
 The spread operator is a companion to rest parameters, allowing you to destructure an array into separate parameters when calling a function. Prior to ECMAScript 6, the only ways to pass individual parameters that were contained in an array were either manually specifying each parameter or using `apply()`. With the spread operator, you can easily pass an array to any function without worrying about the `this` binding of the function.
 
 The addition of the `name` property helps to more easily identify functions for debugging and evaluation purposes. Additionally, ECMAScript 6 formally defines the behavior of block-level functions so they are no longer a syntax error in strict mode.
+
+The behavior of a function has been defined by `[[Call]]`, normal function execution, and `[[Construct]]`, when a function is called with `new`. The `new.target` metaproperty allows you to determine if a function was called using `new` or not.
 
 The biggest change to functions in ECMAScript 6 was the addition of arrow functions. Arrow functions are designed to be used in places where anonymous function expressions have traditionally been used. Arrow functions have a more concise syntax, lexical `this` binding, and no `arguments` object. Additionally, arrow functions can't change their `this` binding and so can't be used as constructors.
