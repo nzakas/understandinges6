@@ -82,7 +82,7 @@ let PersonType2 = (function() {
     function PersonType2(name) {
 
         // make sure the function was called with new
-        if ((!this instanceof PersonType2)) {
+        if (typeof new.target === "undefined") {
             throw new Error("Constructor must be called with new.");
         }
 
@@ -234,7 +234,7 @@ let CustomHTMLElement = (function() {
     function CustomHTMLElement(element) {
 
         // make sure the function was called with new
-        if ((!this instanceof CustomHTMLElement)) {
+        if (typeof new.target === "undefined") {
             throw new Error("Constructor must be called with new.");
         }
 
@@ -260,7 +260,55 @@ As with previous examples, this one shows just how much code you're saving by us
 
 ## Static Members
 
-TODO
+Another common pattern in JavaScript is adding addition methods directly onto constructors to simulate static members. For example:
+
+```js
+function PersonType(name) {
+    this.name = name;
+}
+
+// static method
+PersonType.create = function(name) {
+    return new PersonType(name);
+};
+
+// instance method
+PersonType.prototype.sayName = function() {
+    console.log(this.name);
+};
+
+var person = PersonType.create("Nicholas");
+```
+
+This code creates a factory method called `PersonType.create()`. In other programming languages, this would be considered a static method as it is not dependent on an instance of `PersonType` for its data.
+
+Classes simplify the creation of static members by using the formal `static` annotation before the method or accessor property name. Here's the equivalent of the last example:
+
+```js
+class PersonClass {
+
+    // equivalent of the PersonType constructor
+    constructor(name) {
+        this.name = name;
+    }
+
+    // equivalent of PersonType.prototype.sayName
+    sayName() {
+        console.log(this.name);
+    }
+
+    // equivalent of PersonType.create
+    static create(name) {
+        return new PersonClass(name);
+    }
+}
+
+let person = PersonClass.create("Nicholas");
+```
+
+The `PersonClass` definition defines a single static method called `create()` by adding the `static` keyword.
+
+You can use the `static` keyword on any method or accessor property definition within a class. The only restriction is that you cannot use `static` with the `constructor` method definition.
 
 ## Derived Classes
 
@@ -273,9 +321,6 @@ super() throws error in non-derived class constructors
 new.target
 
 TODO
-
-
-
 
 ## Summary
 
