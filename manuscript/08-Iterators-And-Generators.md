@@ -262,7 +262,7 @@ for (let x of collection) {
 // 3
 ```
 
-This code defines a default iterator for a variable called `collection` using object literal method shorthand and a computed property using `Symbol.iterator`. The generator then delegates to the `values()` iterator of `this.items`. The `for-of` loop then uses the generator to create an iterator and execute the loop.
+This code defines a default iterator for a variable called `collection` using object literal method shorthand and a computed property using `Symbol.iterator`. The generator then delegates to the `values()` iterator of `this.items` using the `yield *` notation, discussed later in this chapter. The `for-of` loop then uses the generator to create an iterator and execute the loop.
 
 You can also define a default iterator using classes, such as:
 
