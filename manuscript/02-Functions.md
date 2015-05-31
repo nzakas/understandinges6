@@ -394,7 +394,7 @@ var notAPerson = Person.call(person, "Michael");    // works!
 
 The call to `Person.call()` passes the `person` variable as the first argument, which means `this` is set to `person` inside of the `Person` function. To the function, there's no way to distinguish this from being called with `new`.
 
-To solve this problem, ECMAScript 6 introduces the `new.target` *metaproperty*. When a function's `[[Construct]]` method is called, `new.target` is filled with the newly created object instance that will become `this` inside the function body. If `[[Call]]` is executed, then `new.target` is `undefined`. That means you can now safely detect if a function is called with `new` by checking that `new.target` is defined:
+To solve this problem, ECMAScript 6 introduces the `new.target` *metaproperty*. When a function's `[[Construct]]` method is called, `new.target` is filled with the constructor of the newly created object instance that will become `this` inside the function body. If `[[Call]]` is executed, then `new.target` is `undefined`. That means you can now safely detect if a function is called with `new` by checking that `new.target` is defined:
 
 ```js
 function Person(name) {
