@@ -70,6 +70,7 @@ Despite the similarities, there are some important differences to keep in mind:
 1. All code inside of class declarations runs in strict mode automatically. There's no way to opt-out of strict mode inside of classes.
 1. All methods are non-enumerable. This is a significant change from custom types, where you need to use `Object.defineProperty()` to make a method non-enumerable.
 1. Calling the class constructor without `new` throws an error.
+1. Attempting to overwrite the class name within a class method throws an error.
 
 With all of this in mind, the `PersonClass` declaration from the previous example is directly equivalent to the following:
 
@@ -79,7 +80,7 @@ let PersonType2 = (function() {
 
     "use strict";
 
-    function PersonType2(name) {
+    const PersonType2 = function(name) {
 
         // make sure the function was called with new
         if (typeof new.target === "undefined") {
@@ -231,7 +232,7 @@ let CustomHTMLElement = (function() {
 
     "use strict";
 
-    function CustomHTMLElement(element) {
+    const CustomHTMLElement = function(element) {
 
         // make sure the function was called with new
         if (typeof new.target === "undefined") {
