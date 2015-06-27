@@ -394,7 +394,7 @@ var notAPerson = Person.call(person, "Michael");    // works!
 
 The call to `Person.call()` passes the `person` variable as the first argument, which means `this` is set to `person` inside of the `Person` function. To the function, there's no way to distinguish this from being called with `new`.
 
-To solve this problem, ECMAScript 6 introduces the `new.target` *metaproperty*. When a function's `[[Construct]]` method is called, `new.target` is filled with the constructor of the newly created object instance that will become `this` inside the function body. If `[[Call]]` is executed, then `new.target` is `undefined`. That means you can now safely detect if a function is called with `new` by checking that `new.target` is defined:
+To solve this problem, ECMAScript 6 introduces the `new.target` *metaproperty*. When a function's `[[Construct]]` method is called, `new.target` is filled with the target of the `new` operator, which is typically the constructor of the newly created object instance that will become `this` inside the function body. If `[[Call]]` is executed, then `new.target` is `undefined`. That means you can now safely detect if a function is called with `new` by checking that `new.target` is defined:
 
 ```js
 function Person(name) {
@@ -411,8 +411,28 @@ var notAPerson = Person.call(person, "Michael");    // error!
 
 By using `new.target` instead of `this instanceof Person`, the `Person` constructor is now correctly throwing an error when used without `new`.
 
-W> Using `new.target` outside of a function is a syntax error.
+You can also check that `new.target` was called with a specific constructor, for instance:
 
+```js
+function Person(name) {
+    if (typeof new.target === Person) {
+        this.name = name;   // using new
+    } else {
+        throw new Error("You must use new with Person.")
+    }
+}
+
+function AnotherPerson(name) {
+    Person.call(this, name);
+}
+
+var person = new Person("Nicholas");
+var anotherPerson = new AnotherPerson("Nicholas");  // error!
+```
+
+In this example, `new.target` must be `Person` in order to work correctly. When `new AnotherPerson("Nicholas")` is called, `new.target` is set to `AnotherPerson`, so the subsequent call to `Person.call(this, name)` will throw an error even though `new.target` is defined.
+
+W> Using `new.target` outside of a function is a syntax error.
 
 ## Block-Level Functions
 
