@@ -105,6 +105,23 @@ let PersonType2 = (function() {
 
 While it was possible to do everything that classes do without adding new syntax, you can see how the class syntax makes all of the functionality a lot simpler than it would be otherwise.
 
+A> ### Constant Class Names
+A>
+A> The name of a class is specified as if using `const`, but only inside of the class itself. That means you can overwrite the class name outside of the class but not inside a class method. For example:
+A>
+A> ```js
+A> class Foo {
+A>    constructor() {
+A>        Foo = "bar";    // throws an error when executed
+A>    }
+A> }
+A>
+A>// but this is okay
+A> Foo = "baz";
+A> ```
+A>
+A> In this code, the `Foo` inside of the class constructor is a separate binding than the `Foo` outside of the class. The internal `Foo` is defined as if it's a `const` and so cannot be overwritten, which means and error is thrown when an attempt is made to do so; the external `Foo` is defined as if it's a `let` declaration and so its value may be overwritten at any time.
+
 ## Class Expressions
 
 Classes and functions are similar in that they have two forms: declarations and expressions. Function and class declarations begin with an appropriate keyword (`function` or `class`, respectively) followed by an identifier. Functions have an expression form that doesn't require an identifier after `function`, and similarly, classes have an expression form that doesn't require an identifier after `class`.
