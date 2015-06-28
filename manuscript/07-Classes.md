@@ -328,15 +328,125 @@ The `PersonClass` definition defines a single static method called `create()` by
 
 You can use the `static` keyword on any method or accessor property definition within a class. The only restriction is that you cannot use `static` with the `constructor` method definition.
 
+
 ## Derived Classes
+
+Another problem with custom types in ECMAScript 5 and earlier was the extensive process necessary to implement inheritance. To properly inherit, you would need multiple steps. For instance:
+
+```js
+function Rectangle(length, width) {
+    this.length = length;
+    this.width = width;
+}
+
+Rectangle.prototype.getArea = function() {
+    return this.length * this.width;
+};
+
+function Square(length) {
+    Rectangle.call(this, length, length);
+}
+
+Square.prototype = Object.create(Rectangle.prototype, {
+    constructor: Square,
+    enumerable: true,
+    writable: true,
+    configurable: true
+});
+
+var square = new Square(3, 4);
+
+console.log(square.getArea());              // 12
+console.log(square instanceof Square);      // true
+console.log(square instanceof Rectangle);   // true
+```
+
+Here, `Square` inherits from `Rectangle`, and to do so, it must be overwrite `Square.prototype` with a new object created from `Rectangle.prototype` as well as call `Rectangle.call()`. These steps often confused newcomers to the language and were a source of errors for experienced developers.
+
+Derived classes use the `extends` keyword to specify the function from which the class should inherit. The prototypes are automatically adjusted and you can access the base class constructor using `super()`. Here's the equivalent of the previous example:
+
+```js
+class Rectangle {
+    constructor(length, width) {
+        this.length = length;
+        this.width = width;
+    }
+
+    getArea() {
+        return this.length * this.width;
+    }
+}
+
+class Square extends Rectangle {
+    constructor(length) {
+
+        // same as Rectangle.call(this, length, length)
+        super(length, length);
+    }
+}
+
+var square = new Square(3, 4);
+
+console.log(square.getArea());              // 12
+console.log(square instanceof Square);      // true
+console.log(square instanceof Rectangle);   // true
+```
+
+In this example, the `Square` class inherits from `Rectangle` using the `extends` keyword. The `Square` constructor uses `super()` to call the `Rectangle` constructor with the specified arguments. Note that unlike the ECMAScript 5 version of the code, the identifier `Rectangle` is only used within the class declaration (after `extends`).
+
+Using `super()` is a requirement of derived classes if you specify a constructor (if you don't, an error will occur). If you choose not to use a constructor, then `super()` is automatically called for you with all arguments upon creating a new instance of the class. For instance, the following two classes are identical:
+
+```js
+class Square extends Rectangle {
+    // no constructor
+}
+
+// Is equivalent to
+
+class Square extends Rectangle {
+    constructor(...args) {
+        super(...args);
+    }
+}
+```
+
+The second class in this example shows the equivalent of the default constructor for all derived classes. All of the arguments are passed, in order, to the base class constructor. In this case, the functionality isn't quite correct because the `Square` constructor needs only one argument and so it's best to manually define the constructor.
+
+W> There are a few things to keep in mind when using `super()`:
+W>
+W> 1. You can only use `super()` in a derived class. If you try to use it in a non-derived class (a class that doesn't use `extends`) or a function, it will throw an error.
+W> 1. You should call `super()` before accessing `this` in the constructor. Since `super()` may change `this` in some way, it's best to do that first.
+
+### Class Methods
+
+The methods on derived classes always shadow methods of the same on the base class.
+
+TODO
+
+## new.target
+
+In Chapter 2, you learned about `new.target` and how its value changes depending on how a function is called. You can also use `new.target` in class constructors to determine how the class is being invoked. In the simple case, `new.target` is equal to the constructor function for the class, as in this example:
+
+```js
+class Foo {
+    constructor() {
+        console.log(new.target === Foo);
+    }
+}
+
+var obj = new Foo();        // outputs true
+```
+
+TODO
+
+
+
 
 It's an error to try to subclass a generator function using a class declaration or class expression.
 
 class extends null {} is a derived class
 
 super() throws error in non-derived class constructors
-
-new.target
 
 TODO
 
