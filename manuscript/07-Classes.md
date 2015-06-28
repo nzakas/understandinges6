@@ -328,6 +328,7 @@ The `PersonClass` definition defines a single static method called `create()` by
 
 You can use the `static` keyword on any method or accessor property definition within a class. The only restriction is that you cannot use `static` with the `constructor` method definition.
 
+I> Just as with other class members, static members are not enumerable by default.
 
 ## Derived Classes
 
@@ -415,7 +416,8 @@ The second class in this example shows the equivalent of the default constructor
 W> There are a few things to keep in mind when using `super()`:
 W>
 W> 1. You can only use `super()` in a derived class. If you try to use it in a non-derived class (a class that doesn't use `extends`) or a function, it will throw an error.
-W> 1. You should call `super()` before accessing `this` in the constructor. Since `super()` may change `this` in some way, it's best to do that first.
+W> 1. You must call `super()` before accessing `this` in the constructor. Since `super()` is responsible for initializing `this`, attempting to access `this` before calling `super()` results in an error.
+W> 1. The only way to avoid calling `super()` is to return an object from the class constructor.
 
 ### Class Methods
 
@@ -450,6 +452,19 @@ class Square extends Rectangle {
 ```
 
 Using `super` in this way is the same as discussed in Chapter 3: the `this` value is automatically set correctly so you can make a simple method call.
+
+Another interesting aspect of class methods is that they are missing the `[[Construct]]` internal method and therefore cannot be used with `new`. For example:
+
+```js
+// throws an error
+var x = new Square.prototype.getArea();
+```
+
+Since class methods can't be called with `new`, you are prevented from accidentally calling these methods in a manner for which they were not intended.
+
+### Derived Classes from Expressions
+
+Perhaps the most powerful aspect of derived classes in ECMAScript 6 is the ability to derive a class from an expression. You can use `extends` with any expression
 
 ## new.target
 
