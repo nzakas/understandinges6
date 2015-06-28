@@ -464,34 +464,80 @@ Since class methods can't be called with `new`, you are prevented from accidenta
 
 ### Derived Classes from Expressions
 
-Perhaps the most powerful aspect of derived classes in ECMAScript 6 is the ability to derive a class from an expression. You can use `extends` with any expression
+Perhaps the most powerful aspect of derived classes in ECMAScript 6 is the ability to derive a class from an expression. You can use `extends` with any expression.
+
+It's an error to try to subclass a generator function using a class declaration or class expression.
+
+class extends null {} is a derived class
+
+TODO
 
 ## new.target
 
 In Chapter 2, you learned about `new.target` and how its value changes depending on how a function is called. You can also use `new.target` in class constructors to determine how the class is being invoked. In the simple case, `new.target` is equal to the constructor function for the class, as in this example:
 
 ```js
-class Foo {
-    constructor() {
-        console.log(new.target === Foo);
+class Rectangle {
+    constructor(length, width) {
+        console.log(new.target === Rectangle);
+        this.length = length;
+        this.width = width;
     }
 }
 
-var obj = new Foo();        // outputs true
+// new.target is Rectangle
+var obj = new Rectangle(3, 4);      // outputs true
 ```
 
-TODO
+In this code, you can see that `new.target` is equivalent to `Rectangle` when `new Rectangle(3, 4)` is called. Since class constructors cannot be called without `new`, `new.target` is always defined inside of class constructors. However, the value may not always be the same.
 
+```js
+class Rectangle {
+    constructor(length, width) {
+        console.log(new.target === Rectangle);
+        this.length = length;
+        this.width = width;
+    }
+}
 
+class Square extends Rectangle {
+    constructor(length) {
+        super(length, length)
+    }
+}
 
+// new.target is Square
+var obj = new Square(3);      // outputs false
+```
 
-It's an error to try to subclass a generator function using a class declaration or class expression.
+Here, `Square` is calling the `Rectangle` constructor, so `new.target` is equal to `Square` when the `Rectangle` constructor is called. This is important because it gives each constructor the ability to alter its behavior based on how it's being called. For instance, you can create an abstract base class (one that cannot be instantiated directly) by using `new.target`:
 
-class extends null {} is a derived class
+```js
+// abstract base class
+class Shape {
+    constructor() {
+        if (new.target === Shape) {
+            throw new Error("This class cannot be instantiated directly.")
+        }
+    }
+}
 
-super() throws error in non-derived class constructors
+class Rectangle extends Shape {
+    constructor(length, width) {
+        super();
+        this.length = length;
+        this.width = width;
+    }
+}
 
-TODO
+var x = new Shape();                // throws error
+
+var y = new Rectangle(3, 4);        // no error
+console.log(y instanceof Shape);    // true
+```
+
+In this example, the `Shape` class constructor throws an error whenever `new.target` is `Shape`, meaning that `new Shape()` always throws an error. However, you can still use it as a base class, which is what `Rectangle` does.
+
 
 ## Summary
 
