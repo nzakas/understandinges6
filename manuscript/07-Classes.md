@@ -419,9 +419,37 @@ W> 1. You should call `super()` before accessing `this` in the constructor. Sinc
 
 ### Class Methods
 
-The methods on derived classes always shadow methods of the same on the base class.
+The methods on derived classes always shadow methods of the same name on the base class. For instance, you can add `getArea()` to `Square` in order to redefine that functionality:
 
-TODO
+```js
+class Square extends Rectangle {
+    constructor(length) {
+        super(length, length);
+    }
+
+    // override and shadow Rectangle.prototype.getArea()
+    getArea() {
+        return this.length * this.length;
+    }
+}
+```
+
+In this code, `getArea()` is now defined as part of `Square` and therefore `Rectangle.prototype.getArea()` will no longer be called by any instances of `Square`. Of course, you can always decide to call the base class version of the method by using `super.getArea()`, such as:
+
+```js
+class Square extends Rectangle {
+    constructor(length) {
+        super(length, length);
+    }
+
+    // override, shadow, and call Rectangle.prototype.getArea()
+    getArea() {
+        return super.getArea();
+    }
+}
+```
+
+Using `super` in this way is the same as discussed in Chapter 3: the `this` value is automatically set correctly so you can make a simple method call.
 
 ## new.target
 
