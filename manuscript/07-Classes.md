@@ -349,10 +349,12 @@ function Square(length) {
 }
 
 Square.prototype = Object.create(Rectangle.prototype, {
-    constructor: Square,
-    enumerable: true,
-    writable: true,
-    configurable: true
+    constructor: {
+        value:Square,
+        enumerable: true,
+        writable: true,
+        configurable: true
+    }
 });
 
 var square = new Square(3);
@@ -579,6 +581,68 @@ W> * generator functions (chapter 8)
 W>
 W> In these cases, attempting to create a new instance of the class will throw an error because there is `[[Construct]]` to call.
 
+### Inheriting from Built-ins
+
+For almost as long as there have been JavaScript arrays, developers have wanted to inherit from arrays to create their own special array types. However, in ECMAScript 5 and earlier, this wasn't possible. Here's an example:
+
+```js
+// built-in array behavior
+var colors = [];
+colors[0] = "red";
+console.log(colors.length);         // 1
+
+colors.length = 0;
+console.log(colors[0]);             // undefined
+
+// trying to inherit from array in ES5
+
+function MyArray() {
+    Array.apply(this, arguments);
+}
+
+MyArray.prototype = Object.create(Array.prototype, {
+    constructor: {
+        value: MyArray,
+        writable: true,
+        configurable: true,
+        enumerable: true
+    }
+});
+
+var colors = new MyArray();
+colors[0] = "red";
+console.log(colors.length);         // 0
+
+colors.length = 0;
+console.log(colors[0]);             // "red"
+```
+
+As you can see, using the classical form of JavaScript inheritance results in unexpected behavior. The `length` and numeric properties don't behave the same as they built-in array because this functionality isn't covered either by `Array.apply()` or by assigning the prototype.
+
+One of the goals of ECMAScript 6 classes is to allow inheritance from all built-ins. In order to accomplish this, the inheritance model of classes is slightly different than the classical inheritance model found in ECMAScript 5 and earlier:
+
+* In ECMAScript 5 classical inheritance, the value of `this` is first created by the derived type (for example, `MyArray`) and then the base type constructor is called (`Array.apply()`). That means `this` starts out as an instance of `MyArray` and then is decorated with additional properties from `Array`.
+* In ECMAScript 6 class-based inheritance, the value of `this` is first created by the base (`Array`) and then modified by the derived class constructor (`MyArray`). The result is that `this` is starts out with all of the built-in functionality of the base and correctly receives all functionality related to it.
+
+The following class-based special array works as you would expect:
+
+```js
+class MyArray extends Array {
+    // ...
+}
+
+var colors = new MyArray();
+colors[0] = "red";
+console.log(colors.length);         // 1
+
+colors.length = 0;
+console.log(colors[0]);             // undefined
+```
+
+In this example, `MyArray` inherits directly from `Array` and therefore works in the exact same way. Interacting with numeric properties updates the `length` property, and manipulating the `length` property updates the numeric properties.
+
+This same approach can be used to inherit from any of the built-in JavaScript objects, with a full guarantee that it will work the same way as the built-ins.
+
 ## new.target
 
 In Chapter 2, you learned about `new.target` and how its value changes depending on how a function is called. You can also use `new.target` in class constructors to determine how the class is being invoked. In the simple case, `new.target` is equal to the constructor function for the class, as in this example:
@@ -644,7 +708,6 @@ console.log(y instanceof Shape);    // true
 ```
 
 In this example, the `Shape` class constructor throws an error whenever `new.target` is `Shape`, meaning that `new Shape()` always throws an error. However, you can still use it as a base class, which is what `Rectangle` does.
-
 
 ## Summary
 
