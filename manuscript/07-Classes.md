@@ -1,7 +1,5 @@
 # Classes
 
-W> This chapter is a work-in-progress. As such, it may have more typos or content errors than others.
-
 Ever since JavaScript was first created, many developers have been confused by its lack of classes. Most formal object-oriented programming languages support classes and classical inheritance as the primary way of defining similar and related objects. From pre-ECMAScript 1 all the way through ECMAScript 5, this point of confusion led many libraries to create utilities designed to make JavaScript look like it had support for classes.
 
 While there are some JavaScript developers who feel strongly that the language doesn't need classes, the fact that so many libraries were created specifically for this purpose led to the inclusion of classes in ECMAScript 6. However, ECMAScript 6 classes aren't exactly the same as classes in other language. There's a uniqueness about them that embraces the dynamic of JavaScript as a language.
@@ -22,7 +20,7 @@ PersonType.prototype.sayName = function() {
 let person = new PersonType("Nicholas");
 person.sayName();   // outputs "Nicholas"
 
-console.log(person instanceof PersonType);      // true
+console.log(person instanceof PersonType);  // true
 console.log(person instanceof Object);      // true
 ```
 
@@ -711,4 +709,12 @@ In this example, the `Shape` class constructor throws an error whenever `new.tar
 
 ## Summary
 
-TODO
+For those who have struggled to understand JavaScript in the absence of classes, ECMAScript 6 classes provide an easier way to become acclimated with the language without needing to completely throw away their understanding of inheritance. ECMAScript 6 classes start out as syntatic sugar for the classical inheritance model of ECMAScript 5, but adds a lot of features to reduce mistakes.
+
+ECMAScript 6 classes work with prototypal inheritance by defining non-static methods on the class prototype while static methods end up on the constructor itself. All methods are non-enumerable, which better matches the behavior of built-in objects for which methods are typically not enumerable by default. Additionally, class constructors cannot be called without `new`, ensuring that you can't accidentally call a class as a function.
+
+Class-based inheritance allows you to derive a class from another class, function, or expression. This ability means you can call function to determine the correct base to inherit from, allowing you to use mixins and other different composition patterns to create a new class. Inheritance works in such a way that inheriting from built-in objects, such as `Array`, is now possible and works as expected.
+
+You can use `new.target` in class constructors to behave differently depending on how the class is called. The most common use is to create an abstract base class that throws an error when instantiated directly but still allows inheritance via other classes.
+
+Overall, classes are an important addition to the language that provides a more concise syntax and better functionality for defining custom object types in a safe, consistent manner.
