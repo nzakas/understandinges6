@@ -355,9 +355,9 @@ Square.prototype = Object.create(Rectangle.prototype, {
     configurable: true
 });
 
-var square = new Square(3, 4);
+var square = new Square(3);
 
-console.log(square.getArea());              // 12
+console.log(square.getArea());              // 9
 console.log(square instanceof Square);      // true
 console.log(square instanceof Rectangle);   // true
 ```
@@ -386,9 +386,9 @@ class Square extends Rectangle {
     }
 }
 
-var square = new Square(3, 4);
+var square = new Square(3);
 
-console.log(square.getArea());              // 12
+console.log(square.getArea());              // 9
 console.log(square instanceof Square);      // true
 console.log(square instanceof Rectangle);   // true
 ```
@@ -482,13 +482,102 @@ This example is equivalent to the previous. The only difference is that a comput
 
 ### Derived Classes from Expressions
 
-Perhaps the most powerful aspect of derived classes in ECMAScript 6 is the ability to derive a class from an expression. You can use `extends` with any expression.
+Perhaps the most powerful aspect of derived classes in ECMAScript 6 is the ability to derive a class from an expression. You can use `extends` with any expression, and if the expression resolves to a function with `[[Construct]]` and a prototype, the class will work. For example:
 
-It's an error to try to subclass a generator function using a class declaration or class expression.
+```js
+function Rectangle(length, width) {
+    this.length = length;
+    this.width = width;
+}
 
-class extends null {} is a derived class
+Rectangle.prototype.getArea = function() {
+    return this.length * this.width;
+};
 
-TODO
+class Square extends Rectangle {
+    constructor(length) {
+        super(length, length);
+    }
+}
+
+var x = new Square(3);
+console.log(x.getArea());               // 9
+console.log(x instanceof Rectangle);    // true
+```
+
+This example defines `Rectangle` as an ECMAScript 5-style constructor while `Square` is a class. Since `Rectangle` has `[[Construct]]` and a prototype, the class can still inherit directly from it.
+
+Accepting any type of expression after `extends` allows for some powerful possibilities, such as dynamically determining what to inherit from. For example:
+
+```js
+function Rectangle(length, width) {
+    this.length = length;
+    this.width = width;
+}
+
+Rectangle.prototype.getArea = function() {
+    return this.length * this.width;
+};
+
+function getBase() {
+    return Rectangle;
+}
+
+class Square extends getBase() {
+    constructor(length) {
+        super(length, length);
+    }
+}
+
+var x = new Square(3);
+console.log(x.getArea());               // 9
+console.log(x instanceof Rectangle);    // true
+```
+
+Here, the `getBase()` function is called directly as part of the class declaration. It returns `Rectangle`, which means this example is functionally equivalent to the previous one. And since you can determine the base dynamically, that means it's possible to create different inheritance approaches. For instance, you can effectively create mixins:
+
+```js
+let SerializableMixin = {
+    serialize() {
+        return JSON.stringify(this);
+    }
+};
+
+let AreaMixin = {
+    getArea() {
+        return this.length * this.width;
+    }
+};
+
+function mixin(...mixins) {
+    var base = function() {};
+    Object.assign(base.prototype, ...mixins);
+    return base;
+}
+
+class Square extends mixin(AreaMixin, SerializableMixin) {
+    constructor(length) {
+        super();
+        this.length = length;
+        this.width = length;
+    }
+}
+
+var x = new Square(3);
+console.log(x.getArea());               // 9
+console.log(x.serialize());             // "{"length":3,"width":3}"
+```
+
+In this example, mixins are used instead of classical inheritance. The `mixin()` function takes any number of arguments that represent mixin objects. It creates a function called `base` and assigns the properties of each mixin object to the prototype. The function is then returned so `Square` can use `extends`. Keep in mind that since `extends` is still used, you are required to call `super()` in the constructor.
+
+The instance of `Square` has both `getArea()` from `AreaMixin` and `serialize` from `SerializableMixin`. This is accomplished through prototypal inheritance, as the `mixin()` function dynamically populates the prototype of a new function with all of the own properties of each mixin.
+
+W> Even though any expression can be used after `extends`, not all expressions result in a valid class. Specifically, the following expression types causes errors:
+W>
+W> * `null`
+W> * generator functions (chapter 8)
+W>
+W> In these cases, attempting to create a new instance of the class will throw an error because there is `[[Construct]]` to call.
 
 ## new.target
 
