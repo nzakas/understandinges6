@@ -462,6 +462,24 @@ var x = new Square.prototype.getArea();
 
 Since class methods can't be called with `new`, you are prevented from accidentally calling these methods in a manner for which they were not intended.
 
+Class methods can have computed names, just like computed names in object literals, by using square brackets around an expression. Here's an example:
+
+```js
+let methodName = "getArea";
+class Square extends Rectangle {
+    constructor(length) {
+        super(length, length);
+    }
+
+    // override, shadow, and call Rectangle.prototype.getArea()
+    [methodName]() {
+        return super.getArea();
+    }
+}
+```
+
+This example is equivalent to the previous. The only difference is that a computed name is used for the `getArea()` method.
+
 ### Derived Classes from Expressions
 
 Perhaps the most powerful aspect of derived classes in ECMAScript 6 is the ability to derive a class from an expression. You can use `extends` with any expression.
