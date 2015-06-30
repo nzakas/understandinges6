@@ -119,3 +119,33 @@ console.log(example.multiply(1, 2));    // 2
 ```
 
 In this code, the entirety of the example module is loaded into an object called `example`. The named exports `sum()`, `multiple()`, and `magicNumber` are then accessible as properties on `example`.
+
+## Renaming Exports and Imports
+
+Sometimes the original name of a variable, function, or class isn't what you want to use. It's possible to change the name of an export both during the export and when the identifier is being imported.
+
+In the first case, suppose you have a function that you'd like to export with a different name. You can use the `as` keyword to specify the name that the function should be known as outside of the module:
+
+```js
+function sum(num1, num2) {
+    return num1 + num2;
+}
+
+export { sum as add };
+```
+
+Here, the `sum()` function is exported under the `add()`. That means when another module wants to import this function, it will have to use the name `add` instead:
+
+```js
+import { add } from "example";
+```
+
+If the module importing the function wants to use a different name, it can also use `as`:
+
+```js
+import { add as sum } from "example";
+console.log(typeof add);            // "undefined"
+console.log(sum(1, 2));             // 3
+```
+
+This code imports the `add()` function and renames it to `sum()`. That means there is no identifier named `add` in this module.
