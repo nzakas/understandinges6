@@ -134,7 +134,7 @@ function sum(num1, num2) {
 export { sum as add };
 ```
 
-Here, the `sum()` function is exported under the `add()`. That means when another module wants to import this function, it will have to use the name `add` instead:
+Here, the `sum()` function (`sum` is the *local name*) is exported as `add()` (`add` is the *exported name*). That means when another module wants to import this function, it will have to use the name `add` instead:
 
 ```js
 import { add } from "example";
@@ -148,4 +148,54 @@ console.log(typeof add);            // "undefined"
 console.log(sum(1, 2));             // 3
 ```
 
-This code imports the `add()` function and renames it to `sum()`. That means there is no identifier named `add` in this module.
+This code imports the `add()` function (the *import name*) and renames it to `sum()` (the local name). That means there is no identifier named `add` in this module.
+
+## Exporting and Importing Defaults
+
+The module syntax is really optimized for exporting and importing default values from modules. The default value for a module is a single variable, function, or class as specified by the `default` keyword. For example:
+
+```js
+export default function(num1, num2) {
+    return num1 + num2;
+}
+```
+
+This module exports a function as the default. The `default` keyword indicates that this is a default export and the function doesn't require a name because the module itself represents the function.
+
+W> You can only have one default export per module. It is a syntax error to use the `default` keyword with multiple exports.
+
+You can import a default value from a module using the following syntax:
+
+```js
+// import the default
+import sum from "example";
+
+console.log(sum(1, 2));     // 3
+```
+
+This import statement imports the default from the module `"example"`. Note that there are no curly braces used in this case, as would be with a non-default export. The local name `sum` is used to represent the function that the module exports. This syntax is the cleanest as it's anticipated to be the dominant form of import on the web, allowing you to use already-existing object, such as:
+
+```js
+import $ from "jquery";
+```
+
+For modules that export both a default and one or more non-defaults, you can import them with one statment. For instance, suppose you have this module:
+
+```js
+export let color = "red";
+
+export default function(num1, num2) {
+    return num1 + num2;
+}
+```
+
+You can then import both `color` and the default function using the following:
+
+```js
+import sum, { color } from "example";
+
+console.log(sum(1, 2));     // 3
+console.log(color);         // "red"
+```
+
+The comma separates the default local name from the non-defaults (which are also surrounded by curly braces).
