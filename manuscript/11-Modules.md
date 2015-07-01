@@ -1,12 +1,10 @@
 # Modules
 
-W> This chapter is a work-in-progress. As such, it may have more typos or content errors than others.
-
 One of the most error-prone and confusing aspects of JavaScript has long been the "shared everything" approach to loading code. Whereas other languages have concepts such as packages, JavaScript lagged behind, and everything defined in every file shared the same global scope. As web applications became more complex and the amount of JavaScript used grew, the "shared everything" approach began to show problems with naming collisions, security concerns, and more. One of the goals of ECMAScript 6 was to solve this problem and bring some order into JavaScript applications. That's where modules come in.
 
 ## What are Modules?
 
-Modules are JavaScript files that are loaded in a special module mode. At the time of my writing, neither browsers nor Node.js have a way to natively load ECMAScript 6 modules, but both have indicated that there will need to be some sort of opt-in to do so. The reason this opt-in is necessary is because module files have very different semantics than non-module files:
+*Modules* are JavaScript files that are loaded in a special mode (as opposed to *scripts*, which are loaded in the original way JavaScript worked). At the time of my writing, neither browsers nor Node.js have a way to natively load ECMAScript 6 modules, but both have indicated that there will need to be some sort of opt-in to do so. The reason this opt-in is necessary is because module files have very different semantics than non-module files:
 
 1. Module code automatically runs in strict mode and there's no way to opt-out of strict mode.
 1. Variables created in the top level of a module are not automatically added to the shared global scope. They exist only within the top-level scope of the module.
@@ -162,6 +160,19 @@ export default function(num1, num2) {
 
 This module exports a function as the default. The `default` keyword indicates that this is a default export and the function doesn't require a name because the module itself represents the function.
 
+You can also specify an identifier as being the default export using the renaming syntax, such as:
+
+```js
+// equivalent to previous example
+function sum(num1, num2) {
+    return num1 + num2;
+}
+
+export { sum as default };
+```
+
+The `as default` specifies that `sum` should be the default export of the module. This syntax is equivalent to the previous example.
+
 W> You can only have one default export per module. It is a syntax error to use the `default` keyword with multiple exports.
 
 You can import a default value from a module using the following syntax:
@@ -199,3 +210,89 @@ console.log(color);         // "red"
 ```
 
 The comma separates the default local name from the non-defaults (which are also surrounded by curly braces).
+
+As with exporting defaults, importing defaults can also be accomplished using the renaming syntax:
+
+```js
+// equivalent to previous example
+import { default as sum, color } from "example";
+
+console.log(sum(1, 2));     // 3
+console.log(color);         // "red"
+```
+
+In this code, the default export (`default`) is renamed to `sum` and the additional `color` export is also imported. This example is equivalent to the previous example.
+
+## Re-exporting
+
+There may be a time when you'd like to re-export something that your module has imported. You can do this using the patterns already discussed in this chapter, such as:
+
+```js
+import { sum } from "example";
+export { sum }
+```
+
+However, there's also a single statement that can accomplish the same thing:
+
+```js
+export { sum } from "example";
+```
+
+This form of `export` looks into the specified module for the declaration of `sum` and then exports it. Of course, you can also choose to export a different name for the same thing:
+
+```js
+export { sum as add } from "example";
+```
+
+Here, `sum` is imported from `"example"` and then exported as `add`.
+
+If you'd like to export everything from another module, you can use the `*` pattern:
+
+```js
+export * from "example";
+```
+
+By exporting everything, you're including the default as well as any named exports, which may affect what you can export from your module. For instance, if `"example"` has a default export, you'll be unable to define a new default export when using this syntax.
+
+## Importing Without Bindings
+
+Some modules may not export anything, and instead, only make modifications to objects in the global scope. Even though top-level variables, functions, and classes inside of modules do not automatically end up in the global scope, that doesn't mean modules cannot access the global scope. The shared definitions of built-in objects such as `Array` and `Object` are accessible inside of a module and changes to those objects will be reflected in other modules.
+
+For instance, suppose you want to add a method to all arrays called `pushAll()`, you may define a module like this:
+
+```js
+// module code without exports or imports
+Array.prototype.pushAll = function(items) {
+
+    // items must be an array
+    if (!Array.isArray(items)) {
+        throw new TypeError("Argument must be an array.");
+    }
+
+    // use built-in push() and spread operator
+    return this.push(...items);
+};
+```
+
+This is a valid module even though there are no exports or imports. This code can be used both as a module and a script. Since it doesn't export anything, you can use a simplified import to execute the module code without importing any bindings:
+
+```js
+import from "example";
+
+let colors = ["red", "green", "blue"];
+let items = [];
+
+items.pushAll(colors);
+```
+
+In this example, the module is imported and executed, so `pushAll()` is added to the array prototype. That means `pushAll()` is now available for use on all arrays inside of this module.
+
+I> Imports without bindings are most likely to be used to create polyfills and shims.
+
+## Summary
+
+ECMAScript 6 adds modules to the language as a way to package up and encapsulate functionality. Modules behave differently than scripts, as they do not modify the global scope with their top-level variables, functions, and classes, and `this` is `undefined`. In order to work differently than scripts, modules must be loaded using a different mode.
+
+You must export any functionality you'd like to make available to consumers of a module. Variables, functions, and classes can all be exported, and there is also one default export allowed per module. After exporting, another module can import all or some of the exported names. These names act as if defined by `let`, and so operate as block bindings that cannot be redeclared in the same module.
+
+Modules need not export anything if they are manipulating something in the global scope. In that case, it's possible to import from such a module without introducing any bindings into the module scope.
