@@ -45,6 +45,18 @@ Ever since the first version of JavaScript, developers have longed for a way to 
 ```js
 let message = "Multiline \
 string";
+
+console.log(message);       // "Multiline string"
+```
+
+Note that the string has no newlines present when output, that's because the backslash is treated as a continuation rather than a newline. In order to have a newline at that point, you would need to manually include it, such as:
+
+```js
+let message = "Multiline \n\
+string";
+
+console.log(message);       // "Multiline
+                            //  string"
 ```
 
 Despite this working in all major JavaScript engines, the behavior was defined as a bug and many recommended avoiding its usage.
@@ -55,9 +67,9 @@ Other attempts to create multiline strings usually relied on arrays or string co
 let message = [
     "Multiline ",
     "string"
-].join("");
+].join("\n");
 
-let message = "Multiline " +
+let message = "Multiline \n" +
     "string";
 ```
 
