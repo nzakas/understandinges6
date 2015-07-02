@@ -102,62 +102,62 @@ Here, if the last argument isn't provided, the function `getCallback()` is calle
 Since JavaScript functions can be passed any number of parameters, it's not always necessary to define each parameter specifically. Early on, JavaScript provided the `arguments` object as a way of inspecting all function parameters that were passed without necessarily defining each one individually. While that worked fine in most cases, it can become a little cumbersome to work with. For example:
 
 ```js
-function sum(first) {
-    let result = first,
-        i = 1,
-        len = arguments.length;
+function pick(object) {
+    let result = Object.create(null);
 
-    while (i < len) {
-        result += arguments[i];
-        i++;
+    for (let i = 1, len = arguments.length; i < len; i++) {
+        result[arguments[i]] = object[arguments[i]];
     }
 
     return result;
 }
+
+let book = {
+    title: "Understanding ECMAScript 6",
+    author: "Nicholas C. Zakas",
+    year: 2015
+};
+
+let bookData = pick(book, "author", "year");
+
+console.log(bookData.author);   // "Nicholas C. Zakas"
+console.log(bookData.year);     // 2015
 ```
 
-This function adds together all of the parameters that are passed to it so you can call `sum(1)` or `sum(1,2,3,4)` and it will still work. There are couple of things to notice about this function. First, it's not at all obvious that the function is capable of handling more than one parameter. You could add in several more named parameters, but you would always fall short of indicating that this function can take any number of parameters. Second, because the first parameter is named and used directly, you have to start looking in the `arguments` object at index 1 instead of starting at index 0. Remembering to use the appropriate indices with `arguments` isn't necessarily difficult, but it's one more thing to keep track of. ECMAScript 6 introduces rest parameters to help with these issues.
+This function mimics the `pick()` method from Underscore. The first argument is the object from which to copy properties and every other argument is the name of a property that should be copied on the result. There are couple of things to notice about this function. First, it's not at all obvious that the function is capable of handling more than one parameter. You could add in several more named parameters, but you would always fall short of indicating that this function can take any number of parameters. Second, because the first parameter is named and used directly, you have to start looking in the `arguments` object at index 1 instead of starting at index 0. Remembering to use the appropriate indices with `arguments` isn't necessarily difficult, but it's one more thing to keep track of. ECMAScript 6 introduces rest parameters to help with these issues.
 
 Rest parameters are indicated by three dots (`...`) preceding a named parameter. That named parameter then becomes an `Array` containing the rest of the parameters (which is why these are called "rest" parameters). For example, `sum()` can be rewritten using rest parameters like this:
 
 ```js
-function sum(first, ...numbers) {
-    let result = first,
-        i = 0,
-        len = numbers.length;
+function pick(object, ...keys) {
+    let result = Object.create(null);
 
-    while (i < len) {
-        result += numbers[i];
-        i++;
+    for (let i = 0, len = keys.length; i < len; i++) {
+        result[keys[i]] = object[keys[i]];
     }
 
     return result;
 }
 ```
 
-In this version of the function, `numbers` is a rest parameter that contains all parameters after the first one (unlike `arguments`, which contains all parameters including the first one). That means you can iterate over `numbers` from beginning to end without worry. As a bonus, you can tell by looking at the function that it is capable of handling any number of parameters.
-
-I> The `sum()` method doesn't actually need any named parameters. You could, in theory, use only rest parameters and have it continue to work exactly the same. However, in that case, the rest parameters would effectively be the same as `arguments`, so the only benefit you gain is that the rest parameters would be an actual array, as opposed to `arguments`, which is just an array-like object.
+In this version of the function, `keys` is a rest parameter that contains all parameters after the first one (unlike `arguments`, which contains all parameters including the first one). That means you can iterate over `keys` from beginning to end without worry. As a bonus, you can tell by looking at the function that it is capable of handling any number of parameters.
 
 The only restriction on rest parameters is that no other named arguments can follow in the function declaration. For example, this causes syntax error:
 
 ```js
 // Syntax error: Can't have a named parameter after rest parameters
-function sum(first, ...numbers, last) {
-    let result = first,
-        i = 0,
-        len = numbers.length;
+function pick(object, ...keys, last) {
+    let result = Object.create(null);
 
-    while (i < len) {
-        result += numbers[i];
-        i++;
+    for (let i = 0, len = keys.length; i < len; i++) {
+        result[keys[i]] = object[keys[i]];
     }
 
     return result;
 }
 ```
 
-Here, the parameter `last` follows the rest parameter `numbers` and causes a syntax error.
+Here, the parameter `last` follows the rest parameter `keys` and causes a syntax error.
 
 Rest parameters were designed to replace `arguments` in ECMAScript. Originally ECMAScript 4 did away with `arguments` and added rest parameters to allow for an unlimited number of arguments to be passed to functions. Even though ECMAScript 4 never came into being, the idea was kept around and reintroduced in ECMAScript 6 despite `arguments` not being removed from the language.
 
