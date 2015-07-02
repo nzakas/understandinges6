@@ -620,7 +620,7 @@ Wrapping the object literal in parentheses signals that the braces are an object
 A popular use of functions in JavaScript is immediately-invoked function expressions (IIFEs). IIFEs allow you to define an anonymous function and call it immediately without saving a reference. This pattern comes in handy when you want to create a scope that is shielded from the rest of a program. For example:
 
 ```js
-let person = (function(name) {
+let person = function(name) {
 
     return {
         getName() {
@@ -628,7 +628,7 @@ let person = (function(name) {
         }
     };
 
-}("Nicholas"));
+}("Nicholas");
 
 console.log(person.getName());      // "Nicholas"
 ```
@@ -651,7 +651,7 @@ let person = ((name) => {
 console.log(person.getName());      // "Nicholas"
 ```
 
-Note that the location of the parentheses in this example is different from the previous. The previous example using the `function` keyword wraps parentheses around the entire expression, including passing the argument `"Nicholas"` to the function. This example has the parentheses around just the arrow function and then passes the argument.
+Note that the location of the parentheses is around just the arrow function definition, and does not include `("Nicholas")`. This is different from a formal function, where the parentheses can be placed outside of the passed-in parameters as well as just as around the function definition.
 
 ### Lexical this Binding
 
