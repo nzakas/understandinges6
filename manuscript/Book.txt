@@ -5,4 +5,5 @@
 04-Symbols.md
 07-Classes.md
 08-Iterators-And-Generators.md
+11-Modules.md
 12-Template-Strings.md
