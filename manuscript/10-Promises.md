@@ -180,6 +180,8 @@ promise.then(null, function(err) {
 
 The intent is to use a combination of `then()` and `catch()` to properly handle the result of asynchronous operations. The benefit of this over both events and callbacks is that it's completely clear whether the operation succeeded or failed. (Events tend not to fire when there's an error and in callbacks you must always remember to check the error argument.)
 
+W> If you don't attach a rejection handler to a promise, all failures happen silently. It's a good idea to always attach a rejection handler even if it just logs the failure.
+
 ### Creating Promises
 
 New promises are created through the `Promise` constructor. This constructor accepts a single argument, which is a function (called the *executor*) containing the code to execute when the promise is added to the job queue. The executor is passed two functions as arguments, `resolve()` and `reject()`. The `resolve()` function is called when the executor has finished successfully in order to signal that the promise is ready to be resolved while the `reject()` function indicates that the executor has failed. Here's an example using a promise in Node.js to implement the `readFile()` function from earlier in this chapter:
@@ -285,3 +287,38 @@ Resolved
 ```
 
 The fulfillment and rejection handlers are always added to the end of the job queue after the executor has completed.
+
+### Executor Errors
+
+If an error is thrown inside of an executor, then the promise's rejection handler is called. For example:
+
+```js
+let promise = new Promise(function(resolve, reject) {
+    throw new Error("Explosion!");
+});
+
+promise.catch(function(error) {
+    console.log(error.message);     // "Explosion!"
+});
+```
+
+In this code, the executor intentionally throws an error. There is an implicit `try-catch` inside of every executor such that the error is caught and then passed to the rejection handler. In effect, the previous example is equivalent to:
+
+```js
+// equivalent of previous example
+let promise = new Promise(function(resolve, reject) {
+    try {
+        throw new Error("Explosion!");
+    } catch (ex) {
+        reject(ex);
+    }
+});
+
+promise.catch(function(error) {
+    console.log(error.message);     // "Explosion!"
+});
+```
+
+The executor handles catching any thrown errors in order to simplify this common use case.
+
+
