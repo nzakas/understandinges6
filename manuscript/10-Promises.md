@@ -19,7 +19,7 @@ Because JavaScript engines can only execute one piece of code at a time, it's ne
 When a user clicks a button or presses key on the keyboard, an *event* is triggered (such as `onclick`). That event may be used to respond to the interaction by adding a new job to the back of the job queue. This is the most basic form of asynchronous programming JavaScript has: the event handler code doesn't execute until the event fires, and when it does execute, it has the appropriate context. For example:
 
 ```js
-var button = document.getElementById("my-btn");
+let button = document.getElementById("my-btn");
 button.onclick = function(event) {
     console.log("Clicked");
 };
@@ -117,7 +117,7 @@ A promise is a placeholder for the result of an asynchronous operation. Instead 
 
 ```js
 // readFile promises to complete at some point in the future
-var promise = readFile("example.txt");
+let promise = readFile("example.txt");
 ```
 
 In this code, `readFile()` doesn't actually start reading the file immediately (that will happen later). It returns a promise object that represents the asynchronous operation so you can work with it later.
@@ -138,7 +138,7 @@ The `then()` method is present on all promises and takes two arguments (any obje
 Both arguments are optional, so you can listen for any combination of fulfillment and rejection. For example:
 
 ```js
-var promise = readFile("example.txt");
+let promise = readFile("example.txt");
 
 // listen for both fulfillment and rejection
 promise.then(function(contents) {
@@ -187,7 +187,7 @@ New promises are created through the `Promise` constructor. This constructor acc
 ```js
 // Node.js example
 
-var fs = require("fs");
+let fs = require("fs");
 
 function readFile(filename) {
     return new Promise(function(resolve, reject) {
@@ -208,7 +208,7 @@ function readFile(filename) {
     });
 }
 
-var promise = readFile("example.txt");
+let promise = readFile("example.txt");
 
 // listen for both fulfillment and rejection
 promise.then(function(contents) {
@@ -246,7 +246,7 @@ You can tell from the output that the function passed to `setTimeout()` was exec
 The promise executor is added to the job queue immediately, meaning it will execute only after all previous jobs are complete. For example:
 
 ```js
-var promise = new Promise(function(resolve, reject) {
+let promise = new Promise(function(resolve, reject) {
     console.log("Promise");
     resolve();
 });
@@ -264,7 +264,7 @@ Promise
 The takeaway is that the executor doesn't run until sometime after the current job has finished executing. The same is true for the functions passed to `then()` and `catch()`, as these will also be added to the job queue, but only after the executor job. Here's an example:
 
 ```js
-var promise = new Promise(function(resolve, reject) {
+let promise = new Promise(function(resolve, reject) {
     console.log("Promise");
     resolve();
 });
