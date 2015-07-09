@@ -321,4 +321,47 @@ promise.catch(function(error) {
 
 The executor handles catching any thrown errors in order to simplify this common use case.
 
+## Chaining Promises
 
+To this point, promises may seem like little more than an incremental improvement over using some combination of a callback and `setTimeout()`, but there is much more to promises than meets the eye. More specifically, there are a number of ways to chain promises together to accomplish more complex asynchronous behavior.
+
+Each call to `then()` or `catch()` actually creates and returns another promise. This second promise is resolved only once the first has been fulfilled or rejected. For example:
+
+```js
+let p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+p1.then(function(value) {
+    console.log(value);
+}).then(function() {
+    console.log("Finished");
+});
+```
+
+The output from this example is:
+
+```
+42
+Finished
+```
+
+The call to `p1.then()` returns a second promise on which `then()` is called. The second `then()` fulfillment handler is only called after the first promise has been resolved. If you unchain this example, it looks like this:
+
+```js
+let p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+// same as
+
+let p2 = p1.then(function(value) {
+    console.log(value);
+})
+
+p2.then(function() {
+    console.log("Finished");
+});
+```
+
+As you might have guessed, `p2.then()` also returns a promise, but it's not used in this example.
