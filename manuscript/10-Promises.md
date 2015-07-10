@@ -365,3 +365,91 @@ p2.then(function() {
 ```
 
 As you might have guessed, `p2.then()` also returns a promise, but it's not used in this example.
+
+### Catching Errors
+
+Promise chaining allows you to catch errors that may occur in a fulfillment or rejection handler from a previous promise. For example:
+
+```js
+let p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+p1.then(function(value) {
+    throw new Error("Boom!");
+}).catch(function(error) {
+    console.log(error.message);     // "Boom!"
+});
+```
+
+In this example, the fulfillment handler for `p1` throws an error. The chained call to `catch()`, which is on a second promise, is able to receive that error through its rejection handler. The same is true if a rejection handler throws an error:
+
+```js
+let p1 = new Promise(function(resolve, reject) {
+    throw new Error("Explosion!");
+});
+
+p1.catch(function(error) {
+    console.log(error.message);     // "Explosion!"
+    throw new Error("Boom!");
+}).catch(function(error) {
+    console.log(error.message);     // "Boom!"
+});
+```
+
+Here, the executor throws an error than triggers `p1`'s rejection handler. That handler then throws another error that is caught by the second promise's rejection handler. In this way, chained promise calls can be made aware of errors in other promises in the chain.
+
+I> It's recommended to always have a rejection handler at the end of a promise chain to ensure that you can properly handle any errors that may occur.
+
+### Passing Values in Promise Chains
+
+Another important aspect of promise chains is the ability to pass data from one promise to the next. You've already seen that a value passed to the `resolve()` handler inside an executor is passed to the fulfillment handler for that promise. You can continue passing data along by specifying a return value from the fulfillment handler. For example:
+
+```js
+let p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+p1.then(function(value) {
+    console.log(value);         // "42"
+    return value + 1;
+}).then(function(value) {
+    console.log(value);         // "43"
+});
+```
+
+In this example, the fulfillment handler for `p1` returns a value (`value + 1`). Since `value` is 42 (from the executor) then the fulfillment handler returns 43. That value is then passed to the fulfillment handler of the second promise that can output it to the console.
+
+The same thing is possible using the rejection handler. When a rejection handler is called, it has the option of return a value. That value is then used to fulfill the next promise in the chain. For example:
+
+```js
+let p1 = new Promise(function(resolve, reject) {
+    reject(42);
+});
+
+p1.catch(function(value) {
+    console.log(value);         // "42"
+    return value + 1;
+}).then(function(value) {
+    console.log(value);         // "43"
+});
+```
+
+Here, the executor calls `reject()` with 42. That value is passed into the rejection handler for the promise, where `value + 1` is returned. Even though this return value is coming from a rejection handler, it is still used in the fulfillment handler of the next promise in the chain. This allows for the failure of one promise to allow recovery of the entire chain if necessary.
+
+Unlike the fulfillment handler, if the rejection handler doesn't return a value then the other promises down the chain are never called. For example:
+
+```js
+let p1 = new Promise(function(resolve, reject) {
+    reject(42);
+});
+
+p1.catch(function(value) {
+    console.log(value);         // "42"
+}).then(function(value) {
+    console.log(value);         // Never called
+});
+```
+
+In this version of the code, the second `console.log(value)` is never executed because the upstream rejection handler didn't return a value. At that point, the promise chain is broken.
+
