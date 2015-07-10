@@ -200,7 +200,7 @@ promise.then(function(contents) {
 
 In this example, the fulfillment handler adds another fulfillment handler to the same promise.The promise is already fulfilled at this point, so the new fulfillment handler is added to the job queue and called when ready. Rejection handlers work the same way in that they can be added at any point and are guaranteed to be called.
 
-### Creating Promises
+### Creating Unsettled Promises
 
 New promises are created through the `Promise` constructor. This constructor accepts a single argument, which is a function (called the *executor*) containing the code to execute when the promise is added to the job queue. The executor is passed two functions as arguments, `resolve()` and `reject()`. The `resolve()` function is called when the executor has finished successfully in order to signal that the promise is ready to be resolved while the `reject()` function indicates that the executor has failed. Here's an example using a promise in Node.js to implement the `readFile()` function from earlier in this chapter:
 
@@ -305,6 +305,34 @@ Resolved
 ```
 
 The fulfillment and rejection handlers are always added to the end of the job queue after the executor has completed.
+
+### Creating Settled Promises
+
+The `Promise` constructor is the best way to create unsettled promises due to the dynamic nature of what the promise executor does. However, if you want a promise to represent just a single known value, then it doesn't make sense to go through the work of scheduling a job that simply passes a value to `resolve()`. Instead, there are two methods that create settled promises given a specific value.
+
+The `Promise.resolve()` method accepts a single argument and returns a promise in the fulfilled state. That means there is no job scheduling that occurs and you need to add one or more fulfillment handlers to the promise to retrieve the value. For example:
+
+```js
+let promise = Promise.resolve(42);
+
+promise.then(function(value) {
+    console.log(value);         // 42
+});
+```
+
+This code creates a fulfilled promise so the fulfillment handler receives 42 as `value`. If a rejection handler were added to this promise, it would never be called because the promise will never be in the rejected state.
+
+You can also create rejected promises by using the `Promise.reject()` method. This works in the same way as `Promise.resolve()` except that the created promise is in the rejected state. That means any additional rejection handlers added to the promise will be called but not fulfillment handlers will be called:
+
+```js
+let promise = Promise.reject(42);
+
+promise.catch(function(value) {
+    console.log(value);         // 42
+});
+```
+
+I> If you pass a promise to either `Promise.resolve()` or `Promise.reject()`, the promise is returned without modification.
 
 ### Executor Errors
 
