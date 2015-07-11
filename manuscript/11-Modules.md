@@ -80,7 +80,7 @@ import { identifier1, identifier2 } from "module";
 
 The curly braces after `import` indicate the identifiers to import from the given module. The keyword `from` is used to indicate the module from which to import the given identifiers. The module is specified using a string. At the time of my writing, it is still undecided what module identifiers will look like. They may end up being full file paths (such as "../mymodule.js"), file paths without extensions (such as "../mymodule"), or something else. This likely won't be determined until browsers and Node.js begin implementing modules natively.
 
-N> Even though it looks similar, the list of identifiers to import is not a destructured object.
+I> Even though it looks similar, the list of identifiers to import is not a destructured object.
 
 When importing an identifier from a module, the identifier acts as if were defined using `let`. That means you cannot define another variable with the same name nor can you use the identifier prior to the `import` statement.
 
