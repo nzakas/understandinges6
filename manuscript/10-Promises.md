@@ -336,6 +336,50 @@ promise.catch(function(value) {
 
 I> If you pass a promise to either `Promise.resolve()` or `Promise.reject()`, the promise is returned without modification.
 
+Both `Promise.resolve()` and `Promise.reject()` also accept non-promise thenables as arguments and will create a new promise that is called after `then()`. A non-promise thenable is created when a object has a `then()` method that accepts two arguments: `resolve` and `reject`. For example:
+
+```js
+var thenable = {
+    then: function(resolve, reject) {
+        resolve(42);
+    }
+};
+```
+
+The `thenable` object in this example has no characteristics associated with a promise other than the `then()` method. It can be converted into a fulfilled promise using `Promise.resolve()`:
+
+```js
+var thenable = {
+    then: function(resolve, reject) {
+        resolve(42);
+    }
+};
+
+var p1 = Promise.resolve(thenable);
+p1.then(function(value) {
+    console.log(value);     // 42
+});
+```
+
+In this example, `Promise.resolve()` calls `thenable.then()` so that a promise state can be determined. Since this code calls `resolve(42)`, the promise state for `thenable` is fulfilled. A new promise is created in the fulfilled state with the value passed from the thenable (42) so the fulfillment handler for `p1` receives 42 as the value. The same process can be used with `Promise.reject()` in order to create a rejected promise from a thenable:
+
+```js
+var thenable = {
+    then: function(resolve, reject) {
+        reject(42);
+    }
+};
+
+var p1 = Promise.reject(thenable);
+p1.catch(function(value) {
+    console.log(value);     // 42
+});
+```
+
+This example is similar to the last except that `Promise.reject()` is used on `thenable`. Doing so executes `thenable.then()` and creates a new promise in the rejected state with a value of 42. That value is then passed to the rejection handler for `p1`.
+
+Both `Promise.resolve()` and `Promise.reject()` work in this way to allow you to easily work with non-promise thenables. Whenever you're unsure if an object is a promise, passing the object through `Promise.resolve()` or `Promise.reject()` (depending on your anticipated result) is the best approach since promises are just passed through without any change.
+
 ### Executor Errors
 
 If an error is thrown inside of an executor, then the promise's rejection handler is called. For example:
