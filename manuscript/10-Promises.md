@@ -651,3 +651,101 @@ p1.then(function(value) {
 ```
 
 In this example, a new promise is created within the fulfillment handler for `p1`. That means the second fulfillment handler will not be executed until after `p2` has been fulfilled. This pattern useful when you want to wait until a previous promise has been settled before before triggering another promise.
+
+## Responding to Multiple Promises
+
+Up to this point, each example has dealt with responding to one promise at a time. There are times, however, when you'll want to monitor the progress of multiple promises in order to determine the next action. ECMAScript 6 provides two methods that monitor multiple promises: `Promise.all()` and `Promise.race()`.
+
+### Promise.all()
+
+The `Promise.all()` method accepts a single argument, which is an iterable of promises to monitor, and returns a promise that is resolved only when every promise in the iterable is resolved. The returned promise is fulfilled when every promise in the iterable is fulfilled, for example:
+
+```js
+var p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+var p2 = new Promise(function(resolve, reject) {
+    resolve(43);
+});
+
+var p3 = new Promise(function(resolve, reject) {
+    resolve(44);
+});
+
+var p4 = Promise.all([p1, p2, p3]);
+
+p4.then(function(value) {
+    console.log(value);     // [42, 43, 44]
+});
+```
+
+Each of the promises in this example resolves with a number. The call to `Promise.all()` creates a new promise, `p4`, that ultimately is fulfilled because each of the promises is fulfilled. The result passed to the fulfillment handler for `p4` is an array containing each resolved value: 42, 43, and 44. In this way, you can match promise results to the promises that resolved to them.
+
+If any of the promises passed to `Promise.all()` is rejected, the returned promise is immediately rejected without waiting for the other promises to complete:
+
+```js
+var p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+var p2 = new Promise(function(resolve, reject) {
+    reject(43);
+});
+
+var p3 = new Promise(function(resolve, reject) {
+    resolve(44);
+});
+
+var p4 = Promise.all([p1, p2, p3]);
+
+p4.catch(function(value) {
+    console.log(value);     // 43
+});
+```
+
+In this example, `p2` is rejected with a value of 43. The rejection handler for `p4` is called immediately without waiting for either `p1` or `p3` to finish executing (they still finish executing, it's just that `p4` doesn't wait). The rejection handler is passed 43 to reflect the rejection from `p2`.
+
+### Promise.race()
+
+The `Promise.race()` method provides a slightly different take on monitoring multiple promises. This method also accepts an iterable of promises to monitor and returns a promise, however, the returned promise is settled as soon as the first promise is settled. So instead of waiting for all promises to be fulfilled, as in `Promise.all()`, the returned promise is fulfilled as soon as any of the promises is fulfilled. For example:
+
+```js
+var p1 = Promise.resolve(42);
+
+var p2 = new Promise(function(resolve, reject) {
+    resolve(43);
+});
+
+var p3 = new Promise(function(resolve, reject) {
+    resolve(44);
+});
+
+var p4 = Promise.race([p1, p2, p3]);
+
+p4.then(function(value) {
+    console.log(value);     // 42
+});
+```
+
+In this code, `p1` is created as a fulfilled promise while the others schedule jobs. The fulfillment handler for `p4` is then called with the value of 42 and ignores the other promises completely. The promises passed to `Promise.race()` are truly in a race to see which is settled first. If the first promise to settle is fulfilled, then the returned promise is fulfilled; if the first promise to settle is rejected, then the returned promise is rejected. Here's an example with a rejection:
+
+```js
+var p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+var p2 = Promise.reject(43);
+
+var p3 = new Promise(function(resolve, reject) {
+    resolve(44);
+});
+
+var p4 = Promise.race([p1, p2, p3]);
+
+p4.catch(function(value) {
+    console.log(value);     // 43
+});
+```
+
+Here, `p4` is rejected because `p2` is already in the rejected state when `Promise.race()` is called. Even though `p1` and `p3` are fulfilled, those results are ignored because they occur after `p2` is rejected.
