@@ -501,9 +501,9 @@ p1.catch(function(value) {
 
 In this version of the code, the second `console.log(value)` is never executed because the upstream rejection handler didn't return a value. At that point, the promise chain is broken.
 
-## Returning Thenables in Promise Chains
+## Returning Promise in Promise Chains
 
-Returning primitive values from fulfillment and rejection handlers allows passing of data between promises, but what if you return an object? If the object is a thenable, then there's an extra step that's taken to determine how to proceed. Consider the following example:
+Returning primitive values from fulfillment and rejection handlers allows passing of data between promises, but what if you return an object? If the object is a promise, then there's an extra step that's taken to determine how to proceed. Consider the following example:
 
 ```js
 var p1 = new Promise(function(resolve, reject) {
@@ -585,4 +585,25 @@ p1.then(function(value) {
 
 Here, the rejection handler is called as a result of `p2` being rejected. The rejected value 43 from `p2` is passed into that rejection handler.
 
-I> Returning thenables from fulfillment or rejection handlers doesn't change when the promise executors are executed. The first defined promise will run its executor first, followed by the second, and so on. Returning thenables simply allows you to define additional responses.
+Returning thenables from fulfillment or rejection handlers doesn't change when the promise executors are executed. The first defined promise will run its executor first, followed by the second, and so on. Returning thenables simply allows you to define additional responses. You defer the execution of fulfillment handlers by creating a new promise within a fulfillment handler. For example:
+
+```js
+var p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+p1.then(function(value) {
+    console.log(value);     // 42
+
+    // create a new promise
+    var p2 = new Promise(function(resolve, reject) {
+        resolve(43);
+    });
+
+    return p2
+}).then(function(value) {
+    console.log(value);     // 43
+});
+```
+
+In this example, a new promise is created within the fulfillment handler for `p1`. That means the second fulfillment handler will not be executed until after `p2` has been fulfilled. This pattern useful when you want to wait until a previous promise has been settled before before triggering another promise.
