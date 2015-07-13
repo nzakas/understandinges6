@@ -200,6 +200,8 @@ promise.then(function(contents) {
 
 In this example, the fulfillment handler adds another fulfillment handler to the same promise.The promise is already fulfilled at this point, so the new fulfillment handler is added to the job queue and called when ready. Rejection handlers work the same way in that they can be added at any point and are guaranteed to be called.
 
+I> Each call to `then()` or `catch()` creates a new job to be executed when the promise is resolved. However, these jobs end up in a separate job queue that is reserved strictly for promises. The precise details of this second job queue aren't all that important for understanding how to use promises so long as you understand how job queues work in general.
+
 ### Creating Unsettled Promises
 
 New promises are created through the `Promise` constructor. This constructor accepts a single argument, which is a function (called the *executor*) containing the code to execute when the promise is added to the job queue. The executor is passed two functions as arguments, `resolve()` and `reject()`. The `resolve()` function is called when the executor has finished successfully in order to signal that the promise is ready to be resolved while the `reject()` function indicates that the executor has failed. Here's an example using a promise in Node.js to implement the `readFile()` function from earlier in this chapter:
@@ -447,7 +449,7 @@ Here, the executor throws an error than triggers `p1`'s rejection handler. That 
 
 I> It's recommended to always have a rejection handler at the end of a promise chain to ensure that you can properly handle any errors that may occur.
 
-### Passing Values in Promise Chains
+### Returning Values in Promise Chains
 
 Another important aspect of promise chains is the ability to pass data from one promise to the next. You've already seen that a value passed to the `resolve()` handler inside an executor is passed to the fulfillment handler for that promise. You can continue passing data along by specifying a return value from the fulfillment handler. For example:
 
@@ -499,3 +501,88 @@ p1.catch(function(value) {
 
 In this version of the code, the second `console.log(value)` is never executed because the upstream rejection handler didn't return a value. At that point, the promise chain is broken.
 
+## Returning Thenables in Promise Chains
+
+Returning primitive values from fulfillment and rejection handlers allows passing of data between promises, but what if you return an object? If the object is a thenable, then there's an extra step that's taken to determine how to proceed. Consider the following example:
+
+```js
+var p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+var p2 = new Promise(function(resolve, reject) {
+    resolve(43);
+});
+
+p1.then(function(value) {
+    console.log(value);     // 42
+    return p2;
+}).then(function(value) {
+    console.log(value);     // 43
+});
+```
+
+In this code, `p1` schedules a job that resolves to 42. In the fulfillment handler for `p1`, `p2`, a promise is already in the resolved state, is returned. The second fulfillment handler is called because `p2` has been fulfilled. If `p2` was rejected, the second fulfillment handler would not be called and instead a rejection handler (if present) would be called.
+
+The important thing to recognize about this pattern is that the second fulfillment handler is not added to `p2`, but rather to a third promise. It's this third promise that the second fulfillment handler is attached to. The previous example is equivalent to this:
+
+```js
+var p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+var p2 = new Promise(function(resolve, reject) {
+    resolve(43);
+});
+
+var p3 = p1.then(function(value) {
+    console.log(value);     // 42
+    return p2;
+});
+
+p3.then(function(value) {
+    console.log(value);     // 43
+});
+```
+
+Here, it's clear that the second fulfillment handler is attached to `p3` rather than `p2`. This is a subtle but important distinction as the second fulfillment handler will not be called if `p2` is rejected. For example:
+
+```js
+var p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+var p2 = new Promise(function(resolve, reject) {
+    reject(43);
+});
+
+p1.then(function(value) {
+    console.log(value);     // 42
+    return p2;
+}).then(function(value) {
+    console.log(value);     // never called
+});
+```
+
+In this example, the second fulfillment handler is never called because `p2` is rejected. You could, however, attach a rejection handler instead:
+
+```js
+var p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+var p2 = new Promise(function(resolve, reject) {
+    reject(43);
+});
+
+p1.then(function(value) {
+    console.log(value);     // 42
+    return p2;
+}).catch(function(value) {
+    console.log(value);     // 43
+});
+```
+
+Here, the rejection handler is called as a result of `p2` being rejected. The rejected value 43 from `p2` is passed into that rejection handler.
+
+I> Returning thenables from fulfillment or rejection handlers doesn't change when the promise executors are executed. The first defined promise will run its executor first, followed by the second, and so on. Returning thenables simply allows you to define additional responses.
