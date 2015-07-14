@@ -1,7 +1,5 @@
 # Promises
 
-W> This chapter is a work-in-progress. As such, it may have more typos or content errors than others.
-
 One of the most powerful aspects of JavaScript is how easy it handles asynchronous programming. Since JavaScript originated as a language for the web, it was a requirement to be able to respond to user interactions such as clicks and key presses. Node.js further popularized asynchronous programming in JavaScript by using callbacks as an alternative to events. As more and more programs started using asynchronous programming, there was a growing sense that these two models, events and callbacks, weren't powerful enough to support everything that developers wanted to do. Promises are the solution to this problem.
 
 Promises are another option for asynchronous programming, and similar functionality is available in other languages under names such as futures and deferreds. The basic idea is to specify some code to be executed later (as with events and callbacks) and also explicitly indicate if the code succeeded or failed in its job. In that way, you can chain promises together based on success or failure in ways that are easier to understand and debug.
@@ -836,3 +834,68 @@ run(function *() {
 In this version of the code, a generic `run()` function is used to execute a generator. The `run()` function executes the generator to create an iterator, starts the task by calling `task.next()`, and then recursively calls `step()` until the iterator is complete. Inside of `step()`, `task.next()` returns the iterator result. If there's more work to do then `response.done` is `false`. At that point, `result.value` should be a promise, but `Promise.resolve()` is used just in case the function in question didn't return a promise. Then, a fulfillment handler is added that retrieves the promise value and passes it back to the iterator before calling `step()` once again. A rejection handler is also added and assumes any rejection results in an error object. That error object is passed back into the iterator using `task.throw()` and `step()` is called to continue.
 
 This same `run()` function can be used any to run any generator that uses `yield` as a way to achieve asynchronous code without exposing promises (or callbacks) to the developer.
+
+## Inheriting from Promises
+
+Just like other built-in types, promises can be used as a base upon which you can create a derived class. This allows you to define your own variation of promises to extend what the built-in promises can do. Suppose, for instance, you'd like to create a promise that uses `success()` and `failure()` in addition to `then()` and `catch()`. You could do so as follows:
+
+```js
+class MyPromise extends Promise {
+
+    // use default constructor
+
+    success(resolve, reject) {
+        return this.then(resolve, reject);
+    }
+
+    failure(reject) {
+        return this.catch(reject);
+    }
+
+}
+
+var promise = new MyPromise(function(resolve, reject) {
+    resolve(42);
+});
+
+promise.success(function(value) {
+    console.log(value);             // 42
+}).failure(function(value) {
+    console.log(value);
+});
+```
+
+In this example, `MyPromise` is derived from `Promise` and two additional methods are added. Both `success()` and `failure()` use `this` to call the appropriate method they are mimicking. The created promise functions the same as the built-in version, except now you can use `success()` and `failure()` in addition to `then()` and `catch()`.
+
+Since static methods are also inherited, that means `MyPromise.resolve()`, `MyPromise.reject()`, `MyPromise.race()`, and `MyPromise.all()` are also present. While the last two behave the same as the built-in methods, the first two are slightly different.
+
+Both `MyPromise.resolve()` and `MyPromise.reject()` will return an instance of `MyPromise` regardless of the value passed. So if a built-in promise is passed to either, it will be resolved or rejected and a new `MyPromise` so you can assign fulfillment and rejection handlers. For example:
+
+```js
+var p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+var p2 = MyPromise.resolve(p1);
+p2.success(function(value) {
+    console.log(value);         // 42
+});
+
+console.log(p2 instanceof MyPromise);   // true
+```
+
+Here, `p1` is a built-in promise that is passed to `MyPromise.resolve()`. The result, `p2`, is an instance of `MyPromise` where the resolved value from `p1` is passed into the fulfillment handler.
+
+If an instance of `MyPromise` is passed to `MyPromise.resolve()` or `MyPromise.reject()`, it will just be returned directly without being resolved. In all other ways these two methods behave the same as `Promise.resolve()` and `Promise.reject()`.
+
+## Summary
+
+Promises are designed to improve asynchronous programming in JavaScript. Whereas events and callbacks have several limitations, the permutations available via promises mean more control and composability over asynchronous operations. This is accomplished by scheduling jobs to be added to the JavaScript engine's job queue for execution later. A second job queue keeps track of promise fulfillment and rejection handlers to ensure proper execution.
+
+Promises have three states: pending, fulfilled, and rejected. A promise starts out in a pending state and is either fulfilled (a success) or rejected (a failure). In either case, handlers can be added to be notified when a promise is settled. The `then()` method allows you to assign a fulfillment and rejection handler and the `catch()` method allows you to assign only a rejection handler.
+
+You can chain promises together in a variety of ways and pass information between them. Each call to `then()` creates and returns a new promise that is resolved when the previous one is resolved. Such chains can be used to trigger responses to a series of asynchronous events. You can also use `Promise.race()` and `Promise.all()` to monitor the progress of multiple promises and respond accordingly.
+
+Asynchronous task scheduling is made easier using generators in addition to promises, as promises give a common interface that asynchronous operations can return. You can then use generators and the `yield` operator to wait for asynchronous responses and respond appropriately.
+
+Most new web APIs are being built on top of promises, and you can expect many more to follow suit in the future.
