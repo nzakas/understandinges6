@@ -749,3 +749,90 @@ p4.catch(function(value) {
 ```
 
 Here, `p4` is rejected because `p2` is already in the rejected state when `Promise.race()` is called. Even though `p1` and `p3` are fulfilled, those results are ignored because they occur after `p2` is rejected.
+
+### Asynchronous Task Scheduling
+
+Back in chapter 8, you learned about generators and how they can be used for asynchronous task scheduling such as the following:
+
+```js
+var fs = require("fs");
+
+var task;
+
+function readConfigFile() {
+    fs.readFile("config.json", function(err, contents) {
+        if (err) {
+            task.throw(err);
+        } else {
+            task.next(contents);
+        }
+    });
+}
+
+function *init() {
+    var contents = yield readConfigFile();
+    doSomethingWith(contents);
+    console.log("Done");
+}
+
+task = init();
+task.next();
+```
+
+The pain point of this implementation was needing to keep track of `task` and calling the appropriate methods on it in every single asynchronous function you use (such as `readConfigFile()`). With promises, you can greatly simplify and generalize this process by ensuring that each asynchronous operation returns a promise. That common interface means you can greatly simplify asynchronous code:
+
+```js
+var fs = require("fs");
+
+function run(taskDef) {
+
+    // create the iterator
+    var task = taskDef();
+
+    // start the task
+    task.next();
+
+    // recursive function to iterate through
+    (function step() {
+
+        var result = task.next(),
+            promise;
+
+        // if there's more to do
+        if (!result.done) {
+
+            // resolve to a promise to make it easy
+            promise = Promise.resolve(result.value);
+            promise.then(function(value) {
+                task.next(value);
+                step();
+            }).catch(function(error) {
+                task.throw(error);
+                step();
+            });
+        }
+    }());
+}
+
+function readConfigFile() {
+    return new Promise(resolve, reject) {
+        fs.readFile("config.json", function(err, contents) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(contents);
+            }
+        });
+    });
+}
+
+run(function *() {
+    var contents = yield readConfigFile();
+    doSomethingWith(contents);
+    console.log("Done");
+});
+```
+
+In this version of the code, a generic `run()` function is used to execute a generator. The `run()` function executes the generator to create an iterator, starts the task by calling `task.next()`, and then recursively calls `step()` until the iterator is complete. Inside of `step()`, `task.next()` returns the iterator result. If there's more work to do then `response.done` is `false`. At that point, `result.value` should be a promise, but `Promise.resolve()` is used just in case the function in question didn't return a promise. Then, a fulfillment handler is added that retrieves the promise value and passes it back to the iterator before calling `step()` once again. A rejection handler is also added and assumes any rejection results in an error object. That error object is passed back into the iterator using `task.throw()` and `step()` is called to continue.
+
+This same `run()` function can be used any to run any generator that uses `yield` as a way to achieve asynchronous code without exposing promises (or callbacks) to the developer.
