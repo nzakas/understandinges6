@@ -487,7 +487,7 @@ p1.catch(function(error) {
 });
 ```
 
-Here, the executor throws an error than triggers `p1`'s rejection handler. That handler then throws another error that is caught by the second promise's rejection handler. In this way, chained promise calls can be made aware of errors in other promises in the chain.
+Here, the executor throws an error then triggers `p1`'s rejection handler. That handler then throws another error that is caught by the second promise's rejection handler. In this way, chained promise calls can be made aware of errors in other promises in the chain.
 
 I> It's recommended to always have a rejection handler at the end of a promise chain to ensure that you can properly handle any errors that may occur.
 
