@@ -480,6 +480,43 @@ class Square extends Rectangle {
 
 This example is equivalent to the previous. The only difference is that a computed name is used for the `getArea()` method.
 
+### Static Members
+
+If a base class has static members then those static members are also available on the derived class. This maps to how inheritance works in other languages, but is a new concept for JavaScript. Here's an example:
+
+```js
+class Rectangle {
+    constructor(length, width) {
+        this.length = length;
+        this.width = width;
+    }
+
+    getArea() {
+        return this.length * this.width;
+    }
+
+    static create(length, width) {
+        return new Rectangle(length, width);
+    }
+}
+
+class Square extends Rectangle {
+    constructor(length) {
+
+        // same as Rectangle.call(this, length, length)
+        super(length, length);
+    }
+}
+
+var rect = Square.create(3, 4);
+
+console.log(rect instanceof Rectangle);     // true
+console.log(rect.getArea());                // 12
+console.log(rect instanceof Square);        // false
+```
+
+In this code, a new static `create()` method is added to `Rectangle`. Through inheritance, that method is available as `Square.create()` and behaves in the same manner as `Rectangle.create()`.
+
 ### Derived Classes from Expressions
 
 Perhaps the most powerful aspect of derived classes in ECMAScript 6 is the ability to derive a class from an expression. You can use `extends` with any expression, and if the expression resolves to a function with `[[Construct]]` and a prototype, the class will work. For example:
@@ -638,6 +675,19 @@ console.log(colors[0]);             // undefined
 ```
 
 In this example, `MyArray` inherits directly from `Array` and therefore works in the exact same way. Interacting with numeric properties updates the `length` property, and manipulating the `length` property updates the numeric properties.
+
+Additionally, `MyArray` inherits all static members from `Array`, which means that `MyArray.of()` already exists and can be used:
+
+```js
+class MyArray extends Array {
+    // ...
+}
+
+var colors = MyArray.of(["red", "green", "blue"]);
+console.log(colors instanceof MyArray);     // true
+```
+
+The inherited `MyArray.of()` behaves the same as `Array.of()` except that it creates an instance of `MyArray` rather than an instance of `Array`. Many built-in objects are specifically defined so that their static methods work appropriately for derived classes.
 
 This same approach can be used to inherit from any of the built-in JavaScript objects, with a full guarantee that it will work the same way as the built-ins.
 
