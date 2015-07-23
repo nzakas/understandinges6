@@ -58,7 +58,7 @@ There are a few things to notice in this example:
 1. Every declaration is exactly the same as it would otherwise be without the `export` keyword.
 1. Both function and class declarations require a name. You cannot export anonymous functions or classes using this syntax.
 1. You need not always export the declaration, you can also export references, as with `multiply` in this example.
-1. Any variables, functions, or classes that not explicitly exported remain private to the module. In this example, `subtract()` is not exported and is therefore not accessible from outside the module.
+1. Any variables, functions, or classes that are not explicitly exported remain private to the module. In this example, `subtract()` is not exported and is therefore not accessible from outside the module.
 
 An important limitation of `export` is that it must be used in the top-level of the module. For instance, this is a syntax error:
 
@@ -82,7 +82,7 @@ The curly braces after `import` indicate the identifiers to import from the give
 
 I> Even though it looks similar, the list of identifiers to import is not a destructured object.
 
-When importing an identifier from a module, the identifier acts as if were defined using `let`. That means you cannot define another variable with the same name nor can you use the identifier prior to the `import` statement.
+When importing an identifier from a module, the identifier acts as if were defined using `const`. That means you cannot define another variable with the same name, use the identifier prior to the `import` statement, or change its value.
 
 Suppose that the first example in this section is in a module named `"example"`. You can import and use identifiers from that module in a number of ways. You can just import one identifier:
 
@@ -91,9 +91,11 @@ Suppose that the first example in this section is in a module named `"example"`.
 import { sum } from "example";
 
 console.log(sum(1, 2));     // 3
+
+sum = 1;        // error
 ```
 
-This example imports only `sum()` from the example module. Even though the example module exports more than just that one function, they are not exposed here.
+This example imports only `sum()` from the example module. Even though the example module exports more than just that one function, they are not exposed here. If you try to assign a new value to `sum`, the result is an error, as you cannot reassign imported identifiers.
 
 If you want to import multiple identifiers from the example module, you can explicitly list them out:
 
@@ -147,6 +149,31 @@ console.log(sum(1, 2));             // 3
 ```
 
 This code imports the `add()` function (the *import name*) and renames it to `sum()` (the local name). That means there is no identifier named `add` in this module.
+
+A> ### Imported Bindings
+A>
+A> A subtle but important point about the `import` statements is that they create bindings to variables, functions, and classes rather than simply referencing them. That means even though you cannot change an imported identifier, it can still change on its own. For example, suppose you have this module:
+A>
+A> ```js
+A> export var name = "Nicholas";
+A> export function setName(newName) {
+A>     name = newName;
+A> }
+A> ```
+A>
+A> When you import `name` and `setName()`, you can see that `setName()` is able to change the value of `name`:
+A>
+A> ```js
+A> import { name, setName } from "example";
+A>
+A> console.log(name);       // "Nicholas"
+A> setName("Greg");
+A> console.log(name);       // "Greg"
+A>
+A> name = "Nicholas";       // error
+A> ```
+A>
+A> The call to `setName("Greg")` goes back into the module from which `setName()` was exported and executes there, setting `name` to `"Greg"`. Note this change is automatically reflected on the imported `name` binding. That's because `name` is the local name for the exported *name* identifier so they are not the same thing.
 
 ## Exporting and Importing Defaults
 
