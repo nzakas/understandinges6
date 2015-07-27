@@ -26,6 +26,55 @@ TODO
 
 ### Array.of()
 
+JavaScript has long had a quirk around creating arrays. The `Array` constructor behaves differently based on the type of data passed to it. For example:
+
+```js
+let items = new Array(1, 2);        // length is 2
+console.log(items.length);          // 2
+console.log(items[0]);              // 1
+console.log(items[1]);              // 2
+
+items = new Array(2);
+console.log(items.length);          // 2
+console.log(items[0]);              // undefined
+console.log(items[1]);              // undefined
+
+items = new Array("2");
+console.log(items.length);          // 1
+console.log(items[0]);              // "2"
+```
+
+When the `Array` constructor is passed a single numeric value, that value is set to be the `length` of the array; if a single non-numeric value is passed, then that value becomes the one and only item in the array; if multiple values are passed (numeric or not), then those values become items in the array. This behavior is both confusing and risky, as you may not always be aware of the type of data being passed.
+
+ECMAScript 6 introduces `Array.of()` to solve this problem. `Array.of()` works in a manner that is similar to the `Array` constructor. The only difference is the removal of the special case regarding a single numeric value. The `Array.of()` method always creates an array containing its arguments regardless of the number of arguments or the argument types. Here are some examples:
+
+```js
+let items = Array.of(1, 2);         // length is 2
+console.log(items.length);          // 2
+console.log(items[0]);              // 1
+console.log(items[1]);              // 2
+
+items = Array.of(2);
+console.log(items.length);          // 1
+console.log(items[0]);              // 2
+
+items = Array.of("2");
+console.log(items.length);          // 1
+console.log(items[0]);              // "2"
+```
+
+The `Array.of()` method is similar to using an array literal, which is to say, you can use an array literal instead of `Array.of()` for native arrays most of the time. If you ever need to pass the `Array` constructor into a function, then you might want to pass `Array.of()` instead to get consistent behavior. For example:
+
+```js
+function createArray(arrayConstructor, value) {
+    return arrayConstructor(value);
+}
+
+let items = createArray(Array.of, value);
+```
+
+This is a somewhat contrived example, but when dealing with derived array classes or typed arrays, you may find this pattern to be quite useful.
+
 ### Array.from()
 
 One of the more cumbersome tasks in JavaScript has long been converting array-like objects into actual arrays. For instance, if you have an `arguments` object (which is array-like) and want to work with it as if it's an array, then you'd need to convert it first. Traditionally,  you'd write a function such as:
