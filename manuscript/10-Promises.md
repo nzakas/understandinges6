@@ -527,22 +527,6 @@ p1.catch(function(value) {
 
 Here, the executor calls `reject()` with 42. That value is passed into the rejection handler for the promise, where `value + 1` is returned. Even though this return value is coming from a rejection handler, it is still used in the fulfillment handler of the next promise in the chain. This allows for the failure of one promise to allow recovery of the entire chain if necessary.
 
-Unlike the fulfillment handler, if the rejection handler doesn't return a value then the other promises down the chain are never called. For example:
-
-```js
-let p1 = new Promise(function(resolve, reject) {
-    reject(42);
-});
-
-p1.catch(function(value) {
-    console.log(value);         // "42"
-}).then(function(value) {
-    console.log(value);         // Never called
-});
-```
-
-In this version of the code, the second `console.log(value)` is never executed because the upstream rejection handler didn't return a value. At that point, the promise chain is broken.
-
 ## Returning Promise in Promise Chains
 
 Returning primitive values from fulfillment and rejection handlers allows passing of data between promises, but what if you return an object? If the object is a promise, then there's an extra step that's taken to determine how to proceed. Consider the following example:
