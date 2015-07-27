@@ -337,7 +337,7 @@ I> If you pass a promise to either `Promise.resolve()` or `Promise.reject()`, th
 Both `Promise.resolve()` and `Promise.reject()` also accept non-promise thenables as arguments and will create a new promise that is called after `then()`. A non-promise thenable is created when a object has a `then()` method that accepts two arguments: `resolve` and `reject`. For example:
 
 ```js
-var thenable = {
+let thenable = {
     then: function(resolve, reject) {
         resolve(42);
     }
@@ -347,13 +347,13 @@ var thenable = {
 The `thenable` object in this example has no characteristics associated with a promise other than the `then()` method. It can be converted into a fulfilled promise using `Promise.resolve()`:
 
 ```js
-var thenable = {
+let thenable = {
     then: function(resolve, reject) {
         resolve(42);
     }
 };
 
-var p1 = Promise.resolve(thenable);
+let p1 = Promise.resolve(thenable);
 p1.then(function(value) {
     console.log(value);     // 42
 });
@@ -362,13 +362,13 @@ p1.then(function(value) {
 In this example, `Promise.resolve()` calls `thenable.then()` so that a promise state can be determined. Since this code calls `resolve(42)`, the promise state for `thenable` is fulfilled. A new promise is created in the fulfilled state with the value passed from the thenable (42) so the fulfillment handler for `p1` receives 42 as the value. The same process can be used with `Promise.reject()` in order to create a rejected promise from a thenable:
 
 ```js
-var thenable = {
+let thenable = {
     then: function(resolve, reject) {
         reject(42);
     }
 };
 
-var p1 = Promise.reject(thenable);
+let p1 = Promise.reject(thenable);
 p1.catch(function(value) {
     console.log(value);     // 42
 });
@@ -548,11 +548,11 @@ In this version of the code, the second `console.log(value)` is never executed b
 Returning primitive values from fulfillment and rejection handlers allows passing of data between promises, but what if you return an object? If the object is a promise, then there's an extra step that's taken to determine how to proceed. Consider the following example:
 
 ```js
-var p1 = new Promise(function(resolve, reject) {
+let p1 = new Promise(function(resolve, reject) {
     resolve(42);
 });
 
-var p2 = new Promise(function(resolve, reject) {
+let p2 = new Promise(function(resolve, reject) {
     resolve(43);
 });
 
@@ -569,15 +569,15 @@ In this code, `p1` schedules a job that resolves to 42. In the fulfillment handl
 The important thing to recognize about this pattern is that the second fulfillment handler is not added to `p2`, but rather to a third promise. It's this third promise that the second fulfillment handler is attached to. The previous example is equivalent to this:
 
 ```js
-var p1 = new Promise(function(resolve, reject) {
+let p1 = new Promise(function(resolve, reject) {
     resolve(42);
 });
 
-var p2 = new Promise(function(resolve, reject) {
+let p2 = new Promise(function(resolve, reject) {
     resolve(43);
 });
 
-var p3 = p1.then(function(value) {
+let p3 = p1.then(function(value) {
     console.log(value);     // 42
     return p2;
 });
@@ -590,11 +590,11 @@ p3.then(function(value) {
 Here, it's clear that the second fulfillment handler is attached to `p3` rather than `p2`. This is a subtle but important distinction as the second fulfillment handler will not be called if `p2` is rejected. For example:
 
 ```js
-var p1 = new Promise(function(resolve, reject) {
+let p1 = new Promise(function(resolve, reject) {
     resolve(42);
 });
 
-var p2 = new Promise(function(resolve, reject) {
+let p2 = new Promise(function(resolve, reject) {
     reject(43);
 });
 
@@ -609,11 +609,11 @@ p1.then(function(value) {
 In this example, the second fulfillment handler is never called because `p2` is rejected. You could, however, attach a rejection handler instead:
 
 ```js
-var p1 = new Promise(function(resolve, reject) {
+let p1 = new Promise(function(resolve, reject) {
     resolve(42);
 });
 
-var p2 = new Promise(function(resolve, reject) {
+let p2 = new Promise(function(resolve, reject) {
     reject(43);
 });
 
@@ -630,7 +630,7 @@ Here, the rejection handler is called as a result of `p2` being rejected. The re
 Returning thenables from fulfillment or rejection handlers doesn't change when the promise executors are executed. The first defined promise will run its executor first, followed by the second, and so on. Returning thenables simply allows you to define additional responses. You defer the execution of fulfillment handlers by creating a new promise within a fulfillment handler. For example:
 
 ```js
-var p1 = new Promise(function(resolve, reject) {
+let p1 = new Promise(function(resolve, reject) {
     resolve(42);
 });
 
@@ -638,7 +638,7 @@ p1.then(function(value) {
     console.log(value);     // 42
 
     // create a new promise
-    var p2 = new Promise(function(resolve, reject) {
+    let p2 = new Promise(function(resolve, reject) {
         resolve(43);
     });
 
@@ -659,19 +659,19 @@ Up to this point, each example has dealt with responding to one promise at a tim
 The `Promise.all()` method accepts a single argument, which is an iterable of promises to monitor, and returns a promise that is resolved only when every promise in the iterable is resolved. The returned promise is fulfilled when every promise in the iterable is fulfilled, for example:
 
 ```js
-var p1 = new Promise(function(resolve, reject) {
+let p1 = new Promise(function(resolve, reject) {
     resolve(42);
 });
 
-var p2 = new Promise(function(resolve, reject) {
+let p2 = new Promise(function(resolve, reject) {
     resolve(43);
 });
 
-var p3 = new Promise(function(resolve, reject) {
+let p3 = new Promise(function(resolve, reject) {
     resolve(44);
 });
 
-var p4 = Promise.all([p1, p2, p3]);
+let p4 = Promise.all([p1, p2, p3]);
 
 p4.then(function(value) {
     console.log(value);     // [42, 43, 44]
@@ -683,19 +683,19 @@ Each of the promises in this example resolves with a number. The call to `Promis
 If any of the promises passed to `Promise.all()` is rejected, the returned promise is immediately rejected without waiting for the other promises to complete:
 
 ```js
-var p1 = new Promise(function(resolve, reject) {
+let p1 = new Promise(function(resolve, reject) {
     resolve(42);
 });
 
-var p2 = new Promise(function(resolve, reject) {
+let p2 = new Promise(function(resolve, reject) {
     reject(43);
 });
 
-var p3 = new Promise(function(resolve, reject) {
+let p3 = new Promise(function(resolve, reject) {
     resolve(44);
 });
 
-var p4 = Promise.all([p1, p2, p3]);
+let p4 = Promise.all([p1, p2, p3]);
 
 p4.catch(function(value) {
     console.log(value);     // 43
@@ -709,17 +709,17 @@ In this example, `p2` is rejected with a value of 43. The rejection handler for 
 The `Promise.race()` method provides a slightly different take on monitoring multiple promises. This method also accepts an iterable of promises to monitor and returns a promise, however, the returned promise is settled as soon as the first promise is settled. So instead of waiting for all promises to be fulfilled, as in `Promise.all()`, the returned promise is fulfilled as soon as any of the promises is fulfilled. For example:
 
 ```js
-var p1 = Promise.resolve(42);
+let p1 = Promise.resolve(42);
 
-var p2 = new Promise(function(resolve, reject) {
+let p2 = new Promise(function(resolve, reject) {
     resolve(43);
 });
 
-var p3 = new Promise(function(resolve, reject) {
+let p3 = new Promise(function(resolve, reject) {
     resolve(44);
 });
 
-var p4 = Promise.race([p1, p2, p3]);
+let p4 = Promise.race([p1, p2, p3]);
 
 p4.then(function(value) {
     console.log(value);     // 42
@@ -729,17 +729,17 @@ p4.then(function(value) {
 In this code, `p1` is created as a fulfilled promise while the others schedule jobs. The fulfillment handler for `p4` is then called with the value of 42 and ignores the other promises completely. The promises passed to `Promise.race()` are truly in a race to see which is settled first. If the first promise to settle is fulfilled, then the returned promise is fulfilled; if the first promise to settle is rejected, then the returned promise is rejected. Here's an example with a rejection:
 
 ```js
-var p1 = new Promise(function(resolve, reject) {
+let p1 = new Promise(function(resolve, reject) {
     resolve(42);
 });
 
-var p2 = Promise.reject(43);
+let p2 = Promise.reject(43);
 
-var p3 = new Promise(function(resolve, reject) {
+let p3 = new Promise(function(resolve, reject) {
     resolve(44);
 });
 
-var p4 = Promise.race([p1, p2, p3]);
+let p4 = Promise.race([p1, p2, p3]);
 
 p4.catch(function(value) {
     console.log(value);     // 43
@@ -753,9 +753,9 @@ Here, `p4` is rejected because `p2` is already in the rejected state when `Promi
 Back in chapter 8, you learned about generators and how they can be used for asynchronous task scheduling such as the following:
 
 ```js
-var fs = require("fs");
+let fs = require("fs");
 
-var task;
+let task;
 
 function readConfigFile() {
     fs.readFile("config.json", function(err, contents) {
@@ -768,7 +768,7 @@ function readConfigFile() {
 }
 
 function *init() {
-    var contents = yield readConfigFile();
+    let contents = yield readConfigFile();
     doSomethingWith(contents);
     console.log("Done");
 }
@@ -780,12 +780,12 @@ task.next();
 The pain point of this implementation was needing to keep track of `task` and calling the appropriate methods on it in every single asynchronous function you use (such as `readConfigFile()`). With promises, you can greatly simplify and generalize this process by ensuring that each asynchronous operation returns a promise. That common interface means you can greatly simplify asynchronous code:
 
 ```js
-var fs = require("fs");
+let fs = require("fs");
 
 function run(taskDef) {
 
     // create the iterator
-    var task = taskDef();
+    let task = taskDef();
 
     // start the task
     task.next();
@@ -793,7 +793,7 @@ function run(taskDef) {
     // recursive function to iterate through
     (function step() {
 
-        var result = task.next(),
+        let result = task.next(),
             promise;
 
         // if there's more to do
@@ -825,7 +825,7 @@ function readConfigFile() {
 }
 
 run(function *() {
-    var contents = yield readConfigFile();
+    let contents = yield readConfigFile();
     doSomethingWith(contents);
     console.log("Done");
 });
@@ -854,7 +854,7 @@ class MyPromise extends Promise {
 
 }
 
-var promise = new MyPromise(function(resolve, reject) {
+let promise = new MyPromise(function(resolve, reject) {
     resolve(42);
 });
 
@@ -872,11 +872,11 @@ Since static methods are also inherited, that means `MyPromise.resolve()`, `MyPr
 Both `MyPromise.resolve()` and `MyPromise.reject()` will return an instance of `MyPromise` regardless of the value passed. So if a built-in promise is passed to either, it will be resolved or rejected and a new `MyPromise` so you can assign fulfillment and rejection handlers. For example:
 
 ```js
-var p1 = new Promise(function(resolve, reject) {
+let p1 = new Promise(function(resolve, reject) {
     resolve(42);
 });
 
-var p2 = MyPromise.resolve(p1);
+let p2 = MyPromise.resolve(p1);
 p2.success(function(value) {
     console.log(value);         // 42
 });
