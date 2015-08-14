@@ -120,6 +120,16 @@ console.log(example.multiply(1, 2));    // 2
 
 In this code, the entirety of the example module is loaded into an object called `example`. The named exports `sum()`, `multiple()`, and `magicNumber` are then accessible as properties on `example`.
 
+Keep in mind that the code inside of a module will only ever be executed once, regardless of the number of times it's used in an `import` statement. Consider the following:
+
+```js
+import { sum } from "example";
+import { multiply } from "example";
+import { magicNumber } from "example";
+```
+
+Even though there are three `import` statements in this module, the code in `"example"` will only be executed once. The instantiated module is then kept in memory and reused whenever another `import` statement references it. It doesn't matter if the `import` statements are all in the module, or are spread across multiple modules - they each will use the same module instance.
+
 ## Renaming Exports and Imports
 
 Sometimes the original name of a variable, function, or class isn't what you want to use. It's possible to change the name of an export both during the export and when the identifier is being imported.
