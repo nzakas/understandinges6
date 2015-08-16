@@ -771,9 +771,6 @@ function run(taskDef) {
     // create the iterator
     let task = taskDef();
 
-    // start the task
-    task.next();
-
     // recursive function to iterate through
     (function step() {
 
