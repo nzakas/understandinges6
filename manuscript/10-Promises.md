@@ -794,7 +794,7 @@ function run(taskDef) {
 }
 
 function readConfigFile() {
-    return new Promise(resolve, reject) {
+    return new Promise(function(resolve, reject) {
         fs.readFile("config.json", function(err, contents) {
             if (err) {
                 reject(err);
