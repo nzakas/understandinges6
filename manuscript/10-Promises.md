@@ -771,19 +771,19 @@ function run(taskDef) {
     // create the iterator
     let task = taskDef();
 
+    // start the task
+    let result = task.next();
+
     // recursive function to iterate through
     (function step() {
-
-        let result = task.next(),
-            promise;
 
         // if there's more to do
         if (!result.done) {
 
             // resolve to a promise to make it easy
-            promise = Promise.resolve(result.value);
+            let promise = Promise.resolve(result.value);
             promise.then(function(value) {
-                task.next(value);
+                result = task.next(value);
                 step();
             }).catch(function(error) {
                 task.throw(error);
