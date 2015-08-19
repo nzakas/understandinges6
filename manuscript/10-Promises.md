@@ -786,7 +786,7 @@ function run(taskDef) {
                 result = task.next(value);
                 step();
             }).catch(function(error) {
-                task.throw(error);
+                result = task.throw(error);
                 step();
             });
         }
