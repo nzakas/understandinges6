@@ -772,24 +772,21 @@ function run(taskDef) {
     let task = taskDef();
 
     // start the task
-    task.next();
+    let result = task.next();
 
     // recursive function to iterate through
     (function step() {
-
-        let result = task.next(),
-            promise;
 
         // if there's more to do
         if (!result.done) {
 
             // resolve to a promise to make it easy
-            promise = Promise.resolve(result.value);
+            let promise = Promise.resolve(result.value);
             promise.then(function(value) {
-                task.next(value);
+                result = task.next(value);
                 step();
             }).catch(function(error) {
-                task.throw(error);
+                result = task.throw(error);
                 step();
             });
         }
@@ -797,7 +794,7 @@ function run(taskDef) {
 }
 
 function readConfigFile() {
-    return new Promise(resolve, reject) {
+    return new Promise(function(resolve, reject) {
         fs.readFile("config.json", function(err, contents) {
             if (err) {
                 reject(err);
@@ -815,9 +812,9 @@ run(function *() {
 });
 ```
 
-In this version of the code, a generic `run()` function is used to execute a generator. The `run()` function executes the generator to create an iterator, starts the task by calling `task.next()`, and then recursively calls `step()` until the iterator is complete. Inside of `step()`, `task.next()` returns the iterator result. If there's more work to do then `response.done` is `false`. At that point, `result.value` should be a promise, but `Promise.resolve()` is used just in case the function in question didn't return a promise. Then, a fulfillment handler is added that retrieves the promise value and passes it back to the iterator before calling `step()` once again. A rejection handler is also added and assumes any rejection results in an error object. That error object is passed back into the iterator using `task.throw()` and `step()` is called to continue.
+In this version of the code, a generic `run()` function is used to execute a generator. The `run()` function executes the generator to create an iterator, starts the task by calling `task.next()`, and then recursively calls `step()` until the iterator is complete. Inside of `step()`, if there's more work to do then `result.done` is `false`. At that point, `result.value` should be a promise, but `Promise.resolve()` is used just in case the function in question didn't return a promise. Then, a fulfillment handler is added that retrieves the promise value and passes it back to the iterator and `result` is assigned to the next yield result before calling `step()`. A rejection handler is also added and assumes any rejection results in an error object. That error object is passed back into the iterator using `task.throw()` and `result` is assigned to the next yield result if the error is catched in the task, and then `step()` is called to continue.
 
-This same `run()` function can be used any to run any generator that uses `yield` as a way to achieve asynchronous code without exposing promises (or callbacks) to the developer.
+This same `run()` function can be used to run any generator that uses `yield` as a way to achieve asynchronous code without exposing promises (or callbacks) to the developer.
 
 ## Inheriting from Promises
 
