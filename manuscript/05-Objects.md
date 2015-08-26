@@ -136,6 +136,31 @@ console.log(person["last name"]);       // "Zakas"
 
 Anything you would put inside of square brackets while using bracket notation on object instances will also work for computed property names inside of object literals.
 
+## Object.is()
+
+When you want to compare two values, you're probably used to using either the equals operator (`==`) or the identically equals operator (`===`). Many prefer to use the latter to avoid type coercion during the comparison. However, even the identically equals operator isn't entirely accurate. For example, the values +0 and -0 are considered equal by `===` even though they are represented differently in the JavaScript engine. Also `NaN === NaN` returns `false`, which necessitates using `isNaN()` to detect `NaN` properly.
+
+ECMAScript 6 introduces `Object.is()` to make up for the remaining quirks of the identically equals operator. This method accepts two arguments and returns `true` if the values are equivalent. Two values are considered equivalent when they are of the same type and have the same value. In many cases, `Object.is()` works the same as `===`. The only differences are that +0 and -0 are considered not equivalent and `NaN` is considered equivalent to `NaN`. Here are some examples:
+
+```js
+console.log(+0 == -0);              // true
+console.log(+0 === -0);             // true
+console.log(Object.is(+0, -0));     // false
+
+console.log(NaN == NaN);            // false
+console.log(NaN === NaN);           // false
+console.log(Object.is(NaN, NaN));   // true
+
+console.log(5 == 5);                // true
+console.log(5 == "5");              // true
+console.log(5 === 5);               // true
+console.log(5 === "5");             // false
+console.log(Object.is(5, 5));       // true
+console.log(Object.is(5, "5"));     // false
+```
+
+In most cases you will probably still want to use `==` or `===` for comparing values, as special cases covered by `Object.is()` may not affect you directly.
+
 ## Object.assign()
 
 One of the most popular patterns for object composition is *mixins*, in which one object receives properties and methods from another object. Many JavaScript libraries have a mixin method similar to this:
@@ -527,7 +552,7 @@ Objects are at the center of programming in JavaScript, and ECMAScript 6 has mad
 
 ECMAScript 6 makes several changes to object literals. Shorthand property definitions make it easier to assign properties whose names are the same as in-scope variables. Computed property names allow you to specify non-literal values as property names, which is something you've already been able to do in other areas of the language. Shorthand methods let you type a lot fewer characters in order to define methods on object literals by completely omitting the colon and `function` keyword. A loosening of the strict mode check for duplicate object literal property names was introduced as well, meaning you can now have two properties with the same name in a single object literal without an error being thrown.
 
-The `Object.assign()` method makes it easier to change multiple properties on a single object at once. This can be very useful if you use the mixin pattern.
+The `Object.assign()` method makes it easier to change multiple properties on a single object at once. This can be very useful if you use the mixin pattern. The `Object.is()` method performs strict equality on any value, effectively becoming a safer version of `===` when dealing with special JavaScript values.
 
 It's now possible to modify an object's prototype after it's already created using `Object.setPrototypeOf()`. ECMAScript 6 also defines the behavior of the `__proto__` property, which is an accessor property whose getter calls `Object.getPrototypeOf()` and whose setter calls `Object.setPrototypeOf()`.
 
