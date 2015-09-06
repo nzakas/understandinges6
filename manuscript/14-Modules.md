@@ -314,7 +314,7 @@ Array.prototype.pushAll = function(items) {
 This is a valid module even though there are no exports or imports. This code can be used both as a module and a script. Since it doesn't export anything, you can use a simplified import to execute the module code without importing any bindings:
 
 ```js
-import from "example";
+import "example";
 
 let colors = ["red", "green", "blue"];
 let items = [];
