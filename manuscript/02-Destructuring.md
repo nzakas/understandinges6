@@ -174,6 +174,85 @@ This modified example retrieves `options.colors` and stores it in the `colors` v
 
 Mixed destructuring is very useful for pulling values out of JSON configuration structures without navigating the entire structure.
 
+## Destructured Parameters
+
+In Chapter 1, you learned about destructuring assignment. Destructuring can also be used outside of the context of an assignment expression and perhaps the most interesting such case is with destructured parameters.
+
+It's common for functions that take a large number of optional parameters to use an options object as one or more parameters. For example:
+
+```js
+function setCookie(name, value, options) {
+
+    options = options || {};
+
+    var secure = options.secure,
+        path = options.path,
+        domain = options.domain,
+        expires = options.expires;
+
+    // ...
+}
+
+setCookie("type", "js", {
+    secure: true,
+    expires: 60000
+});
+```
+
+There are many `setCookie()` functions in JavaScript libraries that look similar to this. The `name` and `value` are required but everything else is not. And since there is no priority order for the other data, it makes sense to have an options object with named properties rather than extra named parameters. This approach is okay, although it makes the expected input for the function a bit opaque.
+
+Using destructured parameters, the previous function can be rewritten as follows:
+
+```js
+function setCookie(name, value, { secure, path, domain, expires }) {
+
+    // ...
+}
+
+setCookie("type", "js", {
+    secure: true,
+    expires: 60000
+});
+```
+
+The behavior of this function is similar to the previous example, the biggest difference is the third argument uses destructuring to pull out the necessary data. Doing so makes it clear which parameters are really expected, and the destructured parameters also act like regular parameters in that they are set to `undefined` if they are not passed.
+
+One quirk of this pattern is that the destructured parameters throw an error when the argument isn't provided. If `setCookie()` is called with just two arguments, it results in a runtime error:
+
+```js
+// Error!
+setCookie("type", "js");
+```
+
+This code throws an error because the third argument is missing (`undefined`). To understand why this is an error, it helps to understand that destructured parameters are really just a shorthand for destructured assignment. The JavaScript engine is actually doing this:
+
+```js
+function setCookie(name, value, options) {
+
+    var { secure, path, domain, expires } = options;
+
+    // ...
+}
+```
+
+Since destructuring assignment throws an error when the right side expression evaluates to `null` or `undefined`, the same is true when the third argument isn't passed.
+
+You can work around this behavior by providing a default value for the destructured parameter:
+
+```js
+function setCookie(name, value, { secure, path, domain, expires } = {}) {
+
+    // ...
+}
+```
+
+This example now works exactly the same as the first example in this section. Providing the default value for the destructured parameter means that `secure`, `path`, `domain`, and `expires` will all be `undefined` if the third argument to `setCookie()` isn't provided.
+
+I> It's recommended to always provide the default value for destructured parameters to avoid these types of errors.
+
+
 ## Summary
 
 Destructuring makes it easier to work with objects and arrays in JavaScript. Using syntax that's already familiar to many developers, object literals and array literals, you can now pick data structures apart to get at just the information you're interested in.
+
+Destructured parameters use the destructuring syntax to make options objects more transparent when used as function parameters. The actual data you're interested in can be listed out along with other named parameters.
