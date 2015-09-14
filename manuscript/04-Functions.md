@@ -2,11 +2,11 @@
 
 Functions are an important part of any programming language, and JavaScript functions hadn't changed much since the language was first introduced. This left a backlog of problems and nuanced behavior that made it easy to make mistakes or require more code just to achieve a very common behavior.
 
-ECMAScript 6 functions made a big leap forward, taking into account years of complaints and asks from JavaScript developers. The result is a number of incremental improvements on top of ECMAScript 5 functions that make programming in JavaScript less error-prone and more powerful than ever before.
+ECMAScript 6 functions make a big leap forward, taking into account years of complaints and asks from JavaScript developers. The result is a number of incremental improvements on top of ECMAScript 5 functions that make programming in JavaScript less error-prone and more powerful than ever before.
 
 ## Default Parameters
 
-Functions in JavaScript are unique in that they allow any number of parameters to be passed regardless of the number of declared parameters in the function definition. This allows you to define functions that can handle different number of parameters, often by just filling in default values when ones aren't provided. In ECMAScript 5 and earlier, you would likely use the following pattern to accomplish this:
+Functions in JavaScript are unique in that they allow any number of parameters to be passed regardless of the number of declared parameters in the function definition. This allows you to define functions that can handle different numbers of parameters, often by just filling in default values when ones aren't provided. In ECMAScript 5 and earlier, you would likely use the following pattern to accomplish this:
 
 ```js
 function makeRequest(url, timeout, callback) {
@@ -19,9 +19,20 @@ function makeRequest(url, timeout, callback) {
 }
 ```
 
-In this example, both `timeout` and `callback` are actually optional because they are given a default value if not provided. The logical OR operator (`||`) always returns the second operand when the first is falsy. Since named function parameters that are not explicitly provided are set to `undefined`, the logical OR operator is frequently used to provide default values for missing parameters. There is a flaw with this approach, however, in that a valid value for `timeout` might actually be `0`, but this would replace it with `2000` because `0` is falsy.
+In this example, both `timeout` and `callback` are actually optional because they are given a default value if not provided. The logical OR operator (`||`) always returns the second operand when the first is falsy. Since named function parameters that are not explicitly provided are set to `undefined`, the logical OR operator is frequently used to provide default values for missing parameters. There is a flaw with this approach, however, in that a valid value for `timeout` might actually be `0`, but this would replace it with `2000` because `0` is falsy. In that case, a safer alternative is to check the type of the argument using `typeof`, such as:
 
-Other ways of determining if any parameters are missing include checking `arguments.length` for the number of parameters that were passed or directly inspecting each parameter to see if it is not `undefined`.
+```js
+function makeRequest(url, timeout, callback) {
+
+    timeout = (typeof timeout !== "undefined") ? timeout : 2000;
+    callback = (typeof callback !== "undefined") ? callback : function() {};
+
+    // the rest of the function
+
+}
+```
+
+While this approach is safer, it still requires a lot of extra code for a very basic operation. Popular JavaScript libraries are filled with similar patterns as this represents a common pattern.
 
 ECMAScript 6 makes it easier to provide default values for parameters by providing initializations that are used when the parameter isn't formally passed. For example:
 
@@ -79,23 +90,244 @@ makeRequest("/foo", null, function(body) {
 
 In the case of default parameter values, the value of `null` is considered to be valid and the default value will not be used.
 
+## The arguments Object
+
+The behavior of the `arguments` object is different when default parameters are present. In ECMAScript 5 nonstrict mode, the `arguments` object reflects changes in the named parameters of a function. For example:
+
+```js
+function mixArgs(first, second) {
+    console.log(first === arguments[0]);
+    console.log(second === arguments[1]);
+    first = "c";
+    second = "d"
+    console.log(first === arguments[0]);
+    console.log(second === arguments[1]);
+}
+
+mixArgs("a", "b");
+```
+
+This outputs:
+
+```
+true
+true
+true
+true
+```
+
+The `arguments` object is always updated in nonstrict mode to reflect changes in the named parameters. In ECMAScript 5 strict mode, the `arguments` object does not reflect changes to the named parameters:
+
+```js
+function mixArgs(first, second) {
+    "use strict";
+
+    console.log(first === arguments[0]);
+    console.log(second === arguments[1]);
+    first = "c";
+    second = "d"
+    console.log(first === arguments[0]);
+    console.log(second === arguments[1]);
+}
+
+mixArgs("a", "b");
+```
+
+This outputs:
+
+```
+true
+true
+false
+false
+```
+
+ECMAScript 5 strict mode changed this behavior to eliminate this confusing aspect of `arguments`.
+
+A function using default parameters, however, will always behave in the same manner as ECMAScript 5 strict mode regardless of whether the function is running in strict mode. The presence of default parameters triggers the `arguments` object to remain detached from the named parameters. This is a subtle but more important detail because of how the `arguments` object may be used. Consider the following:
+
+```js
+// not in strict mode
+function mixArgs(first, second = "b") {
+    console.log(arguments.length);
+    console.log(first === arguments[0]);
+    console.log(second === arguments[1]);
+    first = "c";
+    second = "d"
+    console.log(first === arguments[0]);
+    console.log(second === arguments[1]);
+}
+
+mixArgs("a");
+```
+
+This outputs:
+
+```
+1
+true
+false
+false
+false
+```
+
+In this example, `arguments.length` is 1 because only one argument was passed to `mixArgs()`. That also means `arguments[1]` is `undefined`, which is the expected behavior when only one argument is passed to a function. That means `first` is equal to `arguments[0]` as well. Changing `first` and `second` have no effect on `arguments`. This behavior occurs in both nonstrict and strict mode, so you can rely on `arguments` to always reflect the initial call state.
+
+## Default Parameter Expressions
+
 Perhaps the most interesting feature of default parameter values is that the default value need not be a primitive value. You can, for example, execute a function to retrieve the default parameter:
 
 ```js
-function getCallback() {
-    return function() {
-        // some code
-    };
+function getValue() {
+    return 5;
 }
 
-function makeRequest(url, timeout = 2000, callback = getCallback()) {
-
-    // the rest of the function
-
+function add(first, second = getValue()) {
+    return first + second;
 }
+
+console.log(add(1, 1));     // 2
+console.log(add(1));        // 6
 ```
 
-Here, if the last argument isn't provided, the function `getCallback()` is called to retrieve the correct default value. This opens up a lot of interesting possibilities to dynamically inject information into functions.
+Here, if the last argument isn't provided, the function `getValue()` is called to retrieve the correct default value. Keep in mind that `getValue()` is only called when `add()` is called without a second parameter, not when the function declaration is first parsed. That means each call to `getValue()` can potentially return a different value:
+
+```js
+let value = 5;
+
+function getValue() {
+    return value++;
+}
+
+function add(first, second = getValue()) {
+    return first + second;
+}
+
+console.log(add(1, 1));     // 2
+console.log(add(1));        // 6
+console.log(add(1));        // 7
+```
+
+In this example, `value` begins as 5 and is incremented each time `getValue()` is called. The first call to `add(1)` returns 6 while the second call to `add(1)` returns 7 because `value` was incremented. Because the default value is only evaluated when the function is called, changes to that value can be made at any time.
+
+Another interesting capability is using a previous parameter as the default for a later parameter. Here's an example:
+
+```js
+function add(first, second = first) {
+    return first + second;
+}
+
+console.log(add(1, 1));     // 2
+console.log(add(1));        // 2
+```
+
+In this code, the parameter `second` is given a default value of `first`, meaning that passing in just one argument results in the same value for both arguments. So `add(1, 1)` returns 2 just as `add(1)` returns 2. Taking this a step further, you can pass `first` into a function to get the value for `second`:
+
+```js
+function getValue(value) {
+    return value + 5;
+}
+
+function add(first, second = getValue(first)) {
+    return first + second;
+}
+
+console.log(add(1, 1));     // 2
+console.log(add(1));        // 7
+```
+
+This example sets `second` equal to the value returned from `getValue(first)`, so while `add(1, 1)` still returns 2, `add(1)` returns 7 (1 + 6).
+
+The ability to reference parameters from default parameter assignments works only for previous arguments, so early arguments do not have access to later arguments. For example:
+
+```js
+function add(first = second, second) {
+    return first + second;
+}
+
+console.log(add(1, 1));     // 2
+console.log(add(1));        // throws error
+```
+
+The call to `add(1)` in this example throws an error because `second` is defined after `first` and is therefore unavailable as a default value. To understand why, it's important to revisit temporal dead zones from Chapter 1.
+
+## Parameter Temporal Dead Zone
+
+In Chapter 1, you learned about the temporal dead zone (TDZ) as it relates to `let` and `const`. Default parameters also have a TDZ where parameters cannot be accessed. You can think of default parameters as behaving similarly to `let` declarations. Each parameter creates a new identifier binding that cannot be referenced without error prior to being initialized. In the context of default parameters, initialization happens when the function is called either by passing a value for the parameter or by using the default parameter value. Consider the following example again:
+
+```js
+function getValue(value) {
+    return value + 5;
+}
+
+function add(first, second = getValue(first)) {
+    return first + second;
+}
+
+console.log(add(1, 1));     // 2
+console.log(add(1));        // 7
+```
+
+The calls to `add(1, 1)` and `add(1)` are effectively executing this code to create the parameter values:
+
+```js
+// JavaScript representation of call to add(1, 1)
+let first = 1;
+let second = 1;
+
+// JavaScript representation of call to add(1)
+let first = 1;
+let second = getValue(first);
+```
+
+When the function `add()` is first executed, the bindings `first` and `second` are added to a parameter-specific TDZ (similar to how `let` behaves). So while `second` can be initialized with the value of `first` because `first` is always initialized at that time, the reverse is not true. Consider this example:
+
+```js
+function add(first = second, second) {
+    return first + second;
+}
+
+console.log(add(1, 1));         // 2
+console.log(add(undefined, 1)); // throws error
+```
+
+The calls to `add(1, 1)` and `add(undefined, 1)` and this example now map to this:
+
+```js
+// JavaScript representation of call to add(1, 1)
+let first = 1;
+let second = 1;
+
+// JavaScript representation of call to add(undefined, 1)
+let first = second;
+let second = 1;
+```
+
+In this example, the call to `add(undefined, 1)` throws an error because `second` hasn't yet been initialized when `first` is initialized. At that point, `second` is in the TDZ and therefore any references to `second` throw an error. This mirrors the behavior of `let` bindings discussed in Chapter 1.
+
+I> Function parameters have their own scope and their own TDZ that is separate from the function body scope.
+
+### Default Parameters Using Function Objects
+
+The `Function` constructor is an infrequently used part of JavaScript that allows you to dynamically create a new function. The arguments to the constructor are the parameters for the function and the function body (all as strings). For example:
+
+```js
+var add = new Function("first", "second", "return first + second");
+
+console.log(add(1, 1));     // 2
+```
+
+ECMAScript 6 augments the capabilities of the `Function` constructor to allow default parameters. You need only add an equals sign and a value to the parameter names:
+
+```js
+var add = new Function("first", "second = first",
+        "return first + second");
+
+console.log(add(1, 1));     // 2
+console.log(add(1));        // 2
+```
+
+In this example, the parameter `second` is assigned the value of `first` when not present. The syntax is the same as for function declarations that don't use `Function`. This functionality ensures that `Function` has all of the same capabilities as the declarative form.
 
 ## Rest Parameters
 
@@ -280,7 +512,7 @@ console.log(person);        // "[Object object]"
 console.log(notAPerson);    // "undefined"
 ```
 
-Calling `Person()` without `new` results in `undefined` (and a `name` property being set on the global object in non-strict mode). It's fairly obvious from the code that the intent is to use `Person` with `new` to create a new object. The confusion over the dual roles of functions led to some changes in ECMAScript 6.
+Calling `Person()` without `new` results in `undefined` (and a `name` property being set on the global object in nonstrict mode). It's fairly obvious from the code that the intent is to use `Person` with `new` to create a new object. The confusion over the dual roles of functions led to some changes in ECMAScript 6.
 
 First, the specification defines two different internal-only methods that every function has: `[[Call]]` and `[[Construct]]`. When a function is called without `new`, the `[[Call]]` method is executed, which essentially executes the body of the function as it appears in the code. When a function is called with `new`, that's when the `[[Construct]]` method is called. The `[[Construct]]` method is responsible for creating a new object, called the *new target*, and then executing the function body with `this` set to the new target. Functions that have a `[[Construct]]` method are called *constructors*.
 
