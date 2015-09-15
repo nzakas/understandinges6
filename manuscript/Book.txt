@@ -1,9 +1,9 @@
 00-Introduction.md
 01-Block-Bindings.md
-02-Destructuring.md
-03-Strings-and-Regular-Expressions.md
-04-Functions.md
-05-Objects.md
+02-Strings-and-Regular-Expressions.md
+03-Functions.md
+04-Objects.md
+05-Destructuring.md
 06-Symbols.md
 07-Iterators-And-Generators.md
 08-Classes.md
