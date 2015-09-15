@@ -307,28 +307,6 @@ In this example, the call to `add(undefined, 1)` throws an error because `second
 
 I> Function parameters have their own scope and their own TDZ that is separate from the function body scope.
 
-### Default Parameters Using Function Objects
-
-The `Function` constructor is an infrequently used part of JavaScript that allows you to dynamically create a new function. The arguments to the constructor are the parameters for the function and the function body (all as strings). For example:
-
-```js
-var add = new Function("first", "second", "return first + second");
-
-console.log(add(1, 1));     // 2
-```
-
-ECMAScript 6 augments the capabilities of the `Function` constructor to allow default parameters. You need only add an equals sign and a value to the parameter names:
-
-```js
-var add = new Function("first", "second = first",
-        "return first + second");
-
-console.log(add(1, 1));     // 2
-console.log(add(1));        // 2
-```
-
-In this example, the parameter `second` is assigned the value of `first` when not present. The syntax is the same as for function declarations that don't use `Function`. This functionality ensures that `Function` has all of the same capabilities as the declarative form.
-
 ## Rest Parameters
 
 Since JavaScript functions can be passed any number of parameters, it's not always necessary to define each parameter specifically. Early on, JavaScript provided the `arguments` object as a way of inspecting all function parameters that were passed without necessarily defining each one individually. While that worked fine in most cases, it can become a little cumbersome to work with. For example:
@@ -337,6 +315,7 @@ Since JavaScript functions can be passed any number of parameters, it's not alwa
 function pick(object) {
     let result = Object.create(null);
 
+    // start at the second parameter
     for (let i = 1, len = arguments.length; i < len; i++) {
         result[arguments[i]] = object[arguments[i]];
     }
@@ -356,7 +335,7 @@ console.log(bookData.author);   // "Nicholas C. Zakas"
 console.log(bookData.year);     // 2015
 ```
 
-This function mimics the `pick()` method from Underscore. The first argument is the object from which to copy properties and every other argument is the name of a property that should be copied on the result. There are couple of things to notice about this function. First, it's not at all obvious that the function is capable of handling more than one parameter. You could add in several more named parameters, but you would always fall short of indicating that this function can take any number of parameters. Second, because the first parameter is named and used directly, you have to start looking in the `arguments` object at index 1 instead of starting at index 0. Remembering to use the appropriate indices with `arguments` isn't necessarily difficult, but it's one more thing to keep track of. ECMAScript 6 introduces rest parameters to help with these issues.
+This function mimics the `pick()` method from the Underscore library. The first argument is the object from which to copy properties and every other argument is the name of a property that should be copied on the result. There are couple of things to notice about this function. First, it's not at all obvious that the function is capable of handling more than one parameter. You could add in several more named parameters, but you would always fall short of indicating that this function can take any number of parameters. Second, because the first parameter is named and used directly, you have to start looking in the `arguments` object at index 1 instead of starting at index 0. Remembering to use the appropriate indices with `arguments` isn't necessarily difficult, but it's one more thing to keep track of. ECMAScript 6 introduces rest parameters to help with these issues.
 
 Rest parameters are indicated by three dots (`...`) preceding a named parameter. That named parameter then becomes an `Array` containing the rest of the parameters (which is why these are called "rest" parameters). For example, `pick()` can be rewritten using rest parameters like this:
 
@@ -374,7 +353,11 @@ function pick(object, ...keys) {
 
 In this version of the function, `keys` is a rest parameter that contains all parameters after the first one (unlike `arguments`, which contains all parameters including the first one). That means you can iterate over `keys` from beginning to end without worry. As a bonus, you can tell by looking at the function that it is capable of handling any number of parameters.
 
-The only restriction on rest parameters is that no other named arguments can follow in the function declaration. For example, this causes syntax error:
+I> Rest parameters do not affect the `length` property of functions, which indicates the number of named parameters for a function. The value of `length` for `pick()` from the previous example is 1 because only `object` counts towards this value.
+
+### Restrictions
+
+There are two restrictions on rest parameters. The first restriction is that there can be only one rest parameter and the rest parameter must be last. For example, this causes a syntax error:
 
 ```js
 // Syntax error: Can't have a named parameter after rest parameters
@@ -391,7 +374,47 @@ function pick(object, ...keys, last) {
 
 Here, the parameter `last` follows the rest parameter `keys` and causes a syntax error.
 
+The second restriction is that rest parameters cannot be used in an object literal setter. For example:
+
+```js
+let object = {
+
+    // Syntax error: Can't use rest param in setter
+    set(...value) {
+        // do something
+    }
+};
+```
+
+Since object literal setters are restricted to a single argument, rest parameters are not allowed.
+
+### The arguments Object
+
 Rest parameters were designed to replace `arguments` in ECMAScript. Originally ECMAScript 4 did away with `arguments` and added rest parameters to allow for an unlimited number of arguments to be passed to functions. Even though ECMAScript 4 never came into being, the idea was kept around and reintroduced in ECMAScript 6 despite `arguments` not being removed from the language.
+
+The `arguments` object works together with rest parameters by reflecting the arguments that were passed to the function when called. For example:
+
+```js
+function checkArgs(...args) {
+    console.log(args.length);
+    console.log(arguments.length);
+    console.log(args[0], arguments[0]);
+    console.log(args[1], arguments[1]);
+}
+
+checkArgs("a", "b");
+```
+
+This outputs:
+
+```
+2
+2
+a a
+b b
+```
+
+The `arguments` object always correctly reflects the parameters that were passed into a function regardless of rest parameter usage.
 
 ## The Spread Operator
 
@@ -437,6 +460,40 @@ console.log(Math.max(...values, 0));        // 0
 In this example, the last argument passed to `Math.max()` is `0`, which comes after the other arguments are passed in using the spread operator.
 
 The spread operator for argument passing makes using arrays for function arguments much easier. You'll likely find it to be a suitable replacement for the `apply()` method in most circumstances.
+
+### The Function Constructor
+
+The `Function` constructor is an infrequently used part of JavaScript that allows you to dynamically create a new function. The arguments to the constructor are the parameters for the function and the function body (all as strings). For example:
+
+```js
+var add = new Function("first", "second", "return first + second");
+
+console.log(add(1, 1));     // 2
+```
+
+ECMAScript 6 augments the capabilities of the `Function` constructor to allow default parameters and rest parameters. You need only add an equals sign and a value to the parameter names:
+
+```js
+var add = new Function("first", "second = first",
+        "return first + second");
+
+console.log(add(1, 1));     // 2
+console.log(add(1));        // 2
+```
+
+In this example, the parameter `second` is assigned the value of `first` when not present. The syntax is the same as for function declarations that don't use `Function`.
+
+For rest parameters, just add the `...` before the last parameter:
+
+```js
+var pickFirst = new Function("...args", "return args[0]");
+
+console.log(pickFirst(1, 2));   // 1
+```
+
+This code creates a function that uses only a single rest parameter and returns the first argument that was passed in.
+
+The addition of default and rest parameters ensures that `Function` has all of the same capabilities as the declarative form.
 
 ## The name Property
 
