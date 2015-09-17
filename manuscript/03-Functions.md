@@ -1005,6 +1005,96 @@ In this example, the `sum()` function is called using `call()` and `apply()` to 
 
 Arrow functions are appropriate to use anywhere you're currently using an anonymous function expression, such as with callbacks.
 
+## Tail Call Optimization
+
+Perhaps the most interesting change to functions in ECMAScript 6 is one that has no new syntax. A *tail call* is when a function is called as the last statement in another function.For example:
+
+```js
+function doSomething() {
+    return doSomethingElse();   // tail call
+}
+```
+
+Tail calls as implemented in ECMAScript 5 engines are handled just like any other function call: a new stack frame is created and pushed onto the call stack to represent the function call. That means every previous stack frame is kept in memory and that is problematic when the call stack gets too large.
+
+Tail call optimization seeks to reduce the size of the call stack for certain tail calls in strict mode (nonstrict mode tail calls are left untouched). Instead of creating a new stack frame for a tail call, the current stack frame is cleared and reused so long as certain conditions are met:
+
+1. The tail call does not require access to variables in the current stack frame (the function is not a closure)
+1. The function making the tail call has no further work to do after the tail call returns
+1. The result of the tail call is returned as the function value
+
+Here are some examples:
+
+```js
+"use strict";
+
+function doSomething() {
+    // optimized
+    return doSomethingElse();
+}
+
+function doSomething() {
+    // not optimized - no return
+    doSomethingElse();
+}
+
+function doSomething() {
+    // not optimized - must add after returning
+    return 1 + doSomethingElse();
+}
+
+function doSomething() {
+    // not optimized - call isn't in tail position
+    var result = doSomethingElse();
+    return result;
+}
+
+function doSomething() {
+    var num = 1,
+        func = () => num;
+
+    // not optimized - function is a closure
+    return func();
+}
+```
+
+In practice, tail call optimization happens behind-the-scenes, so you don't need to think about it unless you're trying to optimize a function. The primary use case for tail call optimization is in recursive functions, as that is where the optimization has the greatest effect. Consider a function that computes factorials:
+
+```js
+function factorial(n) {
+
+    if (n <= 1) {
+        return 1;
+    } else {
+
+        // not optimized - must multiple after returning
+        return n * factorial(n - 1);
+    }
+}
+```
+
+This version of the function cannot be optimized because multiplication must happen after the recursive call to `factorial()`. If `n` is a very large number, the call stack size will grow and could potentially cause a stack overflow. In order to optimize the function, you need to ensure that the multiplication doesn't happen after the last function call.
+
+You can use a default parameter to move the multiplication operation outside of the `return` statement. The resulting function carries along the temporary result into the next iteration, creating a function that behaves the same but can be optimized by an ECMAScript 6 engine:
+
+```js
+function factorial(n, p = 1) {
+
+    if (n <= 1) {
+        return 1 * p;
+    } else {
+        let result = n * p;
+
+        // optimized
+        return factorial(n - 1, result);
+    }
+}
+```
+
+In this rewritten version of the code, a second argument `p` is added as a parameter with a default value of 1. The `p` parameter holds the previous multiplication result so that the next result can be computed without another function call. When `n` is greater than 1, the multiplication is done first and then passed in as the second argument to `factorial()`. This allows the recursive call to be optimized.
+
+Tail call optimization is something you should think about whenever you're writing a recursive function as it can provide a significant performance improvement, especially when applied in a computationally-expensive function.
+
 ## Summary
 
 Functions haven't undergone a huge change in ECMAScript 6, but rather, a series of incremental changes that make them easier to work with.
@@ -1020,3 +1110,5 @@ The addition of the `name` property helps to more easily identify functions for 
 The behavior of a function has been defined by `[[Call]]`, normal function execution, and `[[Construct]]`, when a function is called with `new`. The `new.target` metaproperty allows you to determine if a function was called using `new` or not.
 
 The biggest change to functions in ECMAScript 6 was the addition of arrow functions. Arrow functions are designed to be used in places where anonymous function expressions have traditionally been used. Arrow functions have a more concise syntax, lexical `this` binding, and no `arguments` object. Additionally, arrow functions can't change their `this` binding and so can't be used as constructors.
+
+Tail call optimization allows some function calls to be optimized in order to keep a smaller call stack, use less memory, and prevent stack overflow errors. This optimization is applied by the engine automatically when it is safe to do so, however, you may decide to rewrite recursive functions in order to take advantage of this optimization.
