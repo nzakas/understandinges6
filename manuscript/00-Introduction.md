@@ -29,13 +29,13 @@ This book is not for beginners who have never written JavaScript. You will need 
 
 **Chapter 1: Block Bindings** talks about `let` and `const`, the block-level replacement for `var`.
 
-**Chapter 2: Destructuring** introduces object and array destructuring, which allow you to decompose objects and arrays using a concise syntax.
+**Chapter 2: Strings and Regular Expressions** covers the additions to string manipulation and inspection as well as the introduction of template strings.
 
-**Chapter 3: Strings and Regular Expressions** covers the additions to string manipulation and inspection as well as the introduction of template strings.
+**Chapter 3: Functions** discusses the various changes to functions. This includes the arrow function form, default parameters, rest parameters, and more.
 
-**Chapter 4: Functions** discusses the various changes to functions. This includes the arrow function form, default parameters, rest parameters, and more.
+**Chapter 4: Objects** explains the changes to how objects are created, modified, and used. Topics include changes to object literal syntax, and new reflection methods.
 
-**Chapter 5: Objects** explains the changes to how objects are created, modified, and used. Topics include changes to object literal syntax, and new reflection methods.
+**Chapter 5: Destructuring** introduces object and array destructuring, which allow you to decompose objects and arrays using a concise syntax.
 
 **Chapter 6: Symbols** introduces the concept of symbols, a new way to define properties. Symbols are a new primitive type that can be used to obscure (but not hide) object properties and methods.
 
