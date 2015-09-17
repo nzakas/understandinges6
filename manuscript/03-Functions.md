@@ -735,7 +735,7 @@ In this example, `doSomething()` is hoisted into the global scope so that it sti
 
 One of the most interesting new parts of ECMAScript 6 are arrow functions. Arrow functions are, as the name suggests, functions defined with a new syntax that uses an "arrow" (`=>`). However, arrow functions behave differently than traditional JavaScript functions in a number of important ways:
 
-* **Lexical `this`, `super`, `arguments`, and `new.target` bindings** - The value of `this`, `super`, `arguments`, and `new.target` inside of the function is determined by where the arrow function is defined not where it is used. (`super` is covered in Chapter 3.)
+* **Lexical `this`, `super`, `arguments`, and `new.target` bindings** - The value of `this`, `super`, `arguments`, and `new.target` inside of the function is determined by where the arrow function is defined not where it is used. (`super` is covered in Chapter 4.)
 * **Not `new`able** - Arrow functions do not have a `[[Construct]]` method and therefore cannot be used as constructors. Arrow functions throw an error when used with `new`.
 * **Can't change `this`** - The value of `this` inside of the function can't be changed, it remains the same value throughout the entire lifecycle of the function.
 * **No `arguments` object** - You can't access arguments through the `arguments` object, as `arguments` is a lexical binding to the containing function. You must use named arguments or other ES6 features such as rest arguments.
