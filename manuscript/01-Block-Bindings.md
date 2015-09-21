@@ -2,10 +2,7 @@
 
 Traditionally, one tricky part of programming in JavaScript has been the way variable declarations work. In most C-based languages, variables (or *bindings*) are created at the spot where the declaration occurs. In JavaScript, however, this is not the case. Where your variables are actually created depends on how you declare them, and ECMAScript 6 offers options to make controlling scope easier. This chapter demonstrates why classic `var` declarations can be confusing, introduces block-level bindings in ECMAScript 6, and then offers some best practices for using them.
 
-<!-- I suggest stepping back above to introduce readers to the chapter as a whole, and then leading with a header
-     for var declarations. I've had a go at tweaking the opening paragraph, but do change the text if it doesn't make sense. /JG -->
-
-##Var Declarations and Hoisting
+## Var Declarations and Hoisting
 
 Variable declarations using `var` are *hoisted* to the top of the function (or to global scope, if declared outside of a function) regardless of where the actual declaration occurs. For a demonstration of what hoisting does, consider the following function definition:
 
@@ -53,18 +50,18 @@ The declaration of `value` is moved to the top (hoisted) while the initializatio
 
 It often takes new JavaScript developers some time to get used to declaration hoisting, and misunderstanding this unique behavior can end up causing bugs. For this reason, ECMAScript 6 introduces block level scoping options to make the control of variable lifecycle a little more powerful.
 
-##Declarations that Limit Variable Scope
+## Block-Level Declarations
 
-<!-- I suggest making the "Let Declarations" and "Const Declarations" sections subheads of one section. If you
-     agree, could you add a bit here to introduce? /JG -->
+Block-level declarations are those that declare variables that are inaccessible outside of a given block scope. Block scopes are created:
 
-###Let Declarations
+1. Inside of a function
+1. Inside of a block (indicated by the `{` and `}` characters)
 
-The `let` declaration syntax is the same as the syntax for `var`. You can basically replace `var` with `let` to declare a variable, but limit the variable's scope to only the current code block.
+Block scoping is how many C-based languages work, and the introduction of block-level declarations in ECMAScript 6 is intended to bring that same flexibility (and uniformity) to JavaScript.
 
-<!-- I'm unsure what the "I>" syntax means, so I kept it in, but I do suggest moving this sentence here. /JG -->
+### Let Declarations
 
-I> Since `let` declarations are *not* hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block, so that they are available to the entire block. Here's an example:
+The `let` declaration syntax is the same as the syntax for `var`. You can basically replace `var` with `let` to declare a variable, but limit the variable's scope to only the current code block. Since `let` declarations are not hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block, so that they are available to the entire block. Here's an example:
 
 ```js
 function getValue(condition) {
@@ -88,36 +85,34 @@ function getValue(condition) {
 
 This version of the `getValue` function behaves much closer to what you'd expect in other C-based languages. The variable `value` is declared using `let` instead of `var`. That means the declaration is not hoisted to the top of the function definition, and the variable `value` is destroyed once execution has flowed out of the `if` block. If `condition` evaluates to false, then `value` is never declared or initialized.
 
-<!-- I might move this material discussing for loops to the section on loops, and keep this section
-     more general. /JG -->
+### No Redeclaration
 
-Perhaps one area where developers most want block level scoping of variables is with `for` loops, where the throwaway counter variable is meant to be used only inside the loop. For instance, it's not uncommon to see code such as this in JavaScript:
-
-```js
-for (var i=0; i < 10; i++) {
-    process(items[i]);
-}
-
-// i is still accessible here
-console.log(i);                     // 10
-```
-
-In other languages, where block level scoping is the default, code like this works as intended, and only the `for` loop has access to the `i` variable. In JavaScript, the variable `i` is still accessible after the loop is completed because the `var` declaration gets hoisted. Using `let` instead, as in the following code, allows you to get the intended behavior:
+If an identifier has already been defined in a scope, then using the identifier in a `let` declaration inside that scope causes an error to be thrown. For example:
 
 ```js
-for (let i=0; i < 10; i++) {
-    process(items[i]);
-}
+var count = 30;
 
-// i is not accessible here - throws an error
-console.log(i);
+// Syntax error
+let count = 40;
 ```
 
-In this example, the variable `i` only exists within the `for` loop. Once the loop is complete, the variable is destroyed and is no longer accessible elsewhere.
+In this example, `count` is declared twice, once with `var` and once with `let`. Because `let` will not redefine an identifier that already exists in the same scope, the declaration throws an error. No error is thrown if a `let` declaration creates a new variable in a scope with the same name as a variable in the containing scope, which is demonstrated in the following code:
+
+```js
+var count = 30;
+
+// Does not throw an error
+if (condition) {
+
+    let count = 40;
+
+    // more code
+}
+```
+
+This `let` declaration doesn't throw an error because it creates a new variable called `count` within the `if` statement, instead of in the surrounding block. Inside the `if` block, this new variable shadows the global `count`, preventing access to it until execution leaves the block.
 
 ### Constant Declarations
-
-<!-- I might try to avoid saying "new," in general, since it won't always be new. /JG -->
 
 Another way to define variables in ECMAScript 6 is to use the `const` declaration syntax. Variables declared using `const` are considered *constants*, meaning their values cannot be changed once set. For this reason, every `const` variable must be initialized on declaration, as shown in this example:
 
@@ -129,16 +124,10 @@ const maxItems = 30;
 const name;
 ```
 
-<!-- Does not initializing "name" above cause an error on trying to run the script, or only if you try to use
-     "name"? I'm just not 100% clear from the text. /JG -->
-
-The `maxItems` variable is initialized, so its `const` declaration should work without a problem. The `name` variable, however, would cause an error if you tried to run the program containing this code.
+The `maxItems` variable is initialized, so its `const` declaration should work without a problem. The `name` variable, however, would cause an error if you tried to run the program containing this code because it is not initialized. All constant declarations must be initialized or else a syntax error is reported.
 
 
 #### Similarities and Differences from Let
-
-<!-- I feel like we have a couple of subsections here; I've had a go at adding headings, but do tweak
-     if innaccurate. /JG -->
 
 Constants, like `let` declarations, are block-level declarations. That means constants are destroyed once execution flows out of the block in which they were declared, and declarations are not hoisted to the top of the block, as demonstrated in this example:
 
@@ -175,17 +164,11 @@ const maxItems = 5;
 maxItems = 6;      // throws error
 ```
 
-Much like constants in other languages, the `maxItems` variable can't be modified without changing its initialization.
-
-<!-- Or perhaps something else above, if my suggestion doesn't quite work. We could just use something to give a good lead-in to the next concept, and a heading. /JG -->
+Much like constants in other languages, the `maxItems` variable can't be assigned a new value later on. However, unlike constants in other language, the value a constant hold may be modified if it is an object.
 
 #### Declaring Objects with Const
 
-<!-- Are we suggesting a difference between the "variables" we've discussed before and the "objects"
-     described below, or could "...of those objects" be "...of those variables"? It seems like the former,
-     but I did want to check. /JG -->
-
-Keep in mind, however, that `const` prevents modification of the binding and not of the value itself. That means `const` declarations for objects do not prevent modification of those objects. For example:
+A `const` declaration prevents modification of the binding and not of the value itself. That means `const` declarations for objects do not prevent modification of those objects. For example:
 
 ```js
 const person = {
@@ -203,41 +186,24 @@ person = {
 
 Here, the binding `person` is created with an initial value of an object with one property. It's possible to change `person.name` without causing an error because this changes what `person` contains and doesn't change the value that `person` is bound to. When this code attempts to assign a value to `person` (attempting to change the binding), an error is thrown. This subtlety in how `const` works with objects is easy to misunderstand. Just remember: `const` prevents modification of the binding, not modification of the bound value.
 
-#### On Constant Declarations Before ECMAScript 6
-
 W> Several browsers implement pre-ECMAScript 6 versions of `const`, so be aware of this when you use this declaration type. Implementations range from being simply a synonym for `var` (allowing the value to be overwritten) to actually defining constants but only in the global or function scope. For this reason, be especially careful with using `const` in a production system. It may not be providing you with the functionality you expect.
 
 ### The Temporal Dead Zone
 
-Unlike `var`, `let` and `const` have no hoisting characteristics. A variable declared with either cannot be accessed until after the declaration. Attempting to do so results in a reference error, as in this code:
+Unlike `var`, `let` and `const` have no hoisting characteristics. A variable declared with either cannot be accessed until after the declaration. Attempting to do so results in a reference error, even when using normally safe operations such as `typeof`:
 
 ```js
 if (condition) {
-    console.log(value);     // ReferenceError!
+    console.log(typeof value);  // ReferenceError!
     let value = "blue";
 }
 ```
-
-<!-- I suggest combining the next example with this one, and making this "typeof value" now. Then, we can
-     still mention that even this innocuous operator throws an error, without repeating the code. /JG -->
 
 Here, the variable `value` is defined and initialized using `let`, but that statement is never executed because the previous line throws an error. The issue is that `value` exists in what has become known in the JavaScript community as the *temporal dead zone* (TDZ). The TDZ is never named explicitly in the specification, but it's a term often used to describe the non-hoisting behavior of `let` and `const`. This section covers some subtleties of declaration placement that the TDZ causes, and although the examples shown all use `let`, note that the same information applies to `const`.
 
 When a JavaScript engine looks through an upcoming block and finds a variable declaration, it either hoists the declaration (for `var`) or places the declaration in the TDZ (for `let` and `const`). Any attempt to access a variable in the TDZ results in a runtime error. That variable is only removed from the TDZ, and therefore safe to use, once execution flows to the variable declaration.
 
-This is true anytime you attempt to use a variable declared with `let` before it's been defined. Even the normally safe `typeof` operator isn't safe, as this code demonstrates:
-
-```js
-if (condition) {
-    console.log(typeof value);     // ReferenceError!
-    let value = "blue";
-}
-```
-
-Here, `typeof value` throws the same error as the previous example because you cannot use a `let` variable before its declaration within the same block. You can, however, use `typeof` on a variable outside of the block where that variable is declared, though it may not give the results you're after. Consider this code:
-
-<--! Would it be accurate to say that using typeof outside the block may not produce the result you want, even
-     though you can use it? Also, does this only apply to typeof, or would "console.log(value)" work, too? /JG -->
+This is true anytime you attempt to use a variable declared with `let` before it's been defined, even the normally safe `typeof` operator. You can, however, use `typeof` on a variable outside of the block where that variable is declared, though it may not give the results you're after. Consider this code:
 
 ```js
 console.log(typeof value);     // "undefined"
@@ -249,41 +215,37 @@ if (condition) {
 
 The variable `value` isn't in the TDZ when the `typeof` operation executes because it occurs outside of the block in which `value` is declared. That means there is no `value` binding, and `typeof` simply returns `"undefined"`.
 
-<--! It seems like, we're out of the TDZ now, but I wasn't 100% certain. Perhaps add a header here, if so? /JG -->
-
-On the other hand, if an identifier has already been defined in a block, then using the identifier in a `let` declaration inside that block causes an error to be thrown. For example:
-
-```js
-var count = 30;
-
-// Syntax error
-let count = 40;
-```
-
-In this example, `count` is declared twice, once with `var` and once with `let`. Because `let` will not redefine an identifier that already exists in the same scope, the declaration throws an error. No error is thrown if a `let` declaration creates a new variable in a scope with the same name as a variable in the containing scope, which is demonstrated in the following code:
-
-```js
-var count = 30;
-
-// Does not throw an error
-if (condition) {
-
-    let count = 40;
-
-    // more code
-}
-```
-
-This `let` declaration doesn't throw an error because it creates a new variable called `count` within the `if` statement, instead of in the surrounding block. Inside the `if` block, this new variable shadows the global `count`, preventing access to it until execution leaves the block.
-
-Now that you know a little more about limiting variable scope and some general pitfalls to watch out for when declaring variables, read on to see how ECMAScript 6's block-level bindings can help out in a particularly popular programming construct: the `for` loop.
-
-<!-- Or perhaps something else above, if my placeholder doesn't quite fit. We could just use a bit here
-     to transition into the next section more gently. /JG -->
+The TDZ is just one unique aspect of block bindings. Another unique aspect has to do with their use inside of loops.
 
 ## Block Binding in Loops
 
-The characteristics of `var` have long made using variables inside of loops problematic, because those variables are accessible from outside the scope of the loop. Consider the following code:
+Perhaps one area where developers most want block level scoping of variables is with `for` loops, where the throwaway counter variable is meant to be used only inside the loop. For instance, it's not uncommon to see code such as this in JavaScript:
+
+```js
+for (var i=0; i < 10; i++) {
+    process(items[i]);
+}
+
+// i is still accessible here
+console.log(i);                     // 10
+```
+
+In other languages, where block level scoping is the default, code like this works as intended, and only the `for` loop has access to the `i` variable. In JavaScript, the variable `i` is still accessible after the loop is completed because the `var` declaration gets hoisted. Using `let` instead, as in the following code, allows you to get the intended behavior:
+
+```js
+for (let i=0; i < 10; i++) {
+    process(items[i]);
+}
+
+// i is not accessible here - throws an error
+console.log(i);
+```
+
+In this example, the variable `i` only exists within the `for` loop. Once the loop is complete, the variable is destroyed and is no longer accessible elsewhere.
+
+### Functions in Loops
+
+The characteristics of `var` have long made creating functions inside of loops problematic, because the loop variables are accessible from outside the scope of the loop. Consider the following code:
 
 ```js
 var funcs = [];
@@ -297,12 +259,7 @@ funcs.forEach(function(func) {
 });
 ```
 
-<!-- Would it be correct to say that one might expect this to print 0-9, below? The text just seems to hint
-     at unexpected behavior (for a newbie, at least), and I do think it'd be helpful for readers to know what the intended behavior is here, if so.
-
-     I've also just suggested a few other clarifying tweaks, but do revert those if not quite right. /JG -->
-
-You might ordinarily expect this code to print `i` as it goes up from `0` to `9`, but it outputs the number `10` ten times in a row. That's because the variable `i` is shared across each iteration of the loop, meaning the functions created inside the loop all hold a reference to the same variable. The variable `i` has a value of `10` once the loop completes, and so when `console.log(i)` is called, that's the value it outputs each time.
+You might ordinarily expect this code to print 0 to 9, but it outputs the number 10 ten times in a row. That's because the variable `i` is shared across each iteration of the loop, meaning the functions created inside the loop all hold a reference to the same variable. The variable `i` has a value of `10` once the loop completes, and so when `console.log(i)` is called, that's the value it outputs each time.
 
 To fix this problem, developers use immediately-invoked function expressions (IIFEs) inside of loops to force a new copy of the variable they want to iterate over to be created, as in this example:
 
@@ -365,9 +322,6 @@ funcs.forEach(function(func) {
 
 In this example, the `for-in` loop shows the same behavior as the `for` loop. Each time through the loop, a new `key` binding is created, and so each function has its own copy of the `key` variable. The result is that each function outputs a different value. If `var` were used to declare `key`, all functions would output `"c"`.
 
-<!-- Possible to make the following point a "note" in the final book, or add some connective tissue to lend
-     the statement more context? It just feels like a bit of an aside as-is. /JG -->
-
 I> It's important to understand that the behavior of `let` declarations in loops is a specially-defined behavior in the specification and is not necessarily related to the non-hoisting characteristics of `let`. In fact, early implementations of `let` did not have this behavior, as it was added later on in the process.
 
 ### Constant Declarations in Loops
@@ -409,15 +363,9 @@ funcs.forEach(function(func) {
 });
 ```
 
-This code functions almost exactly the same as the second example in the "Let Declarations in Loops" section. The only difference is that the value of `key` cannot be changed inside the loop. The `for-in` and `for-of` loops work with `const` because the loop initializer creates a new binding on each iteration through the loop rather than attempting to modify the value of an existing binding (as was the case with the `for` loop example).
-
-<!-- Which "for" loop example does the piece in parentheses refer to, above? It might be helpful to
-     number and caption selected listings we want to refer to, if possible, to make this easier to indicate.
-     /JG -->
+This code functions almost exactly the same as the second example in the "Let Declarations in Loops" section. The only difference is that the value of `key` cannot be changed inside the loop. The `for-in` and `for-of` loops work with `const` because the loop initializer creates a new binding on each iteration through the loop rather than attempting to modify the value of an existing binding (as was the case with the previous example using `for` instead of `for-in`).
 
 ## Global Block Bindings
-
-<!-- Should global in "the global object" be literal styled? /JG -->
 
 It's unusual to use `let` or `const` in the global scope, but if you do, understand that there is a potential for naming collisions when doing so, because the global object has predefined properties. In many JavaScript environments, global variables are assigned as properties on the global object, and global object properties are accessed transparently as non-qualified identifiers (such as `name` or `location`). Using a block binding declaration to define a variable that shares a name with a property of the global object can produce an error because global object properties may be nonconfigurable. Since block bindings disallow redefinition of an identifier in the same scope, it's not possible to shadow nonconfigurable global properties. Attempting to do so will result in an error. For example:
 
