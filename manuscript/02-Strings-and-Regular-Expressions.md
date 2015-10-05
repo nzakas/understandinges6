@@ -6,11 +6,13 @@ Strings are arguably one of the most important data types in programming. Found 
 
 Prior to ECMAScript 6, JavaScript strings were based solely on the idea of 16-bit character encodings. All string properties and methods, such as `length` and `charAt()`, were based around the idea that every 16-bit sequence represented a single character. ECMAScript 5 allowed JavaScript engines to decide which of two encodings to use, either UCS-2 or UTF-16 (both encodings use 16-bit *code units*, making all observable operations the same). While it's true that all of the world's characters used to fit into 16 bits at one point in time, that is no longer the case.
 
+### UTF-16 Code Points
+
 Keeping within 16 bits wasn't possible for Unicode's stated goal of providing a globally unique identifier to every character in the world. These globally unique identifiers, called *code points*, are simply numbers starting at 0 (you might think of these as character codes, though there is a subtle difference). A character encoding is responsible for encoding a code point into code units that are internally consistent. While UCS-2 had a one-to-one mapping of code point to code unit, UTF-16 is more variable.
 
 The first 2^16 code points are represented as single 16-bit code units in UTF-16. This is called the *Basic Multilingual Plane* (BMP). Everything beyond that range is considered to be in a *supplementary plane*, where the code points can no longer be represented in just 16-bits. UTF-16 solves this problem by introducing *surrogate pairs* in which a single code point is represented by two 16-bit code units. That means any single character in a string can be either one code unit (for BMP, total of 16 bits) or two (for supplementary plane characters, total of 32 bits).
 
-ECMAScript 5 kept all operations as working on 16-bit code units, meaning that you could get unexpected results from strings containing surrogate pairs. For example:
+ECMAScript 5 kept all operations working on 16-bit code units, meaning that you could get unexpected results from strings containing surrogate pairs. For example:
 
 ```js
 var text = "𠮷";
@@ -23,7 +25,13 @@ console.log(text.charCodeAt(0));    // 55362
 console.log(text.charCodeAt(1));    // 57271
 ```
 
-In this example, a single Unicode character is represented using surrogate pairs, and as such, the JavaScript string operations treat the string as having two 16-bit characters. That means `length` is 2, a regular expression trying to match a single character fails, and `charAt()` is unable to return a valid character string. The `charCodeAt()` method returns the appropriate 16-bit number for each code unit, but that is the closest you could get to the real value in ECMAScript 5.
+In this example, a single Unicode character is represented using surrogate pairs, and as such, the JavaScript string operations treat the string as having two 16-bit characters. That means:
+
+* `length` is 2
+* a regular expression trying to match a single character fails
+* `charAt()` is unable to return a valid character string
+
+The `charCodeAt()` method returns the appropriate 16-bit number for each code unit, but that is the closest you could get to the real value in ECMAScript 5.
 
 ECMAScript 6 enforces encoding of strings in UTF-16. Standardizing on this character encoding means that the language can now support functionality designed to work specifically with surrogate pairs.
 
@@ -168,7 +176,7 @@ If you've never worried about Unicode normalization before, then you probably wo
 
 ### The Regular Expression u Flag
 
-Many common string operations are accomplished by using regular expressions. However, as noted earlier, regular expressions also work on the basis of 16-bit code units each representing a single character. That's why the single character match in the earlier example didn't work. To address this problem, ECMAScript 6 defines a new flag for regular expressions: `u` for "Unicode".
+Many common string operations are accomplished by using regular expressions. However, as noted earlier, regular expressions also work on the basis of 16-bit code units each representing a single character. To address this problem, ECMAScript 6 defines a new flag for regular expressions: `u` for "Unicode".
 
 When a regular expression has the `u` flag set, it switches modes to work on characters and not code units. That means the regular expression will no longer get confused about surrogate pairs in strings and can behave as expected. For example:
 
@@ -441,23 +449,23 @@ console.log(re.flags);      // "g"
 
 Using `source` and `flags` together allow you to extract just the pieces of the regular expression that are necessary without needing to parse the regular expression string directly.
 
-## Template Strings
+## Template Literals
 
-JavaScript's strings have been fairly limited when compared to those in other languages. Template strings add new syntax to allow the creation of domain-specific languages (DSLs) for working with content in a way that is safer than the solutions we have today. The description on the template string strawman was as follows:
+JavaScript's strings have been fairly limited when compared to those in other languages. template literals add new syntax to allow the creation of domain-specific languages (DSLs) for working with content in a way that is safer than the solutions we have today. The description on the [template literal strawman](http://wiki.ecmascript.org/doku.php?id=harmony:quasis) was as follows:
 
 > This scheme extends ECMAScript syntax with syntactic sugar to allow libraries to provide DSLs that easily produce, query, and manipulate content from other languages that are immune or resistant to injection attacks such as XSS, SQL Injection, etc.
 
-In reality, though, template strings are ECMAScript 6's answer to several ongoing problems in JavaScript:
+In reality, though, template literals are ECMAScript 6's answer to several ongoing problems in JavaScript:
 
 * **Multiline strings** - JavaScript has never had a formal concept of multiline strings.
 * **Basic string formatting** - The ability to substitute parts of the string for values contained in variables.
 * **HTML escaping** - The ability to transform a string such that it is safe to insert into HTML.
 
-Rather than trying to add more functionality to JavaScript's already-existing strings, template strings represent an entirely new approach to solving these problems.
+Rather than trying to add more functionality to JavaScript's already-existing strings, template literals represent an entirely new approach to solving these problems.
 
 ### Basic Syntax
 
-At their simplest, template strings act like regular strings that are delimited by backticks (`` ` ``) instead of double or single quotes. For example:
+At their simplest, template literals act like regular strings that are delimited by backticks (`` ` ``) instead of double or single quotes. For example:
 
 ```js
 let message = `Hello world!`;
@@ -467,7 +475,7 @@ console.log(typeof message);        // "string"
 console.log(message.length);        // 12
 ```
 
-This code demonstrates that the variable `message` contains a normal JavaScript string. The template string syntax only is used to create the string value, which is then assigned to `message`.
+This code demonstrates that the variable `message` contains a normal JavaScript string. The template literal syntax only is used to create the string value, which is then assigned to `message`.
 
 If you want to use a backtick in your string, then you need only escape it by using a backslash (`\`):
 
@@ -479,7 +487,7 @@ console.log(typeof message);        // "string"
 console.log(message.length);        // 14
 ```
 
-There's no need to escape either double or single quotes inside of template strings.
+There's no need to escape either double or single quotes inside of template literals.
 
 ### Multiline Strings
 
@@ -518,7 +526,7 @@ let message = "Multiline \n" +
 
 All of the ways developers worked around JavaScript's lack of multiline strings left something to be desired.
 
-Template strings make multiline strings easy because there is no special syntax. Just include a newline where you want and it shows up in the result. For example:
+Template literals make multiline strings easy because there is no special syntax. Just include a newline where you want and it shows up in the result. For example:
 
 ```js
 let message = `Multiline
@@ -540,7 +548,7 @@ console.log(message);           // "Multiline
 console.log(message.length);    // 31
 ```
 
-In this code, all of the whitespace before the second line of the template string is considered to be a part of the string itself. If making the text line up with proper indentation is important to you, then you consider leaving nothing on the first line of a multiline template string and then indenting after that, such as this:
+In this code, all of the whitespace before the second line of the template literal is considered to be a part of the string itself. If making the text line up with proper indentation is important to you, then you consider leaving nothing on the first line of a multiline template literal and then indenting after that, such as this:
 
 ```js
 let html = `
@@ -549,9 +557,9 @@ let html = `
 </div>`.trim();
 ```
 
-This code begins the template string on the first line but doesn't have any text until the second. The HTML tags are indented to look correct and then the `trim()` method is called to remove the initial (empty) line.
+This code begins the template literal on the first line but doesn't have any text until the second. The HTML tags are indented to look correct and then the `trim()` method is called to remove the initial (empty) line.
 
-A> If you prefer, you can also use `\n` in a template string to indicate where a newline should be inserted:
+A> If you prefer, you can also use `\n` in a template literal to indicate where a newline should be inserted:
 A> {:lang="js"}
 A> ~~~~~~~~
 A>
@@ -564,7 +572,7 @@ A> ~~~~~~~~
 
 ### Substitutions
 
-To this point, template strings may look like a fancier way of defining normal JavaScript strings. The real difference is with template string substitutions. Substitutions allow you to embed any valid JavaScript expression inside of a template string and have the result be output as part of the string.
+To this point, template literals may look like a fancier way of defining normal JavaScript strings. The real difference is with template literal substitutions. Substitutions allow you to embed any valid JavaScript expression inside of a template literal and have the result be output as part of the string.
 
 Substitutions are delimited by an opening `${` and a closing `}`, within which you can use any JavaScript expression. At its simplest, substitutions let you embed local variables directly into the result string, like this:
 
@@ -577,7 +585,7 @@ console.log(message);       // "Hello, Nicholas."
 
 The substitution `${name}` accessed the local variable `name` to insert it into the string. The `message` variable then holds the result of the substitution immediately.
 
-I> Template strings can access any variable that is accessible in the scope in which it is defined. Attempting to use an undeclared variable in a template string results in an error being thrown in both strict and non-strict modes.
+I> template literals can access any variable that is accessible in the scope in which it is defined. Attempting to use an undeclared variable in a template literal results in an error being thrown in both strict and non-strict modes.
 
 Since all substitutions are JavaScript expressions, it's possible to substitute more than just simple variable names. You can easily embed calculations, function calls, and more. For example:
 
@@ -589,11 +597,11 @@ let count = 10,
 console.log(message);       // "10 items cost $2.50."
 ```
 
-This code performs a calculation as part of the template string. The variables `count` and `price` are multiplied together to get a result, and then formatted to two decimal places using `.toFixed()`. The dollar sign before the second substitution is output as-is because it's not followed by an opening curly brace.
+This code performs a calculation as part of the template literal. The variables `count` and `price` are multiplied together to get a result, and then formatted to two decimal places using `.toFixed()`. The dollar sign before the second substitution is output as-is because it's not followed by an opening curly brace.
 
 ### Tagged Templates
 
-To this point, you've seen how template strings can be used for multiline strings and to insert values into strings without using concatenation. The real power of template strings comes from tagged templates. A *template tag* performs a transformation on the template string and returns the final string value. This tag is specified at the start of the template, just before the first `` ` `` character, such as:
+To this point, you've seen how template literals can be used for multiline strings and to insert values into strings without using concatenation. The real power of template literals comes from tagged templates. A *template tag* performs a transformation on the template literal and returns the final string value. This tag is specified at the start of the template, just before the first `` ` `` character, such as:
 
 ```js
 let message = tag`Hello world`;
@@ -603,7 +611,7 @@ In this example, `tag` is the template tag to apply to `` `Hello world` ``.
 
 #### Defining Tags
 
-A tag is simply a function that is called with the processed template string data. The function receives data about the template string as individual pieces that the tag must then combined to create the finished value. The first argument is an array containing the literal strings as they are interpreted by JavaScript. Each subsequent argument is the interpreted value of each substitution. Tag functions are typically defined using rest arguments to make dealing with the data easier:
+A tag is simply a function that is called with the processed template literal data. The function receives data about the template literal as individual pieces that the tag must then combined to create the finished value. The first argument is an array containing the literal strings as they are interpreted by JavaScript. Each subsequent argument is the interpreted value of each substitution. Tag functions are typically defined using rest arguments to make dealing with the data easier:
 
 ```js
 function tag(literals, ...substitutions) {
@@ -655,7 +663,7 @@ let count = 10,
 console.log(message);       // "10 items cost $2.50."
 ```
 
-This example defines a `passthru` tag that performs the same transformation as the default template string behavior. The only trick is to use `substitutions.length` for the loop rather than `literals.length` to avoid accidentally going past the end of `substitutions`. This works because the relationship between `literals` and `substitutions` is well-defined.
+This example defines a `passthru` tag that performs the same transformation as the default template literal behavior. The only trick is to use `substitutions.length` for the loop rather than `literals.length` to avoid accidentally going past the end of `substitutions`. This works because the relationship between `literals` and `substitutions` is well-defined.
 
 I> The values contained in `substitutions` are not necessarily strings. If an expression is evaluated to be a number, as in the previous example, then the numeric value is passed in. It's part of the tag's job to determine how such values should be output in the result.
 
@@ -706,8 +714,8 @@ Full Unicode support allows JavaScript to start dealing with UTF-16 characters i
 
 Additional methods for working with strings were added, allowing you to more easily identify substrings no matter where they are found, and more functionality was added to regular expressions.
 
-Template strings are an important addition to ECMAScript 6 that allows the creating of domain-specific languages (DSLs) to make creating strings easier. The ability to embed variables directly into template strings means that developers have a safer tool than string concatenation for composing long strings with variables.
+Template literals are an important addition to ECMAScript 6 that allows the creating of domain-specific languages (DSLs) to make creating strings easier. The ability to embed variables directly into template literals means that developers have a safer tool than string concatenation for composing long strings with variables.
 
-Built-in support for multiline strings also makes template strings a useful upgrade over normal JavaScript strings, which have never had this ability. Despite allowing newlines directly inside the template string, you can still use `\n` and other character escape sequences.
+Built-in support for multiline strings also makes template literals a useful upgrade over normal JavaScript strings, which have never had this ability. Despite allowing newlines directly inside the template literal, you can still use `\n` and other character escape sequences.
 
-Template tags are the most important part of this feature for creating DSLs. Tags are functions that receive the pieces of the template string as arguments. You can then use that data to return an appropriate string value. The data provided includes literals, their raw equivalents, and any substitution values. These pieces of information can then be used to determine the correct output for the tag.
+Template tags are the most important part of this feature for creating DSLs. Tags are functions that receive the pieces of the template literal as arguments. You can then use that data to return an appropriate string value. The data provided includes literals, their raw equivalents, and any substitution values. These pieces of information can then be used to determine the correct output for the tag.
