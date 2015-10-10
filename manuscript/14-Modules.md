@@ -68,7 +68,7 @@ if (flag) {
 }
 ```
 
-This example is a syntax error because `export` is inside of an `if` statement. Exports cannot be condition or done dynamically in any way. Part of the benefit of module syntax is so the JavaScript engine can staticly determine what will be exported. As such, you can only use `export` at the top-level of a module.
+This example is a syntax error because `export` is inside of an `if` statement. Exports cannot be conditional or done dynamically in any way. Part of the benefit of module syntax is so the JavaScript engine can staticly determine what will be exported. As such, you can only use `export` at the top-level of a module.
 
 W> If you are using a transpiler like Babel.js, you may find that `export` can be used anywhere. This only works when code is converted to ECMAScript 5 and will not work with a native ECMAScript 6 module system.
 
