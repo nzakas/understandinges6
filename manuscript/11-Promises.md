@@ -202,7 +202,7 @@ I> Each call to `then()` or `catch()` creates a new job to be executed when the 
 
 ### Creating Unsettled Promises
 
-New promises are created through the `Promise` constructor. This constructor accepts a single argument, which is a function (called the *executor*) containing the code to execute when the promise is added to the job queue. The executor is passed two functions as arguments, `resolve()` and `reject()`. The `resolve()` function is called when the executor has finished successfully in order to signal that the promise is ready to be resolved while the `reject()` function indicates that the executor has failed. Here's an example using a promise in Node.js to implement the `readFile()` function from earlier in this chapter:
+New promises are created through the `Promise` constructor. This constructor accepts a single argument, which is a function (called the *executor*) containing the code to initialize the promise. The executor is passed two functions as arguments, `resolve()` and `reject()`. The `resolve()` function is called when the executor has finished successfully in order to signal that the promise is ready to be resolved while the `reject()` function indicates that the executor has failed. Here's an example using a promise in Node.js to implement the `readFile()` function from earlier in this chapter:
 
 ```js
 // Node.js example
@@ -243,7 +243,7 @@ promise.then(function(contents) {
 
 In this example, the native Node.js `fs.readFile()` asynchronous call is wrapped in a promise. The executor either passes the error object to `reject()` or the file contents to `resolve()`.
 
-Keep in mind that the executor doesn't run immediately when `readFile()` is called. Instead, it is added as a job to the job queue. This is called *job scheduling*, and if you've ever used `setTimeout()` or `setInterval()`, then you're already familiar with it. The idea is that a new job is added to the job queue so as to say, "don't execute this right now, but execute later." In the case of `setTimeout()` and `setInterval()`, you're specifying a delay before the job is added to the queue:
+Keep in mind that the executor runs immediately when `readFile()` is called. When either `resolve()` or `reject()` is called inside the executor, a job is added to the job queue in order to resolve the promise. This is called *job scheduling*, and if you've ever used `setTimeout()` or `setInterval()`, then you're already familiar with it. The idea is that a new job is added to the job queue so as to say, "don't execute this right now, but execute later." In the case of `setTimeout()` and `setInterval()`, you're specifying a delay before the job is added to the queue:
 
 ```js
 // add this function to the job queue after 500ms have passed
@@ -263,7 +263,7 @@ Timeout
 
 You can tell from the output that the function passed to `setTimeout()` was executed after `console.log("Hi!")`. Promises work in a similar way.
 
-The promise executor is added to the job queue immediately, meaning it will execute only after all previous jobs are complete. For example:
+The promise executor is executed immediately, meaning that it will execute prior to anything that appears after it in the source code. For example:
 
 ```js
 let promise = new Promise(function(resolve, reject) {
@@ -277,11 +277,11 @@ console.log("Hi!");
 The output for this example is:
 
 ```
-Hi!
 Promise
+Hi!
 ```
 
-The takeaway is that the executor doesn't run until sometime after the current job has finished executing. The same is true for the functions passed to `then()` and `catch()`, as these will also be added to the job queue, but only after the executor job. Here's an example:
+When `resolve()` is called, that triggers an asynchronous operation. Functions passed to `then()` and `catch()` are executed asynchronously, as these will also be added to the job queue. Here's an example:
 
 ```js
 let promise = new Promise(function(resolve, reject) {
@@ -299,12 +299,12 @@ console.log("Hi!");
 The output for this example is:
 
 ```
-Hi!
 Promise
+Hi!
 Resolved
 ```
 
-The fulfillment and rejection handlers are always added to the end of the job queue after the executor has completed.
+Note that even though the call to `then()` appears before `console.log("Hi!")`, it doesn't actually execute until later (unlike the executor). That's because fulfillment and rejection handlers are always added to the end of the job queue after the executor has completed.
 
 ### Creating Settled Promises
 
