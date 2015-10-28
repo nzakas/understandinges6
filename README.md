@@ -89,7 +89,7 @@ To be determined. Since I'm writing this in my spare time, it's hard to predict 
 
 ### If I buy a copy now, do I get the finished one?
 
-Yes. When you buy a copy today, you will automatically get all updates for the book. You'll be notified of updated versions via email after purchase.
+Yes. When you buy the Leanpub ebook today, you will automatically get all updates for the ebook. You'll be notified of updated versions via email after purchase.
 
 ### How often is the book published?
 
@@ -101,8 +101,8 @@ Everything in GitHub is a work in progress. Those parts that are known to be cor
 
 ### Will there be a print version of the book?
 
-In all likelihood yes. I've already been contacted by a couple of publishers, but there will be no final decision made until the content of the book is complete. This is intentional on my part because publishers have deadlines, and I'm unable to estimate when I'll have the book finished.
+Yes. [No Starch Press](https://www.nostarch.com/) will be publishing the book when it's complete. We're hoping to have a print version by early 2016. [Follow me](https://twitter.com/slicknet) for updates.
 
 ### Can I acquire translation rights?
 
-Not at this time. I will likely leave that to the publisher of the print book.
+Yes. Please contact [No Starch Press](https://www.nostarch.com/) for acquiring translation rights.
