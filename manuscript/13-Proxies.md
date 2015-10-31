@@ -83,7 +83,7 @@ console.log(defensivePerson.age);         // 13
 
 So objects retain their ability to mutate unless you do something to change that. Properties can always be added but non-existent properties will throw an error when read rather than just returning `undefined`.
 
-You can then truly defend the interface of an object, disallowing additions and erroring when accessing a non-existent property, by using a couple of steps:
+You can then truly defend the interface of an object, disallowing additions and throwing an error when accessing a non-existent property, by using a couple of steps:
 
 ```js
 function Person(name) {

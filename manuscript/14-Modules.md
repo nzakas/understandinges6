@@ -9,7 +9,7 @@ One of the most error-prone and confusing aspects of JavaScript has long been th
 1. Module code automatically runs in strict mode and there's no way to opt-out of strict mode.
 1. Variables created in the top level of a module are not automatically added to the shared global scope. They exist only within the top-level scope of the module.
 1. The value of `this` in the top level of a module is `undefined`.
-1. Does not allow HTML-style comments within the code (a leftover feature from the early browser days).
+1. Modules do not allow HTML-style comments within the code (a leftover feature from the early browser days).
 1. Modules must export anything that should be available to code outside of the module.
 
 These differences may seem small at first glance, however, they represent a significant change in how JavaScript code is loaded and evaluated.
@@ -56,7 +56,7 @@ export multiply;
 There are a few things to notice in this example:
 
 1. Every declaration is exactly the same as it would otherwise be without the `export` keyword.
-1. Both function and class declarations require a name. You cannot export anonymous functions or classes using this syntax.
+1. Both function and class declarations require a name. You cannot export anonymous functions or classes using this syntax (unless using the `default` keyword discussed later in this chapter)
 1. You need not always export the declaration, you can also export references, as with `multiply` in this example.
 1. Any variables, functions, or classes that are not explicitly exported remain private to the module. In this example, `subtract()` is not exported and is therefore not accessible from outside the module.
 
@@ -82,7 +82,7 @@ The curly braces after `import` indicate the identifiers to import from the give
 
 I> Even though it looks similar, the list of identifiers to import is not a destructured object.
 
-When importing an identifier from a module, the identifier acts as if were defined using `const`. That means you cannot define another variable with the same name, use the identifier prior to the `import` statement, or change its value.
+When importing an identifier from a module, the identifier acts as if it were defined using `const`. That means you cannot define another variable with the same name, use the identifier prior to the `import` statement, or change its value.
 
 Suppose that the first example in this section is in a module named `"example"`. You can import and use identifiers from that module in a number of ways. You can just import one identifier:
 
@@ -227,7 +227,7 @@ This import statement imports the default from the module `"example"`. Note that
 import $ from "jquery";
 ```
 
-For modules that export both a default and one or more non-defaults, you can import them with one statment. For instance, suppose you have this module:
+For modules that export both a default and one or more non-defaults, you can import them with one statement. For instance, suppose you have this module:
 
 ```js
 export let color = "red";
