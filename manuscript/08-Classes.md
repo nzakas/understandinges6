@@ -614,7 +614,7 @@ W>
 W> * `null`
 W> * generator functions (chapter 8)
 W>
-W> In these cases, attempting to create a new instance of the class will throw an error because there is `[[Construct]]` to call.
+W> In these cases, attempting to create a new instance of the class will throw an error because there is no `[[Construct]]` to call.
 
 ### Inheriting from Built-ins
 
