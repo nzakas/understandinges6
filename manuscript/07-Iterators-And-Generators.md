@@ -683,7 +683,7 @@ console.log(iterator.next());           // "{ value: undefined, done: true }"
 
 In this example, the `createCombinedIterator()` generator delegates first to `createNumberIterator()` and then to `createColorIterator()`. The returned iterator appears, from the outside, to be one consistent iterator that has produced all of the values. Each call to `next()` is delegated to the appropriate iterator until they are empty, and then the final `yield` is executed to return `true`.
 
-Generator delegation also lets you use make of generator return values (as seen in the previous section). This is the easiest way to access such returned values and can be quite useful in performing complex tasks. For example:
+Generator delegation also lets you make use of generator return values (as seen in the previous section). This is the easiest way to access such returned values and can be quite useful in performing complex tasks. For example:
 
 ```js
 function *createNumberIterator() {
