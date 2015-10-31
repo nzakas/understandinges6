@@ -237,12 +237,11 @@ promise.then(function(contents) {
     // rejection
     console.error(err.message);
 });
-
 ```
 
 In this example, the native Node.js `fs.readFile()` asynchronous call is wrapped in a promise. The executor either passes the error object to `reject()` or the file contents to `resolve()`.
 
-Keep in mind that the executor runs immediately when `readFile()` is called. When either `resolve()` or `reject()` is called inside the executor, a job is added to the job queue in order to resolve the promise. This is called *job scheduling*, and if you've ever used `setTimeout()` or `setInterval()`, then you're already familiar with it. The idea is that a new job is added to the job queue so as to say, "don't execute this right now, but execute later." In the case of `setTimeout()` and `setInterval()`, you're specifying a delay before the job is added to the queue:
+Keep in mind that the executor runs immediately when `readFile()` is called. When either `resolve()` or `reject()` is called inside the executor, a job is added to the job queue in order to resolve the promise. This is called *job scheduling*, and if you've ever used `setTimeout()` or `setInterval()`, then you're already familiar with it. The idea is that a new job is added to the job queue so as to say, "don't execute this right now, but execute it later." In the case of `setTimeout()` and `setInterval()`, you're specifying a delay before the job is added to the queue:
 
 ```js
 // add this function to the job queue after 500ms have passed
@@ -321,7 +320,7 @@ promise.then(function(value) {
 
 This code creates a fulfilled promise so the fulfillment handler receives 42 as `value`. If a rejection handler were added to this promise, it would never be called because the promise will never be in the rejected state.
 
-You can also create rejected promises by using the `Promise.reject()` method. This works in the same way as `Promise.resolve()` except that the created promise is in the rejected state. That means any additional rejection handlers added to the promise will be called but not fulfillment handlers will be called:
+You can also create rejected promises by using the `Promise.reject()` method. This works in the same way as `Promise.resolve()` except that the created promise is in the rejected state. That means any additional rejection handlers added to the promise will be called but not the fulfillment handlers:
 
 ```js
 let promise = Promise.reject(42);
@@ -333,7 +332,7 @@ promise.catch(function(value) {
 
 I> If you pass a promise to either `Promise.resolve()` or `Promise.reject()`, the promise is returned without modification.
 
-Both `Promise.resolve()` and `Promise.reject()` also accept non-promise thenables as arguments and will create a new promise that is called after `then()`. A non-promise thenable is created when a object has a `then()` method that accepts two arguments: `resolve` and `reject`. For example:
+Both `Promise.resolve()` and `Promise.reject()` also accept non-promise thenables as arguments and will create a new promise that is called after `then()`. A non-promise thenable is created when an object has a `then()` method that accepts two arguments: `resolve` and `reject`. For example:
 
 ```js
 let thenable = {
@@ -509,7 +508,7 @@ p1.then(function(value) {
 
 In this example, the fulfillment handler for `p1` returns a value (`value + 1`). Since `value` is 42 (from the executor) then the fulfillment handler returns 43. That value is then passed to the fulfillment handler of the second promise that can output it to the console.
 
-The same thing is possible using the rejection handler. When a rejection handler is called, it has the option of return a value. That value is then used to fulfill the next promise in the chain. For example:
+The same thing is possible using the rejection handler. When a rejection handler is called, it has the option of returning a value. That value is then used to fulfill the next promise in the chain. For example:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -811,7 +810,7 @@ run(function *() {
 });
 ```
 
-In this version of the code, a generic `run()` function is used to execute a generator. The `run()` function executes the generator to create an iterator, starts the task by calling `task.next()`, and then recursively calls `step()` until the iterator is complete. Inside of `step()`, if there's more work to do then `result.done` is `false`. At that point, `result.value` should be a promise, but `Promise.resolve()` is used just in case the function in question didn't return a promise. Then, a fulfillment handler is added that retrieves the promise value and passes it back to the iterator and `result` is assigned to the next yield result before calling `step()`. A rejection handler is also added and assumes any rejection results in an error object. That error object is passed back into the iterator using `task.throw()` and `result` is assigned to the next yield result if the error is catched in the task, and then `step()` is called to continue.
+In this version of the code, a generic `run()` function is used to execute a generator. The `run()` function executes the generator to create an iterator, starts the task by calling `task.next()`, and then recursively calls `step()` until the iterator is complete. Inside of `step()`, if there's more work to do then `result.done` is `false`. At that point, `result.value` should be a promise, but `Promise.resolve()` is used just in case the function in question didn't return a promise. Then, a fulfillment handler is added that retrieves the promise value and passes it back to the iterator and `result` is assigned to the next yield result before calling `step()`. A rejection handler is also added and assumes any rejection results in an error object. That error object is passed back into the iterator using `task.throw()` and `result` is assigned to the next yield result if the error is caught in the task, and then `step()` is called to continue.
 
 This same `run()` function can be used to run any generator that uses `yield` as a way to achieve asynchronous code without exposing promises (or callbacks) to the developer.
 
@@ -849,7 +848,7 @@ In this example, `MyPromise` is derived from `Promise` and two additional method
 
 Since static methods are also inherited, that means `MyPromise.resolve()`, `MyPromise.reject()`, `MyPromise.race()`, and `MyPromise.all()` are also present. While the last two behave the same as the built-in methods, the first two are slightly different.
 
-Both `MyPromise.resolve()` and `MyPromise.reject()` will return an instance of `MyPromise` regardless of the value passed. So if a built-in promise is passed to either, it will be resolved or rejected and a new `MyPromise` so you can assign fulfillment and rejection handlers. For example:
+Both `MyPromise.resolve()` and `MyPromise.reject()` will return an instance of `MyPromise` regardless of the value passed. So if a built-in promise is passed to either, it will be resolved or rejected and return a new `MyPromise` so you can assign fulfillment and rejection handlers. For example:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
