@@ -8,7 +8,7 @@ Before you can get a good understanding of how promises work, however, it's impo
 
 ## Asynchronous Programming Background
 
-JavaScript engines are built on the concept of a single-threaded event loop. Single-threaded means that only one piece of code is executed at any given point in time. This stands in contrast to other languages such as Java or C++ that may use threads to allow multiple different pieces of code to execute at the same time. Maintaining, and protecting, state when multiple pieces of code can access and change that state is a difficult problem and the source of frequent bugs in thread-based software.
+JavaScript engines are built on the concept of a single-threaded event loop. Single-threaded means that only one piece of code is executed at any given point in time. This stands in contrast to other languages such as Java or C++ that may use threads to allow multiple different pieces of code to execute at the same time. Maintaining and protecting state when multiple pieces of code can access and change that state is a difficult problem and the source of frequent bugs in thread-based software.
 
 Because JavaScript engines can only execute one piece of code at a time, it's necessary to keep track of code that is meant to run. That code is kept in a *job queue*. Whenever a piece of code is ready to be executed, it is added to the job queue. When the JavaScript engine is finished executing code, the event loop picks the next job in the queue and executes it. The *event loop* is a process inside of the JavaScript engine that monitors code execution and manages the job queue. Keep in mind that as a queue, job execution runs from the first job in the queue to the last.
 
@@ -125,7 +125,7 @@ In this code, `readFile()` doesn't actually start reading the file immediately (
 Each promise goes through a short lifecycle. It starts in the *pending* state, which is an indicator that the asynchronous operation has not yet completed. The promise in the last example is in the pending state as soon as it is returned from `readFile()`. Once the asynchronous operation completes, the promise is considered *settled* and enters one of two possible states:
 
 1. *Fulfilled* - the promise's asynchronous operation has completed successfully
-1. *Rejected* - the promise's asynchronous operation did not complete successfully (either due to error or some other cause)
+1. *Rejected* - the promise's asynchronous operation did not complete successfully (either due to an error or some other cause)
 
 You can't determine which state the promise is in programmatically, but you can take a specific action when a promise changes state by using the `then()` method.
 
