@@ -26,7 +26,7 @@ TODO
 
 ### Array.of()
 
-JavaScript has long had a quirk around creating arrays. The `Array` constructor behaves differently based on the type of data passed to it. For example:
+JavaScript has long had a quirk around creating arrays. The `Array` constructor behaves differently based on the type of data passed into it. For example:
 
 ```js
 let items = new Array(1, 2);        // length is 2
@@ -192,4 +192,3 @@ Also works on strings.
 ## Typed Arrays
 
 TODO
-

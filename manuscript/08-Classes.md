@@ -614,7 +614,7 @@ W>
 W> * `null`
 W> * generator functions (chapter 8)
 W>
-W> In these cases, attempting to create a new instance of the class will throw an error because there is `[[Construct]]` to call.
+W> In these cases, attempting to create a new instance of the class will throw an error because there is no `[[Construct]]` to call.
 
 ### Inheriting from Built-ins
 
@@ -652,12 +652,12 @@ colors.length = 0;
 console.log(colors[0]);             // "red"
 ```
 
-As you can see, using the classical form of JavaScript inheritance results in unexpected behavior. The `length` and numeric properties don't behave the same as they built-in array because this functionality isn't covered either by `Array.apply()` or by assigning the prototype.
+As you can see, using the classical form of JavaScript inheritance results in unexpected behavior. The `length` and numeric properties don't behave the same as the built-in array because this functionality isn't covered either by `Array.apply()` or by assigning the prototype.
 
 One of the goals of ECMAScript 6 classes is to allow inheritance from all built-ins. In order to accomplish this, the inheritance model of classes is slightly different than the classical inheritance model found in ECMAScript 5 and earlier:
 
 * In ECMAScript 5 classical inheritance, the value of `this` is first created by the derived type (for example, `MyArray`) and then the base type constructor is called (`Array.apply()`). That means `this` starts out as an instance of `MyArray` and then is decorated with additional properties from `Array`.
-* In ECMAScript 6 class-based inheritance, the value of `this` is first created by the base (`Array`) and then modified by the derived class constructor (`MyArray`). The result is that `this` is starts out with all of the built-in functionality of the base and correctly receives all functionality related to it.
+* In ECMAScript 6 class-based inheritance, the value of `this` is first created by the base (`Array`) and then modified by the derived class constructor (`MyArray`). The result is that `this` starts out with all of the built-in functionality of the base and correctly receives all functionality related to it.
 
 The following class-based special array works as you would expect:
 
@@ -759,11 +759,11 @@ In this example, the `Shape` class constructor throws an error whenever `new.tar
 
 ## Summary
 
-For those who have struggled to understand JavaScript in the absence of classes, ECMAScript 6 classes provide an easier way to become acclimated with the language without needing to completely throw away their understanding of inheritance. ECMAScript 6 classes start out as syntatic sugar for the classical inheritance model of ECMAScript 5, but adds a lot of features to reduce mistakes.
+For those who have struggled to understand JavaScript in the absence of classes, ECMAScript 6 classes provide an easier way to become acclimated with the language without needing to completely throw away their understanding of inheritance. ECMAScript 6 classes start out as syntactic sugar for the classical inheritance model of ECMAScript 5, but add a lot of features to reduce mistakes.
 
 ECMAScript 6 classes work with prototypal inheritance by defining non-static methods on the class prototype while static methods end up on the constructor itself. All methods are non-enumerable, which better matches the behavior of built-in objects for which methods are typically not enumerable by default. Additionally, class constructors cannot be called without `new`, ensuring that you can't accidentally call a class as a function.
 
-Class-based inheritance allows you to derive a class from another class, function, or expression. This ability means you can call function to determine the correct base to inherit from, allowing you to use mixins and other different composition patterns to create a new class. Inheritance works in such a way that inheriting from built-in objects, such as `Array`, is now possible and works as expected.
+Class-based inheritance allows you to derive a class from another class, function, or expression. This ability means you can call a function to determine the correct base to inherit from, allowing you to use mixins and other different composition patterns to create a new class. Inheritance works in such a way that inheriting from built-in objects, such as `Array`, is now possible and works as expected.
 
 You can use `new.target` in class constructors to behave differently depending on how the class is called. The most common use is to create an abstract base class that throws an error when instantiated directly but still allows inheritance via other classes.
 
