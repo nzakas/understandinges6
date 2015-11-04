@@ -731,7 +731,7 @@ Block level functions are hoisted to the top of the block in which they are defi
 
 ### Deciding When to Use Block-Level Functions
 
-Block level functions are a similar to `let` function expressions in that the function definition is removed once execution flows out of the block in which it's defined. The key difference is that block level functions are hoisted to the top of the containing block. Function expressions that use `let` are not hoisted, as this example illustrates:
+Block level functions are similar to `let` function expressions in that the function definition is removed once execution flows out of the block in which it's defined. The key difference is that block level functions are hoisted to the top of the containing block. Function expressions that use `let` are not hoisted, as this example illustrates:
 
 ```js
 "use strict";
@@ -1155,7 +1155,7 @@ function factorial(n) {
         return 1;
     } else {
 
-        // not optimized - must multiple after returning
+        // not optimized - must multiply after returning
         return n * factorial(n - 1);
     }
 }

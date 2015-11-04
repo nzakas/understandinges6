@@ -60,7 +60,7 @@ The class declaration `PersonClass` behaves quite similarly to `PersonType` from
 
 I> Own properties, properties that occur on the instance rather than the prototype, can only be created inside of a class constructor or method. In the previous example, `name` is an own property. It's recommended to create all possible own properties inside of the constructor function so there's a single place that's responsible for all of them.
 
-Perhaps the worst-kept secret in ECMAScript 6 is that class declarations such as this example are actually just syntactic sugar on top of the existing custom type declarations. The `PersonClass` declaration actually creates a function that has the behavior of the `constructor` method, which is why `typeof PersonClass` is `"function"`. Similarly, the `sayName()` method ends up as a method on `PersonClass.prototype`, similar to `PersonType.prototype` in the earlier example. These similarities allow you to mix custom types and classes without worry too much about which you're using.
+Perhaps the worst-kept secret in ECMAScript 6 is that class declarations such as this example are actually just syntactic sugar on top of the existing custom type declarations. The `PersonClass` declaration actually creates a function that has the behavior of the `constructor` method, which is why `typeof PersonClass` is `"function"`. Similarly, the `sayName()` method ends up as a method on `PersonClass.prototype`, similar to `PersonType.prototype` in the earlier example. These similarities allow you to mix custom types and classes without worrying too much about which you're using.
 
 Despite the similarities, there are some important differences to keep in mind:
 
@@ -276,7 +276,7 @@ As with previous examples, this one shows just how much code you're saving by us
 
 ## Static Members
 
-Another common pattern in JavaScript is adding addition methods directly onto constructors to simulate static members. For example:
+Another common pattern in JavaScript is adding additional methods directly onto constructors to simulate static members. For example:
 
 ```js
 function PersonType(name) {
@@ -767,4 +767,4 @@ Class-based inheritance allows you to derive a class from another class, functio
 
 You can use `new.target` in class constructors to behave differently depending on how the class is called. The most common use is to create an abstract base class that throws an error when instantiated directly but still allows inheritance via other classes.
 
-Overall, classes are an important addition to the language that provides a more concise syntax and better functionality for defining custom object types in a safe, consistent manner.
+Overall, classes are an important addition to the language that provide a more concise syntax and better functionality for defining custom object types in a safe, consistent manner.
