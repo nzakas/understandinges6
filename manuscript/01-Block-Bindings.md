@@ -164,7 +164,7 @@ const maxItems = 5;
 maxItems = 6;      // throws error
 ```
 
-Much like constants in other languages, the `maxItems` variable can't be assigned a new value later on. However, unlike constants in other language, the value a constant hold may be modified if it is an object.
+Much like constants in other languages, the `maxItems` variable can't be assigned a new value later on. However, unlike constants in other language, the value a constant holds may be modified if it is an object.
 
 #### Declaring Objects with Const
 
