@@ -669,7 +669,7 @@ I> The values contained in `substitutions` are not necessarily strings. If an ex
 
 #### Using Raw Values
 
-Template tags also have access to raw string information, which primarily means access to character escapes before they are transformed into their character equivalents. The simplest way to work with raw string values is to the built-in `String.raw()` tag. For example:
+Template tags also have access to raw string information, which primarily means access to character escapes before they are transformed into their character equivalents. The simplest way to work with raw string values is to use the built-in `String.raw()` tag. For example:
 
 ```js
 let message1 = `Multiline\nstring`,
