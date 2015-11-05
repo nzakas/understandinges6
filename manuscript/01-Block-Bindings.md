@@ -172,7 +172,7 @@ A `const` declaration prevents modification of the binding and not of the value 
 
 ```js
 const person = {
-    name: "Nicholas";
+    name: "Nicholas"
 };
 
 // works
