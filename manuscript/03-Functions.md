@@ -305,7 +305,7 @@ console.log(add(1, 1));         // 2
 console.log(add(undefined, 1)); // throws error
 ```
 
-The calls to `add(1, 1)` and `add(undefined, 1)` and this example now map to this code behind the scenes:
+The calls to `add(1, 1)` and `add(undefined, 1)` in this example now map to this code behind the scenes:
 
 ```js
 // JavaScript representation of call to add(1, 1)
