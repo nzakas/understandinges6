@@ -203,14 +203,12 @@ In this version of the code, `node.loc.start` is stored in a new local variable 
 
 While object destructuring is very powerful and has a lot of options, array destructuring offers some unique capabilities that allow you to extract information from arrays.
 
-## Array Destructuring
+### Array Destructuring
 
-Similarly, you can destructure arrays using array literal syntax on the left side of an assignment operation. For example:
+Array destructuring works in a way that is very similar to object destructuring, with the exception that it uses array literal syntax instead of object literal syntax. The destructuring operates on positions within an array rather than the named properties that are available in objects. For example:
 
 ```js
 let colors = [ "red", "green", "blue" ];
-
-// later
 
 let [ firstColor, secondColor ] = colors;
 
@@ -218,9 +216,88 @@ console.log(firstColor);        // "red"
 console.log(secondColor);       // "green"
 ```
 
-In this example, array destructuring pulls out the first and second values in the `colors` array. Keep in mind that the array itself isn't changed in any way.
+In this example, array destructuring pulls out the first and second values in the `colors` array and stores them in `firstColor` and `secondColor`. The values stores in these variables, `"red"` and `"green"`, are chosen because of the position in the array (the actual variables names can be anything). Any items not explicitly mentioned in the destructuring pattern are ignored. Keep in mind that the array itself isn't changed in any way.
 
-Similar to object destructuring, you can also nest array destructuring. Just use another set of square brackets to descend into a subarray:
+You can also omit items in the destructuring pattern and only provide variable names for the items you're interested in. For example, suppose you just want the third value of an array. You don't need to supply variable names for the first and second items:
+
+```js
+let colors = [ "red", "green", "blue" ];
+
+let [ , , thirdColor ] = colors;
+
+console.log(thirdColor);        // "blue"
+```
+
+This code uses a destructuring assignment to retrieve the third item in `colors`. The commas preceding `thirdColor` in the pattern are placeholders for the array items that come before it. By using this approach, you can easily pick out values from any number of slots in the middle of an array without needing to provide variable names for them.
+
+W> Similar to object destructuring, you must always provide an initializer when using array destructuring with `var`, `let`, or `const`.
+
+#### Destructuring Assignment
+
+You can use array destructuring in the context of an assignment, but unlike object destructuring, there is no need to wrap the expression in parentheses. For example:
+
+```js
+let colors = [ "red", "green", "blue" ],
+    firstColor = "black",
+    secondColor = "purple";
+
+[ firstColor, secondColor ] = colors;
+
+console.log(firstColor);        // "red"
+console.log(secondColor);       // "green"
+```
+
+The destructured assignment in this example works in a similar manner to the example from the previous section. The only difference is that `firstColor` and `secondColor` have already been defined. But there's a little bit more to array destructuring assignment than may be obvious.
+
+Array destructuring assignment has a very unique use case in that it's possible to swap the value of two variables. Value swapping is a common operation in sorting algorithms, and the ECMAScript 5 way of swapping variables involves a third, temporary variable:
+
+```js
+// Swapping variables in ECMAScript 5
+let a = 1,
+    b = 2,
+    tmp;
+
+tmp = a;
+a = b;
+b = tmp;
+
+console.log(a);     // 2
+console.log(b);     // 1
+```
+
+The intermediate variable `tmp` is necessary in order to swab the values of `a` and `b`. Using array destructuring assignment, however, there's no need for that extra variable. Here's how you can swap variables in ECMAScript 6:
+
+```js
+// Swapping variables in ECMAScript 6
+let a = 1,
+    b = 2;
+
+[ a, b ] = [ b, a ];
+
+console.log(a);     // 2
+console.log(b);     // 1
+```
+
+The array destructuring assignment in this example looks like a mirror image. The left side of the assignment (before the equals sign) is the destructuring pattern just like you've seen in the previous examples. The right side is an array literal that is temporarily created for the purposes of doing the swap. The destructuring happens on the temporary array, which has the values of `b` and `a` copied into its first and second positions. The effect is that the variables have swapped values.
+
+#### Default Values
+
+Another similarity with object destructuring is the ability to specify a default value for any position in the array. The default value is used when the given position either doesn't exist or has the value `undefined`. For example:
+
+```js
+let colors = [ "red" ];
+
+let [ firstColor, secondColor = "green" ] = colors;
+
+console.log(firstColor);        // "red"
+console.log(secondColor);       // "green"
+```
+
+In this code, the `colors` array has only one item, so there is nothing for `secondColor` to match. The default value `"green"` is used instead of the default (`undefined`).
+
+#### Nested Destructuring
+
+You can destructure nested arrays in a manner similar to object destructuring nested objects. By inserting another array pattern into the overall pattern, the destructuring will descend into a nested array. For example:
 
 ```js
 let colors = [ "red", [ "green", "lightgreen" ], "blue" ];
@@ -233,7 +310,48 @@ console.log(firstColor);        // "red"
 console.log(secondColor);       // "green"
 ```
 
-Here, the `secondColor` variable refers to the `"green"` value inside of the `colors` array. That item is contained within a second array, so the extra square brackets around `secondColor` in the destructuring assignment is necessary.
+Here, the `secondColor` variable refers to the `"green"` value inside of the `colors` array. That item is contained within a second array, so the extra square brackets around `secondColor` in the destructuring pattern is necessary. As with objects, you can nest arrays arbitrarily deep.
+
+#### Rest Items
+
+You learned about rest parameters for functions in Chapter 3 and array destructuring has a similar concept called *rest items*. Rest items use the `...` syntax to assign the remaining items in an array to a particular variable. Here's an example:
+
+```js
+let colors = [ "red", "green", "blue" ];
+
+let [ firstColor, ...restColors ] = colors;
+
+console.log(firstColor);        // "red"
+console.log(restColors.length); // 2
+console.log(restColors[0]);     // "green"
+console.log(restColors[0]);     // "blue"
+```
+
+In this code, the first item in `colors` in assigned to `firstColor`, and the rest are assigned into a new array in `restColors`. The `restColors` array, therefore, has two items: `"green"` and `"blue"`. Rest items are useful for extracting certain items from an array and keeping the rest available, but there's also another helpful use.
+
+A glaring omission from JavaScript objects is the ability to easily create a clone. In ECMAScript 5, developers frequently used the `concat()` method as an easy way to clone an array. For example:
+
+```js
+// cloning an array in ECMAScript 5
+var colors = [ "red", "green", "blue" ];
+var clonedColors = colors.concat();
+
+console.log(clonedColors);      //"[red,green,blue]"
+```
+
+While the `concat()` method is intended to concatenate two arrays together, calling it without an argument returns a clone of the array. In ECMAScript 6, you can use rest items to achieve the same thing:
+
+```js
+// cloning an array in ECMAScript 6
+let colors = [ "red", "green", "blue" ];
+let [ ...clonedColors ] = colors;
+
+console.log(clonedColors);      //"[red,green,blue]"
+```
+
+In this example, rest items are used to copy values from `colors` into `clonedColors`. While it's a matter of perception as to whether this or `concat()` makes the developer's intent clearer, this is a useful ability to be aware of.
+
+
 
 ## Mixed Destructuring
 
