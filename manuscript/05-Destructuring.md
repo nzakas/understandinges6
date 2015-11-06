@@ -1,117 +1,218 @@
 # Destructuring
 
-JavaScript developers spend a lot of time pulling data out of objects and arrays. It's not uncommon to see code such as this:
+Objects and arrays are two of the most frequently used types in JavaScript. Thanks to the popularity of JSON as a data format, object and array literals have become an important part of JavaScript. It's quite common to define objects and arrays, and then systematically pull out the relevant pieces of information from those structures. In ECMAScript 5 and earlier, this could lead to a lot of code that looks the same, just to get certain data into local variables. For example:
 
 ```js
-var options = {
+let options = {
         repeat: true,
         save: false
     };
 
-// later
-
-var localRepeat = options.repeat,
-    localSave = options.save;
+// extract data from the object
+let repeat = options.repeat,
+    save = options.save;
 ```
 
-Frequently, object properties are stored into local variables for more succinct code and easier access. ECMAScript 6 makes this easy by introducing *destructuring assignment*, which systematically goes through an object or array and stores specified pieces of data into local variables.
+This code extracts information from the `options` object and stores them in local variables of the same name. While this code looks simple, imagine if you had a large number of variables to assign, or if there was a nested data structure to traverse to find the information. This is where destructuring comes in.
 
-W> If the right side value of a destructuring assignment evaluates to `null` or `undefined`, an error is thrown.
+## What is Destructuring?
 
-## Object Destructuring
+ECMAScript 6 adds destructuring for both objects and arrays. *Destructuring* is the process of breaking down a data structure into smaller parts. Many languages implement destructuring using a minimal amount of syntax to make it simpler to use. The ECMAScript 6 implementation of destructuring makes use of syntax you're already familiar with: object and array literals.
 
-Object destructuring assignment syntax uses an object literal on the left side of an assignment operation. For example:
+### Object Destructuring
+
+Object destructuring syntax uses an object literal on the left side of an assignment operation. For example:
 
 ```js
-var options = {
-        repeat: true,
-        save: false
+let node = {
+        type: "Identifier",
+        name: "foo"
     };
 
-// later
+let { type, name } = node;
 
-var { repeat: localRepeat, save: localSave } = options;
-
-console.log(localRepeat);       // true
-console.log(localSave);         // false
+console.log(type);      // "Identifier"
+console.log(name);      // "foo"
 ```
 
-In this code, the value of `options.repeat` is stored in a variable called `localRepeat` and the value of `options.save` is stored in a variable called `localSave`. These are both specified using the object literal syntax where the key is the property to find on `options` and the value is the variable in which to store the property value.
+In this code, the value of `node.type` is stored in a variable called `type` and the value of `node.name` is stored in a variable called `name`. This syntax is the same as the object literal property initializer shorthand introduced in Chapter 4. The identifiers `type` and `name` are both declarations of local variables and the property to read the value from on `options`.
 
-I> If the property with the given name doesn't exist on the object, then the local variable gets a value of `undefined`.
+A> #### Don't Forget the Initializer
+A>
+A>When using destructuring to declare variables using `var`, `let`, or `const`, you must supply an initializer (the value after the equals sign). The following lines of code will all throw syntax errors due to a missing initializer:
+A>
+A>```js
+A>// syntax error!
+A>var { type, name };
+A>
+A>// syntax error!
+A>let { type, name };
+A>
+A>// syntax error!
+A>const { type, name };
+A>```
+A>
+A>While `const` always requires an initializer, even when using nondestructured variables, `var` and `let` only require initializers when using destructuring.
 
-If you want to use the property name as the local variable name, you can omit the colon and the identifier, such as:
+#### Destructuring Assignment
+
+The object destructuring examples so far have used variable declarations. However, it's also possible to use destructuring in assignments. For instance, you may decide to change the value of variables after they are defined:
 
 ```js
-var options = {
-        repeat: true,
-        save: false
+let node = {
+        type: "Identifier",
+        name: "foo"
+    },
+    type = "Literal",
+    name = 5;
+
+// assign different values using structuring
+({ type, name } = node);
+
+console.log(type);      // "Identifier"
+console.log(name);      // "foo"
+```
+
+In this example, `type` and `name` are initialized with values when declared. The next line uses destructuring assignment to change those values by reading from `node`. Note that you must put parentheses around a destructuring assignment statement. That's because an opening curly brace is expected to a be a block statement, and a block statement cannot appear on the left side of an assignment. The parentheses signal that the next curly brace is not a block statement and should be interpreted as an expression, allowing the assignment to complete.
+
+#### Default Values
+
+If you specify a property name that doesn't exist on the object, then the local variable is assigned a value of `undefined`. For example:
+
+```js
+let node = {
+        type: "Identifier",
+        name: "foo"
     };
 
-// later
+let { type, name, value } = node;
 
-var { repeat, save } = options;
-
-console.log(repeat);        // true
-console.log(save);          // false
+console.log(type);      // "Identifier"
+console.log(name);      // "foo"
+console.log(value);     // undefined
 ```
 
-Here, two local variables called `repeat` and `save` are created. They are initialized with the value of `options.repeat` and `options.save`, respectively. This shorthand is helpful when there's no need to have different variable names.
+This code defines an additional local variable, `value`, and attempts to assign it a value. However, there is no corresponding `value` property on `node`, so it's assigned the value of `undefined`.
 
-Destructuring can also handle nested objects, such as the following:
+You can optionally define a different value to use when a specified property doesn't exist. To do so, insert an equals sign (`=`) after the property name and specify the default value. For example:
 
 ```js
-var options = {
-        repeat: true,
-        save: false,
-        rules: {
-            custom: 10,
+let node = {
+        type: "Identifier",
+        name: "foo"
+    };
+
+let { type, name, value = true } = node;
+
+console.log(type);      // "Identifier"
+console.log(name);      // "foo"
+console.log(value);     // true
+```
+
+In this example, the variable `value` is given a default value of `true` that is used only if the property is missing or has the value of `undefined`. Since there is no `node.value`, the variable `value` uses the default value. This works similar to default parameter values as discussed in Chapter 3.
+
+#### Assigning to Different Local Variable Names
+
+To this point, each example has used the object property name as the local variable name, so the value of `options.repeat` was stored in `repeat`. That works well when you want to use the same name, but what if you don't? There is an extended syntax that allows you to assign to a local variable with a different name, and that syntax looks like the object literal nonshorthand property initializer syntax. Here's an example:
+
+```js
+let node = {
+        type: "Identifier",
+        name: "foo"
+    };
+
+let { type: localType, name: localName } = node;
+
+console.log(localType);     // "Identifier"
+console.log(localName);     // "foo"
+```
+
+This code uses destructuring assignment to declare two variables, `localType` and `localName`, that contain the values from `node.type` and `node.name`, respectively. The syntax `type: localType` says to read the property named `type` and store it in the variable `localType`. This syntax is effectively the opposite of traditional object literal syntax where the name is on the left of the colon and the value is on the right. In this case, the name is on the right of the colon and the location of the value to read is on the left.
+
+You can add default values when using a different variable name, as well. The equals sign and default value are placed after the local variable name. For example:
+
+```js
+let node = {
+        type: "Identifier"
+    };
+
+let { type: localType, name: localName = "bar" } = node;
+
+console.log(localType);     // "Identifier"
+console.log(localName);     // "bar"
+```
+
+Here, the `localName` variable has a default value of `"bar"`. The default value is used because there is no `node.name` property, so `localName` has a value of `"bar"`.
+
+So far, you've seen how to deal with destructuring of an object whose properties are primitive values. Object destructuring can also be used to retrieve values in nested object structures.
+
+#### Nested Object Destructuring
+
+By using a syntax similar to object literals, you can navigate into a nested object structure to retrieve just the information you want. Here's an example:
+
+```js
+let node = {
+        type: "Identifier",
+        name: "foo",
+        loc: {
+            start: {
+                line: 1,
+                column: 1
+            },
+            end: {
+                line: 1,
+                column: 4
+            }
         }
     };
 
-// later
+let { loc: { start }} = node;
 
-var { repeat, save, rules: { custom }} = options;
-
-console.log(repeat);        // true
-console.log(save);          // false
-console.log(custom);        // 10
+console.log(start.line);        // 1
+console.log(start.column);      // 1
 ```
 
-In this example, the `custom` property is embedded in another object. The extra set of curly braces allows you to descend into a nested object and pull out its properties.
+The destructuring pattern in this example uses curly braces to indicate that the pattern should descend into the property named `loc` and look for the property named `start`. Remember from the last section that whenever there's a colon in a destructuring pattern, it means the identifier before the colon is giving a location to inspect and the right side is the one that assigns a value. When there's a curly brace after the colon, that indicates another level of pattern.
 
-A> ### Syntax Gotcha
-A>
-A> If you try use destructuring assignment without a `var`, `let`, or `const`, you may be surprised by the result:
-A>
-A> {:lang="js"}
-A> ~~~~~~~~
-A> // syntax error
-A> { repeat, save, rules: { custom }} = options;
-A> ~~~~~~~~
-A>
-A> This causes a syntax error because the opening curly brace is normally the beginning of a block and blocks can't be part of assignment expressions.
-A>
-A> The solution is to wrap the entire expression in parentheses:
-A>
-A> {:lang="js"}
-A> ~~~~~~~~
-A> // no syntax error
-A> ({ repeat, save, rules: { custom }} = options);
-A> ~~~~~~~~
-A>
-A> This now works without any problems.
+You can go one step further and use a different name for the local variable as well:
+
+```js
+let node = {
+        type: "Identifier",
+        name: "foo",
+        loc: {
+            start: {
+                line: 1,
+                column: 1
+            },
+            end: {
+                line: 1,
+                column: 4
+            }
+        }
+    };
+
+// extract node.loc.start
+let { loc: { start: localStart }} = node;
+
+console.log(localStart.line);   // 1
+console.log(localStart.column); // 1
+```
+
+In this version of the code, `node.loc.start` is stored in a new local variable `localStart`. Destructuring patterns can be nested to an arbitrary level of depth, with all capabilities available at each level.
+
+While object destructuring is very powerful and has a lot of options, array destructuring offers some unique capabilities that allow you to extract information from arrays.
 
 ## Array Destructuring
 
 Similarly, you can destructure arrays using array literal syntax on the left side of an assignment operation. For example:
 
 ```js
-var colors = [ "red", "green", "blue" ];
+let colors = [ "red", "green", "blue" ];
 
 // later
 
-var [ firstColor, secondColor ] = colors;
+let [ firstColor, secondColor ] = colors;
 
 console.log(firstColor);        // "red"
 console.log(secondColor);       // "green"
@@ -122,11 +223,11 @@ In this example, array destructuring pulls out the first and second values in th
 Similar to object destructuring, you can also nest array destructuring. Just use another set of square brackets to descend into a subarray:
 
 ```js
-var colors = [ "red", [ "green", "lightgreen" ], "blue" ];
+let colors = [ "red", [ "green", "lightgreen" ], "blue" ];
 
 // later
 
-var [ firstColor, [ secondColor ] ] = colors;
+let [ firstColor, [ secondColor ] ] = colors;
 
 console.log(firstColor);        // "red"
 console.log(secondColor);       // "green"
@@ -139,13 +240,13 @@ Here, the `secondColor` variable refers to the `"green"` value inside of the `co
 It's possible to mix objects and arrays together in a destructuring assignment expression using a mix of object and array literals. For example:
 
 ```js
-var options = {
+let options = {
         repeat: true,
         save: false,
         colors: [ "red", "green", "blue" ]
     };
 
-var { repeat, save, colors: [ firstColor, secondColor ]} = options;
+let { repeat, save, colors: [ firstColor, secondColor ]} = options;
 
 console.log(repeat);            // true
 console.log(save);              // false
@@ -156,13 +257,13 @@ console.log(secondColor);       // "green"
 This example extracts two property values, `repeat` and `save`, and then two items from the `colors` array, `firstColor` and `secondColor`. Of course, you could also choose to retrieve the entire array:
 
 ```js
-var options = {
+let options = {
         repeat: true,
         save: false,
         colors: [ "red", "green", "blue" ]
     };
 
-var { repeat, save, colors } = options;
+let { repeat, save, colors } = options;
 
 console.log(repeat);                        // true
 console.log(save);                          // false
@@ -185,7 +286,7 @@ function setCookie(name, value, options) {
 
     options = options || {};
 
-    var secure = options.secure,
+    let secure = options.secure,
         path = options.path,
         domain = options.domain,
         expires = options.expires;
@@ -229,7 +330,7 @@ This code throws an error because the third argument is missing (`undefined`). T
 ```js
 function setCookie(name, value, options) {
 
-    var { secure, path, domain, expires } = options;
+    let { secure, path, domain, expires } = options;
 
     // ...
 }
