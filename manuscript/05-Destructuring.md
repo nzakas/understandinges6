@@ -75,6 +75,25 @@ console.log(name);      // "foo"
 
 In this example, `type` and `name` are initialized with values when declared. The next line uses destructuring assignment to change those values by reading from `node`. Note that you must put parentheses around a destructuring assignment statement. That's because an opening curly brace is expected to a be a block statement, and a block statement cannot appear on the left side of an assignment. The parentheses signal that the next curly brace is not a block statement and should be interpreted as an expression, allowing the assignment to complete.
 
+Destructuring assignment is a bit more flexible than destructuring declarations, as it's possible to store values into object properties. Here's an example:
+
+```js
+let node = {
+        type: "Identifier",
+        name: "foo"
+    },
+    anotherNode = {};
+
+({ anotherNode.type, anotherNode.name } = node);
+
+console.log(anotherNode.type);  // "Identifier"
+console.log(anotherNode.name);  // "foo"
+```
+
+This code specifies `anotherNode.type` and `anotherNode.name` as the locations in which to store the destructured information. Note that `anotherNode` is initially declared without any properties, but that's unimportant because properties can be added to `anotherNode` at any point in time. The end result is that two new properties are added to `anotherNode` through destructuring assignment.
+
+W> An error is thrown when the right side of the destructured assignment expression (the expression after `=`) evaluates to `null` or `undefined`. This happens because any attempt to read a property of `null` or `undefined` results in a runtime error.
+
 #### Default Values
 
 If you specify a property name that doesn't exist on the object, then the local variable is assigned a value of `undefined`. For example:
@@ -203,6 +222,17 @@ In this version of the code, `node.loc.start` is stored in a new local variable 
 
 While object destructuring is very powerful and has a lot of options, array destructuring offers some unique capabilities that allow you to extract information from arrays.
 
+A> #### Syntax Gotcha
+A>
+A>Be careful when using nested destructuring because you an inadvertently create a statement that has no effect. Empty curly braces are legal in object destructuring, however, they don't do anything. For example:
+A>
+A>```js
+A>// no variables declared!
+A>let { loc: {} } = node;
+A>```
+A>
+A>There are no bindings declared in this statement. Due to the curly braces on the right, `loc` is used as a location to inspect rather than a binding to create. In such a case, it's likely that the intent was to use `=` to define a default value rather than `:` to define a location. It's possible that this syntax will be made illegal in the future, but for now, this is a bit of a gotcha to look out for.
+
 ### Array Destructuring
 
 Array destructuring works in a way that is very similar to object destructuring, with the exception that it uses array literal syntax instead of object literal syntax. The destructuring operates on positions within an array rather than the named properties that are available in objects. For example:
@@ -280,6 +310,8 @@ console.log(b);     // 1
 
 The array destructuring assignment in this example looks like a mirror image. The left side of the assignment (before the equals sign) is the destructuring pattern just like you've seen in the previous examples. The right side is an array literal that is temporarily created for the purposes of doing the swap. The destructuring happens on the temporary array, which has the values of `b` and `a` copied into its first and second positions. The effect is that the variables have swapped values.
 
+W> As with object destructuring assignment, an error is thrown when the right side of the destructured assignment expression evaluates to `null` or `undefined`.
+
 #### Default Values
 
 Another similarity with object destructuring is the ability to specify a default value for any position in the array. The default value is used when the given position either doesn't exist or has the value `undefined`. For example:
@@ -351,55 +383,47 @@ console.log(clonedColors);      //"[red,green,blue]"
 
 In this example, rest items are used to copy values from `colors` into `clonedColors`. While it's a matter of perception as to whether this or `concat()` makes the developer's intent clearer, this is a useful ability to be aware of.
 
-
+W> Rest items must be the last entry in the destructured array and cannot be followed by a comma. Including a comma after rest items is a syntax error.
 
 ## Mixed Destructuring
 
-It's possible to mix objects and arrays together in a destructuring assignment expression using a mix of object and array literals. For example:
+Object and array destructuring can be used together to create more complex expressions. In doing so, you are able to extract just the pieces of information you want from any mixture of objects and arrays. For example:
 
 ```js
-let options = {
-        repeat: true,
-        save: false,
-        colors: [ "red", "green", "blue" ]
+let node = {
+        type: "Identifier",
+        name: "foo",
+        loc: {
+            start: {
+                line: 1,
+                column: 1
+            },
+            end: {
+                line: 1,
+                column: 4
+            }
+        },
+        range: [0, 3]
     };
 
-let { repeat, save, colors: [ firstColor, secondColor ]} = options;
+let {
+    loc: { start },
+    range: [ startIndex ]
+} = node;
 
-console.log(repeat);            // true
-console.log(save);              // false
-console.log(firstColor);        // "red"
-console.log(secondColor);       // "green"
+console.log(start.line);        // 1
+console.log(start.column);      // 1
+console.log(startIndex);        // 0
 ```
 
-This example extracts two property values, `repeat` and `save`, and then two items from the `colors` array, `firstColor` and `secondColor`. Of course, you could also choose to retrieve the entire array:
-
-```js
-let options = {
-        repeat: true,
-        save: false,
-        colors: [ "red", "green", "blue" ]
-    };
-
-let { repeat, save, colors } = options;
-
-console.log(repeat);                        // true
-console.log(save);                          // false
-console.log(colors);                        // "red,green,blue"
-console.log(colors === options.colors);     // true
-```
-
-This modified example retrieves `options.colors` and stores it in the `colors` variable. Notice that `colors` is a direct reference to `options.colors` and not a copy.
-
-Mixed destructuring is very useful for pulling values out of JSON configuration structures without navigating the entire structure.
+This code extracts `node.loc.start` and `node.loc.range[0]` into `start` and `startIndex`, respectively. Keep in mind that `loc:` and `range:` in the destructured pattern are just locations that correspond to properties in `node`. There is no part of `node` that cannot be extracted using destructuring when you use a mix of object and array destructuring. This approach is particularly useful for pulling values out of JSON configuration structures without navigating the entire structure.
 
 ## Destructured Parameters
 
-In Chapter 1, you learned about destructuring assignment. Destructuring can also be used outside of the context of an assignment expression and perhaps the most interesting such case is with destructured parameters.
-
-It's common for functions that take a large number of optional parameters to use an options object as one or more parameters. For example:
+There is another case where destructuring is useful, and that is as function arguments. A common pattern for JavaScript functions that take a large number of optional parameters is to use an options object whose properties specify the additional parameters. For example:
 
 ```js
+// properties on options represent additional parameters
 function setCookie(name, value, options) {
 
     options = options || {};
@@ -412,15 +436,16 @@ function setCookie(name, value, options) {
     // ...
 }
 
+// third argument maps to options
 setCookie("type", "js", {
     secure: true,
     expires: 60000
 });
 ```
 
-There are many `setCookie()` functions in JavaScript libraries that look similar to this. The `name` and `value` are required but everything else is not. And since there is no priority order for the other data, it makes sense to have an options object with named properties rather than extra named parameters. This approach is okay, although it makes the expected input for the function a bit opaque.
+There are many `setCookie()` functions in JavaScript libraries that look similar to this. The `name` and `value` are required but everything else is not. And since there is no priority order for the other data, it makes sense to have an options object with named properties rather than extra named parameters. This approach is okay, although it makes the expected input for the function a bit opaque because you cannot tell what is expected by looking at the function definition (you need to read the function body).
 
-Using destructured parameters, the previous function can be rewritten as follows:
+Destructured parameters offer an alternative that makes it clearer as to what is expected. A destructured parameter uses an object or array destructuring pattern in place of a named parameter. The `setCookie()` function from the last example can be written using destructured parameters as:
 
 ```js
 function setCookie(name, value, { secure, path, domain, expires }) {
@@ -436,14 +461,18 @@ setCookie("type", "js", {
 
 The behavior of this function is similar to the previous example, the biggest difference is the third argument uses destructuring to pull out the necessary data. Doing so makes it clear which parameters are really expected, and the destructured parameters also act like regular parameters in that they are set to `undefined` if they are not passed.
 
-One quirk of this pattern is that the destructured parameters throw an error when the argument isn't provided. If `setCookie()` is called with just two arguments, it results in a runtime error:
+A>Destructured parameters have all of the capabilities of destructuring. You can use default values, mix object and array patterns, and use variable names that are different from the properties you're reading from. Everything you've learned so far in this chapter applies to destructured parameters as well.
+
+### Destructured Parameters are Required
+
+One quirk of using destructured parameters is that, by default, an error is thrown when they are not provided. For instance, the `setCookie()` function in the last example throws an error when only the first two arguments are passed, such as this:
 
 ```js
 // Error!
 setCookie("type", "js");
 ```
 
-This code throws an error because the third argument is missing (`undefined`). To understand why this is an error, it helps to understand that destructured parameters are really just a shorthand for destructured assignment. The JavaScript engine is actually doing this:
+This code throws an error because the third argument is missing (and so evaluates to `undefined`). To understand why this is an error, it helps to understand that destructured parameters are really just a shorthand for destructured declaration. The JavaScript engine is actually doing this:
 
 ```js
 function setCookie(name, value, options) {
@@ -454,9 +483,9 @@ function setCookie(name, value, options) {
 }
 ```
 
-Since destructuring assignment throws an error when the right side expression evaluates to `null` or `undefined`, the same is true when the third argument isn't passed.
+Since destructuring throws an error when the right side expression evaluates to `null` or `undefined`, the same is true when the third argument isn't passed to `setCookie()`.
 
-You can work around this behavior by providing a default value for the destructured parameter:
+If you want the destructured parameter to be required, then this behavior isn't all that troubling. However, if you want the destructured parameter to be optional, you can work around this behavior by providing a default value for the destructured parameter:
 
 ```js
 function setCookie(name, value, { secure, path, domain, expires } = {}) {
@@ -465,13 +494,78 @@ function setCookie(name, value, { secure, path, domain, expires } = {}) {
 }
 ```
 
-This example now works exactly the same as the first example in this section. Providing the default value for the destructured parameter means that `secure`, `path`, `domain`, and `expires` will all be `undefined` if the third argument to `setCookie()` isn't provided.
+This example provides a default value of a new object for the third parameter. Providing the default value for the destructured parameter means that `secure`, `path`, `domain`, and `expires` will all be `undefined` if the third argument to `setCookie()` isn't provided (no error will be thrown).
 
-I> It's recommended to always provide the default value for destructured parameters to avoid these types of errors.
+### Default Values for Destructured Parameters
 
+You can specify destructured default values for destructured parameters just as you would in destructured assignment. Just add the equals sign after the parameter and specify the default value. For example:
+
+```js
+function setCookie(name, value,
+    {
+        secure = false,
+        path = "/",
+        domain = "example.com",
+        expires = new Date(Date.now() + 360000000)
+    }
+) {
+
+    // ...
+}
+```
+
+Each property in the destructured parameter has a default value in this code, so you can avoid checking to see if a given property has been included in order to use the correct value. There are a couple of downsides to this approach. First, the function declaration gets quite a bit more complicated than usual. Second, If the destructured parameter is optional, then it still needs to be assigned a default value (an object), otherwise a call like `setCookie("type", "js")` still throws an error. That default value needs to have all the same default information as the destructured parameters. For example:
+
+```js
+function setCookie(name, value,
+    {
+        secure = false,
+        path = "/",
+        domain = "example.com",
+        expires = new Date(Date.now() + 360000000)
+    } = {
+        secure: false,
+        path: "/",
+        domain: "example.com",
+        expires: new Date(Date.now() + 360000000)
+    }
+) {
+
+    // ...
+}
+```
+
+Now the function declaration is even more complicated. The first object literal is the destructured parameter while the second is the default value. Unfortunately, this leads to a lot of repetition. You can eliminate some of the repetition by extracting the default values into a separate object and using that separate object as both part of the destructuring and the default parameter value:
+
+```js
+var setCookieDefaults = {
+        secure: false,
+        path: "/",
+        domain: "example.com",
+        expires: new Date(Date.now() + 360000000)
+    };
+
+function setCookie(name, value,
+    {
+        secure = setCookieDefault.secure,
+        path = setCookieDefault.path,
+        domain = setCookieDefault.domain,
+        expires = setCookieDefault.expires
+    } = setCookieDefaults
+) {
+
+    // ...
+}
+```
+
+In this code, the default values have been extracted into `setCookieDefaults`. The destructured parameter references that object directly for setting the default value of each binding and also as the overall default parameter value. If a default value needs to change, you can change it in `setCookieDefaults` and the data will end up being used in all of the correct spots. This is an unfortunate side effect of using destructured parameters, as handling all defaults can be complicated.
 
 ## Summary
 
-Destructuring makes it easier to work with objects and arrays in JavaScript. Using syntax that's already familiar to many developers, object literals and array literals, you can now pick data structures apart to get at just the information you're interested in.
+Destructuring makes it easier to work with objects and arrays in JavaScript. Using syntax that's already familiar to many developers, object literals and array literals, you can now pick data structures apart to get at just the information you're interested in. Object patterns allow you to extract data from objects while array patterns let you extract data from arrays.
 
-Destructured parameters use the destructuring syntax to make options objects more transparent when used as function parameters. The actual data you're interested in can be listed out along with other named parameters.
+Both object and array destructuring can specify default values for any property or item that is `undefined` and both throw errors when the right side of an assignment evaluates to `null` or `undefined`. You can also navigate deeply nested data structures with object and array destructuring, descending to any arbitrary depth.
+
+Destructuring declarations use `var`, `let`, or `const` to create variables and must always have an initializer. Destructuring assignments are used in place of other assignments and allow you to destructure into object properties and already-existing variables.
+
+Destructured parameters use the destructuring syntax to make options objects more transparent when used as function parameters. The actual data you're interested in can be listed out along with other named parameters. Destructured parameters can be array patterns, object patterns, or a mixture, and you can use all of the features of destructuring.
