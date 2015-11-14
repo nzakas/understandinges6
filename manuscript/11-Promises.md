@@ -630,7 +630,7 @@ p1.then(function(value) {
 });
 ```
 
-In this example, a new promise is created within the fulfillment handler for `p1`. That means the second fulfillment handler will not be executed until after `p2` has been fulfilled. This pattern is useful when you want to wait until a previous promise has been settled before before triggering another promise.
+In this example, a new promise is created within the fulfillment handler for `p1`. That means the second fulfillment handler will not be executed until after `p2` has been fulfilled. This pattern is useful when you want to wait until a previous promise has been settled before triggering another promise.
 
 ## Responding to Multiple Promises
 
