@@ -356,7 +356,7 @@ let [ firstColor, ...restColors ] = colors;
 console.log(firstColor);        // "red"
 console.log(restColors.length); // 2
 console.log(restColors[0]);     // "green"
-console.log(restColors[0]);     // "blue"
+console.log(restColors[1]);     // "blue"
 ```
 
 In this code, the first item in `colors` in assigned to `firstColor`, and the rest are assigned into a new array in `restColors`. The `restColors` array, therefore, has two items: `"green"` and `"blue"`. Rest items are useful for extracting certain items from an array and keeping the rest available, but there's also another helpful use.
