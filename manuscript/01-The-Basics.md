@@ -27,7 +27,7 @@ In this example, a single Unicode character is represented using surrogate pairs
 
 ECMAScript 6 enforces encoding of strings in UTF-16. Standardizing on this character encoding means that the language can now support functionality designed to work specifically with surrogate pairs.
 
-### The codePointAt() Method
+### The `codePointAt()` Method
 
 The first example of fully supporting UTF-16 is the `codePointAt()` method, which can be used to retrieve the Unicode code point that maps to a given character. This method accepts the character position (not the code unit position) and returns an integer value:
 
@@ -51,7 +51,7 @@ console.log(is32Bit("a"));          // false
 
 The upper bound of 16-bit characters is represented in hexadecimal as `FFFF`, so any code point above that number must be represented by two code units.
 
-### String.fromCodePoint()
+### `String.fromCodePoint()`
 
 When ECMAScript provides a way to do something, it also tends to provide a way to do the reverse. You can use `codePointAt()` to retrieve the code point for a character in a string while `String.fromCodePoint()` produces a single-character string for the given code point. For example:
 
@@ -98,7 +98,7 @@ W>     }
 W> }
 W> ~~~~~~~~
 
-### The normalize() Method
+### The `normalize()` Method
 
 Another interesting aspect of Unicode is that different characters may be considered equivalent for the purposes of sorting or other comparison-based operations. There are two ways to define these relationships. First, *canonical equivalence* means that two sequences of code points are considered interchangeable in all respects. That even means that a combination of two characters can be canonically equivalent to one character. The second relationship is *compatibility*, meaning that two sequences of code points having different appearances but can be used interchangeably in certain situations.
 
@@ -262,7 +262,7 @@ var indent = " ".repeat(size),
 var newIndent = indent.repeat(++indentLevel);
 ```
 
-### The Regular Expression y Flag
+### The Regular Expression `y` Flag
 
 ECMAScript 6 standardized the `y` flag after it had been implemented in Firefox as a proprietary extension to regular expressions. The `y` (sticky) flag indicates that the next match should be made starting with the value of `lastIndex` on the regular expression.
 
@@ -352,7 +352,7 @@ function hasRegExpY() {
 
 Also similar to `u`, if you need to use `y` in code that runs in older JavaScript engines, be sure to use the `RegExp` constructor when defining those regular expressions to avoid a syntax error.
 
-## Object.is()
+## `Object.is()`
 
 When you want to compare two values, you're probably used to using either the equals operator (`==`) or the identically equals operator (`===`). Many prefer to use the latter to avoid type coercion during the comparison. However, even the identically equals operator isn't entirely accurate. For example, the values +0 and -0 are considered equal by `===` even though they are represented differently in the JavaScript engine. Also `NaN === NaN` returns `false`, which necessitates using `isNaN()` to detect `NaN` properly.
 
@@ -377,7 +377,7 @@ console.log(Object.is(5, "5"));     // false
 
 In most cases you will probably still want to use `==` or `===` for comparing values, as special cases covered by `Object.is()` may not affect you directly.
 
-## Block bindings
+## Block Bindings
 
 Traditionally, one of the tricky parts of JavaScript has been the way that `var` declarations work. In most C-based languages, variables are created at the spot where the declaration occurs. In JavaScript, however, this is not the case. Variables declared using `var` are *hoisted* to the top of the function (or global scope) regardless of where the actual declaration occurs. For example:
 
@@ -425,7 +425,7 @@ The declaration of `value` is moved to the top (hoisted) while the initializatio
 
 It often takes new JavaScript developers some time to get used to declaration hoisting and this unique behavior can end up causing bugs. For this reason, ECMAScript 6 introduces block level scoping options to make the control of variable lifecycle a little more powerful.
 
-### Let declarations
+### `let` Declarations
 
 The `let` declaration syntax is the same as for `var`. You can basically replace `var` with `let` to declare a variable but keep its scope to the current code block. For example:
 
@@ -901,7 +901,7 @@ In this code, `Number.isFinite("25")` returns `false` even though `isFinite("25"
 
 These two new methods are aimed at eliminating certain types of errors that can be caused when non-number values are used with `isFinite()` and `isNaN()` without dramatically changing the language.
 
-### parseInt() and parseFloat()
+### `parseInt()` and `parseFloat()`
 
 The global functions `parseInt()` and `parseFloat()` now also reside at `Number.parseInt()` and `Number.parseFloat()`. These functions behave exactly the same as the global functions of the same name. The only purpose in making this move is to categorize purely global functions that clearly relate to a specific data type. Since these functions both create numbers from strings, they are now on `Number` along with the other functions that relate to numbers.
 
