@@ -691,6 +691,24 @@ The inherited `MyArray.of()` behaves the same as `Array.of()` except that it cre
 
 This same approach can be used to inherit from any of the built-in JavaScript objects, with a full guarantee that it will work the same way as the built-ins.
 
+### @@species
+
+TODO TODO
+
+
+The `@@species` property of an object, represented by `Symbol.species` in code, contains a reference to the constructor function used to create that object. For example:
+
+```js
+let book = {
+    title: "Understanding ES6"
+};
+
+var species = book[Symbol.species];
+
+console.log(Object === species);        // true
+```
+
+
 ## new.target
 
 In Chapter 2, you learned about `new.target` and how its value changes depending on how a function is called. You can also use `new.target` in class constructors to determine how the class is being invoked. In the simple case, `new.target` is equal to the constructor function for the class, as in this example:

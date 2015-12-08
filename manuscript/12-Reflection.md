@@ -36,6 +36,6 @@ TODO
 5. get()
 6. getPrototypeOf()
 7. has()
-8. ownKeys()
+8. ownKeys() - includes all keys, including symbols, whether enumerable or not
 9. set()
 10. setPrototypeOf()
