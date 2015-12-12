@@ -480,6 +480,59 @@ class Square extends Rectangle {
 
 This example is equivalent to the previous. The only difference is that a computed name is used for the `getArea()` method.
 
+### Generator Class Methods
+
+Similar to objects, generator methods on classes are created by prepending an asterisk before the method name:
+
+```js
+class MyClass {
+
+    *createIterator(items) {
+        for (let i=0; i < items.length; i++) {
+            yield items[i];
+        }
+    }
+
+}
+
+let o = new MyClass();
+let iterator = o.createIterator([1, 2, 3]);
+```
+
+You can also define a default iterator for a class by using `Symbol.iterator`, such as:
+
+```js
+class Collection {
+
+    constructor() {
+        this.items = [];
+    }
+
+    *[Symbol.iterator]() {
+        yield *this.items.values();
+    }
+}
+
+var collection = new Collection();
+collection.items.push(1);
+collection.items.push(2);
+collection.items.push(3);
+
+for (let x of collection) {
+    console.log(x);
+}
+
+// Output:
+// 1
+// 2
+// 3
+```
+
+
+TODO
+
+
+
 ### Static Members
 
 If a base class has static members then those static members are also available on the derived class. This maps to how inheritance works in other languages, but is a new concept for JavaScript. Here's an example:

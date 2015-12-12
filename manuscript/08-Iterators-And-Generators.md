@@ -4,7 +4,7 @@ Iterators have been used in many programming languages as a way to more easily w
 
 ## What are Iterators?
 
-Iterators are nothing more than objects with a certain interface. That interface consists of a method called `next()` that returns a result object. The result object has two properties, `value`, which is the next value, and `done`, which is a boolean value that's `true` when there are no more values to return. The iterator keeps an internal pointer to a location within a collection of values and, with each call to `next()`, returns the next appropriate value.
+Iterators are nothing more than objects with a specific interface. That interface consists of a method called `next()` that returns a result object. The result object has two properties, `value`, which is the next value, and `done`, which is a boolean value that's `true` when there are no more values to return. The iterator keeps an internal pointer to a location within a collection of values and, with each call to `next()`, returns the next appropriate value.
 
 If you call `next()` after the last value has been returned, the method returns `done` as `true` and `value` contains the return value for the iterator. The *return value* is not considered part of the data set, but rather a final piece of related data or `undefined` if no such data exists. (This concept will become clearer in the generators section later in this chapter.)
 
@@ -47,7 +47,7 @@ ECMAScript 6 makes use of iterators in a number of places to make dealing with c
 
 ## Generators
 
-You might be thinking that iterators sound interesting but they look like a bunch of work. Indeed, writing iterators so that they adhere to the correct behavior is a bit difficult, which is why ECMAScript 6 provides generators. A *generator* is a special kind of function that returns an iterator. Generator functions are indicated by inserting a star character (`*`) after the `function` keyword (it doesn't matter if the star is directly next to `function` or if there's some whitespace between them). The `yield` keyword is used inside of generators to specify the values that the iterator should return when `next()` is called. So if you want to return three different values for each successive call to `next()`, you can do so as follows:
+You might be thinking that iterators look interesting but seem complex to write. Indeed, writing iterators so that they adhere to the correct behavior is a bit difficult, which is why ECMAScript 6 provides generators. A *generator* is a special kind of function that returns an iterator. Generator functions are indicated by inserting a star character (`*`) after the `function` keyword (it doesn't matter if the star is directly next to `function` or if there's some whitespace between them). The `yield` keyword is used inside of generators to specify the values that the iterator should return when `next()` is called. So if you want to return three different values for each successive call to `next()`, you can do so as follows:
 
 ```js
 // generator
@@ -60,17 +60,9 @@ function *createIterator() {
 // generators are called like regular functions but return an iterator
 let iterator = createIterator();
 
-for (let i of iterator) {
-    console.log(i);
-}
-```
-
-This code outputs the following:
-
-```
-1
-2
-3
+console.log(iterator.next().value);     // 1
+console.log(iterator.next().value);     // 2
+console.log(iterator.next().value);     // 3
 ```
 
 In this example, the `createIterator()` function is a generator (as indicated by the `*` before the name) and it's called like any other function. The value returned is an object that adheres to the iterator pattern. Multiple `yield` statements inside the generator indicate the progression of values that should be returned when `next()` is called on the iterator. First, `next()` should return `1`, then `2`, and then `3` before the iterator is finished.
@@ -123,7 +115,9 @@ console.log(iterator.next());           // "{ value: undefined, done: true }"
 console.log(iterator.next());           // "{ value: undefined, done: true }"
 ```
 
-In this code, `createIterator()` is created by using a generator function expression. This behaves exactly the same as the example in the previous section.
+In this code, `createIterator()` is a generator function expression rather than a function declaration (as in the previous example). Since the function expression is anonymous, the asterisk is between the `function` keyword and the opening parentheses. Otherwise, this example is the same as the previous one using a generator function declaration.
+
+I> It is not possible to create an arrow function that is also a generator.
 
 ### Generator Object Methods
 
@@ -158,27 +152,6 @@ let iterator = o.createIterator([1, 2, 3]);
 ```
 
 This example is functionally equivalent to the previous one, the only difference is the syntax used.
-
-### Generator Class Methods
-
-Similar to objects, you can add generator methods directly to classes using almost the same syntax:
-
-```js
-class MyClass {
-
-    *createIterator(items) {
-        for (let i=0; i < items.length; i++) {
-            yield items[i];
-        }
-    }
-
-}
-
-let o = new MyClass();
-let iterator = o.createIterator([1, 2, 3]);
-```
-
-The syntax is very similar to using shorthand object literal methods, as the asterisk needs to come before the method name.
 
 ## Iterables and for-of
 
