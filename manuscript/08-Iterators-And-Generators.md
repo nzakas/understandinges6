@@ -157,6 +157,7 @@ This example is functionally equivalent to the previous one, the only difference
 
 Closely related to the concept of an iterator is an iterable. An *iterable* is an object that has a default iterator specified using the `@@iterator` symbol. More specifically, `@@iterator` contains a function that returns an iterator for the given object. All of the collection objects, including arrays, sets, and maps, as well as strings, are iterables and so have a default iterator specified. Iterables are designed to be used with a new addition to ECMAScript: the `for-of` loop.
 
+
 The `for-of` loop is similar to the other loops in ECMAScript except that it is designed to work with iterables. The loop itself calls `next()` behind the scenes and exits when the `done` property of the returned object is `true`. For example:
 
 ```js
@@ -236,37 +237,6 @@ for (let x of collection) {
 ```
 
 This code defines a default iterator for a variable called `collection` using object literal method shorthand and a computed property using `Symbol.iterator`. The generator then delegates to the `values()` iterator of `this.items` using the `yield *` notation, discussed later in this chapter. The `for-of` loop then uses the generator to create an iterator and execute the loop.
-
-You can also define a default iterator using classes, such as:
-
-```js
-class Collection {
-
-    constructor() {
-        this.items = [];
-    }
-
-    *[Symbol.iterator]() {
-        yield *this.items.values();
-    }
-}
-
-var collection = new Collection();
-collection.items.push(1);
-collection.items.push(2);
-collection.items.push(3);
-
-for (let x of collection) {
-    console.log(x);
-}
-
-// Output:
-// 1
-// 2
-// 3
-```
-
-This example mirrors the previous one with the exception that a class is used instead of an object literal.
 
 Default iterators can be added to any object by assigning a generator to `Symbol.iterator`. It doesn't matter if the property is an own or prototype property, as `for-of` normal prototype chain lookup applies.
 
@@ -430,6 +400,32 @@ This example outputs the following:
 ["title", "Understanding ECMAScript 6"]
 ["format", "ebook"]
 ```
+
+TODO: FIXME
+
+When you want to work with all of the data in the map, you have several options. There are actually three generator methods to choose from: `keys`, which iterates over the keys in the map, `values`, which iterates over the values in the map, and `entries`, which iterates over key-value pairs by returning an array containing the key and the value (`entries` is the default iterator for maps). The easiest way to make use of these is to use a `for-of` loop:
+
+```js
+for (let key of map.keys()) {
+    console.log("Key: %s", key);
+}
+
+for (let value of map.values()) {
+    console.log("Value: %s", value);
+}
+
+for (let item of map.entries()) {
+    console.log("Key: %s, Value: %s", item[0], item[1]);
+}
+
+// same as using map.entries()
+for (let item of map) {
+    console.log("Key: %s, Value: %s", item[0], item[1]);
+}
+```
+
+When iterating over keys or values, you receive a single value each time through the loop. When iterating over entries, you receive an array whose first item is the key and the second item is the value.
+
 
 ### String Iterators
 
