@@ -33,8 +33,6 @@ In this example, a single Unicode character is represented using surrogate pairs
 * A regular expression trying to match a single character fails.
 * The `charAt()` method is unable to return a valid character string.
 
-
-
 The `charCodeAt()` method returns the appropriate 16-bit number for each code unit, but that is the closest you could get to the real value in ECMAScript 5.
 
 ECMAScript 6 enforces UTF-16 string encoding. Standardizing string operations based on this character encoding means that JavaScript can support functionality designed to work specifically with surrogate pairs. The rest of this section discusses a few key examples of that functionality.
@@ -80,15 +78,11 @@ console.log(String.fromCodePoint(134071));  // "𠮷"
 
 Think of `String.fromCodePoint()` as a more complete version of the `String.fromCharCode()` method. Both give the same result for all characters in the BMP. There's only a difference when you pass code points for characters outside of the BMP.
 
-<!-- I might suggest moving the "escaping characters" section to after this section, or before covering "charCodeAt" if you prefer, to keep all the method discussions together. /JG -->
-
 ### The normalize() Method
 
 Another interesting aspect of Unicode is that different characters may be considered equivalent for the purpose of sorting or other comparison-based operations. There are two ways to define these relationships. First, *canonical equivalence* means that two sequences of code points are considered interchangeable in all respects. For example, a combination of two characters can be canonically equivalent to one character. The second relationship is *compatibility*. Two compatible sequences of code points look different but can be used interchangeably in certain situations.
 
-<!-- I've tried to clarify below a bit, but do tweak if those suggestions don't make sense. /JG -->
-
-Due to these relationships, two strings representing fundamentally the same text can contain different code point sequences. For example, the character "æ" and the string "ae" may be used interchangeably, even though they are different code points. But because they have different code points, they would be unequal in JavaScript unless they were normalized in some way.
+Due to these relationships, two strings representing fundamentally the same text can contain different code point sequences. For example, the character "æ" and the two-character string "ae" may be used interchangeably but are strictly not equivalent unless normalized in some way.
 
 ECMAScript 6 supports Unicode normalization forms by giving strings a `normalize()` method. This method optionally accepts a single string parameter indicating one of the  following Unicode normalization forms to apply:
 
@@ -153,46 +147,6 @@ If you've never worried about Unicode normalization before, then you probably wo
 
 Methods aren't the only improvements that ECMAScript 6 provides for working with Unicode strings, though. The standard also offers two new syntax elements.
 
-### Escaping Non-BMP Characters
-
-ECMAScript 5 allows strings to contain 16-bit Unicode characters represented by an *escape sequence*. The escape sequence is the `\u` followed by four hexadecimal values. For example, the escape sequence `\u0061` represents the `"a"` character:
-
-```js
-console.log("\u0061");      // "a"
-```
-
-But if you try to use an escape sequence with a number past `FFFF` (the upper bound of the BMP) in ECMAScript 5, then you can get some surprising results:
-
-```js
-console.log("\u20BB7");     // "₻7"
-```
-
-Since Unicode escape sequences were defined as having exactly four hexadecimal characters, ECMAScript evaluates `\u20BB7` as two characters: `\u20BB` and `"7"`. The first character is unprintable, and the second is the number 7.
-
-ECMAScript 6 solves this problem by introducing an extended Unicode escape sequence where the hexadecimal numbers are inside curly braces. This allows any number of hexadecimal characters to specify a single character:
-
-```js
-console.log("\u{20BB7}");     // "𠮷"
-```
-
-With the extended escape sequence, the resulting string should contain the correct character.
-
-W> Only use this new escape sequence in an ECMAScript 6 environment. In all other environments, it causes a syntax error. To check whether an environment supports the extended escape sequence, you can write a function like this:
-W>
-W> {lang=js}
-W> ~~~~~~~~
-W> function supportsExtendedEscape() {
-W>     try {
-W>         eval("'\\u{00FF1}'");
-W>         return true;
-W>     } catch (ex) {
-W>         return false;
-W>     }
-W> }
-W> ~~~~~~~~
-W> If this function returns false, then you can't use the extended escape sequence.
-
-
 ### The Regular Expression u Flag
 
 You can accomplish many common string operations through regular expressions. But remember, regular expressions assume 16-bit code units, where each represents a single character. To address this problem, ECMAScript 6 defines a `u` flag for regular expressions, which stands for Unicode.
@@ -207,9 +161,9 @@ console.log(/^.$/.test(text));      // false
 console.log(/^.$/u.test(text));     // true
 ```
 
-<!-- Could you describe briefly what the regexes do as they appear throughout, in case the reader is rusty? I just had some trouble following the discussions where I didn't know exactly what the goal of the code is. /JG-->
+The regular expression `/^.$/` matches any input string with a single character. When used without the `u` flag, this regular expression matches on code units, and so the Japanese character (which is represented by two code units) doesn't match the regular expression. When used with the `u` flag, the regular expression compares characters instead of code units and so the Japanese character matches.
 
-Adding the `u` flag allows the regular expression in the third `console.log()` call to correctly match the string by characters. Unfortunately, ECMAScript 6 can't natively determine how many code points a string has, but with the `u` flag, you can use regular expressions to figure it out as follows:
+Unfortunately, ECMAScript 6 can't natively determine how many code points a string has, but with the `u` flag, you can use regular expressions to figure it out as follows:
 
 ```js
 function codePointLength(text) {
@@ -254,7 +208,7 @@ Developers have used the `indexOf()` method to identify strings inside other str
 * The `startsWith()` method returns true if the given text is found at the beginning of the string. It returns false if not.
 * The `endsWith()` method returns true if the given text is found at the end of the string. It returns false if not.
 
-Each of these methods accepts two arguments: the text to search for and an optional location from which to start the search. When the second argument is omitted, `includes()` and `startsWith()` search from the beginning of the string, while `endsWith()` starts from the end. In effect, the second argument minimizes the amount of the string being searched. Here are some examples showing these three methods in action:
+Each of these methods accepts two arguments: the text to search for and an optional index from which to start the search. When the second argument is provided, `includes()` and `startsWith()` start the match from that index while `endsWith()` starts the match from the length of the string minus the second argument; when the second argument is omitted, `includes()` and `startsWith()` search from the beginning of the string, while `endsWith()` starts from the end. In effect, the second argument minimizes the amount of the string being searched. Here are some examples showing these three methods in action:
 
 ```js
 var msg = "Hello world!";
@@ -272,9 +226,9 @@ console.log(msg.endsWith("o", 8));          // true
 console.log(msg.includes("o", 8));          // false
 ```
 
-<!-- Is the second parameter an index or a straight number of characters? It seems like endsWith should return false in the last group unless it's a number of characters, but I'm not quite certain. /JG -->
+The first three calls don't include a second parameter, so they'll search the whole string if needed. The last three calls only check part of the string. The call to `msg.startsWith("o", 4)` starts the match by looking at index 4 of `msg` (which is the "o" in "Hello"); the call to `msg.endsWith("o", 8)` starts the match at index 4 as well because the `8` argument is subtracted from the string length (12); the call to `msg.includes("o", 8)` starts the match from index 8 (which is the "r" in "world").
 
-The first three calls don't include a second parameter, so they'll search the whole string if needed. The last three calls only check part of the string. But while these three methods make identifying the existence of substrings easier, each only returns a boolean value. If you need to find the actual position of one string within another, use the `indexOf()` or `lastIndexOf()` methods.
+While these three methods make identifying the existence of substrings easier, each only returns a boolean value. If you need to find the actual position of one string within another, use the `indexOf()` or `lastIndexOf()` methods.
 
 W> The `startsWith()`, `endsWith()`, and `includes()` methods will throw an error if you pass a regular expression instead of a string. This stands in contrast to `indexOf()` and `lastIndexOf()`, which both convert a regular expression argument into a string and then search for that string.
 
@@ -290,18 +244,16 @@ console.log("abc".repeat(4));       // "abcabcabcabc"
 
 This method is a convenience function above all else, and it can be especially useful when manipulating text. It's particularly useful in code formatting utilities that need to create indentation levels, like this:
 
-<!-- Could we show "size" defined?  /JG -->
-
 ```js
 // indent using a specified number of spaces
-var indent = " ".repeat(size),
+var indent = " ".repeat(4),
     indentLevel = 0;
 
 // whenever you increase the indent
 var newIndent = indent.repeat(++indentLevel);
 ```
 
-The first `repeat()` call creates a string of spaces at the specified size, and the `indentLevel` variable keeps track of the indent level. Then, you can just call `repeat()` with an incremented `indentLevel` to change the number of spaces.
+The first `repeat()` call creates a string of four spaces, and the `indentLevel` variable keeps track of the indent level. Then, you can just call `repeat()` with an incremented `indentLevel` to change the number of spaces.
 
 ECMAScript 6 also makes some useful changes to regular expression functionality that don't fit into a particular category. The next section highlights a few.
 
@@ -311,9 +263,7 @@ Regular expressions are an important part of working with strings in JavaScript,
 
 ### The Regular Expression y Flag
 
-<!-- I had some trouble following below, so I tried clarifying the point about "sticky". Definitely tweak if I've missed anything. /JG -->
-
-ECMAScript 6 standardized the `y` flag after it was implemented in Firefox as a proprietary extension to regular expressions. The `y` flag affects a regular expression search's `sticky` property, and it tells the search to start matching characters in a string at the position specified by the string's `lastIndex` property. If there is no match at that location, then the regular expression stops matching. To see how this works, consider the following code:
+ECMAScript 6 standardized the `y` flag after it was implemented in Firefox as a proprietary extension to regular expressions. The `y` flag affects a regular expression search's `sticky` property, and it tells the search to start matching characters in a string at the position specified by the regular expression's `lastIndex` property. If there is no match at that location, then the regular expression stops matching. To see how this works, consider the following code:
 
 ```js
 var text = "hello1 hello2 hello3",
@@ -465,9 +415,7 @@ var re = /ab/g;
 console.log(getFlags(re));          // "g"
 ```
 
-<!-- I had a go at describing this, but do change the suggested text if I've missed anything. /JG -->
-
-This converts a regular expression to a string, and fetches any characters after the last `/` in the string. Those characters should be the flags.
+This code converts a regular expression into a string and then returns the characters found after the last `/`. Those characters are the flags.
 
 ECMAScript 6 makes fetching flags easier by adding a `flags` property to go along with the `source` property. Both properties are prototype accessor properties with only a getter assigned, making them read-only. The `flags` property makes inspecting regular expressions easier for both debugging and inheritance purposes.
 
@@ -482,21 +430,15 @@ console.log(re.flags);      // "g"
 
 This fetches all flags on `re` and prints them to the console with far fewer lines of code than the `toString()` technique can. Using `source` and `flags` together allows you to extract the pieces of the regular expression that you need without parsing the regular expression string directly.
 
-<!-- Or perhaps something different below, if my suggestion doesn't quite hit the mark. I do think we need a bit of connective tissue before the next section, since it's a pretty big shift in topic. /JG -->
-
 All of the changes to strings and regular expressions that this chapter has covered so far are definitely powerful, but ECMAScript 6 improves your power over strings in a much bigger way. It brings a new type of literal to the table that makes strings more flexible.
 
 ## Template Literals
 
-<!-- Could you specify in what way strings have been limited? It may also be helpful to define DSL, if not all readers will be completely familiar with it. /JG -->
-
-JavaScript's strings have always been fairly limited when compared to those in other languages. *Template literals* add new syntax for creating domain-specific languages (DSLs) for working with content in a way that is safer than the solutions we have today. The ECMAScript wiki offers the following description on the [template literal strawman](http://wiki.ecmascript.org/doku.php?id=harmony:quasis):
+JavaScript's strings have always been fairly limited when compared to those in other languages. Since JavaScript's inception, strings have lacked the methods covered so far in this chapter and string concatenation is as simple as possible. *Template literals* add new syntax for creating domain-specific languages (DSLs) for working with content in a way that is safer than the solutions we have today. DSLs are languages designed for a specific, narrow purpose (as opposed to JavaScript, which is a general-purpose language) and the ability to create DSLs inside of JavaScript was desired to deal with some of the more complex problems facing JavaScript developers. The ECMAScript wiki offers the following description on the [template literal strawman](http://wiki.ecmascript.org/doku.php?id=harmony:quasis):
 
 > This scheme extends ECMAScript syntax with syntactic sugar to allow libraries to provide DSLs that easily produce, query, and manipulate content from other languages that are immune or resistant to injection attacks such as XSS, SQL Injection, etc.
 
-In reality, though, template literals are ECMAScript 6's answer to the following options that JavaScript lacked all the way through ECMAScript 5:
-
-<!-- It seemed like these are all things that JavaScript didn't have until ES6, and I've edited to clarify. Do revert if that's not correct. /JG -->
+In reality, though, template literals are ECMAScript 6's answer to the following features that JavaScript lacked all the way through ECMAScript 5:
 
 * **Multiline strings** A formal concept of multiline strings.
 * **Basic string formatting** The ability to substitute parts of the string for values contained in variables.
@@ -534,14 +476,12 @@ There's no need to escape either double or single quotes inside of template lite
 
 JavaScript developers have wanted a way to create multiline strings since the first version of the language. But when using double or single quotes, strings must be completely contained on a single line.
 
-####Pre-ECMAScript 6 Workarounds
+#### Pre-ECMAScript 6 Workarounds
 
 Thanks to a long-standing syntax bug, JavaScript does have a workaround. You can create multiline strings if there's a backslash (`\`) before a newline. Here's an example:
 
-<!-- I tried this and the next example in the developer tools console in Chrome, and both threw an Uncaught SyntaxError. Using var instead of let works, though. I may have entered them wrong, but wanted to let you know. /JG -->
-
 ```js
-let message = "Multiline \
+var message = "Multiline \
 string";
 
 console.log(message);       // "Multiline string"
@@ -550,7 +490,7 @@ console.log(message);       // "Multiline string"
 The `message` string has no newlines present when printed to the console because the backslash is treated as a continuation rather than a newline. In order to show a newline in output, you'd need to manually include it:
 
 ```js
-let message = "Multiline \n\
+var message = "Multiline \n\
 string";
 
 console.log(message);       // "Multiline
@@ -562,7 +502,7 @@ This should print `Multiline String` on two separate lines in all major JavaScri
 Other pre-ECMAScript 6 attempts to create multiline strings usually relied on arrays or string concatenation, such as:
 
 ```js
-let message = [
+var message = [
     "Multiline ",
     "string"
 ].join("\n");
@@ -688,9 +628,7 @@ The next argument would be `10`, which is the interpreted value for the `count` 
 
 Note that the first item in `literals` is an empty string. This ensures that `literals[0]` is always the start of the string, just like `literals[literals.length - 1]` is always the end of the string. There is always one fewer substitution than literal, which means the expression `substitutions.length === literals.length - 1` is always true.
 
-Using this pattern, the `literals` and `substitutions` arrays can be interwoven to create a resulting string. The first item in `literals` comes first, the first item in `substitutions` is next, and so on, until the string is complete. To mimic the default behavior of template, you need only define a function that performs this operation:
-
-<!-- I don't quite follow the sentence above. Which template, and why do we want to mimic it? /JG -->
+Using this pattern, the `literals` and `substitutions` arrays can be interwoven to create a resulting string. The first item in `literals` comes first, the first item in `substitutions` is next, and so on, until the string is complete. As an example, you can mimic the default behavior of a template literal by alternating values from these two arrays:
 
 ```js
 function passthru(literals, ...substitutions) {
@@ -758,9 +696,7 @@ console.log(message);           // "Multiline\\nstring"
 console.log(message.length);    // 17
 ```
 
-This uses `literals.raw` instead of `literals` to output the string result. That means any character escapes, including Unicode code point escapes, should be returned in their raw form.
-
-<!-- Could you speak a bit to when we'd want the character escapse to be returned in their raw form? I get that we can do it, but I'm not certain when we'd want to. /JG -->
+This uses `literals.raw` instead of `literals` to output the string result. That means any character escapes, including Unicode code point escapes, should be returned in their raw form.Raw strings are helpful when you want to output a string containing code in which you'll need to include the character escaping (for instance, if you want to generate documentation about some code, you may want to output the actual code as it appears).
 
 ## Summary
 
