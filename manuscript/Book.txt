@@ -5,8 +5,9 @@
 04-Objects.md
 05-Destructuring.md
 06-Symbols.md
-07-Iterators-And-Generators.md
-08-Classes.md
+07-Sets-And-Maps.md
+08-Iterators-And-Generators.md
+09-Classes.md
 11-Promises.md
 14-Modules.md
 A-Other-Changes.md
