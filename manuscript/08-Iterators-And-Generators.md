@@ -778,63 +778,210 @@ Generator delegation using the return value is a very powerful paradigm that all
 
 I> You can use `yield *` directly on strings, such as `yield * "hello"` and the string's default iterator will be used.
 
-### Asynchronous Task Scheduling
+## Asynchronous Task Running
 
 A lot of the excitement around generators is directly related to usage with asynchronous programming. Asynchronous programming in JavaScript is a double-edged sword: it's very easy to do simple things while complex things become an errand in code organization. Since generators allow you to effectively pause code in the middle of execution, this opens up a lot of possibilities as it relates to asynchronous processing.
 
 The traditional way to perform asynchronous operations is to call a function that has a callback. For example, consider reading a file from disk in Node.js:
 
 ```js
-var fs = require("fs");
+let fs = require("fs");
 
-function readConfigFile(callback) {
-    fs.readFile("config.json", callback);
-}
+fs.readFile("config.json", function(err, contents) {
+    if (err) {
+        throw err;
+    }
 
-function init(callback) {
-    readConfigFile(function(err, contents) {
-        if (err) {
-            throw err;
-        }
-
-        doSomethingWith(contents);
-        console.log("Done");
-    });
-}
-
-init();
-```
-
-Instead of providing a callback, you can `yield` and just wait for a response before starting again:
-
-```js
-var fs = require("fs");
-
-var task;
-
-function readConfigFile() {
-    fs.readFile("config.json", function(err, contents) {
-        if (err) {
-            task.throw(err);
-        } else {
-            task.next(contents);
-        }
-    });
-}
-
-function *init() {
-    var contents = yield readConfigFile();
     doSomethingWith(contents);
     console.log("Done");
-}
-
-task = init();
-task.next();
+});
 ```
 
-The difference between `init()` in this example and the previous one is why developers are excited about generators for asynchronous operation. Instead of using callbacks, `init()` yields to `readConfigFile()`, which does the asynchronous read operation and, when complete, either calls `throw()` if there's an error or `next()` if the contents have been ready. That means the `yield` operation inside of `init()` will throw an error if there's a read error or else the file contents will be returned almost as if the operation was synchronous.
+The `fs.readFile()` method is called with the filename to read and a callback function. When the operation is finished, the callback function is called. The callback checks to see if there's an error, and if not, processes the returned `contents`. This works well when you have a small, finite number of asynchronous tasks to complete, but gets complicated when you need to nest callbacks or otherwise sequence a series of asynchronous tasks. This is where generators and `yield` are helpful.
 
-Managing the `task` variable is a bit cumbersome in this example, but it's only important that you understand the theory. There are more powerful ways of doing asynchronous task scheduling using promises, and that will be covered further in Chapter 10.
+### A Simple Task Runner
+
+Because `yield` stops execution and waits for the `next()` method to be called before starting again, this provides a way to implement asynchronous calls without managing callbacks. To start, you need a function that can call a generator and start the iterator, such as:
+
+```js
+function run(taskDef) {
+
+    // create the iterator, make available elsewhere
+    let task = taskDef();
+
+    // start the task
+    let result = task.next();
+
+    // recursive function to keep calling next()
+    function step() {
+
+        // if there's more to do
+        if (!result.done) {
+            result = task.next();
+            step();
+        }
+    }
+
+    // start the process
+    step();
+
+}
+```
+
+The `run()` function accepts a task definition (a generator function) as an argument. It calls the generator to create an iterator and stores the iterator in `task`. The `task` variable is outside of the function so it can be accessed by other functions (the reason why will be clear later in this section). The first call to `next()` begins the iterator and the result is stored for later use. The function `step()` checks to see if `result.done` is false and, if so, calls `next()` before recursively calling itself. Each call to `next()` stores the return value in `result`, so that variable is always overwritten to contain the latest information. The initial call to `step()` starts the process of looking at `result.done`.
+
+With this implementation of `run()`, you can run a generator containing multiple `yield` statements, such as:
+
+```js
+run(function*() {
+    console.log(1);
+    yield;
+    console.log(2);
+    yield;
+    console.log(3);
+});
+```
+
+This example just outputs three numbers to the console, which simply shows that all calls to `next()` are being made. However, just yielding a couple times of times isn't very useful, so the next step is to pass values into and out of the iterator.
+
+### Task Running With Data
+
+The easiest way to pass data through the task runner is to pass the value specified by `yield` into the next call to `next()`. To do so, you need only pass `result.value`, as in this code:
+
+```js
+function run(taskDef) {
+
+    // create the iterator, make available elsewhere
+    let task = taskDef();
+
+    // start the task
+    let result = task.next();
+
+    // recursive function to keep calling next()
+    function step() {
+
+        // if there's more to do
+        if (!result.done) {
+            result = task.next(result.value);
+            step();
+        }
+    }
+
+    // start the process
+    step();
+
+}
+```
+
+With this change, it's now possible to pass data back and forth, such as:
+
+```js
+run(function*() {
+    let value = yield 1;
+    console.log(value);         // 1
+
+    value = yield value + 3;
+    console.log(value);         // 4
+});
+```
+
+This example outputs two values to the console: 1 and 4. The value 1 comes from `yield 1`, as the 1 is being passed right back into the variable `value`. The 4 is calculated by adding 3 to `value` and passing that result back to `value`. Now that data is flowing between calls to `yield`, it's just a small change to allow asynchronous calls.
+
+### Asynchronous Task Runner
+
+Whereas the previous example passed static data back and forth, waiting for an asynchronous process is slightly different. The task runner needs to know about callbacks and how to use them. And since `yield` expressions pass their values into the task runner, that means any function call must return a value that somehow indicates it's an asynchronous operation that the task runner should wait for. How can you signal that?
+
+For the purposes of this example, any function meant to be called by the task runner will return a function that executes a callback. For example:
+
+```js
+function fetchData() {
+    return function(callback) {
+        callback(null, "Hi!");
+    };
+}
+```
+
+The `fetchData()` function returns a function that accepts a callback function as an argument. When the returned function is called, it executes the callback function with a single piece of data, the string `"Hi!"`. The `callback` argument needs to come from the task runner and ensure that calling it correctly interacts with the underlying iterator. While the `fetchData()` function is synchronous, you can easily extend it to be asynchronous by calling the callback with a slight delay, such as:
+
+```js
+function fetchData() {
+    return function(callback) {
+        setTimeout(function() {
+            callback(null, "Hi!");
+        }, 50);
+    };
+}
+```
+
+This version of `fetchData()` introduces a 50ms delay before calling the callback, demonstrating that this pattern works equally well for synchronous and asynchronous code. You just have to make sure each function that wants to be called using `yield` follows this same pattern.
+
+With a good understanding of how functions signal that they are an asynchronous process, you can modify the task runner to take this into account. Anytime `result.value` is a function, the task runner will execute it instead of just passing that value into `next()`. Here's the updated code:
+
+```js
+function run(taskDef) {
+
+    // create the iterator, make available elsewhere
+    let task = taskDef();
+
+    // start the task
+    let result = task.next();
+
+    // recursive function to keep calling next()
+    function step() {
+
+        // if there's more to do
+        if (!result.done) {
+            if (typeof result.value === "function") {
+                result.value(function(err, data) {
+                    if (err) {
+                        result = task.throw(err);
+                        return;
+                    }
+
+                    result = task.next(data);
+                    step();
+                });
+            } else {
+                result = task.next(result.value);
+                step();
+            }
+
+        }
+    }
+
+    // start the process
+    step();
+
+}
+```
+
+When `result.value` is a function, it is called with a callback function. That callback function follows the Node.js convention of passing any possible error as the first argument and the result as the second argument. If `err` is present, then that means an error occurred and `task.throw()` is called with the error object instead of `task.next()` so an error is thrown at the correct location. If there is no error, then `data` is passed into `task.next()` and the result is stored. Then, `step()` is called to continue the process. When `result.value` is not a function, it is directly passed into `next()` just as before.
+
+This new version of the task runner is ready for all asynchronous tasks. To read data from a file in Node.js, you need to create a wrapper around `fs.readFile()` that returns a function similar to the `fetchData()` function from earlier in this section. For example:
+
+```js
+let fs = require("fs");
+
+function readFile(filename) {
+    return function(callback) {
+        fs.readFile(filename, callback);
+    };
+}
+```
+
+The `readFile()` method accepts a single argument, the filename, and returns a function that calls a callback. The callback is passed directly to `fs.readFile()`, which will execute it upon completion. You can then run this task using `yield` as follows:
+
+```js
+run(function*() {
+    let contents = yield readFile("config.json");
+    doSomethingWith(contents);
+    console.log("Done");
+});
+```
+
+This example is performing the asynchronous `readFile()` operation without making any callbacks visible in the main code. Aside from `yield`, the code looks the same as synchronous code. As long as the functions performing asynchronous operations all conform to the same interface, you can write logic that reads like synchronous code.
+
+Of course, there are downsides to the pattern used in these examples, namely that you can't always be sure that a function that returns a function is asynchronous. For now, though, it's only important that you understand the theory behind the task running. There are more powerful ways of doing asynchronous task scheduling using promises, and that will be covered further in Chapter 11.
 
 ## Summary
 
