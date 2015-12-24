@@ -2,7 +2,7 @@
 
 Ever since JavaScript was first created, many developers have been confused by its lack of classes. Most formal object-oriented programming languages support classes and classical inheritance as the primary way of defining similar and related objects. From pre-ECMAScript 1 all the way through ECMAScript 5, this point of confusion led many libraries to create utilities designed to make JavaScript look like it had support for classes.
 
-While there are some JavaScript developers who feel strongly that the language doesn't need classes, the fact that so many libraries were created specifically for this purpose led to the inclusion of classes in ECMAScript 6. However, ECMAScript 6 classes aren't exactly the same as classes in other language. There's a uniqueness about them that embraces the dynamic of JavaScript as a language.
+While there are some JavaScript developers who feel strongly that the language doesn't need classes, the fact that so many libraries were created specifically for this purpose led to the inclusion of classes in ECMAScript 6. However, ECMAScript 6 classes aren't exactly the same as classes in other languages. There's a uniqueness about them that embraces the dynamic nature of JavaScript.
 
 ## Class-Like Structures in ECMAScript 5
 
@@ -30,7 +30,7 @@ This same basic pattern underlies a lot of the class-mimicking JavaScript librar
 
 ## Class Declarations
 
-The simplest form of classes to understand is the one that looks similar to other languages: the class declaration. Class declarations begin with the `class` keyword followed by the name of the class. The rest of the syntax looks similar to concise methods in object literals without requiring commas between them. For example, here's the class equivalent of the previous example:
+The simplest class form is the one that looks similar to other languages: the class declaration. Class declarations begin with the `class` keyword followed by the name of the class. The rest of the syntax looks similar to concise methods in object literals without requiring commas between them. For example, here's the class equivalent of the previous example:
 
 ```js
 class PersonClass {
@@ -60,7 +60,7 @@ The class declaration `PersonClass` behaves quite similarly to `PersonType` from
 
 I> Own properties, properties that occur on the instance rather than the prototype, can only be created inside of a class constructor or method. In the previous example, `name` is an own property. It's recommended to create all possible own properties inside of the constructor function so there's a single place that's responsible for all of them.
 
-Perhaps the worst-kept secret in ECMAScript 6 is that class declarations such as this example are actually just syntactic sugar on top of the existing custom type declarations. The `PersonClass` declaration actually creates a function that has the behavior of the `constructor` method, which is why `typeof PersonClass` is `"function"`. Similarly, the `sayName()` method ends up as a method on `PersonClass.prototype`, similar to `PersonType.prototype` in the earlier example. These similarities allow you to mix custom types and classes without worrying too much about which you're using.
+An interesting aspect of class declarations is that they are just syntactic sugar on top of the existing custom type declarations. The `PersonClass` declaration actually creates a function that has the behavior of the `constructor` method, which is why `typeof PersonClass` is `"function"`. Similarly, the `sayName()` method ends up as a method on `PersonClass.prototype`, similar to `PersonType.prototype` in the earlier example. These similarities allow you to mix custom types and classes without worrying too much about which you're using.
 
 Despite the similarities, there are some important differences to keep in mind:
 
@@ -101,7 +101,9 @@ let PersonType2 = (function() {
 }());
 ```
 
-While it was possible to do everything that classes do without adding new syntax, you can see how the class syntax makes all of the functionality a lot simpler than it would be otherwise.
+The first thing to notice in this code is that there are two `PersonType2` declarations, a `let` declaration in the outer scope and a `const` declaration inside of the IIFE. This is how class methods are forbidden from overwriting the class name while code outside of the class is allowed to do so. The constructor function checks `new.target` to ensure that it's being called with `new`, otherwise an error is thrown. Next, the `sayName()` method is defined as nonenumerable. The final step is to return the constructor function.
+
+From this example, you can see that while it is possible to do everything that classes do without using new syntax, the class syntax makes all of the functionality a lot simpler than it would be otherwise.
 
 A> ### Constant Class Names
 A>
@@ -151,7 +153,13 @@ console.log(typeof PersonClass);                    // "function"
 console.log(typeof PersonClass.prototype.sayName);  // "function"
 ```
 
-Aside from the syntax, class expressions are exactly equivalent to class declarations. This example omits the identifier after `class`, but you can also include it:
+Aside from the syntax, class expressions are exactly equivalent to class declarations.
+
+I> Whether you use class declarations or class expressions is purely a matter of style. Unlike function declarations and function expressions, both class declarations and class expressions are not hoisted, and so the choice has little bearing on the runtime behavior of the code.
+
+### Named Class Expressions
+
+The previous section used an anonymous class expression in the example, but you can also name class expressions just like you can name function expressions. To do so, include an identifier after the `class` keyword:
 
 ```js
 let PersonClass = class PersonClass2 {
@@ -167,12 +175,48 @@ let PersonClass = class PersonClass2 {
     }
 };
 
-console.log(PersonClass === PersonClass2);  // true
+console.log(typeof PersonClass);        // "function"
+console.log(typeof PersonClass2);       // "undefined"
 ```
 
-In this case, `PersonClass` and `PersonClass2` both reference the same class, and so they can be used interchangeably.
+In this example, the class expression is given a name, `PersonClass2`. The `PersonClass2` identifier exists only within the class definition so that it can be used inside of methods. Outside of the class, there is no `PersonClass2` binding, so `typeof PersonClass2` is `"undefined"`. To understand why this is, here's the equivalent declaration without using classes:
 
-Class expressions can also be used in some interesting ways. For example, they can be passed into functions as arguments:
+```js
+// direct equivalent of PersonClass named class expression
+let PersonClass = (function() {
+
+    "use strict";
+
+    const PersonClass2 = function(name) {
+
+        // make sure the function was called with new
+        if (typeof new.target === "undefined") {
+            throw new Error("Constructor must be called with new.");
+        }
+
+        this.name = name;
+    }
+
+    Object.defineProperty(PersonClass2.prototype, "sayName", {
+        value: function() {
+            console.log(this.name);
+        },
+        enumerable: false,
+        writable: true,
+        configurable: true
+    });
+
+    return PersonClass2;
+}());
+```
+
+Creating a named class expression slightly changes what's happening in the JavaScript engine. For class declarations the outer binding (defined with `let`) has the same name as the inner binding (defined with `const`). Named class expressions use their name as the `const` definition, so in this case, `PersonClass2` is defined for use only inside of the class.
+
+While the behavior of named class expressions is different from that of named function expressions, there are still a lot of similarities between the two. Both can be used as values, and that opens up a lot of possibilities.
+
+## Classes as First-Class Citizens
+
+In programming, something is said to be a *first-class citizen* when it can be used as a value, meaning it can be passed into a function, returned from a function, and assigned to a variable. JavaScript functions are first class citizens, sometimes just called first class functions, and that's part of what makes JavaScript unique. ECMAScript 6 continues this tradition by making classes first-class citizens as well. That allows classes to be used in a lot of different ways. For example, they can be passed into functions as arguments:
 
 ```js
 function createObject(classDef) {
@@ -194,7 +238,7 @@ In this example, an anonymous class expression is passed into `createObject()`. 
 Another interesting use of class expressions is to create singletons by immediately invoking the class constructor. To do so, you must use `new` with a class expression and include parentheses at the end. For example:
 
 ```js
-let person = new class {
+let person = new class PersonClass {
 
     constructor(name) {
         this.name = name;
@@ -209,13 +253,13 @@ let person = new class {
 person.sayName();       // "Nicholas"
 ```
 
-Here, the anonymous class expression is created and then executed immediately. This pattern allows you to use the class syntax for creating singletons without leaving a class reference available for inspection. The parentheses at the end are the indicator that you're calling a function while also allowing you to pass in an argument.
+Here, the anonymous class expression is created and then executed immediately. This pattern allows you to use the class syntax for creating singletons without leaving a class reference available for inspection (remember that `PersonClass` only creates a binding inside of the class, not outside). The parentheses at the end are the indicator that you're calling a function while also allowing you to pass in an argument.
 
-Whether you use class declarations or class expressions is purely a matter of style. Unlike function declarations and function expressions, both class declarations and class expressions are not hoisted, and so the choice has little bearing on the runtime behavior of the code.
+The examples in this chapter so far have focused on classes with methods. But you can also create accessor properties on classes using a syntax similar to object literals.
 
 ## Accessor Properties
 
-While own properties should be created inside of class constructors, classes allow you to define accessor properties on the prototype by using a syntax similar to that of object literal accessor format. To create a getter, use the keyword `get` followed by a space followed by an identifier; to create a setter, do the same using the keyword `set`. For example:
+While own properties should be created inside of class constructors, classes allow you to define accessor properties on the prototype. To create a getter, use the keyword `get` followed by a space followed by an identifier; to create a setter, do the same using the keyword `set`. For example:
 
 ```js
 class CustomHTMLElement {
@@ -239,7 +283,7 @@ console.log("set" in descriptor);   // true
 console.log(descriptor.enumerable); // false
 ```
 
-In this example, the `CustomHTMLElement` class is made as a simple wrapper around an existing DOM element. It has both a getter and setter for `html` that simply delegates to the `innerHTML` method on the element itself. This accessor property is created as non-enumerable, just like any other method would be, and is created on the `CustomHTMLElement.prototype`. The equivalent non-class representation is:
+In this example, the `CustomHTMLElement` class is made as a wrapper around an existing DOM element. It has both a getter and setter for `html` that delegates to the `innerHTML` method on the element itself. This accessor property is created as non-enumerable, just like any other method would be, and is created on the `CustomHTMLElement.prototype`. The equivalent non-class representation is:
 
 ```js
 // direct equivalent to previous example
@@ -273,6 +317,8 @@ let CustomHTMLElement = (function() {
 ```
 
 As with previous examples, this one shows just how much code you're saving by using a class instead of the non-class equivalent. The accessor property definition alone is almost the size of the equivalent class declaration.
+
+Adding methods and accessor properties to a class' prototype is useful when you want those to show up on object instances. If, on the other hand, you'd like methods or accessor properties on the class itself, then you'll need to use static members.
 
 ## Static Members
 
@@ -322,11 +368,9 @@ class PersonClass {
 let person = PersonClass.create("Nicholas");
 ```
 
-The `PersonClass` definition defines a single static method called `create()` by adding the `static` keyword.
+The `PersonClass` definition has a single static method called `create()`. The method syntax is the same as for `sayName()` with the exception of the `static` keyword. You can use the `static` keyword on any method or accessor property definition within a class. The only restriction is that you cannot use `static` with the `constructor` method definition.
 
-You can use the `static` keyword on any method or accessor property definition within a class. The only restriction is that you cannot use `static` with the `constructor` method definition.
-
-I> Just as with other class members, static members are not enumerable by default.
+W> Static members are not accessible from instances. You must always access static members from the class directly.
 
 ## Derived Classes
 
