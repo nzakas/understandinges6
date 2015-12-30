@@ -307,13 +307,13 @@ let collection = {
     0: "Hello",
     1: "world",
     length: 2,
-    [Symbol.isConcatSpreadable] = true
+    [Symbol.isConcatSpreadable]: true
 };
 
 let messages = [ "Hi" ].concat(collection);
 
-console.log(message.length);    // 3
-console.log(message);           // ["hi","Hello","world"]
+console.log(messages.length);    // 3
+console.log(messages);           // ["hi","Hello","world"]
 ```
 
 The `collection` object in this example is setup to look like an array: it has a `length` property and two numeric keys. The `@@isConcatSpreadable` property is set to `true` to indicate that the property values should be added as individual items to an array. When `collection` is passed to `concat()`, the resulting array has `"Hello"` and `"world"` as separate items after `"hi"`.
