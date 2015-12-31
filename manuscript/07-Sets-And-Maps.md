@@ -550,7 +550,7 @@ This code uses the common convention of a leading underscore to indicate that a 
 
 Using ECMAScript 5, it's possible to get close to having truly private data using a pattern such as:
 
-``js
+```js
 let Person = (function() {
 
     let privateData = {},
