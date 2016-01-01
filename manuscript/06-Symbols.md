@@ -255,11 +255,11 @@ This example uses `Object.defineProperty()` to overwrite the `@@hasInstance` met
 Of course, you can also inspect the value and decide whether or not a value should be considered an instance based on any arbitrary condition. For instance, maybe numbers with values between 1 and 100 are to be considered an instance of a special number type:
 
 ```js
-function SpecialNumer() {
+function SpecialNumber() {
     // ...
 }
 
-Object.defineProperty(MyObject, Symbol.hasInstance, {
+Object.defineProperty(SpecialNumber, Symbol.hasInstance, {
     value: function(v) {
         return (v instanceof Number) && (v >=1 && v <= 100);
     }
