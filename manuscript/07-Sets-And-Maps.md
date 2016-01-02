@@ -82,7 +82,7 @@ These are difficult problem to identify and debug when it occurs in large applic
 
 ## Sets in ECMAScript 6
 
-ECMAScript 6 adds a `Set` type that is an ordered list of values without duplicates. Sets are allow fast access to the data contained within, adding a more efficient manner of tracking discrete values. Sets are created using `new Set()` and items are added to the set by using the `add()` method. You can see how many items are in the set by using the `size` property.
+ECMAScript 6 adds a `Set` type that is an ordered list of values without duplicates. Sets allow fast access to the data contained within, adding a more efficient manner of tracking discrete values. Sets are created using `new Set()` and items are added to the set by using the `add()` method. You can see how many items are in the set by using the `size` property.
 
 ```js
 let set = new Set();
@@ -277,7 +277,7 @@ key = null;
 console.log(set.size);      // 1
 
 // get the original reference back
-key = ...set[0];
+key = [...set][0];
 ```
 
 In this example, setting `key` to `null` clears one reference of the object but another remains inside the set. So, you can retrieve that value by converting the set to an array using the spread operator and accessing the first item. That works fine for most uses, but sometimes it's better for references in a set to disappear when all other references disappear. For instance, if your JavaScript is running in a web page and wants to keep track of DOM elements (that might be removed by another script), you don't want your code holding onto the last reference to a DOM element - this is called a memory leak.
@@ -591,7 +591,7 @@ let Person = (function() {
 }());
 ```
 
-This version of the code uses a weak map for the private data instead of an object. Because the object instance itself can be used as a key, there's no need to keep track of a separate ID. When the `Person` constructor is called, a new entry is made into the weak map with a key of `this` and a value of an object containing private information (in this case, just `name`). That information is retrieve inside of `getName()` by passing `this` to `privateData.get()` in order to retrieve the data object and access the `name` property. In this way, the private information is kept private and will be destroyed whenever an object instance is destroyed.
+This version of the code uses a weak map for the private data instead of an object. Because the object instance itself can be used as a key, there's no need to keep track of a separate ID. When the `Person` constructor is called, a new entry is made into the weak map with a key of `this` and a value of an object containing private information (in this case, just `name`). That information is retrieved inside of `getName()` by passing `this` to `privateData.get()` in order to retrieve the data object and access the `name` property. In this way, the private information is kept private and will be destroyed whenever an object instance is destroyed.
 
 #### Uses and Limitations
 
