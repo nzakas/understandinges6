@@ -82,7 +82,7 @@ These are difficult problem to identify and debug when it occurs in large applic
 
 ## Sets in ECMAScript 6
 
-ECMAScript 6 adds a `Set` type that is an ordered list of values without duplicates. Sets are allow fast access to the data contained within, adding a more efficient manner of tracking discrete values. Sets are created using `new Set()` and items are added to the set by using the `add()` method. You can see how many items are in the set by using the `size` property.
+ECMAScript 6 adds a `Set` type that is an ordered list of values without duplicates. Sets allow fast access to the data contained within, adding a more efficient manner of tracking discrete values. Sets are created using `new Set()` and items are added to the set by using the `add()` method. You can see how many items are in the set by using the `size` property.
 
 ```js
 let set = new Set();
