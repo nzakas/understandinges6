@@ -591,7 +591,7 @@ let Person = (function() {
 }());
 ```
 
-This version of the code uses a weak map for the private data instead of an object. Because the object instance itself can be used as a key, there's no need to keep track of a separate ID. When the `Person` constructor is called, a new entry is made into the weak map with a key of `this` and a value of an object containing private information (in this case, just `name`). That information is retrieve inside of `getName()` by passing `this` to `privateData.get()` in order to retrieve the data object and access the `name` property. In this way, the private information is kept private and will be destroyed whenever an object instance is destroyed.
+This version of the code uses a weak map for the private data instead of an object. Because the object instance itself can be used as a key, there's no need to keep track of a separate ID. When the `Person` constructor is called, a new entry is made into the weak map with a key of `this` and a value of an object containing private information (in this case, just `name`). That information is retrieved inside of `getName()` by passing `this` to `privateData.get()` in order to retrieve the data object and access the `name` property. In this way, the private information is kept private and will be destroyed whenever an object instance is destroyed.
 
 #### Uses and Limitations
 
