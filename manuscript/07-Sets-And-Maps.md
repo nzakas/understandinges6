@@ -277,7 +277,7 @@ key = null;
 console.log(set.size);      // 1
 
 // get the original reference back
-key = ...set[0];
+key = [...set][0];
 ```
 
 In this example, setting `key` to `null` clears one reference of the object but another remains inside the set. So, you can retrieve that value by converting the set to an array using the spread operator and accessing the first item. That works fine for most uses, but sometimes it's better for references in a set to disappear when all other references disappear. For instance, if your JavaScript is running in a web page and wants to keep track of DOM elements (that might be removed by another script), you don't want your code holding onto the last reference to a DOM element - this is called a memory leak.
