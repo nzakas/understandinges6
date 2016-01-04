@@ -1,32 +1,14 @@
 # Arrays
 
-W> This chapter is a work-in-progress. As such, it may have more typos or content errors than others.
-
-## Changes
-
-Array.prototype.concat/push/splice throw TypeError if new length would be 2^53 or greater.
-
-
-TODO
-
-## New Methods
-
-TODO
-
-
-
-## Species Pattern
-
-TODO
+Arrays have been one of the foundational JavaScript objects since the language's early days. Unfortunately, arrays remained the same for most of their existence until ECMAScript 5 introduced some new array methods. ECMAScript 6 continues the trend by updating arrays with a lot more functionality.
 
 ## Creating Arrays
 
-
-
+Prior to ECMAScript 6, the two primary ways of creating arrays were the `Array` constructor and array literal syntax. Both approaches require you to list out the array items individually and are otherwise fairly limited. If you had an array-like object (an object with numeric indices and a `length` property) and wanted to convert it into an array, your options were fairly limited and often required extra code. While these limitations might seem small, they turned out to be a growing pain point for large JavaScript applications that do a lot of array manipulation. To makes things easier, ECMAScript 6 adds two new methods: `Array.of()` and `Array.from()`.
 
 ### Array.of()
 
-JavaScript has long had a quirk around creating arrays. The `Array` constructor behaves differently based on the type of data passed into it. For example:
+JavaScript has long had a quirk around creating arrays with the `Array` constructor. The behavior of `new Array()` behaves differently based on the type and number of arguments passed into it. For example:
 
 ```js
 let items = new Array(1, 2);        // length is 2
@@ -38,6 +20,11 @@ items = new Array(2);
 console.log(items.length);          // 2
 console.log(items[0]);              // undefined
 console.log(items[1]);              // undefined
+
+items = new Array(3, "2");
+console.log(items.length);          // 2
+console.log(items[0]);              // 3
+console.log(items[1]);              // "2"
 
 items = new Array("2");
 console.log(items.length);          // 1
@@ -66,18 +53,23 @@ console.log(items[0]);              // "2"
 The `Array.of()` method is similar to using an array literal, which is to say, you can use an array literal instead of `Array.of()` for native arrays most of the time. If you ever need to pass the `Array` constructor into a function, then you might want to pass `Array.of()` instead to get consistent behavior. For example:
 
 ```js
-function createArray(arrayConstructor, value) {
-    return arrayConstructor(value);
+function createArray(arrayCreator, value) {
+    return arrayCreator(value);
 }
 
 let items = createArray(Array.of, value);
 ```
 
-This is a somewhat contrived example, but when dealing with derived array classes or typed arrays, you may find this pattern to be quite useful.
+In this code, the `createArray()` function accepts an array creator function and a value to insert into the array. You can then pass `Array.of` as the first argument to `createArray()` to create a new array. It would be dangerous to pass `Array` directly if you cannot guarantee that `value` won't be a number.
+
+Whereas `Array.of()` makes it easier to deal with creating arrays from individual items, the `Array.from()` method is used to create arrays from already-existing data structures.
+
+I> While `Array.of()` might seem like a small addition to the language, it's much more powerful when used with derived array classes. This is discussed later in the chapter.
+
 
 ### Array.from()
 
-One of the more cumbersome tasks in JavaScript has long been converting array-like objects into actual arrays. For instance, if you have an `arguments` object (which is array-like) and want to work with it as if it's an array, then you'd need to convert it first. Traditionally,  you'd write a function such as:
+One of the more cumbersome tasks in JavaScript has long been converting nonarray objects into actual arrays. For instance, if you have an `arguments` object (which is array-like) and want to work with it as if it's an array, then you'd need to convert it first. In ECMAScript 5,  you'd write a function such as:
 
 ```js
 function makeArray(arrayLike) {
@@ -97,7 +89,7 @@ function doSomething() {
 }
 ```
 
-However, developers soon discovered that you could shorten the amount of code by using the native array `slice()` method:
+This approach manually creates an array and copies over each item from `arguments` into that new array. While that works, it's a decent amount of code to perform a relatively simple operation. As such, developers soon discovered that you could shorten the amount of code by using the native array `slice()` method on array-like objects:
 
 ```js
 function makeArray(arrayLike) {
@@ -113,7 +105,7 @@ function doSomething() {
 
 Even though this required less typing, it's not at all obvious that `Array.prototype.slice.call()` means "convert to an array." This works because you're setting the `this` value for `slice()` to the array-like object. Since `slice()` needs only numeric indices and a `length` property to function correctly, any array-like object will work.
 
-The `Array.from()` method was added in ECMAScript 6 as a more obvious way of converting array-like objects into arrays. Simple usage is as follows:
+The `Array.from()` method was added in ECMAScript 6 as a more obvious way of converting objects into arrays. You can pass either an iterable or an array-like object as the first argument and `Array.from()` returns an array. Here's a simple example:
 
 ```js
 function doSomething() {
@@ -124,6 +116,8 @@ function doSomething() {
 ```
 
 The `Array.from()` call in this example creates a new array based on the items in `arguments`. So `args` is an instance of `Array` that contains the same values in the same positions as `arguments`.
+
+### Mapping Conversion
 
 If you want to take this conversion a step further, you can provide a second argument to `Array.from()` that is a mapping function used to convert each value into a final form. For example:
 
@@ -159,29 +153,52 @@ console.log(numbers);               // 2,3,4
 
 This example uses the `helper.add()` method as the mapping function for the conversion. Since `helper.add()` uses `this.diff`, you need to provide the third argument to `Array.from()` specifying the value of `this`. In this way, `Array.from()` can easily handle conversion of data without needing to use `bind()` or another way of specifying the `this` value.
 
+### Use on Iterables
+
 The `Array.from()` method works on both array-like objects and iterables. That means any object with an `@@iterator` property can be converted into an array using `Array.from()`. For example:
 
 ```js
-let collection = {
-    items: [],
+let numbers = {
     *[Symbol.iterator]() {
-        yield *this.items.values();
+        yield 1;
+        yield 2;
+        yield 3;
     }
-
 };
 
-collection.items.push(1);
-collection.items.push(2);
-collection.items.push(3);
+let numbers2 = Array.from(numbers, (value) => value + 1);
 
-let numbers = Array.from(collection, (value) => value + 1);
-
-console.log(numbers);               // 2,3,4
+console.log(numbers2);              // 2,3,4
 ```
 
-In this code, the `collection` object is an iterable so it can be passed directly to `Array.from()` to convert its values into an array.
+In this code, the `numbers` object is an iterable so it can be passed directly to `Array.from()` to convert its values into an array. The mapping function adds one to each number so the resulting array contains 2, 3, and 4 instead of 1, 2, and 3.
 
 I> If an object is both array-like and iterable, then the iterator is used by `Array.from()` to determine the values to convert.
+
+
+
+
+
+## Changes
+
+Array.prototype.concat/push/splice throw TypeError if new length would be 2^53 or greater.
+
+
+TODO
+
+## New Methods
+
+TODO
+
+
+
+## Species Pattern
+
+TODO
+
+
+
+
 
 
 
