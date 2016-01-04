@@ -183,11 +183,44 @@ In this code, the `collection` object is an iterable so it can be passed directl
 
 I> If an object is both array-like and iterable, then the iterator is used by `Array.from()` to determine the values to convert.
 
-## The Spread Operator
 
-TODO
 
-Also works on strings.
+
+
+
+
+Additionally, `MyArray` inherits all static members from `Array`, which means that `MyArray.of()` already exists and can be used:
+
+```js
+class MyArray extends Array {
+    // ...
+}
+
+var colors = MyArray.of(["red", "green", "blue"]);
+console.log(colors instanceof MyArray);     // true
+```
+
+The inherited `MyArray.of()` behaves the same as `Array.of()` except that it creates an instance of `MyArray` rather than an instance of `Array`. Many built-in objects are specifically defined so that their static methods work appropriately for derived classes.
+
+This same approach can be used to inherit from any of the built-in JavaScript objects, with a full guarantee that it will work the same way as the built-ins.
+
+### @@species
+
+TODO TODO
+
+
+The `@@species` property of an object, represented by `Symbol.species` in code, contains a reference to the constructor function used to create that object. For example:
+
+```js
+let book = {
+    title: "Understanding ES6"
+};
+
+var species = book[Symbol.species];
+
+console.log(Object === species);        // true
+```
+
 
 ## Typed Arrays
 
