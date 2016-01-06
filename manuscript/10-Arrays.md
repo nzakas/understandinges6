@@ -505,26 +505,53 @@ console.log(mapped[1]);            // 100
 console.log(mapped instanceof Int16Array);  // true
 ```
 
-This example uses the `map()` method to create a new array based on the values in `ints`. The mapping function doubles each value in the array and returns a new `Int16Array`. If the mapping function resulted in a value that wasn't appropriate for an `Int16Array`, the `map()` method replaces those values with zero. For example:
+This example uses the `map()` method to create a new array based on the values in `ints`. The mapping function doubles each value in the array and returns a new `Int16Array`.
+
+Also note that typed arrays have the same three iterators as regular arrays: `entries()`, `keys()`, and `values()`. These allow you to use the spread operator and `for-of` loops in the same way as you would regular arrays. For example:
 
 ```js
 let ints = new Int16Array([25, 50]),
-    mapped = ints.map(v => "hi");
+    intsArray = [...ints];
 
-console.log(mapped.length);        // 2
-console.log(mapped[0]);            // 0
-console.log(mapped[1]);            // 0
-
-console.log(mapped instanceof Int16Array);  // true
+console.log(intsArray instanceof Array);    // true
+console.log(intsArray[0]);                  // 25
+console.log(intsArray[1]);                  // 50
 ```
 
-Since the string value `"hi"` isn't a 16-bit integer, it's replaced with `0` in the resulting array. All of the array methods have similar error correction behavior to avoid throwing errors when invalid data is present.
+This code creates a new array `intsArray` containing the same data as the typed array `ints`. As with other iterables, the spread operator is an easy way to convert typed arrays into regular arrays.
 
-Also note that typed arrays have the same three iterators as regular arrays: `entries()`, `keys()`, and `values()`. These allow you to use the spread operator and `for-of` loops in the same way as you would regular arrays.
+Lastly, all typed arrays have static `of()` and `from()` methods that work the same way as `Array.of()` and `Array.from()`. The only difference is that the result is a typed array instead of a regular array. Otherwise, you can use these methods in the same way to create various typed arrays, such as:
 
-TODO
+```js
+let ints = Int16Array.of(25, 50),
+    floats = Float32Array.from([1.5, 2.5]);
+
+console.log(ints instanceof Int16Array);        // true
+console.log(floats instanceof Float32Array);    // true
+
+console.log(ints.length);       // 2
+console.log(ints[0]);           // 25
+console.log(ints[1]);           // 50
+
+console.log(floats.length);     // 2
+console.log(floats[0]);         // 1.5
+console.log(floats[1]);         // 2.5
+```
+
+The `of()` and `from()` methods in this example are used to create an `Int16Array` and `Float32Array`, respectively. These methods ensure that typed arrays can be created just as easily as regular arrays.
 
 #### Differences from Arrays
+
+The most importance difference between typed arrays and regular arrays is that typed arrays are not regular arrays. That means they do not inherit from `Array` and `Array.isArray()` returns `false` when passed a typed array. For example:
+
+```js
+let ints = new Int16Array([25, 50]);
+
+console.log(ints instanceof Array);     // false
+console.log(Array.isArray(ints));       // false
+```
+
+The `ints` variable is a typed array, so it's not an instance of `Array` and cannot otherwise be identifier as an array. This distinction is important because there are many ways in which typed arrays do not act like regular arrays.
 
 Whereas regular arrays can grow and shrink as you interact with them, typed arrays always remain the same size. You cannot assign a value to a nonexistent numeric index like you can with regular arrays, as typed arrays will ignore the operation. Here's an example:
 
@@ -543,10 +570,41 @@ console.log(ints[2]);              // undefined
 
 Despite assigning to the numeric index `2` in this example, the `ints` array does not grow at all. The `length` remains the same and the value is thrown away.
 
-TODO
+Typed arrays also have checks to ensure that only valid data types are used. Zero is used in place of any invalid values. For example:
 
+```js
+let ints = new Int16Array(["hi"]);
 
+console.log(ints.length);       // 1
+console.log(ints[0]);           // 0
+```
 
+This code attempts to use the string value `"hi"` in an `Int16Array`. Of course, strings are invalid data types in typed arrays, so the value is inserted as zero instead. The `length` of the array is still one, and the `ints[0]` slot exists, it's just filled with zero instead of the string. The same restriction applies to all methods that modify values in a typed array.For example, if the function passed to `map()` returns an invalid value for the type array, then zero is used instead:
+
+```js
+let ints = new Int16Array([25, 50]),
+    mapped = ints.map(v => "hi");
+
+console.log(mapped.length);        // 2
+console.log(mapped[0]);            // 0
+console.log(mapped[1]);            // 0
+
+console.log(mapped instanceof Int16Array);  // true
+console.log(mapped instanceof Array);       // false
+```
+
+Since the string value `"hi"` isn't a 16-bit integer, it's replaced with `0` in the resulting array. All of the array methods have similar error correction behavior to avoid throwing errors when invalid data is present.
+
+The last difference between typed arrays and regular arrays is that typed arrays are missing several array methods. The following methods are not available on typed arrays:
+
+* `concat()`
+* `pop()`
+* `push()`
+* `shift()`
+* `splice()`
+* `unshift()`
+
+With the exception of `concat()`, the other methods can change the size of an array and so are not available for typed arrays (since they cannot change size). The `concat()` method isn't available because it is unclear what concatenating two typed arrays, especially if they dealt with different data types, would mean for the result.
 
 ## Changes
 
