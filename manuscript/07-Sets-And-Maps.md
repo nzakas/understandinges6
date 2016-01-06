@@ -71,7 +71,7 @@ let map = Object.create(null);
 map.count = 1;
 
 // checking for the existence of "count" or a nonzero value?
-if (map.found) {
+if (map.count) {
     // ...
 }
 ```
