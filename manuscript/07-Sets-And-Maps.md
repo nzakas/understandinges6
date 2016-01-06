@@ -493,7 +493,7 @@ element = null;
 
 In this example, one key-value pair is stored. The key is a DOM element used to store a corresponding string value. That value is then retrieved by passing in the DOM element to `get()`. If the DOM element is then removed from the document and the variable referencing it is set to `null`, then the data is also removed from the weak map.
 
-Similar to weak sets, there is no way to verify that the weak map is empty because it doesn't have a `size` property. Because there are no remaining references to the key, you can use `get()` to attempt to retrieve the value. The weak map has cut off access to the value for that key and, when the garbage collector runs, that memory will be freed.
+Similar to weak sets, there is no way to verify that the weak map is empty because it doesn't have a `size` property. Because there are no remaining references to the key, you can't use `get()` to attempt to retrieve the value. The weak map has cut off access to the value for that key and, when the garbage collector runs, that memory will be freed.
 
 #### Weak Map Initialization
 
