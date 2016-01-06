@@ -606,6 +606,41 @@ The last difference between typed arrays and regular arrays is that typed arrays
 
 With the exception of `concat()`, the other methods can change the size of an array and so are not available for typed arrays (since they cannot change size). The `concat()` method isn't available because it is unclear what concatenating two typed arrays, especially if they dealt with different data types, would mean for the result.
 
+##### Additional Methods
+
+There are a couple of typed arrays methods that are not present on regular arrays: `set()` and `subarray()`. These two methods are opposites in that `set()` allows you to copy another array into an existing typed array whereas `subarray()` let's you extract part of an existing typed array into a new typed array.
+
+The `set()` method accepts an array (either typed or regular) and an optional offset at which to insert the data (default to zero). The data from the array argument is copied into the destination typed array while ensuring only valid data types are used. Here's an example:
+
+```js
+let ints = new Int16Array(4);
+
+ints.set([25, 50]);
+ints.set([75, 100], 2);
+
+console.log(ints.toString());   // 25,50,75,100
+```
+
+This code creates an `Int16Array` with four elements. The first call to `set()` copies two values to the first and second elements in the array. The second call to `set()` uses an offset of `2` to indicate that the values should be placed in the array starting at the third element.
+
+Whereas `set()` inserts new values into a typed array, `subarray()` extracts values into a new typed array. The `subarray()` method accepts an optional start and end index (the end index is exclusive, as in methods like `slice()`) and returns a new typed array. You can also omit both arguments to create a clone of the typed array. For example:
+
+```js
+let ints = new Int16Array([25, 50, 75, 100]),
+    subints1 = ints.subarray(),
+    subints2 = ints.subarray(2),
+    subints3 = ints.subarray(1, 3);
+
+console.log(subints1.toString());   // 25,50,75,100
+console.log(subints2.toString());   // 75,100
+console.log(subints3.toString());   // 50,75
+```
+
+There are three typed arrays created from the original `ints` array in this example. The `subints1` array is a clone of `ints`, containing all the same information. The `subints2` array starts copying data from index 2, and so contains only the last two elements of the array (75 and 100). The `subints3` array contains only the middle two elements of the `ints` array, as both arguments were used for `subarray()`.
+
+
+
+
 ## Changes
 
 Array.prototype.concat/push/splice throw TypeError if new length would be 2^53 or greater.
