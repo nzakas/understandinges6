@@ -224,7 +224,7 @@ While object destructuring is very powerful and has a lot of options, array dest
 
 A> #### Syntax Gotcha
 A>
-A>Be careful when using nested destructuring because you an inadvertently create a statement that has no effect. Empty curly braces are legal in object destructuring, however, they don't do anything. For example:
+A>Be careful when using nested destructuring because you can inadvertently create a statement that has no effect. Empty curly braces are legal in object destructuring, however, they don't do anything. For example:
 A>
 A>```js
 A>// no variables declared!
