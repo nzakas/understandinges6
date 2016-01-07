@@ -66,7 +66,6 @@ Whereas `Array.of()` makes it easier to deal with creating arrays from individua
 
 I> While `Array.of()` might seem like a small addition to the language, it's much more powerful when used with derived array classes. This is discussed later in the chapter.
 
-
 ### Array.from()
 
 One of the more cumbersome tasks in JavaScript has long been converting nonarray objects into actual arrays. For instance, if you have an `arguments` object (which is array-like) and want to work with it as if it's an array, then you'd need to convert it first. In ECMAScript 5,  you'd write a function such as:
@@ -177,17 +176,89 @@ I> If an object is both array-like and iterable, then the iterator is used by `A
 
 ## New Methods
 
-Continuing the trend from ECMAScript 5, ECMAScript 6 adds several new methods to arrays. While the first two methods, `find()` and `findIndex()`, were meant to aid all developers, the others, `fill()` and `copyWithin()` are inspired largely by use cases for typed arrays.
+Continuing the trend from ECMAScript 5, ECMAScript 6 adds several new methods to arrays. While the first two methods, `find()` and `findIndex()`, were meant to aid all developers, the others, `fill()` and `copyWithin()` are inspired largely by use cases for typed arrays (discussed later in this chapter).
 
-### The find() Method
+### The find() and findIndex() Methods
 
-### The findIndex() Method
+Prior to ECMAScript 5, searching through arrays was cumbersome because there were no builtin methods for doing so. ECMAScript 5 added `indexOf()` and `lastIndexOf()`, finally allowing developers to search for specific values inside of an array. As big of an improvement as these two methods were, they were still fairly limited because you could only search for one value at a time (meaning if you wanted to find the first even number in a series of numbers, for example, you'd need to write your own code to do so). ECMAScript 6 solved that problem by introducing two new methods: `find()` and `findIndex()`.
+
+The `find()` and `findIndex()` methods work the same way. They both accepts two arguments, a callback function and an optional value to use for `this` inside of that function. The callback function is passed an array element, the index of that element in the array, and the array itself (same arguments as methods such as `map()` and `forEach()`) and should return `true` if the given value matches some criteria. Both `find()` and `findIndex()` stop searching the array the first time the callback function returns `true`, and the only difference is that `find()` returns the value whereas `findIndex()` returns the index at which the value was found. Here's an example:
+
+```js
+let numbers = [25, 30, 35, 40, 45];
+
+console.log(numbers.find(n => n > 33));         // 35
+console.log(numbers.findIndex(n => n > 33));    // 2
+```
+
+This code uses both `find()` and `findIndex()` to locate the first value in the `numbers` array that is greater than 33. The call to `find()` returns 35 while `findIndex()` returns 2, the location of 35 in the `numbers` array.
+
+Both `find()` and `findIndex()` are useful to find an array element that matches a condition rather than a value. If you only want to find a value, then `indexOf()` and `lastIndexOf()` are better choices.
 
 ### The fill() Method
 
+The `fill()` method fills one or more array elements with a specific value. When passed a value, `fill()` overwrites all of the values in an array with that value. For example:
+
+```js
+let numbers = [1, 2, 3, 4];
+
+numbers.fill(1);
+
+console.log(numbers.toString());    // 1,1,1,1
+```
+
+Here, the call to `numbers.fill(1)` changes all of the values in `numbers` to `1`. If you only want to change some of the elements, rather than all of them, you can optionally include a start index and an exclusive end index, such as:
+
+```js
+let numbers = [1, 2, 3, 4];
+
+numbers.fill(1, 2);
+
+console.log(numbers.toString());    // 1,2,1,1
+
+numbers.fill(0, 1, 3);
+
+console.log(numbers.toString());    // 1,0,0,1
+```
+
+In this example, the last two array elements are filled with `1` by `numbers.fill(1, 2)` as `2` indicates the index at which to start filling elements. The end index is considered to be `numbers.length` because it isn't specified. The next operation, `numbers.fill(0, 1, 3)`, fills array elements at indices 1 and 2 with `0`. In this way, you're able to fill multiple array elements at once without overwriting the entire array.
+
+I> If either the start or end index are negative, then those values are added to the array's length to determine the final location. For instance, a start location of `-1` means that the index will be `array.length-1` where `array` is the array on which `fill()` is called.
+
 ### The copyWithin() Method
 
-TODO
+The `copyWithin()` method is similar to `fill()` in that it changes multiple array elements at the same time. However, instead of specifying a single value to assign to array elements, `copyWithin()` lets you copy array element values from the array itself. To accomplish that, you need to pass two arguments to `copyWithin()`, the index at which the values should be filled and the index starting at which values should be copied. For instance, if you want to copy the values from the first two elements in the array into the last two items in the array, you can do so as follows:
+
+```js
+let numbers = [1, 2, 3, 4];
+
+// paste values into array starting at index 2
+// copy values from array starting at index 0
+numbers.copyWithin(2, 0);
+
+console.log(numbers.toString());    // 1,2,1,2
+```
+
+This code copies the values in `numbers` beginning from index 2, so both indices 2 and 3 will be overwritten. The second argument to `copyWithin()` is `0`, which indicates to start copying values from index 0 and continue until there are no more elements to copy into.
+
+By default, `copyWithin()` always copies values up to the end of the array, but you can provide an optional third argument to limit how many elements will be overwritten. That third argument is an exclusive end index at which copying of values stops. Here's an example:
+
+```js
+let numbers = [1, 2, 3, 4];
+
+// paste values into array starting at index 2
+// copy values from array starting at index 0
+// stop copying values when you hit index 1
+numbers.copyWithin(2, 0, 1);
+
+console.log(numbers.toString());    // 1,2,1,4
+```
+
+In this example, the optional end index is set to `1` so that only the value in index 0 is copied. The last element in the array remains unchanged.
+
+I> As with `fill()`, if you pass a negative number for any argument to `copyWithin()`, the array's length is automatically added to that value to determine the index to use.
+
+The use cases for `fill()` and `copyWithin()` may not be obvious to you at this point. That's because these methods originated on typed arrays and were then added to regular arrays for consistency. However, if you end up using typed arrays for manipulating the bits of a number, these methods become a lot more useful.
 
 ## Typed Arrays
 
