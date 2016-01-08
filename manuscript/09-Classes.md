@@ -800,7 +800,7 @@ colors.length = 0;
 console.log(colors[0]);             // undefined
 ```
 
-In this example, `MyArray` inherits directly from `Array` and therefore works in the exact same way. Interacting with numeric properties updates the `length` property, and manipulating the `length` property updates the numeric properties. That means not only can you properly inherit from `Array` to create your own derived array classes, you can also inherit from other builtins as well. ECMAScript 6 and derived classes have effective removed the last special case of inheriting from builtins.
+In this example, `MyArray` inherits directly from `Array` and therefore works in the exact same way. Interacting with numeric properties updates the `length` property, and manipulating the `length` property updates the numeric properties. That means not only can you properly inherit from `Array` to create your own derived array classes, you can also inherit from other builtins as well. ECMAScript 6 and derived classes have effectively removed the last special case of inheriting from builtins.
 
 ## new.target
 
