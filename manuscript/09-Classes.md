@@ -789,7 +789,7 @@ The following class-based special array works as you would expect:
 
 ```js
 class MyArray extends Array {
-    // ...
+    // empty
 }
 
 var colors = new MyArray();
@@ -801,6 +801,112 @@ console.log(colors[0]);             // undefined
 ```
 
 In this example, `MyArray` inherits directly from `Array` and therefore works in the exact same way. Interacting with numeric properties updates the `length` property, and manipulating the `length` property updates the numeric properties. That means not only can you properly inherit from `Array` to create your own derived array classes, you can also inherit from other builtins as well. ECMAScript 6 and derived classes have effectively removed the last special case of inheriting from builtins.
+
+### The @@species Property
+
+An interesting aspect of inheriting from builtins is that any method that returns an instance of the builtin will automatically return a derived class instance instead. So, if you have a derived class `MyArray` that inherits from `Array`, methods such as `slice()` return an instance of `MyArray`. For example:
+
+```js
+class MyArray extends Array {
+    // empty
+}
+
+let items = new MyArray(1, 2, 3, 4),
+    subitems = items.slice(1, 3);
+
+console.log(items instanceof MyArray);      // true
+console.log(subitems instanceof MyArray);   // true
+```
+
+In this code, the `slice()` method returns a `MyArray` instance. The `slice()` method is inherited from `Array` and returns an instance of `Array` normally. Behind the scenes, it's the `@@species` property that is making this change.
+
+The `@@species` well-known symbol is used to define a static accessor property that returns a function. That function is a constructor to use whenever an instance of the class must be created inside of an instance method (instead of using the constructor). There are several builtin types that have `@@species` defined:
+
+* `Array`
+* `ArrayBuffer`
+* `Map`
+* `Promise`
+* `RegExp`
+* `Set`
+* Typed Arrays
+
+Each of these types have a default `@@species` property that returns `this`, meaning that it will always return the constructor function. If you were to do the same on a custom class, the code would look like this:
+
+```js
+// several builtin types use species similar to this
+class MyClass {
+    static get [Symbol.species]() {
+        return this;
+    }
+
+    constructor(value) {
+        this.value = value;
+    }
+
+    clone() {
+        return new this.constructor[Symbol.species](this.value);
+    }
+}
+```
+
+In this example, the `Symbol.species` well-known symbol is used to assign a static accessor property to `MyClass`. Note that there's only a getter without a setter, because it is not possible to change the species of a class. Any call to `this.constructor[Symbol.species]` returns `MyClass`. The `clone()` method uses that definition to return a new instance rather than directly using `MyClass`, which allows derived classes to override that value. For example:
+
+```js
+class MyClass {
+    static get [Symbol.species]() {
+        return this;
+    }
+
+    constructor(value) {
+        this.value = value;
+    }
+
+    clone() {
+        return new this.constructor[Symbol.species](this.value);
+    }
+}
+
+class MyDerivedClass1 extends MyClass {
+    // empty
+}
+
+class MyDerivedClass2 extends MyClass {
+    static get [Symbol.species]() {
+        return MyClass;
+    }
+}
+
+let instance1 = new MyDerivedClass1("foo"),
+    clone1 = instance1.clone(),
+    instance2 = new MyDerivedClass2("bar"),
+    clone2 = instance2.clone();
+
+console.log(clone1 instanceof MyClass);             // true
+console.log(clone1 instanceof MyDerivedClass1);     // true
+console.log(clone2 instanceof MyClass);             // true
+console.log(clone2 instanceof MyDerivedClass2);     // false
+```
+
+Here, `DerivedClass1` inherits from `MyClass` and doesn't change the `@@species` property. When `clone()` is called, it returns an instance of `MyDerivedClass1` because `this.constructor[Symbol.species]` returns `MyDerivedClass1`. The `DerivedClass2` class inherits from `MyClass` and overrides `@@species` to return `MyClass`. When `clone()` is called on an instance of `DerivedClass2`, the return value is an instance of `MyClass`. Using `@@species`, any derived class can determine what type of value should be returned when a method returns an instance. And since `Array` uses `@@species`, you can make that change in a derived array class, such as:
+
+```js
+class MyArray extends Array {
+    static get [Symbol.species]() {
+        return Array;
+    }
+}
+
+let items = new MyArray(1, 2, 3, 4),
+    subitems = items.slice(1, 3);
+
+console.log(items instanceof MyArray);      // true
+console.log(subitems instanceof Array);     // false
+console.log(subitems instanceof MyArray);   // false
+```
+
+This code overrides `@@species` on `MyArray`, which inherits from `Array`. All of the inherited methods that return arrays will now use an instance of `Array` instead of `MyArray`.
+
+In general, you should use the `@@species` property whenever you might want to use `this.constructor` in a class method. Doing so allows derived classes to override the return type easily. Additionally, if you are creating derived classes from a class that has `@@species` defined, be sure to use that value instead of the constructor.
 
 ## new.target
 
