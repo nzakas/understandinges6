@@ -345,7 +345,7 @@ class PersonClass {
     }
 };
 
-let me = new Person("Nicholas");
+let me = new PersonClass("Nicholas");
 me.sayName();           // "Nicholas"
 ```
 
