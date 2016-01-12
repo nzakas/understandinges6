@@ -823,12 +823,12 @@ In this code, the `slice()` method returns a `MyArray` instance. The `slice()` m
 The `@@species` well-known symbol is used to define a static accessor property that returns a function. That function is a constructor to use whenever an instance of the class must be created inside of an instance method (instead of using the constructor). There are several builtin types that have `@@species` defined:
 
 * `Array`
-* `ArrayBuffer`
+* `ArrayBuffer` (discussed in Chapter 10)
 * `Map`
 * `Promise`
 * `RegExp`
 * `Set`
-* Typed Arrays
+* Typed Arrays (discussed in Chapter 10)
 
 Each of these types have a default `@@species` property that returns `this`, meaning that it will always return the constructor function. If you were to do the same on a custom class, the code would look like this:
 
