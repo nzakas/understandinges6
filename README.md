@@ -29,6 +29,10 @@ Anything that is not present in the published version is considered a work-in-pr
 
 You can purchase a copy of this ebook through [Leanpub](https://leanpub.com/understandinges6). If you purchase a copy before the ebook is finished, you will receive all updates to the ebook as they are released, up to and including the finished version.
 
+## Supporting the author
+
+If you enjoy this book and would like to support my efforts to create more content, please consider becoming a [patron](https://patreon.com/nzakas). A small donation is greatly appreciated and will allow me more time to continue my work. 
+
 ## Contributions
 
 Even though this book is being developed in the open, the project works differently than open source software projects. Please read the following thoroughly before attempting to contribute.
