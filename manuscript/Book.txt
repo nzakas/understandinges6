@@ -8,6 +8,7 @@
 07-Sets-And-Maps.md
 08-Iterators-And-Generators.md
 09-Classes.md
+10-Arrays.md
 11-Promises.md
 14-Modules.md
 A-Other-Changes.md

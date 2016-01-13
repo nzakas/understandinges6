@@ -62,9 +62,36 @@ let items = createArray(Array.of, value);
 
 In this code, the `createArray()` function accepts an array creator function and a value to insert into the array. You can then pass `Array.of` as the first argument to `createArray()` to create a new array. It would be dangerous to pass `Array` directly if you cannot guarantee that `value` won't be a number.
 
-Whereas `Array.of()` makes it easier to deal with creating arrays from individual items, the `Array.from()` method is used to create arrays from already-existing data structures.
+The `Array.of()` method uses the `@@species` property (discussed in Chapter 9) to determine the type of return value. That means derived array classes inherit a static `of()` method that returns an instance of the derived class. For example:
 
-I> While `Array.of()` might seem like a small addition to the language, it's much more powerful when used with derived array classes. This is discussed later in the chapter.
+```js
+class MyArray extends Array {
+    // empty
+}
+
+let items = MyArray.of(1, 2);
+
+console.log(items instanceof MyArray);      // true
+```
+
+The `MyArray` derived class inherits `of()` from `Array` and returns an instance of `MyArray`. If you want `MyArray.of()` to return an instance of `Array`,  you can do so by overriding `@@species`, such as:
+
+```js
+class MyArray extends Array {
+    static get [Symbol.species]() {
+        return Array;
+    }
+}
+
+let items = MyArray.of(1, 2);
+
+console.log(items instanceof MyArray);      // false
+console.log(items instanceof Array);        // true
+```
+
+This example ensures that `MyArray.of()` returns an instance of `Array` by overriding the `@@species` property. Keep in mind that doing so also changes any other inherited method that returns an array.
+
+Whereas `Array.of()` makes it easier to deal with creating arrays from individual items, the `Array.from()` method is used to create arrays from already-existing data structures.
 
 ### Array.from()
 
@@ -115,6 +142,8 @@ function doSomething() {
 ```
 
 The `Array.from()` call in this example creates a new array based on the items in `arguments`. So `args` is an instance of `Array` that contains the same values in the same positions as `arguments`.
+
+I> `Array.from()` also uses `@@species` to determine the type of array to return.
 
 ### Mapping Conversion
 
@@ -173,6 +202,10 @@ console.log(numbers2);              // 2,3,4
 In this code, the `numbers` object is an iterable so it can be passed directly to `Array.from()` to convert its values into an array. The mapping function adds one to each number so the resulting array contains 2, 3, and 4 instead of 1, 2, and 3.
 
 I> If an object is both array-like and iterable, then the iterator is used by `Array.from()` to determine the values to convert.
+
+## Array Size Limits
+
+Most developers are unaware that arrays have a limit on the number of elements they can contain. The limit is set at 2^53 elements for each array, and in ECMAScript
 
 ## New Methods
 
@@ -709,65 +742,10 @@ console.log(subints3.toString());   // 50,75
 
 There are three typed arrays created from the original `ints` array in this example. The `subints1` array is a clone of `ints`, containing all the same information. The `subints2` array starts copying data from index 2, and so contains only the last two elements of the array (75 and 100). The `subints3` array contains only the middle two elements of the `ints` array, as both arguments were used for `subarray()`.
 
+## Summary
 
+ECMAScript 6 continues the work of ECMAScript 5 by continuing to update and change arrays to be more useful. There are now two new ways to create arrays, `Array.of()` and `Array.from()`. These methods can each be used to create arrays and, in the case of `Array.from()`, convert iterables and arraylike objects into arrays. Both methods are inherited by derived array classes and use the `@@species` property to determine what type of value should be returned.
 
+There are also several new methods on arrays. The `fill()` and `copyWithin()` methods allow you to alter array elements in-place. The `find()` and `findIndex()` methods are useful for finding the first element in an array that matches some criteria. The former returns the first element that fits the criteria and the latter returns the index at which the element is found.
 
-## Changes
-
-Array.prototype.concat/push/splice throw TypeError if new length would be 2^53 or greater.
-
-
-TODO
-
-
-
-## Species Pattern
-
-TODO
-
-
-
-
-
-
-
-
-
-
-
-Additionally, `MyArray` inherits all static members from `Array`, which means that `MyArray.of()` already exists and can be used:
-
-```js
-class MyArray extends Array {
-    // ...
-}
-
-var colors = MyArray.of(["red", "green", "blue"]);
-console.log(colors instanceof MyArray);     // true
-```
-
-The inherited `MyArray.of()` behaves the same as `Array.of()` except that it creates an instance of `MyArray` rather than an instance of `Array`. Many built-in objects are specifically defined so that their static methods work appropriately for derived classes.
-
-This same approach can be used to inherit from any of the built-in JavaScript objects, with a full guarantee that it will work the same way as the built-ins.
-
-### @@species
-
-TODO TODO
-
-
-The `@@species` property of an object, represented by `Symbol.species` in code, contains a reference to the constructor function used to create that object. For example:
-
-```js
-let book = {
-    title: "Understanding ES6"
-};
-
-var species = book[Symbol.species];
-
-console.log(Object === species);        // true
-```
-
-
-## Typed Arrays
-
-TODO
+Typed arrays are not actually arrays, as they do not inherit from `Array`, but do look and behave a lot like arrays. Typed arrays contain one of eight different numeric data types and are built upon `ArrayBuffer` objects that represent the underlying bits of a number or series of numbers. Typed arrays are a more efficient way of doing bitwise arithmetic because the values are not converted back and forth between formats, as is the case with the JavaScript number type.
