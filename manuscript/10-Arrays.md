@@ -62,36 +62,7 @@ let items = createArray(Array.of, value);
 
 In this code, the `createArray()` function accepts an array creator function and a value to insert into the array. You can then pass `Array.of` as the first argument to `createArray()` to create a new array. It would be dangerous to pass `Array` directly if you cannot guarantee that `value` won't be a number.
 
-The `Array.of()` method uses the `@@species` property (discussed in Chapter 9) to determine the type of return value. That means derived array classes inherit a static `of()` method that returns an instance of the derived class. For example:
-
-```js
-class MyArray extends Array {
-    // empty
-}
-
-let items = MyArray.of(1, 2);
-
-console.log(items instanceof MyArray);      // true
-```
-
-The `MyArray` derived class inherits `of()` from `Array` and returns an instance of `MyArray`. If you want `MyArray.of()` to return an instance of `Array`,  you can do so by overriding `@@species`, such as:
-
-```js
-class MyArray extends Array {
-    static get [Symbol.species]() {
-        return Array;
-    }
-}
-
-let items = MyArray.of(1, 2);
-
-console.log(items instanceof MyArray);      // false
-console.log(items instanceof Array);        // true
-```
-
-This example ensures that `MyArray.of()` returns an instance of `Array` by overriding the `@@species` property. Keep in mind that doing so also changes any other inherited method that returns an array.
-
-Whereas `Array.of()` makes it easier to deal with creating arrays from individual items, the `Array.from()` method is used to create arrays from already-existing data structures.
+I> The `Array.of()` method does not use the `@@species` property (discussed in Chapter 9) to determine the type of return value. Instead, it uses the current constructor (`this.constructor` inside of `of()`) to determine the correct data type to return.
 
 ### Array.from()
 
@@ -143,7 +114,7 @@ function doSomething() {
 
 The `Array.from()` call in this example creates a new array based on the items in `arguments`. So `args` is an instance of `Array` that contains the same values in the same positions as `arguments`.
 
-I> `Array.from()` also uses `@@species` to determine the type of array to return.
+I> `Array.from()` also uses `this.constructor` to determine the type of array to return.
 
 ### Mapping Conversion
 
