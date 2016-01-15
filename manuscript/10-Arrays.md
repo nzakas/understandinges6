@@ -62,7 +62,7 @@ let items = createArray(Array.of, value);
 
 In this code, the `createArray()` function accepts an array creator function and a value to insert into the array. You can then pass `Array.of` as the first argument to `createArray()` to create a new array. It would be dangerous to pass `Array` directly if you cannot guarantee that `value` won't be a number.
 
-I> The `Array.of()` method does not use the `@@species` property (discussed in Chapter 9) to determine the type of return value. Instead, it uses the current constructor (`this.constructor` inside of `of()`) to determine the correct data type to return.
+I> The `Array.of()` method does not use the `@@species` property (discussed in Chapter 9) to determine the type of return value. Instead, it uses the current constructor (`this` inside of `of()`) to determine the correct data type to return.
 
 ### Array.from()
 
@@ -114,7 +114,7 @@ function doSomething() {
 
 The `Array.from()` call in this example creates a new array based on the items in `arguments`. So `args` is an instance of `Array` that contains the same values in the same positions as `arguments`.
 
-I> `Array.from()` also uses `this.constructor` to determine the type of array to return.
+I> `Array.from()` also uses `this` to determine the type of array to return.
 
 ### Mapping Conversion
 
