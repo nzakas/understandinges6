@@ -176,9 +176,9 @@ I> If an object is both array-like and iterable, then the iterator is used by `A
 
 ## Array Size Limits
 
-Most developers are unaware that arrays have a limit on the number of elements they can contain. In ECMAScript 5, the maximum size of arrays was 2^32^ - 1. Attempting to add an items to an array that already had the maximum would result in an error being thrown. This limit is the largest unsigned integer representable in 32 bits.
+Most developers are unaware that arrays have a limit on the number of elements they can contain. In ECMAScript 5, the maximum size of arrays was 2^32 - 1. Attempting to add an items to an array that already had the maximum would result in an error being thrown. This limit is the largest unsigned integer representable in 32 bits.
 
-In ECMAScript 6, the maximum size of an array was increased to 2^53^ - 1. Since JavaScript numbers are IEEE 754 64-bit double-precision numbers, you can actually store numbers that need more than 32 bits. Of the 64 bits, there's one bit for the sign and 11 bits for the exponent, which leaves 53 bits of precision. Whereas ECMAScript 5 always converted an array's length into an unsigned 32-bit integer, ECMAScript 6 does not. That allows for a larger numeric value and therefore a larger maximum array size. Consider the following:
+In ECMAScript 6, the maximum size of an array was increased to 2^53 - 1. Since JavaScript numbers are IEEE 754 64-bit double-precision numbers, you can actually store numbers that need more than 32 bits. Of the 64 bits, there's one bit for the sign and 11 bits for the exponent, which leaves 52 bits of precision. Whereas ECMAScript 5 always converted an array's length into an unsigned 32-bit integer, ECMAScript 6 does not. That allows for a larger numeric value and therefore a larger maximum array size. Consider the following:
 
 ```js
 var items = new Array(Math.pow(2, 32) - 1);
