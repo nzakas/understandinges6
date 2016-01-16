@@ -900,7 +900,7 @@ let items = new MyArray(1, 2, 3, 4),
     subitems = items.slice(1, 3);
 
 console.log(items instanceof MyArray);      // true
-console.log(subitems instanceof Array);     // false
+console.log(subitems instanceof Array);     // true
 console.log(subitems instanceof MyArray);   // false
 ```
 
