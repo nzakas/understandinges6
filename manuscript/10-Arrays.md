@@ -291,7 +291,7 @@ The use cases for `fill()` and `copyWithin()` may not be obvious to you at this 
 
 Typed arrays are special-purpose arrays designed to work with numeric types (not all types, as it may seem from the name). The origin of typed arrays can be traced back to WebGL, a port of Open GL ES 2.0 designed for use in web pages with the `<canvas>` element. Typed arrays were created as part of this port to provide fast bitwise arithmetic in JavaScript. The native JavaScript numbers were too slow to due to being stored in a 64-bit floating-point format and converted into 32-bit integers as needed, so typed arrays were introduced to circumvent this limitation and provide better performance for these operations. The concept is that any single number can be treated like arrays of bits, and in doing so, can make use of the familiar methods available on JavaScript arrays.
 
-ECMAScript 6 adopted typed arrays as a formal part of the language to ensure better compatibility across JavaScript engines and interoperability with JavaScript arrays. While the ECMAScript 6 version is of typed arrays is not exactly the same as the WebGL version, there are enough similarities to make the ECMAScript 6 version an evolution of the WebGL version rather than a different approach.
+ECMAScript 6 adopted typed arrays as a formal part of the language to ensure better compatibility across JavaScript engines and interoperability with JavaScript arrays. While the ECMAScript 6 version of typed arrays is not exactly the same as the WebGL version, there are enough similarities to make the ECMAScript 6 version an evolution of the WebGL version rather than a different approach.
 
 ### Numeric Data Types
 
