@@ -174,33 +174,6 @@ In this code, the `numbers` object is an iterable so it can be passed directly t
 
 I> If an object is both array-like and iterable, then the iterator is used by `Array.from()` to determine the values to convert.
 
-## Array Size Limits
-
-Most developers are unaware that arrays have a limit on the number of elements they can contain. In ECMAScript 5, the maximum size of arrays was 2^32^ - 1. Attempting to add an items to an array that already had the maximum would result in an error being thrown. This limit is the largest unsigned integer representable in 32 bits.
-
-In ECMAScript 6, the maximum size of an array was increased to 2^53^ - 1. Since JavaScript numbers are IEEE 754 64-bit double-precision numbers, you can actually store numbers that need more than 32 bits. Of the 64 bits, there's one bit for the sign and 11 bits for the exponent, which leaves 53 bits of precision. Whereas ECMAScript 5 always converted an array's length into an unsigned 32-bit integer, ECMAScript 6 does not. That allows for a larger numeric value and therefore a larger maximum array size. Consider the following:
-
-```js
-var items = new Array(Math.pow(2, 32) - 1);
-
-// throws an error in ES5, no error in ES6
-items.push(1);
-````
-
-If you were to run this code in an ECMAScript 5 environment, `items.push(1)` would throw an error because that additional item pushes the array over the 2^32^-1 limit. However, an ECMAScript 6 engine adds the additional item without throwing an error.
-
-The `Array` constructor itself, however, can only create an array up to 2^32^-1 items. For instance, the following throws an error:
-
-```js
-// throws an error in ES5 and ES6
-let items = new Array(Math.pow(2, 32));
-```
-
-The `Array` constructor still performs the old check for an unsigned 32-bit integer. This is necessary for backwards compatibility so the `Array` constructor continues to throw errors for the same conditions as in ECMAScript 5.
-
-I> The maximum size of an array is enforced by all array methods to increase the size of the array or produce a new array. An error is always thrown whenever an operation will result in an array with more than the maximum number of elements.
-
-
 ## New Methods
 
 Continuing the trend from ECMAScript 5, ECMAScript 6 adds several new methods to arrays. While the first two methods, `find()` and `findIndex()`, were meant to aid all developers, the others, `fill()` and `copyWithin()` are inspired largely by use cases for typed arrays (discussed later in this chapter).
