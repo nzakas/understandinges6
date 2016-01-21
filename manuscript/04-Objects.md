@@ -1,27 +1,27 @@
-# Objects
+# Expanded Object Functionality
 
-A lot of ECMAScript 6 focuses on improving the utility of objects. This focus makes sense given that nearly every value in JavaScript is represented by some type of object. Additionally, the number of objects used in an average JavaScript program continues to increase, meaning that developers are writing more objects all the time. With more objects comes the necessity to use them more effectively.
+ECMAScript 6 focuses heavily on improving the utility of objects, which makes sense because nearly every value in JavaScript is some type of object. Additionally, the number of objects used in an average JavaScript program continues to increase as the complexity of JavaScript applications increases, meaning that developers are writing more objects all the time. With more objects comes the necessity to use them more effectively.
 
-ECMAScript 6 improves objects in a number of ways, from simple syntax to new ways of manipulating and interacting with objects.
+ECMAScript 6 improves objects in a number of ways, from simple syntax extensions to options for manipulating and interacting with them.
 
 ## Object Categories
 
-The ECMAScript 6 specification introduced some new terminology to help distinguish between categories of objects. JavaScript has long been littered with a mix of terminology used to describe objects found in the standard as opposed to those that are added by execution environments such as the browser. ECMAScript 6 takes the time to clearly define each category of object, and it's important to understand this terminology to have a good understanding of the language as a whole. The object categories are:
+JavaScript uses a mix of terminology to describe objects found in the standard as opposed to those added by execution environments such as the browser, and the ECMAScript 6 specification has clear definitions for each category of object. It's important to understand this terminology to have a good understanding of the language as a whole. The object categories are:
 
-* *Ordinary objects* are objects that have all of the default internal behaviors for objects in JavaScript.
-* *Exotic objects* are objects whose internal behavior is different than the default in some way.
-* *Standard objects* are objects defined by ECMAScript 6, such as `Array`, `Date`, etc. Standard objects may be ordinary or exotic.
-* *Built-in objects* are objects that are present in a JavaScript execution environment when a script begins to execute. All standard objects are built-in objects.
+* *Ordinary objects* Have all the default internal behaviors for objects in JavaScript.
+* *Exotic objects* Have internal behavior that differs from the default in some way.
+* *Standard objects* Are those defined by ECMAScript 6, such as `Array`, `Date`, and so on. Standard objects may be ordinary or exotic.
+* *Built-in objects* Are present in a JavaScript execution environment when a script begins to execute. All standard objects are built-in objects.
 
-These terms are used throughout the book to explain the various objects defined by ECMAScript 6.
+I will use these terms throughout the book to explain the various objects defined by ECMAScript 6.
 
-## Object Literal Extensions
+## Object Literal Syntax Extensions
 
-One of the most popular patterns in JavaScript is the object literal. It's the syntax upon which JSON is built and can be seen in nearly every JavaScript file on the Internet. The reason for the popularity is clear: a succinct syntax for creating objects that otherwise would take several lines of code to accomplish. ECMAScript 6 recognized the popularity of the object literal and extends the syntax in several ways to make object literals more powerful and even more succinct.
+The object literal is one of the most popular patterns in JavaScript. JSON is built upon its syntax, and it's in nearly every JavaScript file on the Internet. The object literal is so popular because it's a succinct syntax for creating objects that otherwise would take several lines of code. Luckily for developers, ECMAScript 6 makes object literals more powerful and even more succinct by extending the syntax in several ways.
 
 ### Property Initializer Shorthand
 
-In ECMAScript 5 and earlier, object literals were simply collections of name-value pairs. That meant there could be some duplication when property values are being initialized. For example:
+In ECMAScript 5 and earlier, object literals were simply collections of name-value pairs. That meant there could be some duplication when property values are initialized. For example:
 
 ```js
 function createPerson(name, age) {
@@ -32,9 +32,9 @@ function createPerson(name, age) {
 }
 ```
 
-The `createPerson()` function creates an object whose property names are the same as the function parameter names. The result is what appears to be duplication of `name` and `age` even though each represents a different aspect of the process. The key `name` in the returned object is assigned the value contained in the variable `name`, and the key `age` in the returned object is assigned the value contained in the variable `age`.
+The `createPerson()` function creates an object whose property names are the same as the function parameter names. The result appears to be duplication of `name` and `age` even though one is the name of an object property while the other provides the value for that property. The key `name` in the returned object is assigned the value contained in the variable `name`, and the key `age` in the returned object is assigned the value contained in the variable `age`.
 
-In ECMAScript 6, you can eliminate the duplication that exists around property names and local variables by using the property initializer shorthand. When the object property name is the same as the local variable name, you can simply include the name without a colon and value. For example, `createPerson()` can be rewritten as follows:
+In ECMAScript 6, you can eliminate the duplication that exists around property names and local variables by using the *property initializer* shorthand. When an object property name is the same as the local variable name, you can simply include the name without a colon and value. For example, `createPerson()` can be rewritten for ECMAScript 6 as follows:
 
 ```js
 function createPerson(name, age) {
@@ -45,13 +45,13 @@ function createPerson(name, age) {
 }
 ```
 
-When a property in an object literal only has a name and no value, the JavaScript engine looks into the surrounding scope for a variable of the same name. If found, that value is assigned to the same name on the object literal. So in this example, the object literal property `name` is assigned the value of the local variable `name`.
+When a property in an object literal only has a name, the JavaScript engine looks into the surrounding scope for a variable of the same name. If it finds one, that variable's value is assigned to the same name on the object literal. In this example, the object literal property `name` is assigned the value of the local variable `name`.
 
-The purpose of this extension is to make object literal initialization even more succinct and to eliminate naming errors. Assigning a property with the same name as a local variable is a very common pattern in JavaScript and so this extension is a welcome addition.
+This extension makes object literal initialization even more succinct and helps to eliminate naming errors. Assigning a property with the same name as a local variable is a very common pattern in JavaScript, making this extension a welcome addition.
 
 ### Concise Methods
 
-ECMAScript 6 also improves syntax for assigning methods to object literals. In ECMAScript 5 and earlier, you must specify a name and then the full function definition to add a method to an object. For example:
+ECMAScript 6 also improves the syntax for assigning methods to object literals. In ECMAScript 5 and earlier, you must specify a name and then the full function definition to add a method to an object, as follows:
 
 ```js
 var person = {
@@ -62,7 +62,7 @@ var person = {
 };
 ```
 
-In ECMAScript 6, the syntax is made more concise by eliminating the colon and the `function` keyword. You can then rewrite the previous example as:
+In ECMAScript 6, the syntax is made more concise by eliminating the colon and the `function` keyword. That means you can rewrite the previous example like this:
 
 ```js
 var person = {
@@ -73,13 +73,13 @@ var person = {
 };
 ```
 
-This shorthand syntax, also called *concise method* syntax, creates a method on the `person` object just as the previous example did. The property `sayName()` is assigned an anonymous function expression and has all of the same characteristics as the function defined in the previous example. The one difference is that concise methods may use `super` (discussed later in this chapter) whereas the nonconcise methods may not.
+This shorthand syntax, also called *concise method* syntax, creates a method on the `person` object just as the previous example did. The `sayName()` property is assigned an anonymous function expression and has all the same characteristics as the ECMAScript 5 `sayName()` function. The one difference is that concise methods may use `super` (discussed later in the "Easy Prototype Access with Super References" section), while the nonconcise methods may not.
 
-I> The `name` property of a method created using this shorthand is the name used before the parentheses. In the previous example, the `name` property for `person.sayName()` is `"sayName"`.
+I> The `name` property of a method created using concise method shorthand is the name used before the parentheses. In the last example, the `name` property for `person.sayName()` is `"sayName"`.
 
 ### Computed Property Names
 
-JavaScript objects have long had computed property names on object instances through the use of square brackets instead of dot notation. The square brackets allow you to specify property names using variables and string literals that may contain characters that would be a syntax error if used in an identifier. For example:
+ECMAScript 5 and earlier could compute property names on object instances when those properties were set with square brackets instead of dot notation. The square brackets allow you to specify property names using variables and string literals that may contain characters that would cause a syntax error if used in an identifier. Here's an example:
 
 ```js
 var person = {},
@@ -92,9 +92,9 @@ console.log(person["first name"]);      // "Nicholas"
 console.log(person[lastName]);          // "Zakas"
 ```
 
-Both of the property names in this example have a space, making it impossible to reference those names using dot notation. However, bracket notation allows any string value to be used as a property name.
+Since `lastName` is assigned a value of `"last name"`, both property names in this example use a space, making it impossible to reference them using dot notation. However, bracket notation allows any string value to be used as a property name, so assigning `"first name"` to `"Nicholas"` and "`last name"` to `"Zakas"` works.
 
-In ECMAScript 5, you could use string literals as property names in object literals, such as:
+Additionally, you can use string literals directly as property names in object literals, like this:
 
 ```js
 var person = {
@@ -104,9 +104,9 @@ var person = {
 console.log(person["first name"]);      // "Nicholas"
 ```
 
-This pattern works fine for property names that known ahead of time and can be represented with a string literal. If, however, the property name was contained in a variable or had to be calculated, then there was no way to define that property using an object literal.
+This pattern works for property names that are known ahead of time and can be represented with a string literal. If, however, the property name `"first name"` were contained in a variable (as in the previous example) or had to be calculated, then there would be no way to define that property using an object literal in ECMAScript 5.
 
-ECMAScript 6 adds computed property names to object literal syntax by using the same square bracket notation that has been used to reference computed property names in object instances. For example:
+In ECMAScript 6, computed property names are part of the object literal syntax, and they use the same square bracket notation that has been used to reference computed property names in object instances. For example:
 
 ```js
 var lastName = "last name";
@@ -120,7 +120,7 @@ console.log(person["first name"]);      // "Nicholas"
 console.log(person[lastName]);          // "Zakas"
 ```
 
-The square brackets inside of the object literal indicate that the property name is computed, so its contents are evaluated as a string. That means you can also include expressions such as:
+The square brackets inside the object literal indicate that the property name is computed, so its contents are evaluated as a string. That means you can also include expressions such as:
 
 ```js
 var suffix = " name";
@@ -134,13 +134,17 @@ console.log(person["first name"]);      // "Nicholas"
 console.log(person["last name"]);       // "Zakas"
 ```
 
-Anything you would put inside of square brackets while using bracket notation on object instances will also work for computed property names inside of object literals.
+These properties evaluate to `"first name"` and `"last name"`, and those strings can be used to reference the properties later. Anything you would put inside square brackets while using bracket notation on object instances will also work for computed property names inside object literals.
 
-## Object.is()
+## New Methods
 
-When you want to compare two values, you're probably used to using either the equals operator (`==`) or the identically equals operator (`===`). Many prefer to use the latter to avoid type coercion during the comparison. However, even the identically equals operator isn't entirely accurate. For example, the values +0 and -0 are considered equal by `===` even though they are represented differently in the JavaScript engine. Also `NaN === NaN` returns `false`, which necessitates using `isNaN()` to detect `NaN` properly.
+One of the design goals of ECMAScript beginning with ECMAScript 5 was to avoid creating new global functions and instead try to find objects on which new methods should be available. As a result, the `Object` global has received an increasing number of methods when no other objects are more appropriate. ECMAScript 6 introduces a couple new methods on the `Object` global that are designed to make certain tasks easier.
 
-ECMAScript 6 introduces `Object.is()` to make up for the remaining quirks of the identically equals operator. This method accepts two arguments and returns `true` if the values are equivalent. Two values are considered equivalent when they are of the same type and have the same value. In many cases, `Object.is()` works the same as `===`. The only differences are that +0 and -0 are considered not equivalent and `NaN` is considered equivalent to `NaN`. Here are some examples:
+### The Object.is() Method
+
+When you want to compare two values in JavaScript, you're probably used to using either the equals operator (`==`) or the identically equals operator (`===`). Many developers prefer the latter, to avoid type coercion during comparison. But even the identically equals operator isn't entirely accurate. For example, the values +0 and -0 are considered equal by `===` even though they are represented differently in the JavaScript engine. Also `NaN === NaN` returns `false`, which necessitates using `isNaN()` to detect `NaN` properly.
+
+ECMAScript 6 introduces the `Object.is()` method to make up for the remaining quirks of the identically equals operator. This method accepts two arguments and returns `true` if the values are equivalent. Two values are considered equivalent when they are of the same type and have the same value. Here are some examples:
 
 ```js
 console.log(+0 == -0);              // true
@@ -159,11 +163,11 @@ console.log(Object.is(5, 5));       // true
 console.log(Object.is(5, "5"));     // false
 ```
 
-The choice of whether to use `Object.is()` instead of `==` or `===` is based on how the special cases affect your code. There's no need to stop using equality operators altogether.
+In many cases, `Object.is()` works the same as the `===` operator. The only differences are that +0 and -0 are considered not equivalent and `NaN` is considered equivalent to `NaN`. But there's no need to stop using equality operators altogether. Choose whether to use `Object.is()` instead of `==` or `===` based on how those special cases affect your code.
 
-## Object.assign()
+### The Object.assign() Method
 
-One of the most popular patterns for object composition is *mixins*, in which one object receives properties and methods from another object. Many JavaScript libraries have a mixin method similar to this:
+*Mixins* are among the most popular patterns for object composition in JavaScript. In a mixin, one object receives properties and methods from another object. Many JavaScript libraries have a mixin method similar to this:
 
 ```js
 function mixin(receiver, supplier) {
@@ -175,7 +179,7 @@ function mixin(receiver, supplier) {
 }
 ```
 
-The `mixin()` function iterates over the own properties of `supplier` and copies them onto `receiver` (a shallow copy). This allows the `receiver` to gain new properties without inheritance. For example:
+The `mixin()` function iterates over the own properties of `supplier` and copies them onto `receiver` (a shallow copy, where object references are shared when property values are objects). This allows the `receiver` to gain new properties without inheritance, as in this code:
 
 ```js
 function EventTarget() { /*...*/ }
@@ -191,13 +195,13 @@ mixin(myObject, EventTarget.prototype);
 myObject.emit("somethingChanged");
 ```
 
-In this example, `myObject` receives behavior from `EventTarget.prototype`. This gives `myObject` the ability to publish events and let others subscribe to them using `emit()` and `on()`, respectively.
+Here, `myObject` receives behavior from the `EventTarget.prototype` object. This gives `myObject` the ability to publish events and subscribe to them using the `emit()` and `on()` methods, respectively.
 
-This pattern became popular enough that ECMAScript 6 added `Object.assign()`, which behaves the same way. The difference in name is to reflect the actual operation that occurs. Since the `mixin()` method uses the assignment operator (`=`), it cannot copy accessor properties to the receiver as accessor properties. The name `Object.assign()` was chosen to reflect this distinction.
+This pattern became popular enough that ECMAScript 6 added the `Object.assign()` method, which behaves the same way. The name change from `mixin()` to `assign()` reflects the actual operation that occurs. Since the `mixin()` method uses the assignment operator (`=`), it cannot copy accessor properties to the receiver as accessor properties. The name `Object.assign()` was chosen to reflect this distinction. Note, however, that `Object.assign()` does not copy properties whose keys are symbols, which I cover in Chapter 6.
 
-I> Similar methods in various libraries may have other names. Some popular alternate names for the same basic functionality are `extend()` and `mix()`. There was also, briefly, an `Object.mixin()` method in ECMAScript 6 in addition to `Object.assign()`. The primary difference was that `Object.mixin()` also copied over accessor properties, but the method was removed due to concerns over the use of `super` (discussed later in this chapter).
+I> Similar methods in various libraries may have other names for the same basic functionality; popular alternates include the `extend()` and `mix()` methods. There was also, briefly, an `Object.mixin()` method in ECMAScript 6 in addition to the `Object.assign()` method. The primary difference was that `Object.mixin()` also copied over accessor properties, but the method was removed due to concerns over the use of `super` (discussed in the "Easy Prototype Access with Super References" section of this chapter).
 
-You can use `Object.assign()` anywhere the `mixin()` function would have been used:
+You can use `Object.assign()` anywhere the `mixin()` function would have been used. Here's an example:
 
 ```js
 function EventTarget() { /*...*/ }
@@ -213,7 +217,7 @@ Object.assign(myObject, EventTarget.prototype);
 myObject.emit("somethingChanged");
 ```
 
-The `Object.assign()` method accepts any number of suppliers, and the receiver receives the properties in the order in which the suppliers are specified. That means the second supplier might overwrite a value from the first supplier on the receiver. For example:
+The `Object.assign()` method accepts any number of suppliers, and the receiver receives the properties in the order in which the suppliers are specified. That means the second supplier might overwrite a value from the first supplier on the receiver, which is what happens in this snippet:
 
 ```js
 var receiver = {};
@@ -234,11 +238,11 @@ console.log(receiver.name);     // "file.js"
 
 The value of `receiver.type` is `"css"` because the second supplier overwrote the value of the first.
 
-The `Object.assign()` method isn't a big addition to ECMAScript 6, but it does formalize a common function that is found in many JavaScript libraries.
+The `Object.assign()` method isn't a big addition to ECMAScript 6, but it does formalize a common function found in many JavaScript libraries.
 
 A> ### Working with Accessor Properties
 A>
-A> Keep in mind that `Object.assign()` does not create accessor properties on the receiver when a supplier has accessor properties. Since `Object.assign()` uses the assignment operator, an accessor property on a supplier will become a data property on the receiver. For example:
+A> Keep in mind that `Object.assign()` doesn't create accessor properties on the receiver when a supplier has accessor properties. Since `Object.assign()` uses the assignment operator, an accessor property on a supplier will become a data property on the receiver. For example:
 A>
 A> ```js
 A> var receiver = {},
@@ -256,13 +260,11 @@ A> console.log(descriptor.value);      // "file.js"
 A> console.log(descriptor.get);        // undefined
 A> ```
 A>
-A> In this code, the `supplier` has an accessor property called `name`. After using `Object.assign()`, `receiver.name` exists as a data property with the value of `"file.js"`. That's because `supplier.name` returned "file.js" at the time `Object.assign()` was called.
-
-W> `Object.assign()` does not copy properties whose keys are symbols (covered in Chapter 6).
+A> In this code, the `supplier` has an accessor property called `name`. After using the `Object.assign()` method, `receiver.name` exists as a data property with a value of `"file.js"` because `supplier.name` returned `"file.js"` when `Object.assign()` was called.
 
 ## Duplicate Object Literal Properties
 
-ECMAScript 5 strict mode introduced a check for duplicate object literal properties that would throw an error if a duplicate was found. For example:
+ECMAScript 5 strict mode introduced a check for duplicate object literal properties that would throw an error if a duplicate was found. For example, this code was problematic:
 
 ```js
 "use strict";
@@ -273,9 +275,7 @@ var person = {
 };
 ```
 
-When running in ECMAScript 5 strict mode, this example results in a syntax error on the second `name` property.
-
-In ECMAScript 6, the duplicate property check has been removed. Both strict and nonstrict mode code no longer check for duplicate properties and instead take the last property of the given name as the actual value.
+When running in ECMAScript 5 strict mode, the second `name` property causes a syntax error. But in ECMAScript 6, the duplicate property check was removed. Both strict and nonstrict mode code no longer check for duplicate properties. Instead, the last property of the given name becomes the property's actual value, as shown here:
 
 ```js
 "use strict";
@@ -288,17 +288,17 @@ var person = {
 console.log(person.name);       // "Greg"
 ```
 
-In this example, the value of `person.name` is `"Greg"` because that was the last value assigned to the property.
+In this example, the value of `person.name` is `"Greg"` because that's the last value assigned to the property.
 
 ## Own Property Enumeration Order
 
-ECMAScript 5 didn't define the enumeration order of object properties, as it left this up to the JavaScript engine vendors. However, ECMAScript 6 strictly defines the order in which own properties must be returned when they are enumerated. This affects how properties are returned using a `for-in` loop, `Object.keys()`, `Object.getOwnPropertyNames()`, and `Reflect.ownKeys` (covered in chapter 12). It also affects the order in which properties are processed by `Object.assign()` and `JSON.stringify()`.
+ECMAScript 5 didn't define the enumeration order of object properties, as it left this up to the JavaScript engine vendors. However, ECMAScript 6 strictly defines the order in which own properties must be returned when they are enumerated. This affects how properties are returned using a `for-in` loop, the `Object.keys()` method, the `Object.getOwnPropertyNames()` method, and `Reflect.ownKeys` (covered in Chapter 12). It also affects the order in which properties are processed by `Object.assign()` and `JSON.stringify()`.
 
-The basic order for own property enumeration is defined as:
+The basic order for own property enumeration is:
 
 1. All numeric keys in ascending order
 2. All string keys in the order in which they were added to the object
-3. All symbol keys (covered in chapter 6) in the order in which they were added to the object
+3. All symbol keys (covered in Chapter 6) in the order in which they were added to the object
 
 Here's an example:
 
@@ -317,9 +317,9 @@ obj.d = 1;
 console.log(Object.keys(obj).join(""));     // "012acbd"
 ```
 
-Using `Object.keys()`, the returned order of the properties in `obj` is `0`, `1`, `2`, `a`, `c`, `b`, `d`. Note that the numeric keys are grouped together and sorted even though they appear out of order in the object literal. The string keys come after the numeric keys and appear in the order that they were added to `obj`, which means the order in which the keys appear in the object literal itself followed by any dynamic keys that were added later (in this case, `d`).
+The `Object.keys()` method returns the properties in `obj` in the order `0`, `1`, `2`, `a`, `c`, `b`, `d`. Note that the numeric keys are grouped together and sorted, even though they appear out of order in the object literal. The string keys come after the numeric keys and appear in the order that they were added to `obj`. The keys in the object literal itself come first, followed by any dynamic keys that were added later (in this case, `d`).
 
-When using a `for-in` loop, which also includes prototype properties, the enumerable own properties are defined to appear first and then followed by any enumerable prototype properties:
+When using a `for-in` loop, which also includes prototype properties, the enumerable own properties appear first and are followed by any enumerable prototype properties:
 
 ```js
 var parent = {
@@ -347,18 +347,19 @@ for (var key in obj) {
 console.log(result.join(""));     // "012acb89zy"
 ```
 
-In this example, `obj` has `parent` in its prototype chain. The property keys are enumerated inside of the `for-in` starting with own properties of `obj` and then continue to the prototype properties provided by `parent`. Each group of properties is ordered in the same way, with numeric keys in ascending order followed by string keys in insertion order.
+The `obj` object has `parent` in its prototype chain. The property keys are enumerated inside the `for-in`  loop, starting with own properties of `obj` and continuing to the prototype properties provided by `parent`. Each group of properties is given with the numeric keys in ascending order, followed by string keys in insertion order.
 
 While enumeration order is a subtle change to how JavaScript works, it's not uncommon to find programs that rely on a specific enumeration order to work correctly. ECMAScript 6, by defining the enumeration order, ensures that JavaScript code relying on enumeration will work correctly regardless of where it is executed.
 
+## More Powerful Prototypes
 
-## Changing Prototypes
+Prototypes are the foundation of inheritance in JavaScript, and ECMAScript 6 continues to make prototypes more powerful. Early versions of JavaScript severely limited what could be done with prototypes. However, as the language matured and developers became more familiar with how prototypes work, it became clear that developers wanted more control over prototypes and easier ways to work with them. As a result, ECMAScript 6 introduced some improvements to prototypes.
 
-Prototypes are the foundation of inheritance in JavaScript, and so ECMAScript 6 continues to make prototypes more powerful. ECMAScript 5 added the `Object.getPrototypeOf()` method for retrieving the prototype of any given object. ECMAScript 6 adds the reverse operation, `Object.setPrototypeOf()`, which allows you to change the prototype of any given object.
+### Changing an Object's Prototype
 
-Normally, the prototype of an object is specified at the time of its creation, either by using a constructor or via `Object.create()`. Prior to ECMAScript 6, there was no standard way to change an object's prototype after instantiation. In a way, `Object.setPrototypeOf()` changes one of the biggest assumptions about objects in JavaScript to this point, which is that an object's prototype remains unchanged after instantiation.
+Normally, the prototype of an object is specified when the object is created, via either a constructor or the `Object.create()` method. The idea that an object's prototype remains unchanged after instantiation was one of the biggest assumptions in JavaScript programming though ECMAScript 5. ECMAScript 5 did add the `Object.getPrototypeOf()` method for retrieving the prototype of any given object, but it still lacked a standard way to change an object's prototype after instantiation.
 
-The `Object.setPrototypeOf()` method accepts two arguments, the object whose prototype should be changed and the object that should become the first argument's prototype. For example:
+ECMAScript 6 changes that assumption by adding the `Object.setPrototypeOf()` method, which allows you to change the prototype of any given object. The `Object.setPrototypeOf()` method accepts two arguments: the object whose prototype should change and the object that should become the first argument's prototype. For example:
 
 ```js
 let person = {
@@ -384,13 +385,13 @@ console.log(friend.getGreeting());                      // "Woof"
 console.log(Object.getPrototypeOf(friend) === dog);     // true
 ```
 
-This code defines two base objects: `person` and `dog`. Both objects have a method `getGreeting()` that returns a string. The object `friend` starts out inheriting from `person`, meaning that `getGreeting()` will output `"Hello"`. When the prototype is changed to be `dog` instead, `person.getGreeting()` outputs `"Woof"` because the original relationship to `person` is broken.
+This code defines two base objects: `person` and `dog`. Both objects have a `getGreeting()` method that returns a string. The object `friend` first inherits from the `person` object, meaning that `getGreeting()` outputs `"Hello"`. When the prototype becomes the `dog` object, `person.getGreeting()` outputs `"Woof"` because the original relationship to `person` is broken.
 
 The actual value of an object's prototype is stored in an internal-only property called `[[Prototype]]`. The `Object.getPrototypeOf()` method returns the value stored in `[[Prototype]]` and `Object.setPrototypeOf()` changes the value stored in `[[Prototype]]`. However, these aren't the only ways to work with the value of `[[Prototype]]`.
 
-Even before ECMAScript 5 was finished, several JavaScript engines already implemented a custom property called `__proto__` that could be used to both get and set `[[Prototype]]`. Effectively, `__proto__` was an early precursor to both `Object.getPrototypeOf()` and `Object.setPrototypeOf()`. It was unrealistic to expect all of the JavaScript engines to remove this property, so ECMAScript 6 formalized the behavior of `__proto__`.
+Even before ECMAScript 5 was finished, several JavaScript engines already implemented a custom property called `__proto__` that could be used to both get and set `[[Prototype]]`. Effectively, `__proto__` was an early precursor to both the `Object.getPrototypeOf()` and `Object.setPrototypeOf()` methods. It was unrealistic to expect all JavaScript engines to remove this property, so ECMAScript 6 also formalized the `__proto__` behavior.
 
-In ECMAScript 6 engines, `Object.prototype.__proto__` is defined as an accessor property whose `get` method calls `Object.getPrototypeOf()` and whose `set` method calls `Object.setPrototypeOf()`. This means that there is no real difference between using `__proto__` and the other methods except that `__proto__` allows you to set the prototype of an object literal directly. For example:
+In ECMAScript 6 engines, `Object.prototype.__proto__` is defined as an accessor property whose `get` method calls `Object.getPrototypeOf()` and whose `set` method calls the `Object.setPrototypeOf()` method. This leaves no real difference between using `__proto__` and the other methods, except that `__proto__` allows you to set the prototype of an object literal directly. Here's how that works:
 
 ```js
 let person = {
@@ -420,18 +421,18 @@ console.log(friend.__proto__ === dog);                  // true
 console.log(Object.getPrototypeOf(friend) === dog);     // true
 ```
 
-This example is functionally equivalent to the previous. The call to `Object.create()` has been replaced with an object literal that assigns a value to `__proto__`. The only real difference between creating an object using `Object.create()` or an object literal with `__proto__` is that the former requires you to specify full property descriptors for any additional object properties while the latter is just a standard object literal.
+This example is functionally equivalent to the `getGreeting()` example. The call to `Object.create()` is replaced with an object literal that assigns a value to the `__proto__` property. The only real difference between creating an object with `Object.create()` or an object literal with `__proto__` is that the former requires you to specify full property descriptors for any additional object properties. The latter is just a standard object literal.
 
 W> The `__proto__` property is special in a number of ways:
 W>
-W> 1. You can only specify it once in an object literal. If you specify two `__proto__` properties, then an error is thrown. This is the only object literal property that has this restriction.
-W> 1. The computed form `["__proto__"]` acts like a regular property and does not set or return the current object's prototype. All rules related to object literal properties apply in this form, as opposed to the non-computed form, for which there are exceptions.
+W> 1. You can only specify it once in an object literal. If you specify two `__proto__` properties, then an error is thrown. This is the only object literal property with that restriction.
+W> 1. The computed form `["__proto__"]` acts like a regular property and doesn't set or return the current object's prototype. All rules related to object literal properties apply in this form, as opposed to the non-computed form, which has exceptions.
 W>
-W> It's best to be careful when using `__proto__` to make sure you don't get caught by these differences.
+W> When using the `__proto__` property, be careful not to get caught by these differences.
 
-## Super References
+### Easy Prototype Access with Super References
 
-As previously mentioned, prototypes are very important for JavaScript and a lot of work went into making them easier to use in ECMAScript 6. Among the improvements is the introduction of `super` references to more easily access functionality on an object's prototype. For example, if you want to override a method on an object instance such that it also calls the prototype method of the same name, you would need to do the following in ECMAScript 5:
+As previously mentioned, prototypes are very important for JavaScript and a lot of work went into making them easier to use in ECMAScript 6. Another improvement is the introduction of `super` references, which make accessing functionality on an object's prototype easier. For example, to override a method on an object instance such that it also calls the prototype method of the same name, you'd do the following in ECMAScript 5:
 
 ```js
 let person = {
@@ -466,11 +467,9 @@ console.log(friend.__proto__ === dog);                  // true
 console.log(Object.getPrototypeOf(friend) === dog);     // true
 ```
 
-In this example, `getGreeting()` on `friend` calls the prototype method of the same name. The `Object.getPrototypeOf()` method is used to ensure the method is always getting the accurate prototype and then an additional string is appended. The additional `.call(this)` ensures that the `this` value inside the prototype method is set correctly.
+In this example, `getGreeting()` on `friend` calls the prototype method of the same name. The `Object.getPrototypeOf()` method ensures the correct prototype is called, and then an additional string is appended to the output. The additional `.call(this)` ensures that the `this` value inside the prototype method is set correctly.
 
-Needing to remember to use `Object.getPrototypeOf()` and `.call(this)` to call a method on the prototype is a bit involved, so ECMAScript 6 introduced `super`.
-
-At it's simplest, `super` acts as a pointer to the current object's prototype, effectively acting like `Object.getPrototypeOf(this)`. So you can simplify the `getGreeting()` method by rewriting it as:
+Remembering to use `Object.getPrototypeOf()` and `.call(this)` to call a method on the prototype is a bit involved, so ECMAScript 6 introduced `super`. At it's simplest, `super` is a pointer to the current object's prototype, effectively the `Object.getPrototypeOf(this)` value. Knowing that, you can simplify the `getGreeting()` method as follows:
 
 ```js
 let friend = {
@@ -484,9 +483,9 @@ let friend = {
 };
 ```
 
-The call to `super.getGreeting()` is the same as `Object.getPrototypeOf(this).getGreeting.call(this)` or `this.__proto__.getGreeting.call(this)`. Similarly, you can call any method on an object's prototype by using a `super` reference.
+The call to `super.getGreeting()` is the same as `Object.getPrototypeOf(this).getGreeting.call(this)` or a `this.__proto__.getGreeting.call(this)` call. Similarly, you can call any method on an object's prototype by using a `super` reference.
 
-Where `super` is really powerful is when you have multiple levels of inheritance. In such a case, `Object.getPrototypeOf()` no longer works in all circumstances. For example:
+The `super` reference is really powerful when you have multiple levels of inheritance, because in that case, `Object.getPrototypeOf()` no longer works in all circumstances. For example:
 
 ```js
 let person = {
@@ -513,7 +512,9 @@ console.log(friend.getGreeting());                  // "Hello, hi!"
 console.log(relative.getGreeting());                // error!
 ```
 
-In this example, `Object.getPrototypeOf()` results in an error when `relative.getGreeting()` is called. That's because `this` is `relative`, and the prototype of `relative` is `friend`. When `friend.getGreeting().call()` is called with `relative` as `this`, the process starts over again and continues to call recursively until a stack overflow error occurs. This is a difficult problem to solve in ECMAScript 5, but with ECMAScript 6 and `super`, it's easy:
+The call to `Object.getPrototypeOf()` results in an error when `relative.getGreeting()` is called. That's because `this` is `relative`, and the prototype of `relative` is the `friend` object. When `friend.getGreeting().call()` is called with `relative` as `this`, the process starts over again and continues to call recursively until a stack overflow error occurs.
+
+That problem is difficult to solve in ECMAScript 5, but with ECMAScript 6 and `super`, it's easy:
 
 ```js
 let person = {
@@ -540,13 +541,13 @@ console.log(friend.getGreeting());                  // "Hello, hi!"
 console.log(relative.getGreeting());                // "Hello, hi!"
 ```
 
-Because `super` references are not dynamic, they always refer to the correct object. In this case, `super.getGreeting()` always refers to `person.getGreeting()`, regardless of how many other object inherit this method.
+Because `super` references are not dynamic, they always refer to the correct object. In this case, `super.getGreeting()` always refers to `person.getGreeting()`, regardless of how many other objects inherit the method.
 
-W> `super` references can only be used inside of concise methods and cannot be used in other functions or the global scope. Attempting to use `super` outside of concise methods results in a syntax error.
+W> `super` references can only be used inside concise methods. Attempting to use `super` outside of concise methods (for example, in other functions or in the global scope) results in a syntax error.
 
-### Methods
+## A Formal Method Definition
 
-Prior to ECMAScript 6, there was no formal definition of a "method" - methods were just object properties that contained functions instead of data. ECMAScript 6 formally defines a method as a function that has an internal `[[HomeObject]]` property containing the object to which the method belongs. Consider the following:
+Prior to ECMAScript 6, the concept of a "method" wasn't formally defined. Methods were just object properties that contained functions instead of data. ECMAScript 6 formally defines a method as a function that has an internal `[[HomeObject]]` property containing the object to which the method belongs. Consider the following:
 
 ```js
 let person = {
@@ -563,9 +564,9 @@ function shareGreeting() {
 }
 ```
 
-This example defines `person` with a single method called `getGreeting()`. The `[[HomeObject]]` for `getGreeting()` is `person` by virtue of assigning the function directly to an object. The `shareGreeting()` function, on the other hand, has no `[[HomeObject]]` specified because it wasn't assigned to an object when it was created. In most cases this difference isn't important, but it becomes very important when using `super`.
+This example defines `person` with a single method called `getGreeting()`. The `[[HomeObject]]` for `getGreeting()` is `person` by virtue of assigning the function directly to an object. The `shareGreeting()` function, on the other hand, has no `[[HomeObject]]` specified because it wasn't assigned to an object when it was created. In most cases, this difference isn't important, but it becomes very important when using `super` references.
 
-Any reference to `super` uses the `[[HomeObject]]` to determine what to do. The first step is to call `Object.getPrototypeOf()` on the `[[HomeObject]]` to retrieve a reference to the prototype. Then, the prototype is searched for a function with the same name. Last, the `this`-binding is set and the method is called. If a function has no `[[HomeObject]]`, or has a different one than expected, then this process won't work and an error is thrown. For example:
+Any reference to `super` uses the `[[HomeObject]]` to determine what to do. The first step is to call `Object.getPrototypeOf()` on the `[[HomeObject]]` to retrieve a reference to the prototype. Then, the prototype is searched for a function with the same name. Last, the `this`-binding is set and the method is called. If a function has no `[[HomeObject]]`, or has a different `[[HomeObject]]` than expected, then this process won't work and an error is thrown, as in this code snippet:
 
 ```js
 let person = {
@@ -591,7 +592,9 @@ console.log(friend.getGreeting());  // "Hello, hi!"
 getGlobalGreeting();                // throws error
 ```
 
-Calling `friend.getGreeting()` returns a string while calling `getGlobalGreeting()` throws an error for improper use of `super`. Since the `getGlobalGreeting()` function has no `[[HomeObject]]`, it's not possible to perform a lookup. Interestingly, the situation doesn't change if `getGlobalGreeting()` is later assigned as a method on `friend`:
+Calling `friend.getGreeting()` returns a string, while calling `getGlobalGreeting()` throws an error for improper use of the `super` keyword. Since the `getGlobalGreeting()` function has no `[[HomeObject]]`, it's not possible to perform a lookup.
+
+Interestingly, the situation doesn't change if `getGlobalGreeting()` is later assigned as a method on the `friend` object, like this:
 
 ```js
 // prototype is person
@@ -614,18 +617,18 @@ friend.getGreeting = getGlobalGreeting;
 friend.getGreeting();               // throws error
 ```
 
-Here the `getGlobalGreeting()` function is used to overwrite the previously-defined `getGreeting()` method on `friend`. Calling `friend.getGreeting()` at that point results in an error as well because this is now calling the `getGlobalGreeting()`, which does not have a `[[HomeObject]]`. The value of `[[HomeObject]]` is only set when the function is first created, so even assigning onto an object doesn't fix the problem.
+Here the `getGlobalGreeting()` function overwrites the previously-defined `getGreeting()` method on the `friend` object. Calling `friend.getGreeting()` at that point results in an error as well, because it's now calling the `getGlobalGreeting()` method, which does not have a `[[HomeObject]]`. The value of `[[HomeObject]]` is only set when the function is first created, so even assigning the method onto an object doesn't fix the problem.
 
 ## Summary
 
-Objects are at the center of programming in JavaScript, and ECMAScript 6 has made some helpful changes to objects that both make them easier to deal with and more powerful.
+Objects are the center of programming in JavaScript, and ECMAScript 6 made some helpful changes to objects that both make them easier to deal with and more powerful.
 
-ECMAScript 6 makes several changes to object literals. Shorthand property definitions make it easier to assign properties whose names are the same as in-scope variables. Computed property names allow you to specify non-literal values as property names, which is something you've already been able to do in other areas of the language. Shorthand methods let you type a lot fewer characters in order to define methods on object literals by completely omitting the colon and `function` keyword. A loosening of the strict mode check for duplicate object literal property names was introduced as well, meaning you can now have two properties with the same name in a single object literal without an error being thrown.
+ECMAScript 6 makes several changes to object literals. Shorthand property definitions make assigning properties with the same names as in-scope variables easier. Computed property names allow you to specify non-literal values as property names, which you've already been able to do in other areas of the language. Shorthand methods let you type a lot fewer characters in order to define methods on object literals, by completely omitting the colon and `function` keyword. ECMAScript 6 loosens the strict mode check for duplicate object literal property names as well, meaning you can have two properties with the same name in a single object literal without throwing an error.
 
 The `Object.assign()` method makes it easier to change multiple properties on a single object at once. This can be very useful if you use the mixin pattern. The `Object.is()` method performs strict equality on any value, effectively becoming a safer version of `===` when dealing with special JavaScript values.
 
 Enumeration order for own properties is now clearly defined in ECMAScript 6. When enumerating properties, numeric keys always come first in ascending order followed by string keys in insertion order and symbol keys in insertion order.
 
-It's now possible to modify an object's prototype after it's already created using `Object.setPrototypeOf()`. ECMAScript 6 also defines the behavior of the `__proto__` property, which is an accessor property whose getter calls `Object.getPrototypeOf()` and whose setter calls `Object.setPrototypeOf()`.
+It's now possible to modify an object's prototype after it's already created, thanks to ECMAScript 6's `Object.setPrototypeOf()` method. ECMAScript 6 also defines the behavior of the `__proto__` property, which is an accessor property whose getter calls `Object.getPrototypeOf()` and whose setter calls `Object.setPrototypeOf()`.
 
-The `super` keyword can now be used to call methods on an object's prototype. It can be used either standalone as a method, such as `super()`, or as a reference to the prototype itself, such as `super.getGreeting()`. In both cases, the `this`-binding is setup automatically to work with the current value of `this`.
+Finally, you can use the `super` keyword to call methods on an object's prototype. It can be used either standalone as a method, such as `super()`, or as a reference to the prototype itself, such as `super.getGreeting()`. In both cases, the `this`-binding is set up automatically to work with the current value of `this`.
