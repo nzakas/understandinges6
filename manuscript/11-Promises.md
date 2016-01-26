@@ -1,6 +1,6 @@
 # Promises
 
-One of the most powerful aspects of JavaScript is how easily it handles asynchronous programming. Since JavaScript originated as a language for the web, it was a requirement to be able to respond to user interactions such as clicks and key presses. Node.js further popularized asynchronous programming in JavaScript by using callbacks as an alternative to events. As more and more programs started using asynchronous programming, there was a growing sense that these two models, events and callbacks, weren't powerful enough to support everything that developers wanted to do. Promises are the solution to this problem.
+One of the most powerful aspects of JavaScript is how easily it handles asynchronous programming. Since JavaScript originated as a language for the web, it was a requirement to be able to respond to asynchronous user interactions such as clicks and key presses. Node.js further popularized asynchronous programming in JavaScript by using callbacks as an alternative to events. As more and more programs started using asynchronous programming, there was a growing sense that these two models, events and callbacks, weren't powerful enough to support everything that developers wanted to do. Promises are the solution to this problem.
 
 Promises are another option for asynchronous programming, and similar functionality is available in other languages under names such as futures and deferreds. The basic idea is to specify some code to be executed later (as with events and callbacks) and also explicitly indicate if the code succeeded or failed in its job. In that way, you can chain promises together based on success or failure in ways that are easier to understand and debug.
 
@@ -25,7 +25,7 @@ button.onclick = function(event) {
 
 In this code, `console.log("Clicked")` will not be executed until `button` is clicked. When `button` is clicked, the function assigned to `onclick` is added to the back of the job queue and will be executed when all other jobs ahead of it are complete.
 
-Events work well for simple interactions such as this, but chaining multiple separate asynchronous calls together becomes more complicated because you must keep track of the event target (`button` in the previous example) for each event. Additionally, you need to ensure all appropriate event handlers are added before the first instance of an event occurs. For instance, if `button` in the previous example was clicked before `onclick` is assigned, then nothing would happen.
+Events work well for simple interactions such as this, but chaining multiple separate asynchronous calls together becomes more complicated because you must keep track of the event target (`button` in the previous example) for each event. Additionally, you need to ensure all appropriate event handlers are added before the first time an event occurs. For instance, if `button` in the previous example was clicked before `onclick` is assigned, then nothing would happen.
 
 So while events are useful for responding to user interactions and similar functionality that occurs infrequently, they aren't very flexible for more complex needs.
 
@@ -118,22 +118,24 @@ A promise is a placeholder for the result of an asynchronous operation. Instead 
 let promise = readFile("example.txt");
 ```
 
-In this code, `readFile()` doesn't actually start reading the file immediately (that will happen later). It returns a promise object that represents the asynchronous operation so you can work with it later.
+In this code, `readFile()` doesn't actually start reading the file immediately (that will happen later). It returns a promise object that represents the asynchronous operation so you can work with it later. Before using a promise, though, it's important to understand a promise lifecycle and how that lifecycle affects your results.
 
 ### Lifecycle
 
-Each promise goes through a short lifecycle. It starts in the *pending* state, which is an indicator that the asynchronous operation has not yet completed. The promise in the last example is in the pending state as soon as it is returned from `readFile()`. Once the asynchronous operation completes, the promise is considered *settled* and enters one of two possible states:
+Each promise goes through a short lifecycle starting in the *pending* state, which is an indicator that the asynchronous operation has not yet completed. The promise in the last example is in the pending state as soon as it is returned from `readFile()`. Once the asynchronous operation completes, the promise is considered *settled* and enters one of two possible states:
 
 1. *Fulfilled* - the promise's asynchronous operation has completed successfully
 1. *Rejected* - the promise's asynchronous operation did not complete successfully (either due to an error or some other cause)
 
 You can't determine which state the promise is in programmatically, but you can take a specific action when a promise changes state by using the `then()` method.
 
-I> There is an internal `[[PromiseState]]` property that is set to `"pending"`, `"fulfilled"`, or `"rejected"` to reflect the promise's state.
+I> There is an internal `[[PromiseState]]` property that is set to `"pending"`, `"fulfilled"`, or `"rejected"` to reflect the promise's state. This property is not exposed on promise objects.
 
-The `then()` method is present on all promises and takes two arguments (any object that implements `then()` is called a *thenable*). The first argument is a function to call when the promise is fulfilled. Any additional data related to the asynchronous operation is passed into this fulfillment function. The second argument is a function to call when the promise is rejected. Similar to the fulfillment function, the rejection function is passed any additional data related to the rejection.
+The `then()` method is present on all promises and takes two arguments. The first argument is a function to call when the promise is fulfilled. Any additional data related to the asynchronous operation is passed into this fulfillment function. The second argument is a function to call when the promise is rejected. Similar to the fulfillment function, the rejection function is passed any additional data related to the rejection.
 
-Both arguments are optional, so you can listen for any combination of fulfillment and rejection. For example:
+I> Any object that implements the `then()` method in this way is called a *thenable*, so all promises are thenables but all thenables are not promises.
+
+Both arguments to`then()` are optional, so you can listen for any combination of fulfillment and rejection. For example:
 
 ```js
 let promise = readFile("example.txt");
@@ -202,7 +204,7 @@ I> Each call to `then()` or `catch()` creates a new job to be executed when the 
 
 ### Creating Unsettled Promises
 
-New promises are created through the `Promise` constructor. This constructor accepts a single argument, which is a function (called the *executor*) containing the code to initialize the promise. The executor is passed two functions as arguments, `resolve()` and `reject()`. The `resolve()` function is called when the executor has finished successfully in order to signal that the promise is ready to be resolved while the `reject()` function indicates that the executor has failed. Here's an example using a promise in Node.js to implement the `readFile()` function from earlier in this chapter:
+New promises are created using the `Promise` constructor. This constructor accepts a single argument, which is a function (called the *executor*) containing the code to initialize the promise. The executor is passed two functions as arguments, `resolve()` and `reject()`. The `resolve()` function is called when the executor has finished successfully in order to signal that the promise is ready to be resolved while the `reject()` function indicates that the executor has failed. Here's an example using a promise in Node.js to implement the `readFile()` function from earlier in this chapter:
 
 ```js
 // Node.js example
@@ -407,7 +409,173 @@ promise.catch(function(error) {
 });
 ```
 
-The executor handles catching any thrown errors in order to simplify this common use case.
+The executor handles catching any thrown errors in order to simplify this common use case. However, it also has the caveat that an error thrown in the executor is only reported when a rejection handler is present; otherwise, the error is suppressed. This became a problem for developers early on in the use of promises so JavaScript environments decided to address it by providing hooks for catching rejected promises.
+
+## Global Promise Rejection Handling
+
+One of the most controversial aspects of promises is the silent failure that occurs when a promise is rejected and doesn't have a rejection handler. Some consider this the biggest flaw in the specification as it's the only part of the JavaScript language that doesn't make errors apparent when they occur.
+
+Determining whether a promise rejection was handled isn't straightforward due to the nature of promises. A promise may be rejected and handled only at a later point in time, for example:
+
+```js
+let rejected = Promise.reject(42);
+
+// at this point, rejected is unhandled
+
+// some time later...
+rejected.catch(function(value) {
+    // now rejected has been handled
+    console.log(value);
+});
+```
+
+Because you can call `then()` or `catch()` at any point and have them work correctly regardless of whether the promises is settled or not, it's hard to know precisely when a promise is going to be handled.
+
+While it's possible that the next version of ECMAScript will address this problem, both browsers and Node.js have implemented changes to address this developer pain point. Note these are not part of the ECMAScript 6 specification but are valuable tools when using promises.
+
+## Node.js Rejection Handling
+
+In Node.js, there are two events on the `process` object related to promise rejection handling:
+
+* `unhandledRejection` - emitted when a promise is rejected and there is no rejection handler called within one turn of the event loop
+* `rejectionHandled` - emitted when a promise is rejected and there is a rejection handler called after one turn of the event loop
+
+These two events are designed to work together to help identify promises that are rejected and not handled.
+
+The `unhandledRejection` event handler is passed two arguments: the rejection reason (frequently an error object) and the promise that was rejected. Here's a simple example:
+
+```js
+let rejected;
+
+process.on("unhandledRejection", function(reason, promise) {
+    console.log(reason.message);            // "Explosion!"
+    console.log(rejected === promise);      // true
+});
+
+rejected = Promise.reject(new Error("Explosion!"));
+```
+
+This example creates a rejected promise with an error object and listens for the `unhandledRejection` event. The event handler receives the error object as the first argument and the promise as the second.
+
+The `rejectionHandled` event handler has only one argument, which is the promise that was rejected. For example:
+
+```js
+let rejected;
+
+process.on("rejectionHandled", function(promise) {
+    console.log(rejected === promise);              // true
+});
+
+rejected = Promise.reject(new Error("Explosion!"));
+
+// wait to add the rejection handler
+setTimeout(function() {
+    rejected.catch(function(value) {
+        console.log(value.message);     // "Explosion!"
+    });
+}, 1000);
+```
+
+Here, the `rejectionHandled` event is emitted when the rejection handler is finally called. If the rejection handler was attached directly to `rejected` after its creation, then the event wouldn't have been emitted because the rejection handler would have been called during the same turn of the event loop in which `rejected` was created.
+
+In order to properly track potentially unhandled rejections, you need to use both events to keep a list of potentially unhandled rejections and then wait some period of time to inspect the list. For example:
+
+```js
+let possiblyUnhandledRejections = new Map();
+
+// when a rejection is unhandled, add it to the map
+process.on("unhandledRejection", function(reason, promise) {
+    possiblyUnhandledRejections.set(promise, reason);
+});
+
+process.on("rejectionHandled", function(promise) {
+    possiblyUnhandledRejections.delete(promise);
+});
+
+setInterval(function() {
+
+    possiblyUnhandledRejections.forEach(function(reason, promise) {
+        console.log(reason.message ? reason.message : reason);
+
+        // do something to handle these rejections
+        handleRejection(promise, reason);
+    });
+
+    possiblyUnhandledRejections.clear();
+
+}, 60000);
+```
+
+This code is a simple unhandled rejection tracker. It uses a map to store promises and their rejection reasons where the promise is the key and the reason is the value. Each time `unhandledRejection` is emitted, the promise and its rejection reason is added to the map; each time `rejectionHandled` is emitted, the promise is removed from the map. As a result, `possiblyUnhandledRejections` continues to grow and shrink as each event is called. The `setInterval()` call periodically checks each the list of possible unhandled rejections and outputs the information to the console (in reality, you probably want to do something else to either log or otherwise handle the rejection). A map is used in this example instead of a weak map because you need to inspect the map periodically to see which promises are present, and that's not possible with a weak map.
+
+While this example is specific to Node.js, browsers have implemented a similar mechanism for notifying developers about unhandled rejections.
+
+### Browser Rejection Handling
+
+Browsers also emit two events to help identify unhandled rejections. These events are emitted by the `window` object and are effectively the same as their Node.js equivalents:
+
+* `unhandledrejection` - emitted when a promise is rejected and there is no rejection handler called within one turn of the event loop
+* `rejectionhandled` - emitted when a promise is rejected and there is a rejection handler called after one turn of the event loop
+
+The event handler for these events receives an event object with the following properties:
+
+* `type` - the name of the event (`"unhandledrejection"` or `"rejectionhandled"`)
+* `promise` - the promise object that was rejected
+* `reason` - the rejection value from the promise
+
+Aside from using an event object instead of individual parameters in the event handler, the other difference in the browser implementation is that the rejection value (`reason`) is available for both events. For example:
+
+```js
+let rejected;
+
+window.onunhandledrejection = function(event) {
+    console.log(event.type);                    // "unhandledrejection"
+    console.log(event.reason.message);          // "Explosion!"
+    console.log(rejected === event.promise);    // true
+});
+
+window.onrejectionhandled = function(event) {
+    console.log(event.type);                    // "rejectionhandled"
+    console.log(event.reason.message);          // "Explosion!"
+    console.log(rejected === event.promise);    // true
+});
+
+rejected = Promise.reject(new Error("Explosion!"));
+```
+
+This code assigns both event handlers use the DOM Level 0 notation of `onunhandledrejection` and `onrejectionhandled` (you can also use `addEventListener("unhandledrejection")` and `addEventListener("rejectionhandled")` if you prefer). Each event handler receives an event object containing information about the rejected promise. All three properties, `type`, `promise`, and `reason`, are available in both event handlers.
+
+The code to keep track of unhandled rejections in the browser is very similar to the code for Node.js:
+
+```js
+let possiblyUnhandledRejections = new Map();
+
+// when a rejection is unhandled, add it to the map
+window.onunhandledrejection = function(event) {
+    possiblyUnhandledRejections.set(event.promise, event.reason);
+};
+
+window.onrejectionhandled = function(event) {
+    possiblyUnhandledRejections.delete(event.promise);
+};
+
+setInterval(function() {
+
+    possiblyUnhandledRejections.forEach(function(reason, promise) {
+        console.log(reason.message ? reason.message : reason);
+
+        // do something to handle these rejections
+        handleRejection(promise, reason);
+    });
+
+    possiblyUnhandledRejections.clear();
+
+}, 60000);
+```
+
+This implementation is almost exactly the same as the Node.js implementation, the only real difference is where the information is retrieved from in the event handlers. Otherwise, this uses the same approach of storing promises and their rejection values in a map and then inspecting them later.
+
+Handling promise rejections can be tricky, but it's far from the only tricky concept involving promises. You've just begun to see how powerful promises can really be, and it's time to take the next step and chain several promises together.
 
 ## Chaining Promises
 
@@ -516,16 +684,18 @@ let p1 = new Promise(function(resolve, reject) {
 });
 
 p1.catch(function(value) {
+    // first fulfillment handler
     console.log(value);         // "42"
     return value + 1;
 }).then(function(value) {
+    // second fulfillment handler
     console.log(value);         // "43"
 });
 ```
 
 Here, the executor calls `reject()` with 42. That value is passed into the rejection handler for the promise, where `value + 1` is returned. Even though this return value is coming from a rejection handler, it is still used in the fulfillment handler of the next promise in the chain. This allows for the failure of one promise to allow recovery of the entire chain if necessary.
 
-## Returning Promise in Promise Chains
+### Returning Promises in Promise Chains
 
 Returning primitive values from fulfillment and rejection handlers allows passing of data between promises, but what if you return an object? If the object is a promise, then there's an extra step that's taken to determine how to proceed. Consider the following example:
 
@@ -539,14 +709,16 @@ let p2 = new Promise(function(resolve, reject) {
 });
 
 p1.then(function(value) {
+    // first fulfillment handler
     console.log(value);     // 42
     return p2;
 }).then(function(value) {
+    // second fulfillment handler
     console.log(value);     // 43
 });
 ```
 
-In this code, `p1` schedules a job that resolves to 42. In the fulfillment handler for `p1`, `p2`, a promise is already in the resolved state, is returned. The second fulfillment handler is called because `p2` has been fulfilled. If `p2` was rejected, the second fulfillment handler would not be called and instead a rejection handler (if present) would be called.
+In this code, `p1` schedules a job that resolves to 42. The fulfillment handler for `p1` returns `p2`, a promise already in the resolved state. The second fulfillment handler is called because `p2` has been fulfilled. If `p2` was rejected, the second fulfillment handler would not be called and instead a rejection handler (if present) would be called.
 
 The important thing to recognize about this pattern is that the second fulfillment handler is not added to `p2`, but rather to a third promise. It's this third promise that the second fulfillment handler is attached to. The previous example is equivalent to this:
 
@@ -560,11 +732,13 @@ let p2 = new Promise(function(resolve, reject) {
 });
 
 let p3 = p1.then(function(value) {
+    // first fulfillment handler
     console.log(value);     // 42
     return p2;
 });
 
 p3.then(function(value) {
+    // second fulfillment handler
     console.log(value);     // 43
 });
 ```
@@ -581,9 +755,11 @@ let p2 = new Promise(function(resolve, reject) {
 });
 
 p1.then(function(value) {
+    // first fulfillment handler
     console.log(value);     // 42
     return p2;
 }).then(function(value) {
+    // second fulfillment handler
     console.log(value);     // never called
 });
 ```
@@ -600,9 +776,11 @@ let p2 = new Promise(function(resolve, reject) {
 });
 
 p1.then(function(value) {
+    // first fulfillment handler
     console.log(value);     // 42
     return p2;
 }).catch(function(value) {
+    // rejection handler
     console.log(value);     // 43
 });
 ```
@@ -634,11 +812,11 @@ In this example, a new promise is created within the fulfillment handler for `p1
 
 ## Responding to Multiple Promises
 
-Up to this point, each example has dealt with responding to one promise at a time. There are times, however, when you'll want to monitor the progress of multiple promises in order to determine the next action. ECMAScript 6 provides two methods that monitor multiple promises: `Promise.all()` and `Promise.race()`.
+Up to this point, each example in this chapter has dealt with responding to one promise at a time. There are times, however, when you'll want to monitor the progress of multiple promises in order to determine the next action. ECMAScript 6 provides two methods that monitor multiple promises: `Promise.all()` and `Promise.race()`.
 
 ### Promise.all()
 
-The `Promise.all()` method accepts a single argument, which is an iterable of promises to monitor, and returns a promise that is resolved only when every promise in the iterable is resolved. The returned promise is fulfilled when every promise in the iterable is fulfilled, for example:
+The `Promise.all()` method accepts a single argument, which is an iterable (such as an array) of promises to monitor, and returns a promise that is resolved only when every promise in the iterable is resolved. The returned promise is fulfilled when every promise in the iterable is fulfilled, for example:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -656,11 +834,14 @@ let p3 = new Promise(function(resolve, reject) {
 let p4 = Promise.all([p1, p2, p3]);
 
 p4.then(function(value) {
-    console.log(value);     // [42, 43, 44]
+    console.log(Array.isArray(value));  // true
+    console.log(value[0]);              // 42
+    console.log(value[1]);              // 43
+    console.log(value[2]);              // 44
 });
 ```
 
-Each of the promises in this example resolves with a number. The call to `Promise.all()` creates a new promise, `p4`, that ultimately is fulfilled because each of the promises is fulfilled. The result passed to the fulfillment handler for `p4` is an array containing each resolved value: 42, 43, and 44. In this way, you can match promise results to the promises that resolved to them.
+Each of the promises in this example resolves with a number. The call to `Promise.all()` creates a new promise, `p4`, that ultimately is fulfilled when all of the promises are fulfilled. The result passed to the fulfillment handler for `p4` is an array containing each resolved value: 42, 43, and 44. In this way, you can match promise results to the promises that resolved to them.
 
 If any of the promises passed to `Promise.all()` is rejected, the returned promise is immediately rejected without waiting for the other promises to complete:
 
@@ -680,11 +861,12 @@ let p3 = new Promise(function(resolve, reject) {
 let p4 = Promise.all([p1, p2, p3]);
 
 p4.catch(function(value) {
-    console.log(value);     // 43
+    console.log(Array.isArray(value))   // false
+    console.log(value);                 // 43
 });
 ```
 
-In this example, `p2` is rejected with a value of 43. The rejection handler for `p4` is called immediately without waiting for either `p1` or `p3` to finish executing (they still finish executing, it's just that `p4` doesn't wait). The rejection handler is passed 43 to reflect the rejection from `p2`.
+In this example, `p2` is rejected with a value of 43. The rejection handler for `p4` is called immediately without waiting for either `p1` or `p3` to finish executing (they still finish executing, it's just that `p4` doesn't wait). The rejection handler is passed 43 to reflect the rejection from `p2`. The rejection handler always receives a single value rather than an array, and the value is the rejection value from the promise that was rejected.
 
 ### Promise.race()
 
@@ -730,36 +912,67 @@ p4.catch(function(value) {
 
 Here, `p4` is rejected because `p2` is already in the rejected state when `Promise.race()` is called. Even though `p1` and `p3` are fulfilled, those results are ignored because they occur after `p2` is rejected.
 
-### Asynchronous Task Scheduling
+### Asynchronous Task Running
 
-Back in chapter 8, you learned about generators and how they can be used for asynchronous task scheduling such as the following:
+Back in chapter 8, you learned about generators and how they can be used for asynchronous task running such as the following:
 
 ```js
 let fs = require("fs");
 
-let task;
+function run(taskDef) {
 
-function readConfigFile() {
-    fs.readFile("config.json", function(err, contents) {
-        if (err) {
-            task.throw(err);
-        } else {
-            task.next(contents);
+    // create the iterator, make available elsewhere
+    let task = taskDef();
+
+    // start the task
+    let result = task.next();
+
+    // recursive function to keep calling next()
+    function step() {
+
+        // if there's more to do
+        if (!result.done) {
+            if (typeof result.value === "function") {
+                result.value(function(err, data) {
+                    if (err) {
+                        result = task.throw(err);
+                        return;
+                    }
+
+                    result = task.next(data);
+                    step();
+                });
+            } else {
+                result = task.next(result.value);
+                step();
+            }
+
         }
-    });
+    }
+
+    // start the process
+    step();
+
 }
 
-function *init() {
-    let contents = yield readConfigFile();
+// Define a function to use with the task runner
+
+function readFile(filename) {
+    return function(callback) {
+        fs.readFile(filename, callback);
+    };
+}
+
+// Run a task
+
+run(function*() {
+    let contents = yield readFile("config.json");
     doSomethingWith(contents);
     console.log("Done");
-}
-
-task = init();
-task.next();
+});
 ```
 
-The pain point of this implementation was needing to keep track of `task` and calling the appropriate methods on it in every single asynchronous function you use (such as `readConfigFile()`). With promises, you can greatly simplify and generalize this process by ensuring that each asynchronous operation returns a promise. That common interface means you can greatly simplify asynchronous code:
+There are some pain points to this implementation. First, wrapping every function in a function that returns a function is a bit confusing (even this sentence was confusing). Second, there is no way to distinguish between a function return value intended to be a callback for the task runner and one that is not. With promises, you can greatly simplify and generalize this process by ensuring that each asynchronous operation returns a promise. That common interface means you can greatly simplify asynchronous code:
 
 ```js
 let fs = require("fs");
@@ -791,9 +1004,11 @@ function run(taskDef) {
     }());
 }
 
-function readConfigFile() {
+// Define a function to use with the task runner
+
+function readFile(filename) {
     return new Promise(function(resolve, reject) {
-        fs.readFile("config.json", function(err, contents) {
+        fs.readFile(filename, function(err, contents) {
             if (err) {
                 reject(err);
             } else {
@@ -803,16 +1018,18 @@ function readConfigFile() {
     });
 }
 
-run(function *() {
-    let contents = yield readConfigFile();
+// Run a task
+
+run(function*() {
+    let contents = yield readFile("config.json");
     doSomethingWith(contents);
     console.log("Done");
 });
 ```
 
-In this version of the code, a generic `run()` function is used to execute a generator. The `run()` function executes the generator to create an iterator, starts the task by calling `task.next()`, and then recursively calls `step()` until the iterator is complete. Inside of `step()`, if there's more work to do then `result.done` is `false`. At that point, `result.value` should be a promise, but `Promise.resolve()` is used just in case the function in question didn't return a promise. Then, a fulfillment handler is added that retrieves the promise value and passes it back to the iterator and `result` is assigned to the next yield result before calling `step()`. A rejection handler is also added and assumes any rejection results in an error object. That error object is passed back into the iterator using `task.throw()` and `result` is assigned to the next yield result if the error is caught in the task, and then `step()` is called to continue.
+In this version of the code, a generic `run()` function is used to execute a generator. The `run()` function executes the generator to create an iterator, starts the task by calling `task.next()`, and then recursively calls `step()` until the iterator is complete. Inside of `step()`, if there's more work to do then `result.done` is `false`. At that point, `result.value` should be a promise, but `Promise.resolve()` is used just in case the function in question didn't return a promise (remember, `Promise.resolve()` will just pass through any promise that is passed in and will wrap any non-promise in a promise). Then, a fulfillment handler is added that retrieves the promise value and passes it back to the iterator. After that, `result` is assigned to the next yield result before calling `step()`. A rejection handler is also added and assumes any rejection results in an error object. That error object is passed back into the iterator using `task.throw()` and `result` is assigned to the next yield result if the error is caught in the task, and then `step()` is called to continue.
 
-This same `run()` function can be used to run any generator that uses `yield` as a way to achieve asynchronous code without exposing promises (or callbacks) to the developer.
+This same `run()` function can be used to run any generator that uses `yield` as a way to achieve asynchronous code without exposing promises (or callbacks) to the developer. In fact, any function may be used with any return value because the result is always converted into a promise. That means you can use both synchronous and asynchronous methods work correctly when called using `yield`, and you never have to check that the return value is a promise. The only concern is ensuring that asynchronous functions, such as `readFile()`, return a promise that correctly identifies its state. In the case of Node.js built-in methods, that means you'll have to convert those methods to return promises instead of using callbacks.
 
 ## Inheriting from Promises
 
@@ -848,7 +1065,7 @@ In this example, `MyPromise` is derived from `Promise` and two additional method
 
 Since static methods are also inherited, that means `MyPromise.resolve()`, `MyPromise.reject()`, `MyPromise.race()`, and `MyPromise.all()` are also present. While the last two behave the same as the built-in methods, the first two are slightly different.
 
-Both `MyPromise.resolve()` and `MyPromise.reject()` will return an instance of `MyPromise` regardless of the value passed. So if a built-in promise is passed to either, it will be resolved or rejected and return a new `MyPromise` so you can assign fulfillment and rejection handlers. For example:
+Both `MyPromise.resolve()` and `MyPromise.reject()` will return an instance of `MyPromise` regardless of the value passed because it uses the `@@species` property (see Chapter 9) to determine the type of promise to return. So if a built-in promise is passed to either, it will be resolved or rejected and return a new `MyPromise` so you can assign fulfillment and rejection handlers. For example:
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
@@ -875,6 +1092,6 @@ Promises have three states: pending, fulfilled, and rejected. A promise starts o
 
 You can chain promises together in a variety of ways and pass information between them. Each call to `then()` creates and returns a new promise that is resolved when the previous one is resolved. Such chains can be used to trigger responses to a series of asynchronous events. You can also use `Promise.race()` and `Promise.all()` to monitor the progress of multiple promises and respond accordingly.
 
-Asynchronous task scheduling is made easier using generators in addition to promises, as promises give a common interface that asynchronous operations can return. You can then use generators and the `yield` operator to wait for asynchronous responses and respond appropriately.
+Asynchronous task running is made easier using generators in addition to promises, as promises give a common interface that asynchronous operations can return. You can then use generators and the `yield` operator to wait for asynchronous responses and respond appropriately.
 
 Most new web APIs are being built on top of promises, and you can expect many more to follow suit in the future.
