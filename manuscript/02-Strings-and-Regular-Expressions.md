@@ -368,7 +368,7 @@ var re1 = /ab/i,
     re2 = new RegExp(re1);
 ```
 
-The `re2` variable is justa  copy of the `re1` variable. But if you provide the second argument to the `RegExp` constructor, which specifies the flags for the regular expression, an error is thrown, as in this example:
+The `re2` variable is just a copy of the `re1` variable. But if you provide the second argument to the `RegExp` constructor, which specifies the flags for the regular expression, an error is thrown, as in this example:
 
 ```js
 var re1 = /ab/i,
