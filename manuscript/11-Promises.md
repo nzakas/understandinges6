@@ -433,7 +433,7 @@ Because you can call `then()` or `catch()` at any point and have them work corre
 
 While it's possible that the next version of ECMAScript will address this problem, both browsers and Node.js have implemented changes to address this developer pain point. Note these are not part of the ECMAScript 6 specification but are valuable tools when using promises.
 
-## Node.js Rejection Handling
+### Node.js Rejection Handling
 
 In Node.js, there are two events on the `process` object related to promise rejection handling:
 
