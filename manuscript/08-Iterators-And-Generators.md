@@ -432,7 +432,21 @@ This example outputs the following:
 ["format", "ebook"]
 ```
 
-The default iterators for arrays, sets, and maps are designed to work similarly to how these objects are initialized. So arrays and sets return their values by default while maps return the same array format that can be passed into the `Map` constructor.
+The default iterators for arrays, sets, and maps are designed to work similarly to how these objects are initialized. So arrays and sets return their values by default while maps return the same array format that can be passed into the `Map` constructor. This is useful when used in `for-of` loops with destructuring, as in this example:
+
+```js
+let data = new Map();
+
+data.set("title", "Understanding ECMAScript 6");
+data.set("format", "ebook");
+
+// same as using data.entries()
+for (let [key, value] of data) {
+    console.log(key + "=" + value);
+}
+```
+
+The `for-in` loop in this example uses a destructured array to assign `key` and `value` for each entry in the map. In this way, you can easily work with keys and values at the same time without needing to access a two-item array.
 
 W> Weak sets and weak maps do not have any built-in iterators. Managing weak references means there's no way to know exactly how many values are in these collections, which also means there's no way to iterate over them.
 
