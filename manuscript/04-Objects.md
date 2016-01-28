@@ -292,7 +292,7 @@ In this example, the value of `person.name` is `"Greg"` because that's the last 
 
 ## Own Property Enumeration Order
 
-ECMAScript 5 didn't define the enumeration order of object properties, as it left this up to the JavaScript engine vendors. However, ECMAScript 6 strictly defines the order in which own properties must be returned when they are enumerated. This affects how properties are returned using a `for-in` loop, the `Object.keys()` method, the `Object.getOwnPropertyNames()` method, and `Reflect.ownKeys` (covered in Chapter 12). It also affects the order in which properties are processed by `Object.assign()` and `JSON.stringify()`.
+ECMAScript 5 didn't define the enumeration order of object properties, as it left this up to the JavaScript engine vendors. However, ECMAScript 6 strictly defines the order in which own properties must be returned when they are enumerated. This affects how properties are returned using `Object.getOwnPropertyNames()` and `Reflect.ownKeys` (covered in Chapter 12). It also affects the order in which properties are processed by `Object.assign()`.
 
 The basic order for own property enumeration is:
 
@@ -314,40 +314,12 @@ var obj = {
 
 obj.d = 1;
 
-console.log(Object.keys(obj).join(""));     // "012acbd"
+console.log(Object.getOwnPropertyNames(obj).join(""));     // "012acbd"
 ```
 
-The `Object.keys()` method returns the properties in `obj` in the order `0`, `1`, `2`, `a`, `c`, `b`, `d`. Note that the numeric keys are grouped together and sorted, even though they appear out of order in the object literal. The string keys come after the numeric keys and appear in the order that they were added to `obj`. The keys in the object literal itself come first, followed by any dynamic keys that were added later (in this case, `d`).
+The `Object.getOwnPropertyNames()` method returns the properties in `obj` in the order `0`, `1`, `2`, `a`, `c`, `b`, `d`. Note that the numeric keys are grouped together and sorted, even though they appear out of order in the object literal. The string keys come after the numeric keys and appear in the order that they were added to `obj`. The keys in the object literal itself come first, followed by any dynamic keys that were added later (in this case, `d`).
 
-When using a `for-in` loop, which also includes prototype properties, the enumerable own properties appear first and are followed by any enumerable prototype properties:
-
-```js
-var parent = {
-    z: 1,
-    9: 1,
-    y: 1,
-    8: 1
-};
-
-var obj = Object.assign(Object.create(parent), {
-    a: 1,
-    0: 1,
-    c: 1,
-    2: 1,
-    b: 1,
-    1: 1
-});
-
-var result = [];
-
-for (var key in obj) {
-    result.push(key);
-}
-
-console.log(result.join(""));     // "012acb89zy"
-```
-
-The `obj` object has `parent` in its prototype chain. The property keys are enumerated inside the `for-in`  loop, starting with own properties of `obj` and continuing to the prototype properties provided by `parent`. Each group of properties is given with the numeric keys in ascending order, followed by string keys in insertion order.
+W> The `for-in` loop still has an unspecified enumeration order because not all JavaScript engines implement it the same way. The `Object.keys()` method and `JSON.stringify()` are both specified to use the same (unspecified) enumeration order as `for-in`.
 
 While enumeration order is a subtle change to how JavaScript works, it's not uncommon to find programs that rely on a specific enumeration order to work correctly. ECMAScript 6, by defining the enumeration order, ensures that JavaScript code relying on enumeration will work correctly regardless of where it is executed.
 
