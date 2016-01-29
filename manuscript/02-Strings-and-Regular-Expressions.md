@@ -458,7 +458,7 @@ console.log(typeof message);        // "string"
 console.log(message.length);        // 12
 ```
 
-This code demonstrates that the variable `message` contains a normal JavaScript string. The template literal syntax is only is used to create the string value, which is then assigned to the `message` variable.
+This code demonstrates that the variable `message` contains a normal JavaScript string. The template literal syntax is only used to create the string value, which is then assigned to the `message` variable.
 
 If you want to use a backtick in your string, then just escape it with a backslash (`\`), as in this version of the `message` variable:
 
