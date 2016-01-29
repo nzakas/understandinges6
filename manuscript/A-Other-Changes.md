@@ -106,3 +106,49 @@ Additionally, ECMAScript 6 formally specifies valid identifiers in terms of [Uni
 1. Each subsequent character must be `$`, `_`, `\u200c` (zero-width non-joiner), `\u200d` (zero-width joiner), or any Unicode symbol with a derived core property of `ID_Continue`.
 
 The `ID_Start` and `ID_Continue` derived core properties are defined in Unicode Identifier and Pattern Syntax as a way to identify symbols that are appropriate for use in identifiers such as variables and domain names (the specification is not specific to JavaScript).
+
+## Formalizing the __proto__ Property
+
+Even before ECMAScript 5 was finished, several JavaScript engines already implemented a custom property called `__proto__` that could be used to both get and set `[[Prototype]]`. Effectively, `__proto__` was an early precursor to both the `Object.getPrototypeOf()` and `Object.setPrototypeOf()` methods. It was unrealistic to expect all JavaScript engines to remove this property, so ECMAScript 6 also formalized the `__proto__` behavior. However, the formalization is in Appendix B along with this warning:
+
+> These features are not considered part of the core ECMAScript language. Programmers should not use or assume the existence of these features and behaviours when writing new ECMAScript code. ECMAScript implementations are discouraged from implementing these features unless the
+implementation is part of a web browser or is required to run the same legacy ECMAScript code that web browsers encounter.
+
+While it's best to avoid using `__proto__`, it's interesting to see how the specification defined it. In ECMAScript 6 engines, `Object.prototype.__proto__` is defined as an accessor property whose `get` method calls `Object.getPrototypeOf()` and whose `set` method calls the `Object.setPrototypeOf()` method. This leaves no real difference between using `__proto__` and the other methods, except that `__proto__` allows you to set the prototype of an object literal directly. Here's how that works:
+
+```js
+let person = {
+    getGreeting() {
+        return "Hello";
+    }
+};
+
+let dog = {
+    getGreeting() {
+        return "Woof";
+    }
+};
+
+// prototype is person
+let friend = {
+    __proto__: person
+};
+console.log(friend.getGreeting());                      // "Hello"
+console.log(Object.getPrototypeOf(friend) === person);  // true
+console.log(friend.__proto__ === person);               // true
+
+// set prototype to dog
+friend.__proto__ = dog;
+console.log(friend.getGreeting());                      // "Woof"
+console.log(friend.__proto__ === dog);                  // true
+console.log(Object.getPrototypeOf(friend) === dog);     // true
+```
+
+This example is functionally equivalent to the `getGreeting()` example. The call to `Object.create()` is replaced with an object literal that assigns a value to the `__proto__` property. The only real difference between creating an object with `Object.create()` or an object literal with `__proto__` is that the former requires you to specify full property descriptors for any additional object properties. The latter is just a standard object literal.
+
+W> The `__proto__` property is special in a number of ways:
+W>
+W> 1. You can only specify it once in an object literal. If you specify two `__proto__` properties, then an error is thrown. This is the only object literal property with that restriction.
+W> 1. The computed form `["__proto__"]` acts like a regular property and doesn't set or return the current object's prototype. All rules related to object literal properties apply in this form, as opposed to the non-computed form, which has exceptions.
+W>
+W> For these reasons, it's recommend to avoid using `__proto__` when you can use `Object.getPrototypeOf()` and `Object.setPrototypeOf()` instead.

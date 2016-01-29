@@ -361,47 +361,6 @@ This code defines two base objects: `person` and `dog`. Both objects have a `get
 
 The actual value of an object's prototype is stored in an internal-only property called `[[Prototype]]`. The `Object.getPrototypeOf()` method returns the value stored in `[[Prototype]]` and `Object.setPrototypeOf()` changes the value stored in `[[Prototype]]`. However, these aren't the only ways to work with the value of `[[Prototype]]`.
 
-Even before ECMAScript 5 was finished, several JavaScript engines already implemented a custom property called `__proto__` that could be used to both get and set `[[Prototype]]`. Effectively, `__proto__` was an early precursor to both the `Object.getPrototypeOf()` and `Object.setPrototypeOf()` methods. It was unrealistic to expect all JavaScript engines to remove this property, so ECMAScript 6 also formalized the `__proto__` behavior.
-
-In ECMAScript 6 engines, `Object.prototype.__proto__` is defined as an accessor property whose `get` method calls `Object.getPrototypeOf()` and whose `set` method calls the `Object.setPrototypeOf()` method. This leaves no real difference between using `__proto__` and the other methods, except that `__proto__` allows you to set the prototype of an object literal directly. Here's how that works:
-
-```js
-let person = {
-    getGreeting() {
-        return "Hello";
-    }
-};
-
-let dog = {
-    getGreeting() {
-        return "Woof";
-    }
-};
-
-// prototype is person
-let friend = {
-    __proto__: person
-};
-console.log(friend.getGreeting());                      // "Hello"
-console.log(Object.getPrototypeOf(friend) === person);  // true
-console.log(friend.__proto__ === person);               // true
-
-// set prototype to dog
-friend.__proto__ = dog;
-console.log(friend.getGreeting());                      // "Woof"
-console.log(friend.__proto__ === dog);                  // true
-console.log(Object.getPrototypeOf(friend) === dog);     // true
-```
-
-This example is functionally equivalent to the `getGreeting()` example. The call to `Object.create()` is replaced with an object literal that assigns a value to the `__proto__` property. The only real difference between creating an object with `Object.create()` or an object literal with `__proto__` is that the former requires you to specify full property descriptors for any additional object properties. The latter is just a standard object literal.
-
-W> The `__proto__` property is special in a number of ways:
-W>
-W> 1. You can only specify it once in an object literal. If you specify two `__proto__` properties, then an error is thrown. This is the only object literal property with that restriction.
-W> 1. The computed form `["__proto__"]` acts like a regular property and doesn't set or return the current object's prototype. All rules related to object literal properties apply in this form, as opposed to the non-computed form, which has exceptions.
-W>
-W> When using the `__proto__` property, be careful not to get caught by these differences.
-
 ### Easy Prototype Access with Super References
 
 As previously mentioned, prototypes are very important for JavaScript and a lot of work went into making them easier to use in ECMAScript 6. Another improvement is the introduction of `super` references, which make accessing functionality on an object's prototype easier. For example, to override a method on an object instance such that it also calls the prototype method of the same name, you'd do the following in ECMAScript 5:
@@ -419,23 +378,21 @@ let dog = {
     }
 };
 
-// prototype is person
+
 let friend = {
-    __proto__: person,
     getGreeting() {
-        // same as this.__proto__.getGreeting.call(this)
         return Object.getPrototypeOf(this).getGreeting.call(this) + ", hi!";
     }
 };
 
+// set prototype to person
+Object.setPrototypeOf(friend, person);
 console.log(friend.getGreeting());                      // "Hello, hi!"
 console.log(Object.getPrototypeOf(friend) === person);  // true
-console.log(friend.__proto__ === person);               // true
 
 // set prototype to dog
-friend.__proto__ = dog;
+Object.setPrototypeOf(friend, dog);
 console.log(friend.getGreeting());                      // "Woof, hi!"
-console.log(friend.__proto__ === dog);                  // true
 console.log(Object.getPrototypeOf(friend) === dog);     // true
 ```
 
@@ -445,17 +402,27 @@ Remembering to use `Object.getPrototypeOf()` and `.call(this)` to call a method 
 
 ```js
 let friend = {
-    __proto__: person,
     getGreeting() {
         // in the previous example, this is the same as:
-        // 1. Object.getPrototypeOf(this).getGreeting.call(this)
-        // 2. this.__proto__.getGreeting.call(this)
+        // Object.getPrototypeOf(this).getGreeting.call(this)
         return super.getGreeting() + ", hi!";
     }
 };
 ```
 
-The call to `super.getGreeting()` is the same as `Object.getPrototypeOf(this).getGreeting.call(this)` or a `this.__proto__.getGreeting.call(this)` call. Similarly, you can call any method on an object's prototype by using a `super` reference.
+The call to `super.getGreeting()` is the same as `Object.getPrototypeOf(this).getGreeting.call(this)` in this context. Similarly, you can call any method on an object's prototype by using a `super` reference, so long as it's inside a concise method. Attempting to use `super` outside of concise methods results in a syntax error, as in this example:
+
+```js
+let friend = {
+    getGreeting: function() {
+        return super.getGreeting() + ", hi!";
+    }
+};
+
+friend.getGreeting();       // throws error!
+```
+
+This example uses a named property with a function, and the call to `friend.getGreeting()` throws an error because `super` is invalid in this context.
 
 The `super` reference is really powerful when you have multiple levels of inheritance, because in that case, `Object.getPrototypeOf()` no longer works in all circumstances. For example:
 
@@ -468,16 +435,15 @@ let person = {
 
 // prototype is person
 let friend = {
-    __proto__: person,
     getGreeting() {
         return Object.getPrototypeOf(this).getGreeting.call(this) + ", hi!";
     }
 };
+Object.setPrototypeOf(friend, person);
+
 
 // prototype is friend
-let relative = {
-    __proto__: friend
-};
+let relative = Object.create(friend);
 
 console.log(person.getGreeting());                  // "Hello"
 console.log(friend.getGreeting());                  // "Hello, hi!"
@@ -497,16 +463,15 @@ let person = {
 
 // prototype is person
 let friend = {
-    __proto__: person,
     getGreeting() {
         return super.getGreeting() + ", hi!";
     }
 };
+Object.setPrototypeOf(friend, person);
+
 
 // prototype is friend
-let relative = {
-    __proto__: friend
-};
+let relative = Object.create(friend);
 
 console.log(person.getGreeting());                  // "Hello"
 console.log(friend.getGreeting());                  // "Hello, hi!"
@@ -514,8 +479,6 @@ console.log(relative.getGreeting());                // "Hello, hi!"
 ```
 
 Because `super` references are not dynamic, they always refer to the correct object. In this case, `super.getGreeting()` always refers to `person.getGreeting()`, regardless of how many other objects inherit the method.
-
-W> `super` references can only be used inside concise methods. Attempting to use `super` outside of concise methods (for example, in other functions or in the global scope) results in a syntax error.
 
 ## A Formal Method Definition
 
@@ -549,11 +512,11 @@ let person = {
 
 // prototype is person
 let friend = {
-    __proto__: person,
     getGreeting() {
         return super.getGreeting() + ", hi!";
     }
 };
+Object.setPrototypeOf(friend, person);
 
 function getGlobalGreeting() {
     return super.getGreeting() + ", yo!";
@@ -571,11 +534,11 @@ Interestingly, the situation doesn't change if `getGlobalGreeting()` is later as
 ```js
 // prototype is person
 let friend = {
-    __proto__: person,
     getGreeting() {
         return super.getGreeting() + ", hi!";
     }
 };
+Object.setPrototypeOf(friend, person);
 
 function getGlobalGreeting() {
     return super.getGreeting() + ", yo!";
@@ -601,6 +564,6 @@ The `Object.assign()` method makes it easier to change multiple properties on a 
 
 Enumeration order for own properties is now clearly defined in ECMAScript 6. When enumerating properties, numeric keys always come first in ascending order followed by string keys in insertion order and symbol keys in insertion order.
 
-It's now possible to modify an object's prototype after it's already created, thanks to ECMAScript 6's `Object.setPrototypeOf()` method. ECMAScript 6 also defines the behavior of the `__proto__` property, which is an accessor property whose getter calls `Object.getPrototypeOf()` and whose setter calls `Object.setPrototypeOf()`.
+It's now possible to modify an object's prototype after it's already created, thanks to ECMAScript 6's `Object.setPrototypeOf()` method.
 
 Finally, you can use the `super` keyword to call methods on an object's prototype. It can be used either standalone as a method, such as `super()`, or as a reference to the prototype itself, such as `super.getGreeting()`. In both cases, the `this`-binding is set up automatically to work with the current value of `this`.
