@@ -135,7 +135,7 @@ The `then()` method is present on all promises and takes two arguments. The firs
 
 I> Any object that implements the `then()` method in this way is called a *thenable*, so all promises are thenables but all thenables are not promises.
 
-Both arguments to`then()` are optional, so you can listen for any combination of fulfillment and rejection. For example:
+Both arguments to `then()` are optional, so you can listen for any combination of fulfillment and rejection. For example:
 
 ```js
 let promise = readFile("example.txt");
