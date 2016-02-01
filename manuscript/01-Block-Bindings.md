@@ -4,11 +4,9 @@ Traditionally, the way variable declarations work has been one tricky part of pr
 
 ## Var Declarations and Hoisting
 
-Variable declarations using `var` are moved to the top of the function (or to global scope, if declared outside of a function) regardless of where the actual declaration occurs, which is called *hoisting*. For a demonstration of what hoisting does, consider the following function definition:
+Variable declarations using `var` are treat as if they are at the top of the function (or global scope, if declared outside of a function) regardless of where the actual declaration occurs; this is called *hoisting*. For a demonstration of what hoisting does, consider the following function definition:
 
-<!-- JZ: "moved to the top" is a bit of a misnomer; it's good to _think_ about it like that but they're not moved, they're "executed as if they wre on top", when function is "entered". I'm not sure if this distinction is important or not. -->
-
-```
+```js
 function getValue(condition) {
 
     if (condition) {
@@ -30,7 +28,7 @@ function getValue(condition) {
 
 If you are unfamiliar with JavaScript, then you might expect the variable `value` to only be created if `condition` evaluates to true. In fact, the variable `value` is created regardless. Behind the scenes, the JavaScript engine changes the `getValue` function to look like this:
 
-```
+```js
 function getValue(condition) {
 
     var value;
@@ -63,9 +61,7 @@ Block scoping is how many C-based languages work, and the introduction of block-
 
 ### Let Declarations
 
-The `let` declaration syntax is the same as the syntax for `var`. You can basically replace `var` with `let` to declare a variable, but limit the variable's scope to only the current code block. Since `let` declarations are not hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block, so that they are available to the entire block. Here's an example:
-
-<!-- JZ: Technically, you can't just replace var with let due to TDZ (which, I see, is explained further down, so maybe worth mentioning here that it's explained further) -->
+The `let` declaration syntax is the same as the syntax for `var`. You can basically replace `var` with `let` to declare a variable, but limit the variable's scope to only the current code block (there are a few other subtle differences discussed a bit later, as well). Since `let` declarations are not hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block, so that they are available to the entire block. Here's an example:
 
 ```js
 function getValue(condition) {
@@ -100,7 +96,7 @@ var count = 30;
 let count = 40;
 ```
 
-In this example, `count` is declared twice: once with `var` and once with `let`. Because `let` will not redefine an identifier that already exists in the same scope, the `let` declaration will throw an error. On the other hand, no error is thrown if a `let` declaration in a nested scope creates a new variable with the same name as a variable in its containing scope, as demonstrated in the following code:
+In this example, `count` is declared twice: once with `var` and once with `let`. Because `let` will not redefine an identifier that already exists in the same scope, the `let` declaration will throw an error. On the other hand, no error is thrown if a `let` declaration creates a new variable with the same name as a variable in its containing scope, as demonstrated in the following code:
 
 ```js
 var count = 30;
@@ -133,7 +129,7 @@ The `maxItems` variable is initialized, so its `const` declaration should work w
 
 #### Constants vs Let Declarations
 
-Constants, like `let` declarations, are block-level declarations. That means constants are destroyed once execution flows out of the block in which they were declared, and declarations are not hoisted to the top of the block, as demonstrated in this example:
+Constants, like `let` declarations, are block-level declarations. That means constants are destroyed once execution flows out of the block in which they were declared, and declarations are not hoisted, as demonstrated in this example:
 
 ```js
 if (condition) {
@@ -144,8 +140,6 @@ if (condition) {
 
 // maxItems isn't accessible here
 ```
-
-<!-- JZ: "not hoisted to the top of the FUNCTION"! (not block) -->
 
 In this code, the constant `maxItems` is declared within an `if` statement. Once the statement finishes executing, `maxItems` is destroyed and is not accessible outside of that block.
 
@@ -373,16 +367,35 @@ This code functions almost exactly the same as the second example in the "Let De
 
 ## Global Block Bindings
 
-It's unusual to use `let` or `const` in the global scope, but if you do, understand that there is a potential for naming collisions when doing so, because the global object has predefined properties. In many JavaScript environments, global variables are assigned as properties on the global object, and global object properties are accessed transparently as non-qualified identifiers (such as `name` or `location`). Using a block binding declaration to define a variable that shares a name with a property of the global object can produce an error because global object properties may be nonconfigurable.
-
-Since block bindings disallow redefinition of an identifier in the same scope, it's not possible to shadow nonconfigurable global properties, and attempting to do so will result in an error. For example:
+Another way in which `let` and `const` are different from `var` is in their global scope behavior. When `var` is used in the global scope, it creates a new global variable, which is a property on the global object (`window` in browsers). That means you can accidentally overwrite an existing global using `var`, such as:
 
 ```js
-let RegExp = "Hello!";          // ok
-let undefined = "Hello!";       // throws error
+// in a browser
+var RegExp = "Hello!";
+console.log(window.RegExp);     // "Hello!"
+
+var ncz = "Hi!";
+console.log(window.ncz);        // "Hi!"
 ```
 
-The first line of this example redefines the global `RegExp` as a string. Even though this would be problematic, there is no error thrown. The second line throws an error because `undefined` is a nonconfigurable own property of the global object. Since its definition is locked down by the environment, the `let` declaration is illegal.
+Even though the `RegExp` global is defined on `window`, it is not safe from being overwritten by a `var` declaration. This example declares a new global variable `RegExp` that overwrites the original. Similarly, `ncz` is defined as a global variable and immediately defined as a property on `window`. This is the way JavaScript has always worked.
+
+If you instead use `let` or `const` in the global scope, a new binding is created in the global scope but no property is added to the global object. That also means you cannot overwrite a global variable using `let` or `const`, you can only shadow it. Here's an example:
+
+```js
+// in a browser
+let RegExp = "Hello!";
+console.log(RegExp);                    // "Hello!"
+console.log(window.RegExp === RegExp);  // false
+
+const ncz = "Hi!";
+console.log(ncz);                       // "Hi!"
+console.log("ncz" in window);           // false
+```
+
+Here, a new `let` declaration for `RegExp` creates a binding that shadows the global `RegExp`. That means `window.RegExp` and `RegExp` are not the same, so there is no disruption to the global scope. Also, the `const` declaration for `ncz` creates a binding but does not create a property on the global object. This capability makes `let` and `const` a lot safer to use in the global scope when you don't want to create properties on the global object.
+
+I> You may still want to use `var` in the global scope if you have a code that should be available from the global object. This is most common in a browser when you want to access code across frames or windows.
 
 ## Emerging Best Practices for Block Bindings
 
