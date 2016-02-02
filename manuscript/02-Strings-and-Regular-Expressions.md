@@ -31,11 +31,11 @@ The single Unicode character `"𠮷"` is represented using surrogate pairs, and 
 
 * The `length` of `text` is 2, when it should be 1.
 * A regular expression trying to match a single character fails because it thinks there are two characters.
-* The `charAt()` method is unable to return a valid character string, because neither set of 16 bits corresponds to a character code.
+* The `charAt()` method is unable to return a valid character string, because neither set of 16 bits corresponds to a printable character.
 
 The `charCodeAt()` method also just can't identify the character properly. It returns the appropriate 16-bit number for each code unit, but that is the closest you could get to the real value of `text` in ECMAScript 5.
 
-ECMAScript 6, on the other hand, enforces UTF-16 string encoding to eliminate problems like these. Standardizing string operations based on this character encoding means that JavaScript can support functionality designed to work specifically with surrogate pairs. The rest of this section discusses a few key examples of that functionality.
+ECMAScript 6, on the other hand, enforces UTF-16 string encoding to address problems like these. Standardizing string operations based on this character encoding means that JavaScript can support functionality designed to work specifically with surrogate pairs. The rest of this section discusses a few key examples of that functionality.
 
 ### The codePointAt() Method
 
@@ -53,9 +53,7 @@ console.log(text.codePointAt(1));   // 57271
 console.log(text.codePointAt(2));   // 97
 ```
 
-<!-- Is saying that the string is three characters long quite right? Should we qualify that with "to ECMAScript 5" or use a different word for "characters"? /JG -->
-
-The `codePointAt()` method returns the same value as the `charCodeAt()` method unless it operates on non-BMP characters. The first character in `text` is non-BMP and is therefore comprised of two code units, meaning the string is three characters long rather than two. The `charCodeAt()` method returns only the first code unit for position 0, but `codePointAt()` returns the full code point even though the code point spans multiple code units. Both methods return the same value for positions 1 (the second code unit of the first character) and 2 (the `"a"` character).
+The `codePointAt()` method returns the same value as the `charCodeAt()` method unless it operates on non-BMP characters. The first character in `text` is non-BMP and is therefore comprised of two code units, meaning the `length` property is 3 rather than 2. The `charCodeAt()` method returns only the first code unit for position 0, but `codePointAt()` returns the full code point even though the code point spans multiple code units. Both methods return the same value for positions 1 (the second code unit of the first character) and 2 (the `"a"` character).
 
 Calling the `codePointAt()` method on a character is the easiest way to determine if that character is represented by one or two code points. Here's a function you could write to check:
 
@@ -181,21 +179,9 @@ console.log(codePointLength("abc"));    // 3
 console.log(codePointLength("𠮷bc"));   // 3
 ```
 
-This example calls `match()` to check `text` for both whitespace and non-whitespace characters, using a regular expression that is applied globally with Unicode enabled. The `result` contains an array of matches when there's at least one match, so the array length is the number of code points in the string. In Unicode, the strings `"abc"` and `"𠮷bc"` both have three characters, so the array length is three.
+This example calls `match()` to check `text` for both whitespace and non-whitespace characters (using `[\s\S]` to ensure the pattern matches newlines), using a regular expression that is applied globally with Unicode enabled. The `result` contains an array of matches when there's at least one match, so the array length is the number of code points in the string. In Unicode, the strings `"abc"` and `"𠮷bc"` both have three characters, so the array length is three.
 
-<!-- JZ: maybe worth pointing out that we're using [\s\S] instead of . to match newlines? -->
-
-W> Although this approach works, it's not very fast, especially when applied to long strings. Try to minimize counting code points whenever possible. Hopefully, ECMAScript 7 will include a built-in, efficient way to count code points.
-
-<!-- JZ: maybe worth mentioning that string iterator (String.prototype[Symbol.iterator]) works correctly with surrogate pairs as well:
-
-var str = '𠮷';
-for (var char of str) console.log(char); // '𠮷'
-for (var i = 0; i < str.length; i++) { console.log(str[i]) }; // � �
-
-An even more advanced topic could be to cover overriding String.prototype[Symbol.iterator] to implement custom iteration logic (e.g. outputting codepoints or implementing some sort of mapping algorithm), although not sure how practical that would be.
-
--->
+W> Although this approach works, it's not very fast, especially when applied to long strings. You can use a string iterator (discussed in Chapter 8) as well. In general, try to minimize counting code points whenever possible.
 
 #### Determining Support for the u Flag
 
@@ -419,8 +405,6 @@ console.log(re2.test("AB"));            // false
 
 In this code, `re1` has the case-insensitive `i` flag while `re2` has only the global `g` flag. The `RegExp` constructor duplicated the pattern from `re1` and substituted the `g` flag for the `i` flag. Without the second argument, `re2` would have the same flags as `re1`.
 
-<!-- JZ: maybe worth mentioning that regexes are now also subclassable? `class R extends RegExp {}; var r = new R("baz","g"); r.global && r.source === "baz"; -->
-
 ### The `flags` Property
 
 Along with adding a new flag and changing how you can work with flags, ECMAScript 6 added a property associated with them. In ECMAScript 5, you could get the text of a regular expression by using the `source` property, but to get the flag string, you'd have to parse the output of  the `toString()` method as shown below:
@@ -480,7 +464,7 @@ console.log(typeof message);        // "string"
 console.log(message.length);        // 12
 ```
 
-This code demonstrates that the variable `message` contains a normal JavaScript string. The template literal syntax is only is used to create the string value, which is then assigned to the `message` variable.
+This code demonstrates that the variable `message` contains a normal JavaScript string. The template literal syntax is used to create the string value, which is then assigned to the `message` variable.
 
 If you want to use a backtick in your string, then just escape it with a backslash (`\`), as in this version of the `message` variable:
 
@@ -520,8 +504,6 @@ console.log(message);       // "Multiline
 ```
 
 This should print `Multiline String` on two separate lines in all major JavaScript engines, but the behavior is defined as a bug and many developers recommend avoiding it.
-
-<!-- JZ: are you sure it's considered a "bug" and not a de-facto non-standard extension implemented by most of the browsers? -->
 
 Other pre-ECMAScript 6 attempts to create multiline strings usually relied on arrays or string concatenation, such as:
 
@@ -611,6 +593,19 @@ console.log(message);       // "10 items cost $2.50."
 ```
 
 This code performs a calculation as part of the template literal. The variables `count` and `price` are multiplied together to get a result, and then formatted to two decimal places using `.toFixed()`. The dollar sign before the second substitution is output as-is because it's not followed by an opening curly brace.
+
+Template literals are also JavaScript expressions, which means you can place a template literal inside of another template literal, as in this example:
+
+```js
+let name = "Nicholas",
+    message = `Hello, ${
+        `my name is ${ name }`
+    }.`;
+
+console.log(message);        // "Hello, my name is Nicholas."
+```
+
+This example nests a second template literal inside the first. After the first `${`, another template literal begins. The second `${` indicates the beginning of an embedded expression inside the inner template literal. That expression is the variable `name`, which is inserted into the result.
 
 ### Tagged Templates
 
@@ -721,13 +716,6 @@ console.log(message.length);    // 17
 ```
 
 This uses `literals.raw` instead of `literals` to output the string result. That means any character escapes, including Unicode code point escapes, should be returned in their raw form.Raw strings are helpful when you want to output a string containing code in which you'll need to include the character escaping (for instance, if you want to generate documentation about some code, you may want to output the actual code as it appears).
-
-<!-- JZ: maybe mention that template literals can nest?
-
-var name = 'Joe';
-`hello ${name + ` who ${name}` }`
-
--->
 
 ## Summary
 
