@@ -4,7 +4,7 @@ Strings are arguably one of the most important data types in programming. They'r
 
 ## Better Unicode Support
 
-Before ECMAScript 6, JavaScript strings revolved around 16-bit character encoding. All string properties and methods, like the `length` property and the `charAt()` method, were based on the idea that every 16-bit sequence represented a single character. ECMAScript 5 allowed JavaScript engines choose from two encoding options: either UCS-2 or UTF-16. (Both systems use 16-bit *code units*, making all observable operations work the same.) But 16 bits used to be enough to contain any character, that's no longer true thanks to the expanded character set introduced by Unicode.
+Before ECMAScript 6, JavaScript strings revolved around 16-bit character encoding. All string properties and methods, like the `length` property and the `charAt()` method, were based on the idea that every 16-bit sequence represented a single character. ECMAScript 5 allowed JavaScript engines choose from two encoding options: either UCS-2 or UTF-16. (Both systems use 16-bit *code units*, making all observable operations work the same.) Of course, 16 bits used to be enough to contain any character. That's no longer true thanks to the expanded character set introduced by Unicode.
 
 ### UTF-16 Code Points
 
@@ -14,7 +14,7 @@ Code points are like character codes, but there's a subtle difference. A charact
 
 The first 2^16 code points in UTF-16 are represented as single 16-bit code units. This range is called the *Basic Multilingual Plane* (BMP). Everything beyond that is considered to be in a *supplementary plane*, where the code points can no longer be represented in just 16-bits. UTF-16 solves this problem by introducing *surrogate pairs* in which a single code point is represented by two 16-bit code units. That means any single character in a string can be either one code unit for BMP characters, giving total of 16 bits, or two units for supplementary plane characters, giving a total of 32 bits.
 
-In ECMAScript 5, all string operations work on 16-bit code units, meaning that you can get unexpected results from UTF-16 encoded strings containing surrogate pairs. For example:
+In ECMAScript 5, all string operations work on 16-bit code units, meaning that you can get unexpected results from UTF-16 encoded strings containing surrogate pairs, as in this example:
 
 ```js
 var text = "𠮷";
@@ -27,15 +27,15 @@ console.log(text.charCodeAt(0));    // 55362
 console.log(text.charCodeAt(1));    // 57271
 ```
 
-In this example, a single Unicode character is represented using surrogate pairs, and as such, the JavaScript string operations treat the string as having two 16-bit characters. That means:
+The single Unicode character `"𠮷"` is represented using surrogate pairs, and as such, the JavaScript string operations above treat the string as having two 16-bit characters. That means:
 
-* The `length` of `text` is 2.
-* A regular expression trying to match a single character fails.
-* The `charAt()` method is unable to return a valid character string.
+* The `length` of `text` is 2, when it should be 1.
+* A regular expression trying to match a single character fails because it thinks there are two characters.
+* The `charAt()` method is unable to return a valid character string, because neither set of 16 bits corresponds to a character code.
 
-The `charCodeAt()` method returns the appropriate 16-bit number for each code unit, but that is the closest you could get to the real value in ECMAScript 5.
+The `charCodeAt()` method also just can't identify the character properly. It returns the appropriate 16-bit number for each code unit, but that is the closest you could get to the real value of `text` in ECMAScript 5.
 
-ECMAScript 6 enforces UTF-16 string encoding. Standardizing string operations based on this character encoding means that JavaScript can support functionality designed to work specifically with surrogate pairs. The rest of this section discusses a few key examples of that functionality.
+ECMAScript 6, on the other hand, enforces UTF-16 string encoding to eliminate problems like these. Standardizing string operations based on this character encoding means that JavaScript can support functionality designed to work specifically with surrogate pairs. The rest of this section discusses a few key examples of that functionality.
 
 ### The codePointAt() Method
 
@@ -52,6 +52,8 @@ console.log(text.codePointAt(0));   // 134071
 console.log(text.codePointAt(1));   // 57271
 console.log(text.codePointAt(2));   // 97
 ```
+
+<!-- Is saying that the string is three characters long quite right? Should we qualify that with "to ECMAScript 5" or use a different word for "characters"? /JG -->
 
 The `codePointAt()` method returns the same value as the `charCodeAt()` method unless it operates on non-BMP characters. The first character in `text` is non-BMP and is therefore comprised of two code units, meaning the string is three characters long rather than two. The `charCodeAt()` method returns only the first code unit for position 0, but `codePointAt()` returns the full code point even though the code point spans multiple code units. Both methods return the same value for positions 1 (the second code unit of the first character) and 2 (the `"a"` character).
 
@@ -145,11 +147,13 @@ values.sort(function(first, second) {
 
 If you've never worried about Unicode normalization before, then you probably won't have much use for this method now. But if you ever work on an internationalized application, you'll definitely find the `normalize()` method helpful.
 
-Methods aren't the only improvements that ECMAScript 6 provides for working with Unicode strings, though. The standard also offers two new syntax elements.
+Methods aren't the only improvements that ECMAScript 6 provides for working with Unicode strings, though. The standard also adds two useful syntax elements.
 
 ### The Regular Expression u Flag
 
 You can accomplish many common string operations through regular expressions. But remember, regular expressions assume 16-bit code units, where each represents a single character. To address this problem, ECMAScript 6 defines a `u` flag for regular expressions, which stands for Unicode.
+
+#### The u Flag in Action
 
 When a regular expression has the `u` flag set, it switches modes to work on characters, not code units. That means the regular expression should no longer get confused about surrogate pairs in strings and should behave as expected. For example, consider this code:
 
@@ -162,6 +166,8 @@ console.log(/^.$/u.test(text));     // true
 ```
 
 The regular expression `/^.$/` matches any input string with a single character. When used without the `u` flag, this regular expression matches on code units, and so the Japanese character (which is represented by two code units) doesn't match the regular expression. When used with the `u` flag, the regular expression compares characters instead of code units and so the Japanese character matches.
+
+#### Counting Code Points
 
 Unfortunately, ECMAScript 6 can't natively determine how many code points a string has, but with the `u` flag, you can use regular expressions to figure it out as follows:
 
@@ -177,7 +183,21 @@ console.log(codePointLength("𠮷bc"));   // 3
 
 This example calls `match()` to check `text` for both whitespace and non-whitespace characters, using a regular expression that is applied globally with Unicode enabled. The `result` contains an array of matches when there's at least one match, so the array length is the number of code points in the string. In Unicode, the strings `"abc"` and `"𠮷bc"` both have three characters, so the array length is three.
 
+<!-- JZ: maybe worth pointing out that we're using [\s\S] instead of . to match newlines? -->
+
 W> Although this approach works, it's not very fast, especially when applied to long strings. Try to minimize counting code points whenever possible. Hopefully, ECMAScript 7 will include a built-in, efficient way to count code points.
+
+<!-- JZ: maybe worth mentioning that string iterator (String.prototype[Symbol.iterator]) works correctly with surrogate pairs as well:
+
+var str = '𠮷';
+for (var char of str) console.log(char); // '𠮷'
+for (var i = 0; i < str.length; i++) { console.log(str[i]) }; // � �
+
+An even more advanced topic could be to cover overriding String.prototype[Symbol.iterator] to implement custom iteration logic (e.g. outputting codepoints or implementing some sort of mapping algorithm), although not sure how practical that would be.
+
+-->
+
+#### Determining Support for the u Flag
 
 Since the `u` flag is a syntax change, attempting to use it in JavaScript engines that aren't compatible with ECMAScript 6 throws a syntax error. The safest way to determine if the `u` flag is supported is with a function, like this one:
 
@@ -198,7 +218,7 @@ I> If your code still needs to work in older JavaScript engines, always use the 
 
 ## Other String Changes
 
-JavaScript strings have always lagged behind similar features of other languages. It was only in ECMAScript 5 that strings finally gained a `trim()` method, and ECMAScript 6 continues extending JavaScript's capacity to parse strings with new functionality.
+JavaScript strings have always lagged behind similar features of other languages. It was only in ECMAScript 5 that strings finally gained a `trim()` method, for example, and ECMAScript 6 continues extending JavaScript's capacity to parse strings with new functionality.
 
 ### Methods for Identifying Substrings
 
@@ -208,7 +228,7 @@ Developers have used the `indexOf()` method to identify strings inside other str
 * The `startsWith()` method returns true if the given text is found at the beginning of the string. It returns false if not.
 * The `endsWith()` method returns true if the given text is found at the end of the string. It returns false if not.
 
-Each of these methods accepts two arguments: the text to search for and an optional index from which to start the search. When the second argument is provided, `includes()` and `startsWith()` start the match from that index while `endsWith()` starts the match from the length of the string minus the second argument; when the second argument is omitted, `includes()` and `startsWith()` search from the beginning of the string, while `endsWith()` starts from the end. In effect, the second argument minimizes the amount of the string being searched. Here are some examples showing these three methods in action:
+Each methods accept two arguments: the text to search for and an optional index from which to start the search. When the second argument is provided, `includes()` and `startsWith()` start the match from that index while `endsWith()` starts the match from the length of the string minus the second argument; when the second argument is omitted, `includes()` and `startsWith()` search from the beginning of the string, while `endsWith()` starts from the end. In effect, the second argument minimizes the amount of the string being searched. Here are some examples showing these three methods in action:
 
 ```js
 var msg = "Hello world!";
@@ -226,7 +246,7 @@ console.log(msg.endsWith("o", 8));          // true
 console.log(msg.includes("o", 8));          // false
 ```
 
-The first three calls don't include a second parameter, so they'll search the whole string if needed. The last three calls only check part of the string. The call to `msg.startsWith("o", 4)` starts the match by looking at index 4 of `msg` (which is the "o" in "Hello"); the call to `msg.endsWith("o", 8)` starts the match at index 4 as well because the `8` argument is subtracted from the string length (12); the call to `msg.includes("o", 8)` starts the match from index 8 (which is the "r" in "world").
+The first three calls don't include a second parameter, so they'll search the whole string if needed. The last three calls only check part of the string. The call to `msg.startsWith("o", 4)` starts the match by looking at index 4 of the `msg` string, which is the "o" in "Hello". The call to `msg.endsWith("o", 8)` starts the match at index 4 as well, because the `8` argument is subtracted from the string length (12). The call to `msg.includes("o", 8)` starts the match from index 8, which is the "r" in "world".
 
 While these three methods make identifying the existence of substrings easier, each only returns a boolean value. If you need to find the actual position of one string within another, use the `indexOf()` or `lastIndexOf()` methods.
 
@@ -291,7 +311,7 @@ console.log(globalResult[0]);   // "hello2 "
 console.log(stickyResult[0]);   // Error! stickyResult is null
 ```
 
-This example has three regular expressions. The expression in `pattern` has no flags, the one in `globalPattern` uses the `g` flag, and the one in `stickyPattern` uses the `y` flag. In the first trio of `console.log()` calls, all three regular expressions should return `"hello1 "` (with a space at the end).
+This example has three regular expressions. The expression in `pattern` has no flags, the one in `globalPattern` uses the `g` flag, and the one in `stickyPattern` uses the `y` flag. In the first trio of `console.log()` calls, all three regular expressions should return `"hello1 "` with a space at the end.
 
 After that, the `lastIndex` property is changed to 1 on all three patterns, meaning that the regular expression should start matching from the second character on all of them. The regular expression with no flags completely ignores the change to `lastIndex` and still matches `"hello1 "` without incident. The regular expression with the `g` flag goes on to match `"hello2 "` because it is searching forward from the second character of the string (`"e"`). The sticky regular expression doesn't match anything beginning at the second character so `stickyResult` is `null`.
 
@@ -368,7 +388,7 @@ var re1 = /ab/i,
     re2 = new RegExp(re1);
 ```
 
-The `re2` variable is just a copy of the `re1` variable. But if you provide the second argument to the `RegExp` constructor, which specifies the flags for the regular expression, an error is thrown, as in this example:
+The `re2` variable is just a copy of the `re1` variable. But if you provide the second argument to the `RegExp` constructor, which specifies the flags for the regular expression, your code won't work, as in this example:
 
 ```js
 var re1 = /ab/i,
@@ -377,7 +397,7 @@ var re1 = /ab/i,
     re2 = new RegExp(re1, "g");
 ```
 
-If you execute this code in an ECMAScript 5 environment, you'll get an error stating that the second argument cannot be used when the first argument is a regular expression. ECMAScript 6 changed this behavior such that the second argument is allowed and overrides whichever flags are present on the first argument. For example:
+If you execute this code in an ECMAScript 5 environment, you'll get an error stating that the second argument cannot be used when the first argument is a regular expression. ECMAScript 6 changed this behavior such that the second argument is allowed and overrides any flags present on the first argument. For example:
 
 ```js
 var re1 = /ab/i,
@@ -399,9 +419,11 @@ console.log(re2.test("AB"));            // false
 
 In this code, `re1` has the case-insensitive `i` flag while `re2` has only the global `g` flag. The `RegExp` constructor duplicated the pattern from `re1` and substituted the `g` flag for the `i` flag. Without the second argument, `re2` would have the same flags as `re1`.
 
+<!-- JZ: maybe worth mentioning that regexes are now also subclassable? `class R extends RegExp {}; var r = new R("baz","g"); r.global && r.source === "baz"; -->
+
 ### The `flags` Property
 
-Along with adding a new flag and changing how you can work with flags, ECMAScript 6 added a new property associated with them. In ECMAScript 5, you could get the text of a regular expression by using the `source` property, but to get the flag string, you'd have to parse the output of  the `toString()` method as shown below:
+Along with adding a new flag and changing how you can work with flags, ECMAScript 6 added a property associated with them. In ECMAScript 5, you could get the text of a regular expression by using the `source` property, but to get the flag string, you'd have to parse the output of  the `toString()` method as shown below:
 
 ```js
 function getFlags(re) {
@@ -415,7 +437,7 @@ var re = /ab/g;
 console.log(getFlags(re));          // "g"
 ```
 
-This code converts a regular expression into a string and then returns the characters found after the last `/`. Those characters are the flags.
+This converts a regular expression into a string and then returns the characters found after the last `/`. Those characters are the flags.
 
 ECMAScript 6 makes fetching flags easier by adding a `flags` property to go along with the `source` property. Both properties are prototype accessor properties with only a getter assigned, making them read-only. The `flags` property makes inspecting regular expressions easier for both debugging and inheritance purposes.
 
@@ -430,11 +452,11 @@ console.log(re.flags);      // "g"
 
 This fetches all flags on `re` and prints them to the console with far fewer lines of code than the `toString()` technique can. Using `source` and `flags` together allows you to extract the pieces of the regular expression that you need without parsing the regular expression string directly.
 
-All of the changes to strings and regular expressions that this chapter has covered so far are definitely powerful, but ECMAScript 6 improves your power over strings in a much bigger way. It brings a new type of literal to the table that makes strings more flexible.
+The changes to strings and regular expressions that this chapter has covered so far are definitely powerful, but ECMAScript 6 improves your power over strings in a much bigger way. It brings a type of literal to the table that makes strings more flexible.
 
 ## Template Literals
 
-JavaScript's strings have always been fairly limited when compared to those in other languages. Since JavaScript's inception, strings have lacked the methods covered so far in this chapter and string concatenation is as simple as possible. *Template literals* add new syntax for creating domain-specific languages (DSLs) for working with content in a way that is safer than the solutions we have today. DSLs are languages designed for a specific, narrow purpose (as opposed to JavaScript, which is a general-purpose language) and the ability to create DSLs inside of JavaScript was desired to deal with some of the more complex problems facing JavaScript developers. The ECMAScript wiki offers the following description on the [template literal strawman](http://wiki.ecmascript.org/doku.php?id=harmony:quasis):
+JavaScript's strings have always had limited functionality compared to strings in other languages. For instance, until ECMAScript 6, strings lacked the methods covered so far in this chapter, and string concatenation is as simple as possible. To allow developers to solve more complex problems, ECMAScript 6's *template literals* provide syntax for creating domain-specific languages (DSLs) for working with content in a safer way than the solutions available in ECMAScript 5 and earlier. (A DSL is a programming language designed for a specific, narrow purpose, as opposed to general-purpose languages like JavaScript.) The ECMAScript wiki offers the following description on the [template literal strawman](http://wiki.ecmascript.org/doku.php?id=harmony:quasis):
 
 > This scheme extends ECMAScript syntax with syntactic sugar to allow libraries to provide DSLs that easily produce, query, and manipulate content from other languages that are immune or resistant to injection attacks such as XSS, SQL Injection, etc.
 
@@ -458,7 +480,7 @@ console.log(typeof message);        // "string"
 console.log(message.length);        // 12
 ```
 
-This code demonstrates that the variable `message` contains a normal JavaScript string. The template literal syntax is only used to create the string value, which is then assigned to the `message` variable.
+This code demonstrates that the variable `message` contains a normal JavaScript string. The template literal syntax is only is used to create the string value, which is then assigned to the `message` variable.
 
 If you want to use a backtick in your string, then just escape it with a backslash (`\`), as in this version of the `message` variable:
 
@@ -498,6 +520,8 @@ console.log(message);       // "Multiline
 ```
 
 This should print `Multiline String` on two separate lines in all major JavaScript engines, but the behavior is defined as a bug and many developers recommend avoiding it.
+
+<!-- JZ: are you sure it's considered a "bug" and not a de-facto non-standard extension implemented by most of the browsers? -->
 
 Other pre-ECMAScript 6 attempts to create multiline strings usually relied on arrays or string concatenation, such as:
 
@@ -697,6 +721,13 @@ console.log(message.length);    // 17
 ```
 
 This uses `literals.raw` instead of `literals` to output the string result. That means any character escapes, including Unicode code point escapes, should be returned in their raw form.Raw strings are helpful when you want to output a string containing code in which you'll need to include the character escaping (for instance, if you want to generate documentation about some code, you may want to output the actual code as it appears).
+
+<!-- JZ: maybe mention that template literals can nest?
+
+var name = 'Joe';
+`hello ${name + ` who ${name}` }`
+
+-->
 
 ## Summary
 
