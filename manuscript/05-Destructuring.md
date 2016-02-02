@@ -295,7 +295,7 @@ console.log(a);     // 2
 console.log(b);     // 1
 ```
 
-The intermediate variable `tmp` is necessary in order to swab the values of `a` and `b`. Using array destructuring assignment, however, there's no need for that extra variable. Here's how you can swap variables in ECMAScript 6:
+The intermediate variable `tmp` is necessary in order to swap the values of `a` and `b`. Using array destructuring assignment, however, there's no need for that extra variable. Here's how you can swap variables in ECMAScript 6:
 
 ```js
 // Swapping variables in ECMAScript 6
