@@ -216,7 +216,7 @@ I> Overwriting a method defined with a well-known symbol changes an ordinary obj
 
 ### @@hasInstance
 
-The `@@hasInstance` symbol is the property on functions that determines whether or not a given object is an instance of that function. The symbol is represented in code by `Symbol.hasInstance` and the symbol property is defined on `Function.prototype` so that all functions inherit the default behavior for `instanceof`. The property itself is defined as nonwritable and onconfigurable as well as nonenumerable to ensure it doesn't get overwritten by mistake. The `@@hasInstance` method accepts a single argument, the value to check, and returns true if the value is an instance of the function.
+The `@@hasInstance` symbol is the property on functions that determines whether or not a given object is an instance of that function. The symbol is represented in code by `Symbol.hasInstance` and the symbol property is defined on `Function.prototype` so that all functions inherit the default behavior for `instanceof`. The property itself is defined as nonwritable and nonconfigurable as well as nonenumerable to ensure it doesn't get overwritten by mistake. The `@@hasInstance` method accepts a single argument, the value to check, and returns true if the value is an instance of the function.
 
 To understand how `@@hasInstance` works, consider the following code:
 
