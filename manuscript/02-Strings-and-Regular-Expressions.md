@@ -4,15 +4,15 @@ Strings are arguably one of the most important data types in programming. They'r
 
 ## Better Unicode Support
 
-Before ECMAScript 6, JavaScript strings revolved around 16-bit character encoding. All string properties and methods, like the `length` property and the `charAt()` method, were based on the idea that every 16-bit sequence represented a single character. ECMAScript 5 allowed JavaScript engines choose from two encoding options: either UCS-2 or UTF-16. (Both systems use 16-bit *code units*, making all observable operations work the same.) Of course, 16 bits used to be enough to contain any character. That's no longer true thanks to the expanded character set introduced by Unicode.
+Before ECMAScript 6, JavaScript strings revolved around 16-bit character encoding (UTF-16). Each 16-bit sequence is a *code unit* representing a character. All string properties and methods, like the `length` property and the `charAt()` method, were based on these 16-bit code units. Of course, 16 bits used to be enough to contain any character. That's no longer true thanks to the expanded character set introduced by Unicode.
 
 ### UTF-16 Code Points
 
 Limiting character length to 16 bits wasn't possible for Unicode's stated goal of providing a globally unique identifier to every character in the world. These globally unique identifiers, called *code points*, are simply numbers starting at 0.
 
-Code points are like character codes, but there's a subtle difference. A character encoding translates code points into code units that are internally consistent. While UCS-2 code points are also code units, the same isn't true in UTF-16.
+Code points are like character codes, but there's a subtle difference. A character encoding translates code points into code units that are internally consistent. For UTF-16, code points can be made up of many code units.
 
-The first 2^16 code points in UTF-16 are represented as single 16-bit code units. This range is called the *Basic Multilingual Plane* (BMP). Everything beyond that is considered to be in one of many *supplementary planes*, where the code points can no longer be represented in just 16-bits. UTF-16 solves this problem by introducing *surrogate pairs* in which a single code point is represented by two 16-bit code units. That means any single character in a string can be either one code unit for BMP characters, giving a total of 16 bits, or two units for supplementary plane characters, giving a total of 32 bits.
+The first 2^16^ code points in UTF-16 are represented as single 16-bit code units. This range is called the *Basic Multilingual Plane* (BMP). Everything beyond that is considered to be in one of the *supplementary planes*, where the code points can no longer be represented in just 16-bits. UTF-16 solves this problem by introducing *surrogate pairs* in which a single code point is represented by two 16-bit code units. That means any single character in a string can be either one code unit for BMP characters, giving a total of 16 bits, or two units for supplementary plane characters, giving a total of 32 bits.
 
 In ECMAScript 5, all string operations work on 16-bit code units, meaning that you can get unexpected results from UTF-16 encoded strings containing surrogate pairs, as in this example:
 
