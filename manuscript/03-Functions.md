@@ -4,13 +4,13 @@ Functions are an important part of any programming language, and prior to ECMASc
 
 ECMAScript 6 functions make a big leap forward, taking into account years of complaints and requests from JavaScript developers. The result is a number of incremental improvements on top of ECMAScript 5 functions that make programming in JavaScript less error-prone and more powerful.
 
-## Functions with Default Parameters
+## Functions with Default Parameter Values
 
 Functions in JavaScript are unique in that they allow any number of parameters to be passed, regardless of the number of parameters declared in the function definition. This allows you to define functions that can handle different numbers of parameters, often by just filling in default values when parameters aren't provided. This section covers how default parameters work both in and prior to ECMAScript 6, along with some important information on the `arguments` object, using expressions as parameters, and another TDZ.
 
-### Simulating Default Parameters in ECMAScript 5
+### Simulating Default Parameter Values in ECMAScript 5
 
-In ECMAScript 5 and earlier, you would likely use the following pattern to create a function with default parameters:
+In ECMAScript 5 and earlier, you would likely use the following pattern to create a function with default parameters values:
 
 ```js
 function makeRequest(url, timeout, callback) {
@@ -40,7 +40,7 @@ function makeRequest(url, timeout, callback) {
 
 While this approach is safer, it still requires a lot of extra code for a very basic operation. Popular JavaScript libraries are filled with similar patterns, as this represents a common pattern.
 
-### Default Parameters in ECMAScript 6
+### Default Parameter Values in ECMAScript 6
 
 ECMAScript 6 makes it easier to provide default values for parameters by providing initializations that are used when the parameter isn't formally passed. For example:
 
@@ -100,9 +100,9 @@ makeRequest("/foo", null, function(body) {
 
 In the case of default parameter values, a value of `null` is considered to be valid, meaning that in the third call to `makeRequest()`, the default value for `timeout` will not be used.
 
-### How Default Parameters Affect the arguments Object
+### How Default Parameter Values Affect the arguments Object
 
-Just keep in mind that the behavior of the `arguments` object is different when default parameters are present. In ECMAScript 5 nonstrict mode, the `arguments` object reflects changes in the named parameters of a function. Here's some code that illustrates how this works:
+Just keep in mind that the behavior of the `arguments` object is different when default parameter values are present. In ECMAScript 5 nonstrict mode, the `arguments` object reflects changes in the named parameters of a function. Here's some code that illustrates how this works:
 
 ```js
 function mixArgs(first, second) {
@@ -156,7 +156,7 @@ false
 
 This time, changing `first` and `second` doesn't affect `arguments`, so the output behaves as you'd normally expect it to.
 
-The `arguments` object in a function using ECMAScript 6 default parameters, however, will always behave in the same manner as ECMAScript 5 strict mode, regardless of whether the function is explicitly running in strict mode. The presence of default parameters triggers the `arguments` object to remain detached from the named parameters. This is a subtle but important detail because of how the `arguments` object may be used. Consider the following:
+The `arguments` object in a function using ECMAScript 6 default parameter values, however, will always behave in the same manner as ECMAScript 5 strict mode, regardless of whether the function is explicitly running in strict mode. The presence of default parameter values triggers the `arguments` object to remain detached from the named parameters. This is a subtle but important detail because of how the `arguments` object may be used. Consider the following:
 
 ```js
 // not in strict mode
@@ -187,7 +187,7 @@ In this example, `arguments.length` is 1 because only one argument was passed to
 
 ### Default Parameter Expressions
 
-Perhaps the most interesting feature of default parameter values is that the default value need not be a primitive value. You can, for example, execute a function to retrieve the default parameter, like this:
+Perhaps the most interesting feature of default parameter values is that the default value need not be a primitive value. You can, for example, execute a function to retrieve the default parameter value, like this:
 
 ```js
 function getValue() {
@@ -265,11 +265,11 @@ console.log(add(1));        // throws error
 
 The call to `add(1)` throws an error because `second` is defined after `first` and is therefore unavailable as a default value. To understand why that happens, it's important to revisit temporal dead zones.
 
-### Default Parameter Temporal Dead Zone
+### Default Parameter Value Temporal Dead Zone
 
-Chapter 1 introduced the temporal dead zone (TDZ) as it relates to `let` and `const`, and default parameters also have a TDZ where parameters cannot be accessed. Similar to a `let` declaration, each parameter creates a new identifier binding that can't be referenced before initialization without throwing an error. Parameter initialization happens when the function is called, either by passing a value for the parameter or by using the default parameter value.
+Chapter 1 introduced the temporal dead zone (TDZ) as it relates to `let` and `const`, and default parameter values also have a TDZ where parameters cannot be accessed. Similar to a `let` declaration, each parameter creates a new identifier binding that can't be referenced before initialization without throwing an error. Parameter initialization happens when the function is called, either by passing a value for the parameter or by using the default parameter value.
 
-To explore the default parameter TDZ, consider this example from "Default Parameter Expressions" again:
+To explore the default parameter value TDZ, consider this example from "Default Parameter Expressions" again:
 
 ```js
 function getValue(value) {
@@ -325,7 +325,7 @@ I> Function parameters have their own scope and their own TDZ that is separate f
 
 ## Working with Unnamed Parameters
 
-So far, the examples in this chapter have only covered parameters that have been named in the function definition. However, JavaScript functions don't limit the number of parameters that can be passed to the number of named parameters defined. You can always pass fewer or more parameters than formally specified. Default parameters make it clear when a function can accept fewer parameters, and ECMAScript 6 sought to make the problem of passing more parameters than defined better as well.
+So far, the examples in this chapter have only covered parameters that have been named in the function definition. However, JavaScript functions don't limit the number of parameters that can be passed to the number of named parameters defined. You can always pass fewer or more parameters than formally specified. Default parameter values make it clear when a function can accept fewer parameters, and ECMAScript 6 sought to make the problem of passing more parameters than defined better as well.
 
 ### Unnamed Parameters in ECMAScript 5
 
