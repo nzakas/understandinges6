@@ -4,7 +4,7 @@ Traditionally, the way variable declarations work has been one tricky part of pr
 
 ## Var Declarations and Hoisting
 
-Variable declarations using `var` are treat as if they are at the top of the function (or global scope, if declared outside of a function) regardless of where the actual declaration occurs; this is called *hoisting*. For a demonstration of what hoisting does, consider the following function definition:
+Variable declarations using `var` are treated as if they are at the top of the function (or global scope, if declared outside of a function) regardless of where the actual declaration occurs; this is called *hoisting*. For a demonstration of what hoisting does, consider the following function definition:
 
 ```js
 function getValue(condition) {
