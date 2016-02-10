@@ -77,23 +77,6 @@ console.log(name);      // "foo"
 
 In this example, `type` and `name` are initialized with values when declared, and then two variables with the same names are initialized with different values. The next line uses destructuring assignment to change those values by reading from the `node` object. Note that you must put parentheses around a destructuring assignment statement. That's because an opening curly brace is expected to a be a block statement, and a block statement cannot appear on the left side of an assignment. The parentheses signal that the next curly brace is not a block statement and should be interpreted as an expression, allowing the assignment to complete.
 
-Destructuring assignment is a bit more flexible than destructuring declarations, too, as it's possible to store values into object properties. Here's an example:
-
-```js
-let node = {
-        type: "Identifier",
-        name: "foo"
-    },
-    anotherNode = {};
-
-({ anotherNode.type, anotherNode.name } = node);
-
-console.log(anotherNode.type);  // "Identifier"
-console.log(anotherNode.name);  // "foo"
-```
-
-This code specifies `anotherNode.type` and `anotherNode.name` as the locations in which to store the destructured information. Note that `anotherNode` is initially declared without any properties, but that's unimportant because properties can be added to `anotherNode` at any point in time. The end result is that two new properties are added to `anotherNode` through destructuring assignment.
-
 W> An error is thrown when the right side of the destructured assignment expression (the expression after `=`) evaluates to `null` or `undefined`. This happens because any attempt to read a property of `null` or `undefined` results in a runtime error.
 
 #### Default Values
