@@ -79,7 +79,7 @@ In this example, `proxy` forwards all operations directly to `target`. The prope
 
 Suppose you want to create an object whose property values must be numbers. That means every new property added to the object must be validated and an error thrown if the value is not a number. To accomplish this, you must define a `set` trap that overrides the default behavior of setting a value. The `set` trap receives four arguments:
 
-1. `trapTarget` - the object that will receive the property (usually the proxy's target)
+1. `trapTarget` - the object that will receive the property (the proxy's target)
 1. `key` - the property key (string or symbol) to write to
 1. `value` - the value being written to the property
 1. `receiver` - the object on which the operation took place (usually the proxy)
@@ -143,7 +143,7 @@ An *object shape* is the collection of properties and methods available on the o
 
 Since property validation only has to be done when a property is read, you need to use the `get` trap. The `get` trap is called whenever a property is read, even if that property doesn't exist on the object. There are three arguments passed to the `get` trap:
 
-1. `trapTarget` - the object that from which the property is read (usually the proxy's target)
+1. `trapTarget` - the object from which the property is read (the proxy's target)
 1. `key` - the property key (string or symbol) to read
 1. `receiver` - the object on which the operation took place (usually the proxy)
 
@@ -173,6 +173,218 @@ In this example, the `get` trap is used to intercept property read operations. T
 
 This code allows new properties to be added, such as adding `proxy.name`, which is written to and read from without any problem. The last line contains a typo, `proxy.nme`, which should probably be `proxy.name`. This throws an error because `nme` does not exist as a property.
 
+
+### Function Proxies Using the `apply` and `construct` traps
+
+Of all the proxy traps, only `apply` and `construct` require the proxy target to be a function. You learned in Chapter 3 that functions have two internal methods, `[[Call]]` and `[[Construct]]`, that are executed when a function is called without and with the `new` operator, respectively. The `apply` and `construct` traps correspond to those internal methods and let you override them. The `apply` trap receives, and `Reflect.apply()` expects, the following the arguments when a function is called without `new`:
+
+1. `trapTarget` - the function being executed (the proxy's target)
+1. `thisArg` - the value of `this` inside of the function during the call
+1. `argumentsList` - an array of arguments passed to the function
+
+The `construct` trap, which is called when the function is executed using `new`, receives the following arguments:
+
+1. `trapTarget` - the function being executed (the proxy's target)
+1. `argumentsList` - an array of arguments passed to the function
+
+The `Reflect.construct()` method also accepts these two arguments and has an optional third argument, `newTarget`. The `newTarget` argument, when given, specifies the value of `new.target` inside of the function.
+
+Together, the `apply` and `construct` traps completely control the behavior of any proxy target function. To mimic the default behavior of a function, you can do this:
+
+
+```js
+let target = function() { return 42 },
+    proxy = new Proxy(target, {
+        apply: function(trapTarget, thisArg, argumentList) {
+            return Reflect.apply(trapTarget, thisArg, argumentList);
+        },
+        construct: function(trapTarget, argumentList) {
+            return Reflect.construct(trapTarget, argumentList);
+        }
+    });
+
+// a proxy with a function as its target looks like a function
+console.log(typeof proxy);                  // "function"
+
+console.log(proxy());                       // 42
+
+var instance = new proxy();
+console.log(instance instanceof proxy);     // true
+console.log(instance instanceof target);    // true
+```
+
+This example has a function that returns the number 42. The proxy for that function uses the `apply` and `construct` traps to delegate those behaviors to `Reflect.apply()` and `Reflect.construct()`, respectively. The end result is that the proxy function works exactly like the target function, including identifying itself as a function when `typeof` is used. The proxy is called without `new` to return 42 and then is called with `new` to create an object called `instance`. The `instance` object is considered an instance of both `proxy` and `target` because `instanceof` uses the prototype chain to determine this information. Since prototype chain lookup is not affected by this proxy, `proxy` and `target` appear to have the same prototype to the JavaScript engine.
+
+#### Validating Function Parameters
+
+The `apply` and `construct` traps open up a lot of possibilities for altering the way a function is executed. For instance, suppose you want to validate that all arguments are of a specific type? You can check the arguments in the `apply` trap:
+
+```js
+// adds together all arguments
+function sum(...values) {
+    return values.reduce((previous, current) => previous + current, 0);
+}
+
+let sumProxy = new Proxy(sum, {
+        apply: function(trapTarget, thisArg, argumentList) {
+
+            argumentList.forEach((arg) => {
+                if (typeof arg !== "number") {
+                    throw new TypeError("All arguments must be numbers.");
+                }
+            });
+
+            return Reflect.apply(trapTarget, thisArg, argumentList);
+        },
+        construct: function(trapTarget, argumentList) {
+            throw new TypeError("This function can't be called with new.");
+        }
+    });
+
+console.log(sumProxy(1, 2, 3, 4));          // 10
+
+// throws error
+console.log(sumProxy(1, "2", 3, 4));
+
+// also throws error
+let result = new sumProxy();
+```
+
+This example uses the `apply` trap to ensure that all arguments are numbers. The `sum()` function adds up all of the arguments that are passed. If a non-number value is passed, it will still attempt the operation, which can result in unexpected results. By wrapping `sum()` into a proxy called `sumProxy()`, this code intercepts function calls and ensures that each argument is a number before allowing the call to proceed. To be safe, the code also uses the `construct` trap to ensure that the function can't be called with `new`.
+
+You can also do the opposite, ensuring that a function must be called with `new`, and validating its arguments to be numbers:
+
+```js
+function Numbers(...values) {
+    this.values = values;
+}
+
+let NumbersProxy = new Proxy(Numbers, {
+
+        apply: function(trapTarget, thisArg, argumentList) {
+            throw new TypeError("This function must be called with new.");
+        },
+
+        construct: function(trapTarget, argumentList) {
+            argumentList.forEach((arg) => {
+                if (typeof arg !== "number") {
+                    throw new TypeError("All arguments must be numbers.");
+                }
+            });
+
+            return Reflect.construct(trapTarget, argumentList);
+        }
+    });
+
+let instance = new NumbersProxy(1, 2, 3, 4);
+console.log(instance.values);               // [1,2,3,4]
+
+// throws error
+NumbersProxy(1, 2, 3, 4);
+```
+
+Here, the `apply` trap is throwing an error while the `construct` trap does input validation and returns a new instance using `Reflect.construct()`. Of course, you can accomplish the same thing without proxies if you use `new.target`.
+
+### Calling Constructors Without new
+
+Chapter 3 introduced the `new.target` metaproperty. To review, `new.target` is a reference to the function on which `new` is called, meaning that you can tell if a function was called using `new` or not by checking the value of `new.target`, such as:
+
+```js
+function Numbers(...values) {
+
+    if (typeof new.target === "undefined") {
+        throw new TypeError("This function must be called with new.");
+    }
+
+    this.values = values;
+}
+
+let instance = new Numbers(1, 2, 3, 4);
+console.log(instance.values);               // [1,2,3,4]
+
+// throws error
+Numbers(1, 2, 3, 4);
+```
+
+This example throws an error when `Numbers()` is called without using `new` (similar to the example in the previous section, but without using a proxy). Writing code like this is much simpler than using a proxy and is preferable if your only goal is to prevent calling the function without `new`. However, sometimes you aren't in control of the function whose behavior needs to be modified. In that case, using a proxy makes sense.
+
+Suppose that the `Numbers` function was defined elsewhere, in code you couldn't modify. You know that the code relies on `new.target` and so you want to avoid that check and still call the function. The behavior when using `new` is already set, so you can just use the `apply` trap:
+
+```js
+function Numbers(...values) {
+
+    if (typeof new.target === "undefined") {
+        throw new TypeError("This function must be called with new.");
+    }
+
+    this.values = values;
+}
+
+
+let NumbersProxy = new Proxy(Numbers, {
+        apply: function(trapTarget, thisArg, argumentsList) {
+            return Reflect.construct(trapTarget, argumentsList);
+        }
+    });
+
+
+let instance = NumbersProxy(1, 2, 3, 4);
+console.log(instance.values);               // [1,2,3,4]
+```
+
+The `NumbersProxy` function allows you to call `Numbers` without using `new` and have it behave as if `new` were used. To do so, the `apply` trap calls `Reflect.construct()` with the arguments passed into `apply`. Doing so means that `new.target` inside of `Numbers` is equal to `Numbers` itself and therefore no error is thrown. While this is a simple example of modifying `new.target`, you can also do so more directly.
+
+### Overriding Abstract Base Class Constructors
+
+You can go one step further and specify the third argument to `Reflect.construct()` as the specific value to assign to `new.target`. This is useful when a function is checking `new.target` against a known value, such as in the creation of an abstract base class constructor (discussed in Chapter 9). In an abstract base class constructor, `new.target` is expected to be something other than the class constructor itself, such as:
+
+```js
+class AbstractNumbers {
+
+    constructor(...values) {
+        if (new.target === AbstractNumbers) {
+            throw new TypeError("This function must be inherited from.");
+        }
+
+        this.values = values;
+    }
+}
+
+class Numbers extends AbstractNumbers {}
+
+let instance = new Numbers(1, 2, 3, 4);
+console.log(instance.values);           // [1,2,3,4]
+
+// throws error
+new AbstractNumbers(1, 2, 3, 4);
+```
+
+When `new AbstractNumbers()` is called, `new.target` is equal to `AbstractNumbers` and an error is thrown. However, `new Numbers()` works because `new.target` is equal to `Numbers`. You can bypass this restriction by manually assigning `new.target` with a proxy:
+
+```js
+class AbstractNumbers {
+
+    constructor(...values) {
+        if (new.target === AbstractNumbers) {
+            throw new TypeError("This function must be inherited from.");
+        }
+
+        this.values = values;
+    }
+}
+
+let AbstractNumbersProxy = new Proxy(AbstractNumbers, {
+        construct: function(trapTarget, argumentList) {
+            return Reflect.construct(trapTarget, argumentList, function() {});
+        }
+    });
+
+
+let instance = new AbstractNumbersProxy(1, 2, 3, 4);
+console.log(instance.values);               // [1,2,3,4]
+```
+
+The `AbstractNumbersProxy` uses the `construct` trap to intercept the call to `new AbstractNumbersProxy()`. Then, the `Reflect.construct()` method is called with arguments from the trap and adds an empty function as the third argument. That empty function is used as the value of `new.target` inside of the constructor. Because `new.target` is not equal to `AbstractNumbers`, no error is thrown and the constructor executes completely.
 
 
 
