@@ -386,6 +386,36 @@ console.log(instance.values);               // [1,2,3,4]
 
 The `AbstractNumbersProxy` uses the `construct` trap to intercept the call to `new AbstractNumbersProxy()`. Then, the `Reflect.construct()` method is called with arguments from the trap and adds an empty function as the third argument. That empty function is used as the value of `new.target` inside of the constructor. Because `new.target` is not equal to `AbstractNumbers`, no error is thrown and the constructor executes completely.
 
+#### Callable Class Constructors
+
+In Chapter 9, you learned that class constructors must always be called with `new`. That happens because the internal `[[Call]]` method for class constructors is specified to throw an error. However, since proxies can intercept calls to `[[Call]]`, you can effectively create callable class constructors my using a proxy. For instance, if you want a class constructor to work without using `new`, you can use the `apply` trap to create a new instance. Here's some sample code:
+
+```js
+class Person {
+    constructor(name) {
+        this.name = name;
+    }
+}
+
+let PersonProxy = new Proxy(Person, {
+        apply: function(trapTarget, thisArg, argumentList) {
+            return new trapTarget(...argumentList);
+        }
+    });
+
+
+let me = PersonProxy("Nicholas");
+console.log(me.name);                   // "Nicholas"
+console.log(me instanceof Person);      // true
+console.log(me instanceof PersonProxy); // true
+```
+
+The `PersonProxy` object is a proxy of the `Person` class constructor. Class constructors are just functions, so they behave the same way when used in proxies. The `apply` trap overrides the default behavior and instead returns a new instance of `trapTarget`, which is equal to `Person` (the example uses `trapTarget` to show that you don't need to manually specify the class). The `argumentList` is passed to `trapTarget` using the spread operator to pass each argument separately. Calling `PersonProxy()` without using `new` returns an instance of `Person` (if you attempt to call `Person()` without `new`, it will still throw an error). Creating callable class constructors is something that is only possible using proxies.
+
+
+
+
+
 
 
 TODO: Continue and clean up below
