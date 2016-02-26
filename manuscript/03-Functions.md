@@ -1041,7 +1041,7 @@ console.log(typeof comparator);                 // "function"
 console.log(comparator instanceof Function);    // true
 ```
 
-The `console.log()` output reveales that both `typeof` and `instanceof` behave the same with arrow functions as they do with other functions.
+The `console.log()` output reveals that both `typeof` and `instanceof` behave the same with arrow functions as they do with other functions.
 
 Also like other functions, you can still use `call()`, `apply()`, and `bind()` on arrow functions, although the `this`-binding of the function will not be affected. Here are some examples:
 
