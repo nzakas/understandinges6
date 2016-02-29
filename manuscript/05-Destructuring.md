@@ -68,7 +68,7 @@ let node = {
     type = "Literal",
     name = 5;
 
-// assign different values using structuring
+// assign different values using destructuring
 ({ type, name } = node);
 
 console.log(type);      // "Identifier"
@@ -77,7 +77,29 @@ console.log(name);      // "foo"
 
 In this example, `type` and `name` are initialized with values when declared, and then two variables with the same names are initialized with different values. The next line uses destructuring assignment to change those values by reading from the `node` object. Note that you must put parentheses around a destructuring assignment statement. That's because an opening curly brace is expected to a be a block statement, and a block statement cannot appear on the left side of an assignment. The parentheses signal that the next curly brace is not a block statement and should be interpreted as an expression, allowing the assignment to complete.
 
-W> An error is thrown when the right side of the destructured assignment expression (the expression after `=`) evaluates to `null` or `undefined`. This happens because any attempt to read a property of `null` or `undefined` results in a runtime error.
+A destructuring assignment expression evaluates to the right side of the expression (after the `=`). That means you can use a destructuring assignment expression anywhere a value is expected. For instance, passing a value to a function:
+
+```js
+let node = {
+        type: "Identifier",
+        name: "foo"
+    },
+    type = "Literal",
+    name = 5;
+
+function outputInfo(value) {
+    console.log(value === node);        // true
+}
+
+outputInfo({ type, name } = node);
+
+console.log(type);      // "Identifier"
+console.log(name);      // "foo"
+```
+
+The `outputInfo()` function is called with a destructuring assignment expression. The expression evaluates to `node` because that is the value of the right side of the expression. The assignment to `type` and `name` both behave as normal and `node` is passed into `outputInfo()`.
+
+W> An error is thrown when the right side of the destructuring assignment expression (the expression after `=`) evaluates to `null` or `undefined`. This happens because any attempt to read a property of `null` or `undefined` results in a runtime error.
 
 #### Default Values
 
