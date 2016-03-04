@@ -388,7 +388,7 @@ let [ ...clonedColors ] = colors;
 console.log(clonedColors);      //"[red,green,blue]"
 ```
 
-In this example, rest items are used to copy values from the `colors` array into the `clonedColors` array. While it's a matter of perception as to whether this techinque makes the developer's intent clearer than using the `concat()` method, this is a useful ability to be aware of.
+In this example, rest items are used to copy values from the `colors` array into the `clonedColors` array. While it's a matter of perception as to whether this technique makes the developer's intent clearer than using the `concat()` method, this is a useful ability to be aware of.
 
 W> Rest items must be the last entry in the destructured array and cannot be followed by a comma. Including a comma after rest items is a syntax error.
 
