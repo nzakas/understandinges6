@@ -1,10 +1,6 @@
-[TOC]
-# Formalized Sets and Maps
+# Sets and Maps
 
-JavaScript only had one type of collection, represented by the `Array` type, for most of its history. Arrays are used in JavaScript just like arrays in other languages, but the lack of other collection options meant arrays were often used as queues and stacks, as well. Since arrays only use numeric indices, developers used non-array objects whenever a non-numeric index was necessary. That technique led to custom implementations of sets and maps.
-
-<!-- I don't quite follow "used non-array objects" above. Is it that they wanted to use non-array objects, so they
-     made their own "set" and "map" objects that behaved like arrays, but had a different type? /JG -->
+JavaScript only had one type of collection, represented by the `Array` type, for most of its history. Arrays are used in JavaScript just like arrays in other languages, but the lack of other collection options meant arrays were often used as queues and stacks, as well. Since arrays only use numeric indices, developers used non-array objects whenever a non-numeric index was necessary. That technique led to custom implementations of sets and maps using non-array objects.
 
 A *set* is a list of values that cannot contain duplicates. You typically don't access individual items in a set like you would items in an array; instead, it's much more common to just check a set to see if a value is present. A *map* is a collection of keys that correspond to specific values. As such, each item in a map stores two pieces of data, and values are retrieved by specifying the key to read from. Maps are frequently used as caches, for storing data to be quickly retrieved later. While ECMAScript 5 didn't formally have sets and maps, developers worked around this limitation using non-array objects, too.
 
@@ -45,11 +41,7 @@ This code stores a string value `"bar"` under the key `foo`. Unlike sets, maps a
 
 ## Problems with Workarounds
 
-<!-- If all object properties must be strings, should `true` in the set example be `"true"` or does this discussion
-     apply specifically to maps? I also just got a bit confused reading the paragraph after the code, which
-     states that keys can be either numbers or strings. /JG -->
-
-While using objects as sets and maps works okay in simple situations, the approach can get more complicated once you run into the limitations of object properties. In a map, for example, since all object properties must be strings, you must certain no two keys evaluate to the same string. Consider the following:
+While using objects as sets and maps works okay in simple situations, the approach can get more complicated once you run into the limitations of object properties. For example, since all object properties must be strings, you must be certain no two keys evaluate to the same string. Consider the following:
 
 ```js
 let map = Object.create(null);
@@ -59,7 +51,7 @@ map[5] = "foo";
 console.log(map["5"]);      // "foo"
 ```
 
-This example assigns the string value `"foo"` to a numeric key of `5`. Internally, that numeric value is converted to a string, so `map["5"]` and `map[5]` actually reference the same property. That internal conversion can cause problems when keys can be either numbers or strings. Another problem arises when using objects as keys, like this:
+This example assigns the string value `"foo"` to a numeric key of `5`. Internally, that numeric value is converted to a string, so `map["5"]` and `map[5]` actually reference the same property. That internal conversion can cause problems when you want to use both numbers and strings as keys. Another problem arises when using objects as keys, like this:
 
 ```js
 let map = Object.create(null),
@@ -71,10 +63,7 @@ map[key1] = "foo";
 console.log(map[key2]);     // "foo"
 ```
 
-Here, `map[key2]` and `map[key1]` reference the same value. The objects `key1` and `key2` are converted to strings because object properties must be strings. Since `"[object Object]"` is the default string representation for objects, both `key1` and `key2` are converted to that string, when all keys in a map should be unique.
-
-<!-- Correct to say that the problem with the two objects being represented by the same default string is that
-     all keys should be unique, above? If not, could you tweak to specify the correct problem? /JG -->
+Here, `map[key2]` and `map[key1]` reference the same value. The objects `key1` and `key2` are converted to strings because object properties must be strings. Since `"[object Object]"` is the default string representation for objects, both `key1` and `key2` are converted to that string. This can cause errors that may not be obvious because it's logical to assume that different object keys would, in fact, be difference. The conversion to the default string representation makes it difficult to use objects as keys. (The same problem exists when trying to use an object as a set.)
 
 Maps with a key whose value is falsy present their own particular problem, too. A falsy value is automatically converted to false when used in situations where a boolean value is required, such as in the condition of an `if` statement. This conversion alone isn't a problem--so long as you're careful as to how you use values. For instance, look at this code:
 
@@ -93,14 +82,11 @@ This example has some ambiguity as to how `map.count` should be used. Is the `if
 
 These are difficult problem to identify and debug when they occur in large applications, which is a prime reason that ECMAScript 6 adds both sets and maps to the language.
 
-<!--All the problems we've covered so far seem particular to maps. Are there any set-related issues worth
-    covering? /JG -->
-
 ## Sets in ECMAScript 6
 
 ECMAScript 6 adds a `Set` type that is an ordered list of values without duplicates. Sets allow fast access to the data they contain, adding a more efficient manner of tracking discrete values.
 
-###Creating Sets and Adding Items
+### Creating Sets and Adding Items
 
 Sets are created using `new Set()` and items are added to a set by calling the `add()` method. You can see how many items are in a set by checking the `size` property:
 
@@ -125,14 +111,9 @@ set.add(key2);
 console.log(set.size);    // 2
 ```
 
-Because `key1` and `key2` are not converted to strings, they count as two unique items in the set.
-
-<!-- If we'd added `"key1"` and `"key2"` would they not count as unique items? I'm just a bit confused, above. /JG-->
+Because `key1` and `key2` are not converted to strings, they count as two unique items in the set. (Remember, if they were converted to strings, they would both be equal to `"[Object object]"`.)
 
 If the `add()` method is called more than once with the same value, all calls after the first one are effectively ignored:
-
-<!-- Would it be accurate to say "...the JavaScript engine effectively ignores all calls after the first one, as in
-     this code:"? /JG -->
 
 ```js
 let set = new Set();
@@ -150,10 +131,7 @@ let set = new Set([1, 2, 3, 4, 5, 5, 5, 5]);
 console.log(set.size);    // 5
 ```
 
-<!-- Does "feed" need special treatment below? I don't think we've discussed the term, so perhaps consider
-     defining. /JG -->
-
-In this example, an array with feed set is used to initialize the set. The number `5` only appears once in the set even though it appears four times in the array. This functionality makes converting existing code or JSON structures to use sets easy.
+In this example, an array with duplicate values is used to initialize the set. The number `5` only appears once in the set even though it appears four times in the array. This functionality makes converting existing code or JSON structures to use sets easy.
 
 I> The `Set` constructor actually accepts any iterable object as an argument. Arrays work because they are iterable by default, as are sets and maps. The `Set` constructor uses an iterator to extract values from the argument. (Iterables and iterators are discussed in detail in Chapter 8.)
 
@@ -210,15 +188,9 @@ The strange difference between the set version of `forEach()` and the array vers
 
 The other objects that have `forEach()` methods (arrays and maps) pass three arguments to their callback functions. The first two arguments for arrays and maps are the value and the key (the numeric index for arrays).
 
-<!-- Would it be correct to say "the developers behind the ES6 standard could have..." below? I just had a little trouble
-     following at first, but I think some slightly more specific language would fix perfectly. /JG -->
-
-Sets do not have keys, however. The developers behind the ECMAScript 6 standard could have made the callback function in the set version of `forEach()` accept two arguments, but that would have made it different from the other two. Instead, they found a way to keep the callback function the same and accept three arguments: each value in a set is considered to be both the key and the value. As such, the first and second argument are always the same in `forEach()` on sets to keep this functionality consistent with the other `forEach()` methods on arrays and maps.
+Sets do not have keys, however. The people behind the ECMAScript 6 standard could have made the callback function in the set version of `forEach()` accept two arguments, but that would have made it different from the other two. Instead, they found a way to keep the callback function the same and accept three arguments: each value in a set is considered to be both the key and the value. As such, the first and second argument are always the same in `forEach()` on sets to keep this functionality consistent with the other `forEach()` methods on arrays and maps.
 
 Other than the difference in arguments, using `forEach()` is basically the same for a set as it is for an array. Here's some code that shows the method at work:
-
-<!-- Are value, key, and ownerSet properties on elements in a Set? Either way, perhaps describe the code a bit before
-     showing the output? I guess I'm just not quite sure what the reader should notice, in particular. /JG -->
 
 ```js
 let set = new Set([1, 2]);
@@ -229,7 +201,7 @@ set.forEach(function(value, key, ownerSet) {
 });
 ```
 
-This outputs:
+This code iterates over each item in the set and outputs the values passed to the `forEach()` callback function. Each time the callback function executes, `key` and `value` are the same, and `ownerSet` is always equal to `set`. This code outputs:
 
 ```
 1 1
@@ -240,41 +212,36 @@ true
 
 Also the same as arrays, you can pass a `this` value as the second argument to `forEach()` if you need to use `this` in your callback function:
 
-<!-- Should there be a semicolon after the set definition below? I also might suggest explaining why the
-     forEach() method here can get away without having three arguments, since the chapter just discussed why it doesn't
-     take two for sets. (Fine to ignore if it's common knowledge.)
-
-     After playing around with this a little, I'm guessing the semicolon isn't necessary, that `set` and `processor
-     just share a `let` statement. Perhaps consider separate let statements, since `processor` is a bit complex? -->
-
 ```js
-let set = new Set([1, 2]),
-    processor = {
-        output(value) {
-            console.log(value);
-        },
-        process(dataSet) {
-            dataSet.forEach(function(value) {
-                this.output(value);
-            }, this);
-        }
-    };
+let set = new Set([1, 2]);
+
+let processor = {
+    output(value) {
+        console.log(value);
+    },
+    process(dataSet) {
+        dataSet.forEach(function(value) {
+            this.output(value);
+        }, this);
+    }
+};
 
 processor.process(set);
 ```
 
-In this example, the `processor.process()` method calls `forEach()` on the set and passes `this` as the `this` value for the callback. That's necessary so `this.output()` will correctly resolve to the `processor.output()` method. You can also use an arrow function to get the same effect without passing the second argument, like this:
+In this example, the `processor.process()` method calls `forEach()` on the set and passes `this` as the `this` value for the callback. That's necessary so `this.output()` will correctly resolve to the `processor.output()` method. The `forEach()` callback function only makes use of the first argument, `value`, so the others are omitted. You can also use an arrow function to get the same effect without passing the second argument, like this:
 
 ```js
-let set = new Set([1, 2]),
-    processor = {
-        output(value) {
-            console.log(value);
-        },
-        process(dataSet) {
-            dataSet.forEach((value) => this.output(value));
-        }
-    };
+let set = new Set([1, 2]);
+
+let processor = {
+    output(value) {
+        console.log(value);
+    },
+    process(dataSet) {
+        dataSet.forEach((value) => this.output(value));
+    }
+};
 
 processor.process(set);
 ```
@@ -313,9 +280,7 @@ In the `eliminateDuplicates()` function, the set is just a temporary intermediar
 
 ### Weak Sets
 
-<!-- I took a stab at clarifying a bit below, but do revert if the suggestions don't make sense. /JG -->
-
-The `Set` class could alternately be called a strong set, because of the way it stores object references. An object stored in an instance of `Set` is effectively the same as storing that object inside a variable. As long as a reference to that `Set` instance exists, the object cannot be garbage collected to free memory. For example:
+The `Set` type could alternately be called a strong set, because of the way it stores object references. An object stored in an instance of `Set` is effectively the same as storing that object inside a variable. As long as a reference to that `Set` instance exists, the object cannot be garbage collected to free memory. For example:
 
 ```js
 let set = new Set(),
@@ -400,10 +365,7 @@ Sets give you a new way to handle lists of values, but they aren't useful when y
 
 ## Maps in ECMAScript 6
 
-<!-- Should the second sentence below say "Keys are not considered the same by the `Object.is()` method..."? The rest
-     of the sentence seems to imply that, but I was uncertain. /JG -->
-
-The ECMAScript 6 `Map` type is an ordered list of key-value pairs, where both the key and the value can have any type. Keys are considered to be the same by using `Object.is()`, so you can have both a key of `5` and a key of `"5"` because they are different types. This is quite different from using object properties as keys, as object properties always coerce values into strings.
+The ECMAScript 6 `Map` type is an ordered list of key-value pairs, where both the key and the value can have any type. Keys equivalence is determined by using `Object.is()`, so you can have both a key of `5` and a key of `"5"` because they are different types. This is quite different from using object properties as keys, as object properties always coerce values into strings.
 
 You can add items to maps by calling the `set()` method and passing it a key and the value to associate with the key. You can later retrieve a value by passing the key to the `get()` method. For example:
 
@@ -418,7 +380,7 @@ console.log(map.get("year"));       // 2016
 
 In this example, two key-value pairs are stored. The `"title"` key stores a string while the `"year"` key stores a number. The `get()` method is called later to retrieve the values for both keys. If either key didn't exist in the map, then `get()` would have returned the special value `undefined` instead of a value.
 
-You can also use objects as keys, which that isn't possible when using object properties to create a map in the old workaround approach. Here's an example:
+You can also use objects as keys, which isn't possible when using object properties to create a map in the old workaround approach. Here's an example:
 
 ```js
 let map = new Map(),
@@ -433,9 +395,6 @@ console.log(map.get(key2));         // 42
 ```
 
 This code uses the objects `key1` and `key2` as keys in the map to store two different values. Because these keys are not coerced into another form, each object is considered unique. This allows you to associate additional data with an object without modifying the object itself.
-
-<!-- Perhaps discuss when you'd want to use objects as keys outside weak maps. It sounds powerful, but readers may find a
-     specific instance helpful to think about. -->
 
 ### Map Methods
 
@@ -513,9 +472,7 @@ map.forEach(function(value, key, ownerMap) {
 });
 ```
 
-This outputs:
-
-<!-- Could you describe the code itself a bit before going to the output? /JG-->
+The `forEach()` callback function outputs the information that is passed to it. The `value` and `key` are output directly, and `ownerMap` is compared to `map` to show that the values are equivalent. This outputs:
 
 ```
 name Nicholas
@@ -530,9 +487,7 @@ I> You can also provide a second argument to `forEach()` to specify the `this` v
 
 ### Weak Maps
 
-Weak maps are to maps what weak sets are to sets: they're a way to store weak object references. In *weak maps*, every key must be an object (an error is thrown if you try to use a non-object key), and those object references are held weakly so they don't interfere with garbage collection. When there are references to a weak map key outside a weak map, the key-value pair is removed from the weak map.
-
-<!-- I had a little trouble following below, but do tweak if my suggestions for clarification don't make sense. /JG -->
+Weak maps are to maps what weak sets are to sets: they're a way to store weak object references. In *weak maps*, every key must be an object (an error is thrown if you try to use a non-object key), and those object references are held weakly so they don't interfere with garbage collection. When there are no references to a weak map key outside a weak map, the key-value pair is removed from the weak map.
 
 The most useful place to employ weak maps is when creating an object related to a particular DOM element in a web page. For example, some JavaScript libraries for web pages maintain one custom object for every DOM element referenced in the library, and that mapping is stored in a cache of objects internally.
 
@@ -566,7 +521,7 @@ Similar to weak sets, there is no way to verify that a weak map is empty, becaus
 
 #### Weak Map Initialization
 
-To initialize a weak map, just pass an array of arrays to the `WeakMap` constructor. Just like initializing a regular map, each array inside the containing array should have two items, where the first item is the non-null object key and the second item is the value (any data type). For example:
+To initialize a weak map, pass an array of arrays to the `WeakMap` constructor. Just like initializing a regular map, each array inside the containing array should have two items, where the first item is the non-null object key and the second item is the value (any data type). For example:
 
 ```js
 let key1 = {},
@@ -602,8 +557,6 @@ console.log(map.get(element));   // undefined
 Here, a DOM element is once again used as the key in a weak map. The `has()` method is useful for checking to see if a reference is currently being used as a key in the weak map. Keep in mind that this only works when you have a non-null reference to a key. The key is forcibly removed from the weak map by the `delete()` method, at which point `has()` returns `false` and `get()` returns `undefined`.
 
 #### Private Object Data
-
-<!-- Perhaps speak to why we'd want to have private object data, if an explanation would make sense for this reader. -->
 
 While most developers consider the main use case of weak maps to be associated data with DOM elements, there are many other possible uses (and no doubt, some that have yet to be discovered). One practical use of weak maps is to store data that is private to object instances. All object properties are public in ECMAScript 6, and so you need to use some creativity to make data accessible to objects, but not accessible to everything. Consider the following example:
 
@@ -643,15 +596,9 @@ let Person = (function() {
 }());
 ```
 
-<!-- Can you clarify what's nonenumerable, nonconfigurable, and nowriteable below? I wasn't quite sure whether
-     it's `_id` or `Person`. /JG -->
+This example wraps the definition of `Person` in an IIFE that contains two private variables, `privateData` and `privateId`. The `privateData` object stores private information for each instance while `privateId` is used to generate a unique ID for each instance. When the `Person` constructor is called, a nonenumerable, nonconfigurable, and nonwritable `_id` property is added.
 
-This example wraps the definition of `Person` in an IIFE that contains two private variables, `privateData` and `privateId`. The `privateData` object stores private information for each instance while `privateId` is used to generate a unique ID for each instance. When the `Person` constructor is called, an `_id` property is added so that it's nonenumerable, nonconfigurable, and nonwritable (meaning it can't be accidentally overwritten).
-
-<!-- Could you clarify what you mean by "restored" below? It seems like `name` hasn't changed so I worry readers
-     may get a bit confused. /JG -->
-
-Then, an entry is made into the `privateData` object that corresponds to the ID for the object instance; that's where the `name` is stored. Later, in the `getName()` function, the name can be restored by using `this._id` as the key into `privateData`. Because `privateData` is not accessible outside of the IIFE, the actual data is safe, even though `this._id` is exposed publicly.
+Then, an entry is made into the `privateData` object that corresponds to the ID for the object instance; that's where the `name` is stored. Later, in the `getName()` function, the name can be retrieved by using `this._id` as the key into `privateData`. Because `privateData` is not accessible outside of the IIFE, the actual data is safe, even though `this._id` is exposed publicly.
 
 The big problem with this approach is that the data in `privateData` never disappears because there is no way to know when an object instance is destroyed; the `privateData` object will always contain extra data. This problem can be solved by using a weak map instead, as follows:
 
