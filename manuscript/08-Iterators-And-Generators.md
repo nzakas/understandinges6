@@ -9,7 +9,7 @@ If you've ever written JavaScript, chances are you've written some code that loo
 ```js
 var colors = ["red", "green", "blue"];
 
-for (var i=0, len < colors.length; i < len; i++) {
+for (var i = 0, len = colors.length; i < len; i++) {
     console.log(colors[i]);
 }
 ```
