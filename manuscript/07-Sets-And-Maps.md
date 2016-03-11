@@ -98,7 +98,7 @@ set.add("5");
 console.log(set.size);    // 2
 ```
 
-Sets do not coerce values to determine they are the same. That means a set can contain both the number `5` and the string `"5"` as two separate items. (Internally, the comparison uses the `Object.is()` method discussed in Chapter 4.) You can also add multiple objects to the set, and those objects will remain distinct:
+Sets do not coerce values to determine whether they are the same. That means a set can contain both the number `5` and the string `"5"` as two separate items. (Internally, the comparison uses the `Object.is()` method discussed in Chapter 4.) You can also add multiple objects to the set, and those objects will remain distinct:
 
 ```js
 let set = new Set(),
