@@ -80,7 +80,7 @@ if (map.count) {
 
 This example has some ambiguity as to how `map.count` should be used. Is the `if` statement intended to check for the existence of `map.count` or that the value is nonzero? The code inside the `if` statement will execute because the value 1 is truthy. However, if `map.count` is 0, or if `map.count` doesn't exist, the code inside the `if` statement would not be executed.
 
-These are difficult problem to identify and debug when they occur in large applications, which is a prime reason that ECMAScript 6 adds both sets and maps to the language.
+These are difficult problems to identify and debug when they occur in large applications, which is a prime reason that ECMAScript 6 adds both sets and maps to the language.
 
 ## Sets in ECMAScript 6
 
@@ -98,7 +98,7 @@ set.add("5");
 console.log(set.size);    // 2
 ```
 
-Sets do not coerce values to determine they are the same. That means a set can contain both the number `5` and the string `"5"` as two separate items. (Internally, the comparison uses the `Object.is()` method discussed in Chapter 4.) You can also add multiple objects to the set, and those objects will remain distinct:
+Sets do not coerce values to determine whether they are the same. That means a set can contain both the number `5` and the string `"5"` as two separate items. (Internally, the comparison uses the `Object.is()` method discussed in Chapter 4.) You can also add multiple objects to the set, and those objects will remain distinct:
 
 ```js
 let set = new Set(),
