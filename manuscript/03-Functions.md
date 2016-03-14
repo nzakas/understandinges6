@@ -406,7 +406,7 @@ The second restriction is that rest parameters cannot be used in an object liter
 let object = {
 
     // Syntax error: Can't use rest param in setter
-    set(...value) {
+    set name(...value) {
         // do something
     }
 };
