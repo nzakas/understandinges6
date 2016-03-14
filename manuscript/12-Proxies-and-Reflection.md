@@ -38,15 +38,15 @@ The reflection API, represented by the `Reflect` object, is a collection of meth
 
 | Proxy Trap               | Overrides the Behavior Of | Default Behavior |
 |--------------------------|---------------------------|------------------|
+|`get`                     | Reading a property value  | `Reflect.get()` |
+|`set`                     | Writing to a property     | `Reflect.set()` |
+|`has`                     | The `in` operator         | `Reflect.has()` |
+|`deleteProperty`          | The `delete` operator     | `Reflect.deleteProperty()` |
 |`getPrototypeOf`          | `Object.getPrototypeOf()` | `Reflect.getPrototypeOf()` |
 |`setPrototypeOf`          | `Object.setPrototypeOf()` | `Reflect.setPrototypeOf()` |
 |`isExtensible`            | `Object.isExtensible()`   | `Reflect.isExtensible()` |
 |`preventExtensions`       | `Object.preventExtensions()` | `Reflect.preventExtensions()` |
 |`getOwnPropertyDescriptor`| `Object.getOwnPropertyDescriptor()` | `Reflect.getOwnPropertyDescriptor()` |
-|`has`                     | The `in` operator         | `Reflect.has()` |
-|`get`                     | Reading a property value  | `Reflect.get()` |
-|`set`                     | Writing to a property     | `Reflect.set()` |
-|`deleteProperty`          | The `delete` operator     | `Reflect.deleteProperty()` |
 |`defineProperty`          | `Object.defineProperty()` | `Reflect.defineProperty` |
 |`enumerate`               | `for-in` and `Object.keys()` | `Reflect.enumerate()` |
 |`ownKeys`                 | `Object.getOwnPropertyNames()` and `Object.getOwnPropertySymbols()` | `Reflect.ownKeys()` |
@@ -61,8 +61,9 @@ Each of the traps overrides some built-in behavior of JavaScript objects, allowi
 Proxies are created using the `Proxy` constructor and passing in two arguments, the target and a handler. A *handler* is an object that defines one or more traps. The proxy uses the default behavior for all operations except when traps are defined for that operation. To create a simple forwarding proxy, you can use a handler without any traps:
 
 ```js
-let target = {},
-    proxy = new Proxy(target, {});
+let target = {};
+
+let proxy = new Proxy(target, {});
 
 proxy.name = "proxy";
 console.log(proxy.name);        // "proxy"
@@ -89,8 +90,11 @@ The corresponding reflection method is `Reflect.set()`, which is the default beh
 To validate the value of properties, you use the `set` trap and inspect the `value` that is passed in. Here's an example:
 
 ```js
-let target = { name: "target" },
-    proxy = new Proxy(target, {
+let target = {
+    name: "target"
+};
+
+let proxy = new Proxy(target, {
         set(trapTarget, key, value, receiver) {
 
             // ignore existing properties so as not to affect them
@@ -150,8 +154,9 @@ Since property validation only has to be done when a property is read, you need 
 These arguments mirror those for the `set` trap, with the noticeable difference being there is no `value` argument. The `Reflect.get()` method accepts these same three arguments and returns the property's default value. You can use these to throw an error when a property doesn't exist on the target:
 
 ```js
-let target = {},
-    proxy = new Proxy(target, {
+let target = {};
+
+let proxy = new Proxy(target, {
         get(trapTarget, key, receiver) {
             if (!(key in receiver)) {
                 throw new TypeError("Property " + key + " doesn't exist.");
@@ -172,6 +177,131 @@ console.log(proxy.nme);             // throws error
 In this example, the `get` trap is used to intercept property read operations. The `in` operator is used to determine if the property already exists on the `receiver`. The `receiver` is used with `in` instead of `trapTarget` in case `receiver` is a proxy with a `has` trap. Using `trapTarget` would sidestep the `has` trap and potentially give you the wrong result. An error is thrown if the property doesn't exist, and otherwise, the default behavior is used.
 
 This code allows new properties to be added, such as adding `proxy.name`, which is written to and read from without any problem. The last line contains a typo, `proxy.nme`, which should probably be `proxy.name`. This throws an error because `nme` does not exist as a property.
+
+### Hiding Property Existence Using the `has` Trap
+
+The `in` operator determines if a property exists on a given object and returns `true` if there is either an own property or a prototype property matching the name or symbol. For example:
+
+```js
+let target = {
+    value: 42;
+}
+
+console.log("value" in target);     // true
+console.log("toString" in target);  // true
+```
+
+Both `value` and `toString` exist on `object`, so in both cases the `in` operator returns `true`. The `value` property is an own property while `toString` is a prototype property (inherited from `Object`). Proxies allow you to intercept this operation and return a different value for `in` by using the `has` trap.
+
+The `has` trap is called whenever the `in` operator is used. When called, there are two arguments passed to the `has` trap:
+
+1. `trapTarget` - the object from which the property is read (the proxy's target)
+1. `key` - the property key (string or symbol) to check
+
+The `Reflect.has()` method accepts these same arguments and returns the default response for the `in` operator. Using the `has` trap and `Reflect.has()` allows you to alter the behavior of `in` for some properties while falling back to default behavior for others. For instance, suppose you just want to hide the `value` property, you can do so like this:
+
+```js
+let target = {
+    name: "target",
+    value: 42
+};
+
+let proxy = new Proxy(target, {
+    has(trapTarget, key) {
+
+        if (key === "value") {
+            return false;
+        } else {
+            return Reflect.has(trapTarget, key);
+        }
+    }
+});
+
+
+console.log("value" in proxy);      // false
+console.log("name" in proxy);       // true
+console.log("toString" in proxy);   // true
+```
+
+The `has` trap for `proxy` checks to see if `key` is `"value"`, and if so, returns `false`. Otherwise, the default behavior is used via `Reflect.has()`. The result is that the `in` operator returns `false` for the `value` property even though it actually does exist on the target. The other properties, `name` and `toString`, correctly return `true` when used with the `in` operator.
+
+### Preventing Property Deletion with the `deleteProperty` Trap
+
+The `delete` operator removes a property from an object and returns `true` when successfull and `false` when unsuccessful. In strict mode, `delete` throws an error when you attempt to delete a nonconfigurable property (`delete` simply returns `false` is nonstrict mode). Here's an example:
+
+```js
+let target = {
+    name: "target",
+    value: 42
+};
+
+Object.defineProperty(target, "name", { configurable: false });
+
+console.log("value" in target);     // true
+
+let result1 = delete target.value;
+console.log(result1);               // true
+
+console.log("value" in target);     // false
+
+// Note: The following line throws an error in strict mode
+let result2 = delete target.name;
+console.log(result2);               // false
+
+console.log("name" in target);      // true
+```
+
+The `value` property is deleted using the `delete` operator and, as a result, the `in` operator returns `false`. The nonconfigurable `name` property can't be deleted so the `delete` operator simply returns `false` (if this code is run in strict mode, an error is thrown instead). You can alter this behavior by using the `deleteProperty` trap in a proxy.
+
+The `deleteProperty` trap is called whenever the `delete` operator is used on an object property. The trap is passed two arguments:
+
+1. `trapTarget` - the object from which the property should be deleted (the proxy's target)
+1. `key` - the property key (string or symbol) to delete
+
+The `Reflect.deleteProperty()` method provides the default implementation of the `deleteProperty` trap and accepts these same two arguments. Using a combination of `Reflect.deleteProperty()` and the `deleteProperty` trap, you can alter the behavior of the `delete` operator, for instance, by ensuring that the `value` property cannot be deleted:
+
+```js
+let target = {
+    name: "target",
+    value: 42
+};
+
+let proxy = new Proxy(target, {
+    deleteProperty(trapTarget, key) {
+
+        if (key === "value") {
+            return false;
+        } else {
+            return Reflect.deleteProperty(trapTarget, key);
+        }
+    }
+});
+
+// Attempt to delete proxy.value
+
+console.log("value" in proxy);      // true
+
+let result1 = delete proxy.value;
+console.log(result1);               // false
+
+console.log("value" in proxy);      // true
+
+// Attempt to delete proxy.name
+
+console.log("name" in proxy);       // true
+
+let result2 = delete proxy.name;
+console.log(result2);               // true
+
+console.log("name" in proxy);       // false
+```
+
+This code is very similar to the `has` trap example in that the `deleteProperty` trap checks to see if the `key` is `"value"`, and if so, returns `false`. Otherwise, the default behavior is used by calling `Reflect.deleteProperty()`. The `value` property cannot be deleted through `proxy` because the operation is trapped whereas the `name` property is deleted as expected. This approach is especially useful when you want to protect properties from deletion without causing an error to be thrown in strict mode.
+
+
+
+
+
 
 
 ### Function Proxies Using the `apply` and `construct` traps
