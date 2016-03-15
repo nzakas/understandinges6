@@ -304,7 +304,7 @@ function add(first = second, second) {
 }
 
 console.log(add(1, 1));         // 2
-console.log(add(undefined, 1)); // throws error
+console.log(add(undefined, 1)); // 2
 ```
 
 The calls to `add(1, 1)` and `add(undefined, 1)` in this example now map to this code behind the scenes:
