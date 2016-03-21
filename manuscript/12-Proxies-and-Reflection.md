@@ -154,9 +154,7 @@ Since property validation only has to be done when a property is read, you need 
 These arguments mirror those for the `set` trap, with the noticeable difference being there is no `value` argument. The `Reflect.get()` method accepts these same three arguments and returns the property's default value. You can use these to throw an error when a property doesn't exist on the target:
 
 ```js
-let target = {};
-
-let proxy = new Proxy(target, {
+let proxy = new Proxy({}, {
         get(trapTarget, key, receiver) {
             if (!(key in receiver)) {
                 throw new TypeError("Property " + key + " doesn't exist.");
@@ -298,11 +296,110 @@ console.log("name" in proxy);       // false
 
 This code is very similar to the `has` trap example in that the `deleteProperty` trap checks to see if the `key` is `"value"`, and if so, returns `false`. Otherwise, the default behavior is used by calling `Reflect.deleteProperty()`. The `value` property cannot be deleted through `proxy` because the operation is trapped whereas the `name` property is deleted as expected. This approach is especially useful when you want to protect properties from deletion without causing an error to be thrown in strict mode.
 
+### Prototype Proxy Traps
 
+In Chapter 4, you learned about the ECMAScript 6 `Object.setPrototypeOf()` method that was added to complement the ECMAScript 5 `Object.getPrototypeOf()` method. Proxies allow you to intercept the execution of both methods through the `setPrototypeOf` and `getPrototypeOf` traps. In both cases, the method on `Object` calls the trap of the corresponding name on the proxy, allowing you to alter their behavior. The `setPrototypeOf` trap receives these arguments:
 
+1. `trapTarget` - the object for which the prototype should be set (the proxy's target)
+1. `proto` - the object to use for as the prototype
 
+These are the same arguments passed to `Object.setPrototypeOf()` and `Reflect.setPrototypeOf()`. The `getPrototypeOf` trap only receives the `trapTarget` argument, which is the argument passed to `Object.getPrototypeOf()` and `Reflect.setPrototypeOf()`.
 
+I> Yes, there are two sets of methods: `Object.getPrototypeOf()` and `Object.setPrototypeOf()`, along with `Reflect.getPrototypeOf()` and `Reflect.setPrototypeOf()`. The differences between these methods are subtle and are discussed later in this chapter.
 
+There are some restrictions on these traps. First, the `getPrototypeOf` trap must return an object or `null`, and any other return value results in a runtime error. The return value check ensures that `Object.getPrototypeOf()` will always return an expected value. Similarly, the return value of the `setPrototypeOf` trap must be `false` if the operation does not succeed. When `setPrototypeOf` returns `false`, `Object.setPrototypeOf()` throws an error. If `setPrototypeOf` returns any value other than `false`, then `Object.setPrototypeOf()` assumes the operation succeeded.
+
+The following example hides the prototype of the proxy by always returning `null` and also doesn't allow the prototype to be changed:
+
+```js
+let target = {};
+let proxy = new Proxy(target, {
+    getPrototypeOf(trapTarget) {
+        return null;
+    },
+    setPrototypeOf(trapTarget, proto) {
+        return false;
+    }
+});
+
+let targetProto = Object.getPrototypeOf(target);
+let proxyProto = Object.getPrototypeOf(proxy);
+
+console.log(targetProto === Object.prototype);      // true
+console.log(proxyProto === Object.prototype);       // false
+console.log(proxyProto);                            // null
+
+// succeeds
+Object.setPrototypeOf(target, {});
+
+// throws error
+Object.setPrototypeOf(proxy, {});
+```
+
+You can see the difference between the behavior of `target` and `proxy` in this example. While `Object.getPrototypeOf()` returns a value for `target`, it returns `null` for `proxy` because the `getPrototypeOf` trap is called. Similarly, `Object.setPrototypeOf()` succeeds when used on `target` but throws an error when used on `proxy` due to the `setPrototypeOf` trap.
+
+If you want to use the default behavior for these two traps, you can use the corresponding methods on `Reflect`. For instance, this example implements the default behavior for the `getPrototypeOf` and `setPrototypeOf` traps:
+
+```js
+let target = {};
+let proxy = new Proxy(target, {
+    getPrototypeOf(trapTarget) {
+        return Reflect.getPrototypeOf(trapTarget);
+    },
+    setPrototypeOf(trapTarget, proto) {
+        return Reflect.setPrototypeOf(trapTarget, proto);
+    }
+});
+
+let targetProto = Object.getPrototypeOf(target);
+let proxyProto = Object.getPrototypeOf(proxy);
+
+console.log(targetProto === Object.prototype);      // true
+console.log(proxyProto === Object.prototype);       // true
+
+// succeeds
+Object.setPrototypeOf(target, {});
+
+// also succeeds
+Object.setPrototypeOf(proxy, {});
+```
+
+In this example, you can use `target` and `proxy` interchangeably and get the same results because the `getPrototypeOf` and `setPrototypeOf` traps are just passing through to use the default implementation. It's important that this example use the `Reflect.getPrototypeOf()` and `Reflect.setPrototypeOf()` methods rather than the methods of the same name on `Object` due to some important differences.
+
+#### Why Two Sets of Methods?
+
+The confusing aspect of `Reflect.getPrototypeOf()` and `Reflect.setPrototypeOf()` is that they look suspiciously similar to `Object.getPrototypeOf()` and `Object.setPrototypeOf()`. While both sets of methods perform similar operations, there are some distinct differences between the two.
+
+To begin, `Object.getPrototypeOf()` and `Object.setPrototypeOf()` are higher-level operations, meaning that they were created for developer use from the start. The `Reflect.getPrototypeOf()` and `Reflect.setPrototypeOf()` methods are lower-level operations, meaning that they are exposing some behavior that was previously not intended for developers. The methods on `Reflect` are meant to give access to the previously internal-only `[[GetPrototypeOf]]` and `[[SetPrototypeOf]]` operations. You can think of the relationship between these two sets of methods as `Object.getPrototypeOf()` calls `Reflect.getPrototypeOf()` and `Object.setPrototypeOf()` calls `Reflect.setPrototypeOf()`. While this isn't strictly true according to the specification, this is still a good way to describe their relationship.
+
+The `Reflect.getPrototypeOf()` methods throws an error if its argument is not an object, whereas `Object.getPrototypeOf()` first coerces the value into an object before performing the operation. So if you were to pass a number into each method, you'd get a different result:
+
+```js
+let result1 = Object.getPrototypeOf(1);
+console.log(result1 === Number.prototype);  // true
+
+// throws an error
+Reflect.getPrototypeOf(1);
+```
+
+The `Object.getPrototypeOf()` method allows you retrieve a prototype for the number `1` because it first coerces the value into a `Number` object and then returns `Number.prototype`. The `Reflect.getPrototypeOf()` method does not coerce the value, and since `1` is not an object, it throws an error.
+
+The `Reflect.setPrototypeOf()` method also has some distinct differences from the `Object.setPrototypeOf()` method. First, it returns a boolean value indicating if the operation was successful (`true` for success, `false` for failure); if `Object.setPrototypeOf()` fails, it throws an error. As you saw earlier, when the `setPrototypeOf` proxy trap returns `false`, it causes `Object.setPrototypeOf()` to throw an error. The `Object.setPrototypeOf()` method returns the first argument as its value and therefore isn't suitable for implementing the default behavior of the `setPrototypeOf` proxy trap. Here's an example of these differences:
+
+```js
+let target1 = {};
+let result1 = Object.setPrototypeOf(target1, {});
+console.log(result1 === target1);                   // true
+
+let target2 = {};
+let result2 = Reflect.setPrototypeOf(target2, {});
+console.log(result2 === target2);                   // false
+console.log(result2);                               // true
+```
+
+In this example, `Object.setPrototypeOf()` returns `target1` as its value whereas `Reflect.setPrototypeOf()` returns `true`. This subtle difference is very important when used in proxy traps, so be sure to use the method on `Reflect` inside of them.
+
+I> Both sets of methods will call the `getPrototypeOf` and `setPrototypeOf` proxy traps when used on a proxy.
 
 ### Function Proxies Using the `apply` and `construct` traps
 
