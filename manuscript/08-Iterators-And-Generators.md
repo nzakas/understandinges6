@@ -2,9 +2,9 @@
 
 Many programming languages have shifted from iterating over data with `for` loops, which require initializing variables to track position in a collection, to using iterator objects that programmatically return the next item in a collection. Iterators make working with collections of data easier, and ECMAScript 6 adds iterators to JavaScript. When coupled with new array methods and new types of collections (such as sets and maps), iterators are an important feature for efficient data processing.
 
-<!-- For the chapter overview, readers may find it useful if we also mention generators and asynchronous code, since
-     that seems to be a very exciting part of the chapter. Perhaps consider mentioning iterables, for-of, and any
-     other new features, too, for a full overview. /JG -->
+Iterators are an important addition to JavaScript and find their way into many parts of the language. There a new `for-of` loop that works with iterators, the spread (`...`) operator uses iterators, and iterators even make asynchronous programming easier.
+
+This chapter covers the many uses of iterators, but first, it's important to understand some of the history of why iterators were added to JavaScript.
 
 ## The Loop Problem
 
@@ -26,10 +26,7 @@ While this loop is fairly straightforward, loops grow in complexity when you nes
 
 Iterators are just objects with a specific interface designed for iteration. All iterator objects have a `next()` method that returns a result object. The result object has two properties: `value`, which is the next value, and `done`, which is a boolean that's `true` when there are no more values to return. The iterator keeps an internal pointer to a location within a collection of values and with each call to the `next()` method, it returns the next appropriate value.
 
-If you call `next()` after the last value has been returned, the method returns `done` as `true` and `value` contains the *return value* for the iterator. That return value is not part of the data set, but rather a final piece of related data, or `undefined` if no such data exists. (This concept will become clearer in the generators section later in this chapter.)
-
-<!-- Could you elaborate a little on the "return value" concept here? I know we'll cover it in detail later, but the
-     reader may wonder now what it is exactly, if different from the concept of a return value in functions. /JG -->
+If you call `next()` after the last value has been returned, the method returns `done` as `true` and `value` contains the *return value* for the iterator. That return value is not part of the data set, but rather a final piece of related data, or `undefined` if no such data exists. An iterator's return value is similar to a function's return value in that it's a final way to pass information to the caller. (This concept will become clearer in the generators section later in this chapter.)
 
 With that understanding, creating an iterator using ECMAScript 5 is fairly straightforward. For example:
 
@@ -90,14 +87,9 @@ console.log(iterator.next().value);     // 3
 
 The `*` before `createIterator()` makes this function a generator. The `yield` keyword specifies values the resulting iterator should return when `next()` is called, in the order they should be returned. The iterator generated in this example has three different values to return on successive calls to the `next()` method: first `1`, then `2`, and finally `3`. A generator gets called like any other function, as shown when `iterator` is created.
 
-Perhaps the most interesting aspect of generator functions is that they stop execution after each `yield` statement. For instance, after `yield 1` executes in this code, the function doesn't execute anything else until the iterator's `next()` method is called. At that point, `yield 2` executes. This ability to stop execution in the middle of a function is extremely powerful and leads to some interesting uses of generator functions (discussed later in this chapter).
-
-<!-- Let's give a section name above, rather than say "later", for readers who want to peek at it now. Or, if possible to
-     describe briefly, perhaps consider mentioning a couple above, and removing the forward reference. /JG -->
+Perhaps the most interesting aspect of generator functions is that they stop execution after each `yield` statement. For instance, after `yield 1` executes in this code, the function doesn't execute anything else until the iterator's `next()` method is called. At that point, `yield 2` executes. This ability to stop execution in the middle of a function is extremely powerful and leads to some interesting uses of generator functions (discussed later in Advanced Iterator Functionality).
 
 The `yield` keyword can be used with any value or expression, so you can write generator functions that add items to iterators without just listing the items one by one. For example, here's one way you could use `yield` inside a `for` loop:
-
-<!-- Is `yield` new to ES6, too? /JG -->
 
 ```js
 function *createIterator(items) {
@@ -124,9 +116,6 @@ Generator functions are an important feature of ECMAScript 6, and since they are
 ### Generator Function Expressions
 
 You can use function expressions to create generators by just including a star (`*`) character between the `function` keyword and the opening parenthesis. For example:
-
-<!-- In this section and the next, readers may find it helpful to read about some example "real" use cases, when they'd
-     want to define a generator with anything other than a normal function declaration. /JG -->
 
 ```js
 let createIterator = function *(items) {
@@ -186,11 +175,9 @@ These examples are functionally equivalent to the example in the "Generator Func
 
 ## Iterables and for-of
 
-<!-- Just flagging the @@ notation used here; I wasn't certain what you'd want to change it to. /JG -->
+Closely related to iterators, an *iterable* is an object with an `Symbol.iterator` symbol property. The well-known `Symbol.iterator` symbol specifies a function that returns an iterator for the given object. All of the collection objects (arrays, sets, and maps) and strings are iterables in ECMAScript 6 and so have a default iterator specified. Iterables are designed to be used with a new addition to ECMAScript: the `for-of` loop.
 
-Closely related to iterators, an *iterable* is an object with an `@@iterator` symbol property. The well-known `@@iterator` symbol specifies a function that returns an iterator for the given object. All of the collection objects (arrays, sets, and maps) and strings are iterables in ECMAScript 6 and so have a default iterator specified. Iterables are designed to be used with a new addition to ECMAScript: the `for-of` loop.
-
-I> All iterators created by generators are also iterables, as generators assign the `@@iterator` property by default.
+I> All iterators created by generators are also iterables, as generators assign the `Symbol.iterator` property by default.
 
 At the beginning of this chapter, I mentioned the problem of tracking an index inside a `for` loop. Iterators are the first part of the solution to that problem. The `for-of` loop is the second part: it removes the need to track an index into a collection entirely, leaving you free to focus on working with the contents of the collection.
 
@@ -212,14 +199,9 @@ This code outputs the following:
 3
 ```
 
-<!-- Is the @@iterator call implicit here? I didn't see it in the code, so readers may find it helpful to have that said
-     in the text below, if so. /JG -->
+This `for-of` loop first calls the `Symbol.iterator` method on the `values` array to retrieve an iterator. (The call to `Symbol.iterator` happens behind the scenes in the JavaScript engine itself.) Next, `iterator.next()` is called and the `value` property on the iterator's result object is read into `num`. The `num` variable is first 1, then 2, and finally 3. When `done` on the result object is `true`, the loop exits, so `num` is never assigned the value of `undefined`.
 
-This `for-of` loop first calls the `@@iterator` method on the `values` array to retrieve an iterator. Next, `iterator.next()` is called and the `value` property on the result object is read into `num`. The `num` variable is first 1, then 2, and finally 3. When `done` on the result object is `true`, the loop exits, so `num` is never assigned the value of `undefined`.
-
-<!-- Is "result object" a specific term in JavaScript, or could it make sense to say "resulting object"?
-     I also might speak a bit here to when you'd want to use a for-of loop over a for loop. Should developers
-     globally replace all for loops, or only complicated ones? /JG -->
+If you are simply iterating over values in an array or collection, then it's a good idea to use a `for-of` loop instead of a `for` loop. The `for-of` loop is generally less error-prone because there are fewers conditions to keep track of. Save the traditional `for` loop for more complex control conditions.
 
 W> The `for-of` statement will throw an error when used on, a non-iterable object, `null`, or `undefined`.
 
@@ -286,13 +268,8 @@ for (let x of collection) {
 // 2
 // 3
 ```
-<!-- I'm having a bit of trouble following this bit; could you clarify? Does the code "define an iterator using both
-     object literal method shorhand and a computed property," or does it "define an iterator using the shorthand and
-     define a computed property using Symbol.iterator"? -->
 
-This code defines a default iterator for a variable called `collection` using object literal method shorthand and a computed property using `Symbol.iterator` (note the star still comes before the name). The generator then uses a `for-of` loop to iterate over the values in `this.items` and uses `yield` to return each one. Instead of manually iterating to define values for the default iterator of `collection` to return, the `collection` object relies on the default iterator of `this.items` to do the work.
-
-<!--When might a developer want to create their own iterables? /JG -->
+This code defines a default iterator for an object called `collection`. The default iterator is created by the `Symbol.iterator` method, which is a generator (note the star still comes before the name). The generator then uses a `for-of` loop to iterate over the values in `this.items` and uses `yield` to return each one. Instead of manually iterating to define values for the default iterator of `collection` to return, the `collection` object relies on the default iterator of `this.items` to do the work.
 
 I> Another approach to using the iterator of another object is to use delegating generators, a topic discussed later in this chapter.
 
@@ -392,10 +369,7 @@ This code outputs the following:
 "ebook"
 ```
 
-<!-- Is there a way to get location information out of values(), or do you mean this would happen in all cases where
-     values() is used? /JG -->
-
-In this case, using `values()` returns the exact data contained in each collection without any information as to its location.
+Using `values()`, as in this example, returns the exact data contained in each collection without any information as to its location.
 
 #### The keys() Iterator
 
@@ -435,10 +409,7 @@ This example outputs the following:
 "format"
 ```
 
-<!-- Do we only get keys here because we're calling keys(), or because we're using for-of? It seems like a little of
-     both, but I just got a bit confused below, and was uncertain how to edit to clarify. /JG -->
-
-The `keys()` iterator fetches each key in `colors`, `tracking`, and `data`, and those keys are printed from inside the three `for` loops. For the array object, only numeric indices are printed, which would still happen even if you added named properties to the array. This is different from the way the `for-in` loop works with arrays, because the `for-in` loop iterates over properties rather than just the numeric indices.
+The `keys()` iterator fetches each key in `colors`, `tracking`, and `data`, and those keys are printed from inside the three `for-of` loops. For the array object, only numeric indices are printed, which would still happen even if you added named properties to the array. This is different from the way the `for-in` loop works with arrays, because the `for-in` loop iterates over properties rather than just the numeric indices.
 
 #### Default Iterators for Collection Types
 
@@ -450,7 +421,7 @@ let tracking = new Set([1234, 5678, 9012]);
 let data = new Map();
 
 data.set("title", "Understanding ECMAScript 6");
-data.set("format", "ebook");
+data.set("format", "print");
 
 // same as using colors.values()
 for (let value of colors) {
@@ -478,35 +449,26 @@ No iterator is specified, so the default iterator functions will be used. The de
 5678
 9012
 ["title", "Understanding ECMAScript 6"]
-["format", "ebook"]
+["format", "print"]
 ```
 
-Arrays and sets return their values by default, while maps return the same array format that can be passed into the `Map` constructor.
+Arrays and sets return their values by default, while maps return the same array format that can be passed into the `Map` constructor. Weak sets and weak maps do not have any built-in iterators. Managing weak references means there's no way to know exactly how many values are in these collections, which also means there's no way to iterate over them.
 
-The behavior of the default constructor for maps is also helpful when used in `for-of` loops with destructuring, as in this example:
-
-<!-- Just a thought, for the print version, maybe change "ebook" to "print"? :) I also might consider boxing
-     the material on destructuring, since it feels like a bit of an aside. -->
-
-```js
-let data = new Map();
-
-data.set("title", "Understanding ECMAScript 6");
-data.set("format", "ebook");
-
-// same as using data.entries()
-for (let [key, value] of data) {
-    console.log(key + "=" + value);
-}
-```
-
-The `for-of` loop in this code uses a destructured array to assign `key` and `value` for each entry in the map. In this way, you can easily work with keys and values at the same time without needing to access a two-item array. You won't need to remember the keys themselves after adding the key-value pairs to `data` because you won't need to call `get()` with a specific key to fetch its value. This reduces the risk of error significantly.
-
-<!-- If possible, I would suggest mentioning a time when this could be particularly handy. I've also just taken a
-     stab at fleshing this out, because I found myself a bit stuck while reading--do cut/tweak these suggestions if
-     they're off in any way, though. /JG -->
-
-W> Weak sets and weak maps do not have any built-in iterators. Managing weak references means there's no way to know exactly how many values are in these collections, which also means there's no way to iterate over them.
+A> The behavior of the default constructor for maps is also helpful when used in `for-of` loops with destructuring, as in this example:
+A>
+A> ```js
+A> let data = new Map();
+A>
+A> data.set("title", "Understanding ECMAScript 6");
+A> data.set("format", "ebook");
+A>
+A> // same as using data.entries()
+A> for (let [key, value] of data) {
+A>     console.log(key + "=" + value);
+A> }
+A> ```
+A>
+A> The `for-of` loop in this code uses a destructured array to assign `key` and `value` for each entry in the map. In this way, you can easily work with keys and values at the same time without needing to access a two-item array or going back to the map to fetch either the key or the value. Using a destructured array for maps makes the `for-of` loop equally useful for maps as it is for sets and arrays.
 
 ### String Iterators
 
@@ -617,10 +579,7 @@ You can accomplish a lot with the basic functionality of iterators and the conve
 
 ### Passing Arguments to Iterators
 
-Throughout this chapter, examples have shown iterators passing values out via the `next()` method or by using `yield` in a generator. But you can also pass arguments to the iterator through the `next()` method. When an argument is passed to the `next()` method, that argument becomes the value of the `yield` statement inside a generator. For example:
-
-<!-- This example is more complicated than it looks! It may make sense to discuss why readers will want to use
-     this trick before going into how to do it, to keep them motivated in this section. /JG -->
+Throughout this chapter, examples have shown iterators passing values out via the `next()` method or by using `yield` in a generator. But you can also pass arguments to the iterator through the `next()` method. When an argument is passed to the `next()` method, that argument becomes the value of the `yield` statement inside a generator. This capability is important for more advanced functionality such as asynchronous programming. Here's a basic example:
 
 ```js
 function *createIterator() {
@@ -647,22 +606,13 @@ It's a bit easier to think about what's happening by considering which code is e
 
 ![Figure 6-1: Code execution inside a generator](images/fg0601.png)
 
-<!--NOTE: I used an image with colors for this, but since we don't print in color, I'm not sure how to represent this in the print book. Let me know if you have a suggestion for how to represent this better. -->
-
-<!-- Hm, perhaps try something in grayscale, or maybe use boxes and arrows like you did in your previous book? Another
-     option might be to show the program three times, show the next() call being executed next to each one, and box/color
-     the corresponding code for each next() call. I might even suggest making a flowchart of the execution instead, if
-     possible. I'll leave the color references as-is for now. -->
-
 The color yellow represents the first call to `next()` and all the code executed inside of the generator as a result; the color aqua represents the call to `next(4)` and the code that is executed; the color purple represents the call to `next(5)` and the code that is executed as a result. The tricky part is how the code on the right side of each expression executes and stops before the left side is executed. This makes debugging complicated generators a bit more involved than debugging regular functions.
 
 So far, you've seen that `yield` can act like `return` when a value is passed to the `next()` method. However, that's not the only execution trick you can do inside of generators. You can also cause iterators throw an error.
 
 ### Throwing Errors in Iterators
 
-It's not only possible to pass data into iterators, it's also possible to pass error conditions. Iterators can choose to implement a `throw()` method that instructs the iterator to throw an error when it resumes. You can pass in an error object that should be thrown when the iterator continues processing. For example:
-
-<!-- When might you want to throw an error on purpose like this? /jg -->
+It's not only possible to pass data into iterators, it's also possible to pass error conditions. Iterators can choose to implement a `throw()` method that instructs the iterator to throw an error when it resumes. This is an important capability for asynchronous programming, but also for flexibility inside of generators (where you want to be able to mimic both return values and thrown errors, the two ways of exiting a function). You can pass an error object to `throw()` that should be thrown when the iterator continues processing. For example:
 
 ```js
 function *createIterator() {
@@ -681,10 +631,6 @@ console.log(iterator.throw(new Error("Boom"))); // error thrown from generator
 In this example, the first two `yield` expressions are evaluated as normal, but when `throw()` is called, an error is thrown before `let second` is evaluated. This effectively halts code execution similar to directly throwing an error. The only difference is the location in which the error is thrown. Figure 6-2 shows which code is executed at each step.
 
 ![Figure 6-2: Throwing an error inside a generator](images/fg0602.png)
-
-<!-- Same here. Suggestions welcome! -->
-
-<!-- For this one, perhaps do the yellow at a light gray, the blue at a darker gray, and do the red at a black with white lettering? Alison may have thoughts on these, too-- I'll share them with her. /Jg -->
 
 In this figure, the color red represents the code executed when `throw()` is called and the red star shows approximately when the error is thrown inside the generator. The first two `yield` statements are executed, it's only when `throw()` is called that an error is thrown before any other code is executed.
 
@@ -713,10 +659,7 @@ console.log(iterator.next());                   // "{ value: undefined, done: tr
 
 In this example, a `try-catch` block is wrapped around the second `yield` statement. While this `yield` executes without error, the error is thrown before any value can be assigned to `second`, so the `catch` block assigns it a value of six. Execution then flows to the next `yield` and returns nine.
 
-Notice that something interesting happened: the `throw()` method returned a value similar to that returned by the `next()` method. Because the error was caught inside the generator, code execution continued on to the next `yield` and returned the appropriate value.
-
-<!-- Perhaps state what value throw() returned in the text? I'm not sure it will be obvious to all readers how they're
-     similar. /JG -->
+Notice that something interesting happened: the `throw()` method returned a result object just like the `next()` method. Because the error was caught inside the generator, code execution continued on to the next `yield` and returned the next value, `9`.
 
 It helps to think of `next()` and `throw()` as both being instructions to the iterator: `next()` instructs the iterator to continue executing (possibly with a given value) and `throw()` instructs the iterator to continue executing by throwing an error. What happens after that point depends on the code inside the generator.
 
@@ -759,9 +702,7 @@ console.log(iterator.next());           // "{ value: undefined, done: true }"
 
 Here, the value `42` is returned in the `value` field on the second call to `next()` (which is the first time that `done` is `true`). The third call to `next()` returns an object whose `value` property is once again `undefined`. Any value you specify with `return` is only available on the returned object one time before the `value` field is reset to `undefined`.
 
-I> Any value specified by `return` is ignored by `for-of` and the spread operator. As soon as they see `done` is `true`, they stop without reading the `value`.
-
-<!-- Are there particular times when you'd want to use a return statement in a generator? -->
+I> Any value specified by `return` is ignored by `for-of` and the spread operator. As soon as they see `done` is `true`, they stop without reading the `value`. Iterator return values are helpful, however, when delegating generators.
 
 ### Delegating Generators
 
@@ -868,9 +809,6 @@ I> You can use `yield *` directly on strings (such as `yield * "hello"`) and the
 
 ## Asynchronous Task Running
 
-<!--I would mention this in the section where generators are first introduced, as it seems like great motivation
-    for readers. -->
-
 A lot of the excitement around generators is directly related to usage with asynchronous programming. Asynchronous programming in JavaScript is a double-edged sword: simple tasks are easy to do asynchronously, while complex tasks become an errand in code organization. Since generators allow you to effectively pause code in the middle of execution, this opens up a lot of possibilities related to asynchronous processing.
 
 The traditional way to perform asynchronous operations is to call a function that has a callback. For example, consider reading a file from disk in Node.js:
@@ -919,8 +857,6 @@ function run(taskDef) {
 }
 ```
 
-<!-- Should there be a star on taskDef() above? /JG -->
-
 The `run()` function accepts a task definition (a generator function) as an argument. It calls the generator to create an iterator and stores the iterator in `task`. The `task` variable is outside of the function so it can be accessed by other functions (the reason why will be clear later in this section). The first call to `next()` begins the iterator and the result is stored for later use. The function `step()` checks to see if `result.done` is false and, if so, calls `next()` before recursively calling itself. Each call to `next()` stores the return value in `result`, so that variable is always overwritten to contain the latest information. The initial call to `step()` starts the process of looking at the `result.done` variable to see whether there's more to do.
 
 With this implementation of `run()`, you can run a generator containing multiple `yield` statements, such as:
@@ -968,8 +904,6 @@ function run(taskDef) {
 
 Now, that `result.value` is passed to `next()` as an argument, it's possible to pass data between `yield` calls, like this:
 
-<!-- Could you specify back and forth between what, above? -->
-
 ```js
 run(function*() {
     let value = yield 1;
@@ -996,10 +930,7 @@ function fetchData() {
 }
 ```
 
-<!-- Is "it" in "calling it correctly" below "the callback function"? I didn't quite follow that part of the
-     sentence, and was unsure how best to clarify. /JG -->
-
-For the purposes of this example, any function meant to be called by the task runner will return a function that executes a callback. The `fetchData()` function returns a function that accepts a callback function as an argument. When the returned function is called, it executes the callback function with a single piece of data (the `"Hi!"` string). The `callback` argument needs to come from the task runner and ensure that calling it correctly interacts with the underlying iterator. While the `fetchData()` function is synchronous, you can easily extend it to be asynchronous by calling the callback with a slight delay, such as:
+For the purposes of this example, any function meant to be called by the task runner will return a function that executes a callback. The `fetchData()` function returns a function that accepts a callback function as an argument. When the returned function is called, it executes the callback function with a single piece of data (the `"Hi!"` string). The `callback` argument needs to come from the task runner to ensure executing the callback correctly interacts with the underlying iterator. While the `fetchData()` function is synchronous, you can easily extend it to be asynchronous by calling the callback with a slight delay, such as:
 
 ```js
 function fetchData() {
@@ -1085,10 +1016,7 @@ Of course, there are downsides to the pattern used in these examples--namely tha
 
 Iterators are an important part of ECMAScript 6 and are at the root of several important parts of the language. On the surface, iterators provide a simple way to return a sequence of values using a simple API. However, there are far more complex ways to use iterators in ECMAScript 6.
 
-<!-- Just flagging the @@ here again if there's a specific way you'd like to deal with them, perhaps show
-     that in this chapter, and I'll make note of it? /JG -->
-
-The `@@iterator` symbol is used to define default iterators for objects. Both built-in objects and developer-defined objects can use this symbol to provide a method that returns an iterator. When `@@iterator` is provided on an object, the object is considered an iterable.
+The `Symbol.iterator` symbol is used to define default iterators for objects. Both built-in objects and developer-defined objects can use this symbol to provide a method that returns an iterator. When `Symbol.iterator` is provided on an object, the object is considered an iterable.
 
 The `for-of` loop uses iterables to return a series of values in a loop. Using `for-of` is easier than iterating with a traditional `for` loop because you no longer need to track values and control when the loop ends. The `for-of` loop automatically reads all values from the iterator until there are no more, and then it exits.
 
