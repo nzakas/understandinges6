@@ -723,8 +723,33 @@ console.log(me instanceof PersonProxy); // true
 
 The `PersonProxy` object is a proxy of the `Person` class constructor. Class constructors are just functions, so they behave the same way when used in proxies. The `apply` trap overrides the default behavior and instead returns a new instance of `trapTarget`, which is equal to `Person` (the example uses `trapTarget` to show that you don't need to manually specify the class). The `argumentList` is passed to `trapTarget` using the spread operator to pass each argument separately. Calling `PersonProxy()` without using `new` returns an instance of `Person` (if you attempt to call `Person()` without `new`, it will still throw an error). Creating callable class constructors is something that is only possible using proxies.
 
+## Revocable Proxies
 
+Normally, a proxy cannot be unbound from its target once the proxy has been created. All of the examples to this point in this chapter have used nonrevocable proxies. However, there may be situations when you want to revoke a proxy at a later point in time so that it can no longer be used. This is most frequently the case when you want to provide an object through an API for security purposes, maintaining the ability to cut off access to some functionality at any point in time.
 
+Revocable proxies are created using the `Proxy.revocable()` method, which the same arguments as the `Proxy` constructor, a target object and the proxy handler. The return value is an object with properties:
+
+1. `proxy` - the proxy object itself
+1. `revoke` - the function to call to revoke the proxy
+
+When the `revoke()` function is called, no further operations can be performed through the `proxy`. Any attempt to interact with the proxy object in a way that would trigger a proxy trap throws an error. For example:
+
+```js
+let target = {
+    name: "target"
+};
+
+let { proxy, revoke } = Proxy.revocable(target, {});
+
+console.log(proxy.name);        // "target"
+
+revoke();
+
+// throws error
+console.log(proxy.name);
+```
+
+This example creates a revocable proxy and uses destructuring to assign the `proxy` and `revoke` variables to the properties of the same name on the object returned from `Proxy.revocable()`. After that, the `proxy` object can be used just like a nonrevocable proxy object, so `proxy.name` returns `"target"` because it passes through to `target.name`. Once the `revoke()` function is called, however, `proxy` no longer functions. Attempting to access `proxy.name` throws an error, as will any other operation that relies on proxy traps.
 
 
 
