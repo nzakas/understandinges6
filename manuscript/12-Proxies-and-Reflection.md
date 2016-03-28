@@ -401,6 +401,90 @@ In this example, `Object.setPrototypeOf()` returns `target1` as its value wherea
 
 I> Both sets of methods will call the `getPrototypeOf` and `setPrototypeOf` proxy traps when used on a proxy.
 
+### Object Extensibility Traps
+
+ECMAScript 5 added object extensibility modification through the `Object.preventExtensions()` and `Object.isExtensible()` methods, and ECMAScript 6 allows proxies to intercept those method calls to the underlying objects through the `preventExtensions` and `isExtensible` traps. Both traps receive a single argument, `trapTarget`, that is the object on which the method was called. The `isExtensible` trap must return a boolean value indicating if the object is extensible while the `preventExtensions` trap must return a boolean value indicating if the operation succeeded.
+
+There are also `Reflect.preventExtensions()` and `Reflect.isExtensible()` methods to implement the default behavior (both return boolean values, so they can be used directly in their corresponding traps). Here's a simple example that implements the default behavior for the `isExtensible` and `preventExtensions` traps:
+
+```js
+let target = {};
+let proxy = new Proxy(target, {
+    isExtensible(trapTarget) {
+        return Reflect.isExtensible(trapTarget);
+    },
+    preventExtensions(trapTarget) {
+        return Reflect.preventExtensions(trapTarget);
+    }
+});
+
+
+console.log(Object.isExtensible(target));       // true
+console.log(Object.isExtensible(proxy));        // true
+
+Object.preventExtensions(proxy);
+
+console.log(Object.isExtensible(target));       // false
+console.log(Object.isExtensible(proxy));        // false
+```
+
+This example shows that both `Object.preventExtensions()` and `Object.isExtensible()` correctly pass through from `proxy` to `target`. You can, of course, also change the behavior. For example, if you didn't want to allow `Object.preventExtensions()` to succeed on your proxy, you can return `false` from the `preventExtensions` trap:
+
+```js
+let target = {};
+let proxy = new Proxy(target, {
+    isExtensible(trapTarget) {
+        return Reflect.isExtensible(trapTarget);
+    },
+    preventExtensions(trapTarget) {
+        return false
+    }
+});
+
+
+console.log(Object.isExtensible(target));       // true
+console.log(Object.isExtensible(proxy));        // true
+
+Object.preventExtensions(proxy);
+
+console.log(Object.isExtensible(target));       // true
+console.log(Object.isExtensible(proxy));        // true
+```
+
+Here, the call to `Object.preventExtensions(proxy)` is effectively ignored because the `preventExtensions` trap returns `false`. The operation is not forwarded to the underlying `target`, so `Object.isExtensible()` returns `true`.
+
+#### Duplicate Extensibility Methods
+
+You may have noticed that, once again, there are seemingly duplicate methods on `Object` and `Reflect`, and in this case, they are more similar than not. The methods `Object.isExtensible()` and `Reflect.isExtensible()` are similar except when passed a non-object value. In that case, `Object.isExtensible()` always returns `false` while `Reflect.isExtensible()` throws an error. Here's an example of that behavior:
+
+```js
+let result1 = Object.isExtensible(2);
+console.log(result1);                       // false
+
+// throws error
+let result2 = Reflect.isExtensible(2);
+```
+
+This restriction is similar to the difference between `Object.getPrototypeOf()` and `Reflect.getPrototypeOf()`, as lower-level functionality has stricter error checks than their higher-level counterparts.
+
+The `Object.preventExtensions()` and `Reflect.preventExtensions()` methods are also very similar. The `Object.preventExtensions()` method always returns the value that was passed to it as an argument even if the value is not an object. The `Reflect.preventExtensions()` method, on the other hand, throws an error if the argument is not an object; if the argument is an object, then `Reflect.preventExtensions()` returns `true` when the operation succeeds or `false` if not. For example:
+
+```js
+let result1 = Object.preventExtensions(2);
+console.log(result1);                               // 2
+
+let target = {};
+let result2 = Reflect.preventExtensions(target);
+console.log(result2);                               // true
+
+// throws error
+let result3 = Reflect.preventExtensions(2);
+```
+
+Here, `Object.preventExtensions()` passed through the value `2` as its return value even though it's not an object. The `Reflect.preventExtensions()` method returns `true` when an object is passed to it and throws an error when `2` is passed to it.
+
+As mentioned earlier, whenever there are seemingly duplicate methods on `Object` and `Reflect`, you should always use the methods on `Reflect` inside of proxy traps.
+
 ### Function Proxies Using the `apply` and `construct` traps
 
 Of all the proxy traps, only `apply` and `construct` require the proxy target to be a function. You learned in Chapter 3 that functions have two internal methods, `[[Call]]` and `[[Construct]]`, that are executed when a function is called without and with the `new` operator, respectively. The `apply` and `construct` traps correspond to those internal methods and let you override them. The `apply` trap receives, and `Reflect.apply()` expects, the following the arguments when a function is called without `new`:
