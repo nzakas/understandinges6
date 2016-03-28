@@ -1,6 +1,6 @@
 # Proxies and Reflection
 
-W> Work in progress! Not ready for review.
+W> This chapter is a work in progress. The content should be correct but may be incomplete.
 
 One of the goals shared by ECMAScript 5 and ECMAScript 6 is the continued demystifying of JavaScript functionality. Prior to ECMAScript 5, for example, there were nonenumerable and nonwritable object properties present in JavaScript environments, but there was no way for developers to define nonenumerable or nonwritable properties of their own. This led to inclusion of `Object.defineProperty()` in ECMAScript 5 to give developers the ability to do what JavaScript engines were already capable of doing.
 
@@ -644,7 +644,7 @@ The `PersonProxy` object is a proxy of the `Person` class constructor. Class con
 
 
 
-
+<!--
 TODO: Continue and clean up below
 
 
@@ -891,3 +891,4 @@ console.log(person.name);                 // "Nicholas"
 ```
 
 Since proxies are transparent, the returned object has all of the same observable characteristics as a regular instance of `Person`, allowing you to create as many instances of a type-safe object while making the call to `createTypeSafeObject()` only once.
+-->
