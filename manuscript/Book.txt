@@ -10,5 +10,6 @@
 09-Classes.md
 10-Arrays.md
 11-Promises.md
+12-Proxies-and-Reflection.md
 13-Modules.md
 A-Other-Changes.md
