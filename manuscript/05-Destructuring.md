@@ -520,52 +520,7 @@ function setCookie(name, value,
 }
 ```
 
-Each property in the destructured parameter has a default value in this code, so you can avoid checking to see if a given property has been included in order to use the correct value. There are a couple of downsides to this approach, however. First, the function declaration gets quite a bit more complicated than usual. Second, if the destructured parameter is optional, then it still needs to be assigned an object as a default value, otherwise a call like `setCookie("type", "js")` throws an error. That default object needs to have all the same information as the destructured parameters (with the same defaults, to ensure consistent behavior), like the one in this version of the `setCookie()` function:
-
-```js
-function setCookie(name, value,
-    {
-        secure = false,
-        path = "/",
-        domain = "example.com",
-        expires = new Date(Date.now() + 360000000)
-    } = {
-        secure: false,
-        path: "/",
-        domain: "example.com",
-        expires: new Date(Date.now() + 360000000)
-    }
-) {
-
-    // ...
-}
-```
-
-Now the function declaration is even more complicated. The first object literal is the destructured parameter while the second is the default value. Unfortunately, this leads to a lot of repetition. You can eliminate some of the repetition by extracting the default values into a separate object and using that separate object as part of both the destructuring and the default parameter value:
-
-```js
-const setCookieDefaults = {
-        secure: false,
-        path: "/",
-        domain: "example.com",
-        expires: new Date(Date.now() + 360000000)
-    };
-
-function setCookie(name, value,
-    {
-        secure = setCookieDefault.secure,
-        path = setCookieDefault.path,
-        domain = setCookieDefault.domain,
-        expires = setCookieDefault.expires
-    } = setCookieDefaults
-) {
-
-    // ...
-}
-```
-
-In this code, the default values have been placed in a `setCookieDefaults` object. The destructured parameter references that object directly for setting the default value of each binding and also as the overall default parameter value. The fact that handling all defaults can be complicated is an unfortunate side effect of using destructured parameters. On the bright side, however, if a default value needs to change, you can change it once in `setCookieDefaults` and the data will be used in all the correct spots.
-
+Each property in the destructured parameter has a default value in this code, so you can avoid checking to see if a given property has been included in order to use the correct value. This does make the function declaration look a bit more complicated than usual, but that’s a small price to pay for ensuring each argument has a usable value.
 ## Summary
 
 Destructuring makes working with objects and arrays in JavaScript easier. Using the familiar object literal and array literal syntax, you can pick data structures apart to get at just the information you're interested in. Object patterns allow you to extract data from objects while array patterns let you extract data from arrays.
