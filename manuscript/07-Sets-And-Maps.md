@@ -1,14 +1,16 @@
 # Sets and Maps
 
-JavaScript only had one type of collection, represented by the `Array` type, for most of its history. Arrays are used in JavaScript just like arrays in other languages, but the lack of other collection options meant arrays were often used as queues and stacks, as well. Since arrays only use numeric indices, developers used non-array objects whenever a non-numeric index was necessary. That technique led to custom implementations of sets and maps using non-array objects.
+JavaScript only had one type of collection, represented by the `Array` type, for most of its history (though some may argue all non-array objects are just collections of key-value pairs, their intended use was, originally quite different from arrays). Arrays are used in JavaScript just like arrays in other languages, but the lack of other collection options meant arrays were often used as queues and stacks, as well. Since arrays only use numeric indices, developers used non-array objects whenever a non-numeric index was necessary. That technique led to custom implementations of sets and maps using non-array objects.
 
 A *set* is a list of values that cannot contain duplicates. You typically don't access individual items in a set like you would items in an array; instead, it's much more common to just check a set to see if a value is present. A *map* is a collection of keys that correspond to specific values. As such, each item in a map stores two pieces of data, and values are retrieved by specifying the key to read from. Maps are frequently used as caches, for storing data to be quickly retrieved later. While ECMAScript 5 didn't formally have sets and maps, developers worked around this limitation using non-array objects, too.
 
-ECMAScript 6 added sets and maps to JavaScript, and this chapter discusses everything you need to know about the two collection types. First, I will discuss the workarounds developers used to implement sets and maps before ECMAScript 6, and why those implementations were problematic. After that important background information, I will cover how sets and maps work in ECMAScript 6.
+ECMAScript 6 added sets and maps to JavaScript, and this chapter discusses everything you need to know about these two collection types.
+
+First, I will discuss the workarounds developers used to implement sets and maps before ECMAScript 6, and why those implementations were problematic. After that important background information, I will cover how sets and maps work in ECMAScript 6.
 
 ## Sets and Maps in ECMAScript 5
 
-In ECMAScript 5 and earlier, developers mimicked sets and maps by using object properties, like this:
+In ECMAScript 5, developers mimicked sets and maps by using object properties, like this:
 
 ```js
 let set = Object.create(null);
@@ -63,7 +65,9 @@ map[key1] = "foo";
 console.log(map[key2]);     // "foo"
 ```
 
-Here, `map[key2]` and `map[key1]` reference the same value. The objects `key1` and `key2` are converted to strings because object properties must be strings. Since `"[object Object]"` is the default string representation for objects, both `key1` and `key2` are converted to that string. This can cause errors that may not be obvious because it's logical to assume that different object keys would, in fact, be difference. The conversion to the default string representation makes it difficult to use objects as keys. (The same problem exists when trying to use an object as a set.)
+Here, `map[key2]` and `map[key1]` reference the same value. The objects `key1` and `key2` are converted to strings because object properties must be strings. Since `"[object Object]"` is the default string representation for objects, both `key1` and `key2` are converted to that string. This can cause errors that may not be obvious because it's logical to assume that different object keys would, in fact, be different.
+
+The conversion to the default string representation makes it difficult to use objects as keys. (The same problem exists when trying to use an object as a set.)
 
 Maps with a key whose value is falsy present their own particular problem, too. A falsy value is automatically converted to false when used in situations where a boolean value is required, such as in the condition of an `if` statement. This conversion alone isn't a problem--so long as you're careful as to how you use values. For instance, look at this code:
 
@@ -82,6 +86,8 @@ This example has some ambiguity as to how `map.count` should be used. Is the `if
 
 These are difficult problems to identify and debug when they occur in large applications, which is a prime reason that ECMAScript 6 adds both sets and maps to the language.
 
+I> JavaScript has the `in` operator that returns `true` if a property exists in an object without reading the value of the object. However, the `in` operator also searches the prototype of an object, which makes it only safe to use when an object has a `null` prototype. Even so, many developers still incorrectly use code as in the last example rather than using `in`.
+
 ## Sets in ECMAScript 6
 
 ECMAScript 6 adds a `Set` type that is an ordered list of values without duplicates. Sets allow fast access to the data they contain, adding a more efficient manner of tracking discrete values.
@@ -98,7 +104,7 @@ set.add("5");
 console.log(set.size);    // 2
 ```
 
-Sets do not coerce values to determine whether they are the same. That means a set can contain both the number `5` and the string `"5"` as two separate items. (Internally, the comparison uses the `Object.is()` method discussed in Chapter 4.) You can also add multiple objects to the set, and those objects will remain distinct:
+Sets do not coerce values to determine whether they are the same. That means a set can contain both the number `5` and the string `"5"` as two separate items. (Internally, the comparison uses the `Object.is()` method discussed in Chapter 4 to determine if two values are the same.) You can also add multiple objects to the set, and those objects will remain distinct:
 
 ```js
 let set = new Set(),
@@ -248,7 +254,7 @@ processor.process(set);
 
 The arrow function in this example reads `this` from the containing `process()` function, and so it should correctly resolve `this.output()` to a `processor.output()` call.
 
-Keep in mind that while sets are great for tracking values and `forEach()` lets you work on each value sequentially, you can't randomly access a value contained in a set like you can with an array. If you need to do so, then the best option is to convert the set into an array.
+Keep in mind that while sets are great for tracking values and `forEach()` lets you work on each value sequentially, you can't directly access a value by index like you can with an array. If you need to do so, then the best option is to convert the set into an array.
 
 ### Converting a Set to an Array
 
@@ -358,6 +364,7 @@ These examples show that weak sets share some characteristics with regular sets,
 1. Weak sets are not iterables and therefore cannot be used in a `for-of` loop.
 1. Weak sets do not expose any iterators (such as the `keys()` and `values()` methods), so there is no way to programmatically determine the contents of a weak set.
 1. Weak sets do not have a `forEach()` method.
+1. Weak sets do not have a `size` property.
 
 The seemingly limited functionality of weak sets is necessary in order to properly handle memory. In general, if you only need to track object references, then you should use a weak set instead of a regular set.
 
