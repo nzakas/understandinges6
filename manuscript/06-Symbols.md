@@ -1,10 +1,4 @@
-[TOC]
-# Symbols
-
-<!-- @Nicholas: Is there a more descriptive title you'd apply to this chapter? I'd just like to avoid single-word
-     chapter titles and headings, where possible, to give readers a bit more information. -->
-
-<!-- JZ: how about "Symbol primitive" -->
+# Symbols and Symbol Properties
 
 Symbols are a primitive type introduced in ECMAScript 6, joining the existing primitive types: strings, numbers, booleans, `null`, and `undefined`. Symbols began as a way to create private object members, a feature JavaScript developers wanted for a long time. Before symbols, any property with a string name was easy to access regardless of the obscurity of the name, and the "private names" feature was meant to let developers create non-string property names. That way, normal techniques for detecting these private names wouldn't work.
 
@@ -142,9 +136,7 @@ W> The global symbol registry is a shared environment, just like the global scop
 
 Type coercion is a significant part of JavaScript, and there's a lot of flexibility in the language's ability to coerce one data type into another. Symbols, however, are quite inflexible when it comes to coercion because other types lack a logical equivalent to a symbol. Specifically, symbols cannot be coerced into strings or numbers so that they cannot accidentally be used as properties that would otherwise be expected to behave as symbols.
 
-The examples in this chapter have used `console.log()` to indicate the output for symbols, and that works because `console.log()` calls `String()` on its arguments. You can use `String()` directly to get the same result. For instance:
-
-<!-- JZ: `console.log` doesn't always call String though and probably depends on the enviornment (e.g. `console.log({ toString: function(){ return 'x' } })` does not output "x" in console). I'm guessing that `console.log` just knows to call `toString` on a symbol? -->
+The examples in this chapter have used `console.log()` to indicate the output for symbols, and that works because `console.log()` calls `String()` on symbols to create useful output. You can use `String()` directly to get the same result. For instance:
 
 ```js
 var uid = Symbol.for("uid"),
@@ -175,9 +167,7 @@ This example attempts to divide the symbol by 1, which causes an error. Errors a
 
 The `Object.keys()` and `Object.getOwnPropertyNames()` methods can retrieve all property names in an object. The former method returns all enumerable property names, and the latter returns all properties regardless of enumerability. Neither method returns symbol properties, however, to preserve their ECMAScript 5 functionality. Instead, the `Object.getOwnPropertySymbols()` method was added in ECMAScript 6 to allow you to retrieve property symbols from an object.
 
-The return value of `Object.getOwnPropertySymbols()` is an array of symbols for own properties. For example:
-
-<!-- JZ: "array of symbols _for_ own properties" sounds strange. Maybe better to say array of "own" symbols? (i.e. defined on an object itself rather than anywhere in its prototype chain) -->
+The return value of `Object.getOwnPropertySymbols()` is an array of own property symbols. For example:
 
 ```js
 var uid = Symbol.for("uid");
@@ -218,14 +208,9 @@ The well-known symbols are:
 
 Some commonly used well-known symbols are discussed in the following sections, while others are discussed throughout the rest of the book to keep them in the correct context.
 
-I> Overwriting a method defined with a well-known symbol changes an ordinary object to an exotic object because this changes some internal default behavior.
+I> Overwriting a method defined with a well-known symbol changes an ordinary object to an exotic object because this changes some internal default behavior. There is no practical impact to your code as a result, it just changes the way the specification describes the object.
 
-<!-- JZ: intreresting point about exotic objects, but what are the ramifications of that? -->
-
-<!-- @Nicholas: Since we're now using Symbol.xxx instead of @@xxx, would it make sense to say "The Symbol.xxx Property"
-     in these headings, to avoid repeating "Symbol"? /JG -->
-
-### The Symbol.hasInstance Symbol
+### The Symbol.hasInstance Property
 
 Every function has a `Symbol.hasInstance` method that determines whether or not a given object is an instance of that function. The method is defined on `Function.prototype` so that all functions inherit the default behavior for the `instanceof` property. The `Symbol.hasInstance` property itself is defined as nonwritable and nonconfigurable as well as nonenumerable, to ensure it doesn't get overwritten by mistake.
 
@@ -475,9 +460,7 @@ function isArray(value) {
 console.log(isArray([]));   // true
 ```
 
-This may look a bit roundabout, but it worked quite well for identifying arrays in all browsers. The `toString()` method on arrays isn't useful for identifying an object because it returns a string representation of the items the object contains. But the `toString()` method on `Object.prototype` had a quirk: it included some internally-defined name in the returned result. Developers could use this method on an object to retrieve what the JavaScript environment thought the object's data type was.
-
-<!-- JZ: I think it's ok to mention that the O.p.toS was returning value of [[Class]] since you already talked about other internal attributes -->
+This may look a bit roundabout, but it worked quite well for identifying arrays in all browsers. The `toString()` method on arrays isn't useful for identifying an object because it returns a string representation of the items the object contains. But the `toString()` method on `Object.prototype` had a quirk: it included internally-defined name called `[[Class]]` in the returned result. Developers could use this method on an object to retrieve what the JavaScript environment thought the object's data type was.
 
 Developers quickly realized that since there was no way to change this behavior, it was possible to use the same approach to distinguish between native objects and those created by developers. The most important case of this was the ECMAScript 5 `JSON` object.
 
@@ -569,9 +552,7 @@ Even though `Symbol.toStringTag` is overwritten for arrays in this example, the 
 
 ### The Symbol.unscopables Symbol
 
-The `with` statement is one of the most controversial parts of JavaScript. Originally designed to avoid repetitive typing, the `with` statement later became roundly criticized for making code harder to understand and for negative performance implications.
-
-<!-- JZ: and error-prone, when you would accidentally change things that you didn't mean to change -->
+The `with` statement is one of the most controversial parts of JavaScript. Originally designed to avoid repetitive typing, the `with` statement later became roundly criticized for making code harder to understand and for negative performance implications as well as being error-prone.
 
 As a result, the `with` statement is not allowed in strict mode; that restriction also affects classes and modules, which are strict mode by default and have no opt-out.
 
@@ -617,9 +598,7 @@ In general, you shouldn't need to define `Symbol.unscopables` for your objects u
 
 ## Summary
 
-Symbols are a new type of primitive value in JavaScript and are used to create nonenumerable properties that can't be accessed without using the symbol.
-
-<!-- JZ: perhaps "without using the _reference_ to the symbol" is better? -->
+Symbols are a new type of primitive value in JavaScript and are used to create nonenumerable properties that can't be accessed without referencing the symbol.
 
 While not truly private, these properties are harder to accidentally change or overwrite and are therefore suitable for functionality that needs a level of protection from developers.
 
