@@ -165,7 +165,7 @@ The regular expression `/^.$/` matches any input string with a single character.
 
 #### Counting Code Points
 
-Unfortunately, ECMAScript 6 can't natively determine how many code points a string has, but with the `u` flag, you can use regular expressions to figure it out as follows:
+Unfortunately, ECMAScript 6 doesn't add a method to determine how many code points a string has, but with the `u` flag, you can use regular expressions to figure it out as follows:
 
 ```js
 function codePointLength(text) {
