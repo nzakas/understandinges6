@@ -485,6 +485,148 @@ Here, `Object.preventExtensions()` passed through the value `2` as its return va
 
 As mentioned earlier, whenever there are seemingly duplicate methods on `Object` and `Reflect`, you should always use the methods on `Reflect` inside of proxy traps.
 
+### Property Descriptor Traps
+
+One of the most important features of ECMAScript 5 was the ability to define property attributes using `Object.defineProperty()`. In previous versions, there was no way to define an accessor property, make a property read-only, or make a property nonenumerable. All of these are possible using `Object.defineProperty()`, and those attributes are retrievable using `Object.getOwnPropertyDescriptor()`. Proxies let you intercepts calls to `Object.defineProperty()` and `Object.getOwnPropertyDescriptor()` using the `defineProperty` and `getOwnPropertyDescriptor` traps, respectively. The `defineProperty` trap receives the following arguments:
+
+1. `trapTarget` - the object on which the property should be defined (the proxy's target)
+1. `key` - the string or symbol for the property
+1. `descriptor` - the descriptor object for the property
+
+The `defineProperty` trap requires you to return `true` if the operation is successful and `false` if not.The `getOwnPropertyDescriptor` traps receives only `trapTarget` and `key`, and you are expected to return the descriptor. The corresponding `Reflect.defineProperty()` and `Reflect.getOwnPropertyDescriptor()` methods accept the same arguments as their proxy trap counterparts. Here's a simple example that just implements the default behavior for each trap:
+
+```js
+let proxy = new Proxy({}, {
+    defineProperty(trapTarget, key, descriptor) {
+        return Reflect.defineProperty(trapTarget, key, descriptor);
+    },
+    getOwnPropertyDescriptor(trapTarget, key) {
+        return Reflect.getOwnPropertyDescriptor(trapTarget, key);
+    }
+});
+
+
+Object.defineProperty(proxy, "name", {
+    value: "proxy"
+});
+
+console.log(proxy.name);            // "proxy"
+
+let descriptor = Object.getOwnPropertyDescriptor(proxy, "name");
+
+console.log(descriptor.value);      // "proxy"
+```
+
+This example defines a property `"name"` on the proxy using `Object.defineProperty()`. The property descriptor for that property is then retrieved using `Object.getOwnPropertyDescriptor()`.
+
+#### Blocking Object.defineProperty()
+
+The `defineProperty` trap requires you to return a boolean value to indicate if the operation was successful. When `true` is returned, `Object.defineProperty()` succeeds as usual; when `false` is returned, `Object.defineProperty()` throws an error. You can use this functionality to restrict the kind of properties that can be defined using `Object.defineProperty()`. For instance, if you want to prevent symbol properties from being defined, you could check that the key is a string and return `false` if not. For example:
+
+```js
+let proxy = new Proxy({}, {
+    defineProperty(trapTarget, key, descriptor) {
+
+        if (typeof key !== "string") {
+            return false;
+        }
+
+        return Reflect.defineProperty(trapTarget, key, descriptor);
+    }
+});
+
+
+Object.defineProperty(proxy, "name", {
+    value: "proxy"
+});
+
+console.log(proxy.name);                    // "proxy"
+
+let nameSymbol = Symbol("name");
+
+// throws error
+Object.defineProperty(proxy, nameSymbol , {
+    value: "proxy"
+});
+```
+
+In this code, the `defineProperty` proxy trap returns `false` when `key` isn't a string and otherwise proceeds with the default behavior. When `Object.defineProperty()` is called with a key of `"name"`, it succeeds because the key is a string. When `Object.defineProperty()` is called with `nameSymbol`, then it throws an error because the `definePropert` trap returns `false`.
+
+I> You can also have `Object.defineProperty()` silently failed by returning `true` and not calling `Reflect.defineProperty()`. That will suppress the error while not actually defining the property.
+
+#### Descriptor Object Restrictions
+
+The descriptor object passed to the `defineProperty` trap and returned from `getOwnPropertyDescriptor` trap are normalized and validated, respectively, to ensure consistent behavior when using `Object.defineProperty()` and `Object.getOwnPropertyDescriptor()`. To start, no matter what object is passed as the third argument to `Object.defineProperty()` only the properties `enumerable`, `configurable`, `value`, `writable`, `get`, and `set` will be on the descriptor object passed to the `defineProperty` trap. For example:
+
+```js
+let proxy = new Proxy({}, {
+    defineProperty(trapTarget, key, descriptor) {
+        console.log(descriptor.value);              // "proxy"
+        console.log(descriptor.name);               // undefined
+
+        return Reflect.defineProperty(trapTarget, key, descriptor);
+    }
+});
+
+
+Object.defineProperty(proxy, "name", {
+    value: "proxy",
+    name: "custom"
+});
+```
+
+Here, `Object.defineProperty()` is called with a nonstandard `name` property on the third argument. When the `defineProperty` trap is called, the `descriptor` object does not have a `name` property but does have a `value` property. That's because `descriptor` is not a reference to the actual third argument to `Object.defineProperty()`, but rather a new object that contains only the allowable properties. The `Reflect.defineProperty()` method also ignores any nonstandard properties on the descriptor.
+
+The `getOwnPropertyDescriptor` trap has a slightly different restriction that requires the return value to be `null`, `undefined`, or an object. If an object is returned, only `enumerable`, `configurable`, `value`, `writable`, `get`, and `set` are allowed as own properties of the object. An error is thrown if you return an object with an own property that isn't allowed, such as:
+
+```js
+let proxy = new Proxy({}, {
+    getOwnPropertyDescriptor(trapTarget, key) {
+        return {
+            name: "proxy";
+        };
+    }
+});
+
+// throws error
+let descriptor = Object.getOwnPropertyDescriptor(proxy, "name");
+```
+
+The property `name` is not allowable on property descriptors, so when `Object.getOwnPropertyDescriptor()` is called, the `getOwnPropertyDescriptor` return value triggers an error. This restriction ensures that the value returned by `Object.getOwnPropertyDescriptor()` always has a reliable structure regardless of use on proxies.
+
+#### Duplicate Descriptor Methods
+
+Once again, ECMAScript 6 has some confusingly similar methods, as `Object.defineProperty() and `Object.getOwnPropertyDescriptor()` appear to do the same thing as `Reflect.defineProperty()` and `Reflect.getOwnPropertyDescriptor()`, respectively. As with other method pairs discussed earlier in this chapter, there are some subtle but important differences.
+
+The `Object.defineProperty()` and `Reflect.defineProperty()` method are exactly the same except for their return values. The `Object.defineProperty()` method returns the first argument whereas `Reflect.defineProperty()` returns a boolean value, `true` if the operation succeeded and `false` if not. For example:
+
+
+```js
+let target = {};
+
+let result1 = Object.defineProperty(target, "name", { value: "target "});
+
+console.log(target === result1);        // true
+
+let result2 = Reflect.defineProperty(target, "name", { value: "reflect" });
+
+console.log(result2);                   // true
+```
+
+When `Object.defineProperty()` is called on `target`, the return value is `target`. When `Reflect.defineProperty()` is called on `target`, the return value is `true`, indicating that the operation succeeded. Since the `defineProperty` proxy trap requires a boolean value to be returned, it's better to use `Reflect.defineProperty()` to implement the default behavior when necessary.
+
+The `Object.getOwnPropertyDescriptor()` method coerces its first argument into an object when a primitive value is passed and then continues the operation whereas `Reflect.getOwnPropertyDescriptor()` throws an error if the first argument is a primitive value. Here's an example:
+
+```js
+let descriptor1 = Object.getOwnPropertyDescriptor(2, "name");
+console.log(descriptor1);       // undefined
+
+// throws an error
+let descriptor2 = Reflect.getOwnPropertyDescriptor(2, "name");
+```
+
+The `Object.getOwnPropertyDescriptor()` method returns `undefined` because it coerces `2` into an object and that object doesn't have a `name` property. This is the standard behavior of the method when a property with the given name isn't found on an object. However, when `Reflect.getOwnPropertyDescriptor()` is called, an error is thrown immediately because it does not accept primitive values for the first argument.
+
 ### Function Proxies Using the `apply` and `construct` traps
 
 Of all the proxy traps, only `apply` and `construct` require the proxy target to be a function. You learned in Chapter 3 that functions have two internal methods, `[[Call]]` and `[[Construct]]`, that are executed when a function is called without and with the `new` operator, respectively. The `apply` and `construct` traps correspond to those internal methods and let you override them. The `apply` trap receives, and `Reflect.apply()` expects, the following the arguments when a function is called without `new`:
