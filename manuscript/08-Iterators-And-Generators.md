@@ -93,7 +93,7 @@ The `yield` keyword can be used with any value or expression, so you can write g
 
 ```js
 function *createIterator(items) {
-    for (let i=0; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
         yield items[i];
     }
 }
@@ -119,7 +119,7 @@ You can use function expressions to create generators by just including a star (
 
 ```js
 let createIterator = function *(items) {
-    for (let i=0; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
         yield items[i];
     }
 };
@@ -147,7 +147,7 @@ Because generators are just functions, they can be added to objects, too. For ex
 var o = {
 
     createIterator: function *(items) {
-        for (let i=0; i < items.length; i++) {
+        for (let i = 0; i < items.length; i++) {
             yield items[i];
         }
     }
@@ -162,7 +162,7 @@ You can also use the ECMAScript 6 method shorthand by prepending the method name
 var o = {
 
     *createIterator(items) {
-        for (let i=0; i < items.length; i++) {
+        for (let i = 0; i < items.length; i++) {
             yield items[i];
         }
     }
@@ -477,7 +477,7 @@ JavaScript strings have slowly become more like arrays since ECMAScript 5 was re
 ```js
 var message = "A 𠮷 B";
 
-for (let i=0; i < message.length; i++) {
+for (let i = 0; i < message.length; i++) {
     console.log(message[i]);
 }
 ```
@@ -747,7 +747,7 @@ function *createNumberIterator() {
 }
 
 function *createRepeatingIterator(count) {
-    for (let i=0; i < count; i++) {
+    for (let i = 0; i < count; i++) {
         yield "repeat";
     }
 }
@@ -779,7 +779,7 @@ function *createNumberIterator() {
 }
 
 function *createRepeatingIterator(count) {
-    for (let i=0; i < count; i++) {
+    for (let i = 0; i < count; i++) {
         yield "repeat";
     }
 }

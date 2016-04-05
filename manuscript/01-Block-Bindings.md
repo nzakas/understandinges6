@@ -220,7 +220,7 @@ The TDZ is just one unique aspect of block bindings. Another unique aspect has t
 Perhaps one area where developers most want block level scoping of variables is within `for` loops, where the throwaway counter variable is meant to be used only inside the loop. For instance, it's not uncommon to see code like this in JavaScript:
 
 ```js
-for (var i=0; i < 10; i++) {
+for (var i = 0; i < 10; i++) {
     process(items[i]);
 }
 
@@ -231,7 +231,7 @@ console.log(i);                     // 10
 In other languages, where block level scoping is the default, this example should work as intended, and only the `for` loop should have access to the `i` variable. In JavaScript, however, the variable `i` is still accessible after the loop is completed because the `var` declaration gets hoisted. Using `let` instead, as in the following code, should give the intended behavior:
 
 ```js
-for (let i=0; i < 10; i++) {
+for (let i = 0; i < 10; i++) {
     process(items[i]);
 }
 
@@ -248,7 +248,7 @@ The characteristics of `var` have long made creating functions inside of loops p
 ```js
 var funcs = [];
 
-for (var i=0; i < 10; i++) {
+for (var i = 0; i < 10; i++) {
     funcs.push(function() { console.log(i); });
 }
 
@@ -264,7 +264,7 @@ To fix this problem, developers use immediately-invoked function expressions (II
 ```js
 var funcs = [];
 
-for (var i=0; i < 10; i++) {
+for (var i = 0; i < 10; i++) {
     funcs.push((function(value) {
         return function() {
             console.log(value);
@@ -286,7 +286,7 @@ A `let` declaration simplifies loops by effectively mimicking what the IIFE does
 ```js
 var funcs = [];
 
-for (let i=0; i < 10; i++) {
+for (let i = 0; i < 10; i++) {
     funcs.push(function() {
         console.log(i);
     });
@@ -330,7 +330,7 @@ The ECMAScript 6 specification doesn't explicitly disallow `const` declarations 
 var funcs = [];
 
 // throws an error after one iteration
-for (const i=0; i < 10; i++) {
+for (const i = 0; i < 10; i++) {
     funcs.push(function() {
         console.log(i);
     });
