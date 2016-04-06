@@ -1,12 +1,12 @@
 # Classes
 
-Ever since JavaScript was first created, many developers have been confused by its lack of classes. Most formal object-oriented programming languages support classes and classical inheritance as the primary way of defining similar and related objects. From pre-ECMAScript 1 all the way through ECMAScript 5, this point of confusion led many libraries to create utilities designed to make JavaScript look like it had support for classes.
+Many developers have been confused by JavaScript's lack of classes ever since the language was created. Most formal object-oriented programming languages support classes and classical inheritance as the primary way of defining similar and related objects. From pre-ECMAScript 1 all the way through ECMAScript 5, this point of confusion led many libraries to create utilities designed to make JavaScript look like it had support for classes. While some JavaScript developers feel strongly that the language doesn't need classes, the number of libraries created specifically for this purpose led to the inclusion of classes in ECMAScript 6.
 
-While there are some JavaScript developers who feel strongly that the language doesn't need classes, the fact that so many libraries were created specifically for this purpose led to the inclusion of classes in ECMAScript 6. However, ECMAScript 6 classes aren't exactly the same as classes in other languages. There's a uniqueness about them that embraces the dynamic nature of JavaScript.
+Before exploring ECMAScript 6 classes, it's helpful to understand the underlying mechanisms that classes use, so this chapter starts by discussing how ECMAScript 5 developers achieved class-like behavior. As you will see after that, however, ECMAScript 6 classes aren't exactly the same as classes in other languages. There's a uniqueness about them that embraces the dynamic nature of JavaScript.
 
 ## Class-Like Structures in ECMAScript 5
 
-Before exploring classes, it's helpful to understand the underlying mechanisms that classes use. In ECMAScript 5 and earlier, there were no classes, and the closest equivalent was creating a constructor and then assigning methods to its prototype. This approach is called creating a custom type. For example:
+In ECMAScript 5 and earlier, JavaScript had no classes. The closest equivalent to a class was creating a constructor and then assigning methods to the constructor's prototype, an approach called *creating a custom type*. For example:
 
 ```js
 function PersonType(name) {
@@ -24,13 +24,17 @@ console.log(person instanceof PersonType);  // true
 console.log(person instanceof Object);      // true
 ```
 
-In this code, `PersonType` is a constructor function that creates a single property called `name`. The `sayName()` method is assigned to the prototype so the same function is shared by all instances of `PersonType`. Then, a new instance of `PersonType` is created via the `new` operator, and the resulting `person` object is considered an instance of `PersonType` and of `Object` (through prototypal inheritance).
+In this code, `PersonType` is a constructor function that creates a single property called `name`. The `sayName()` method is assigned to the prototype so the same function is shared by all instances of the `PersonType` object. Then, a new instance of `PersonType` is created via the `new` operator. The resulting `person` object is considered an instance of `PersonType` and of `Object` through prototypal inheritance.
 
-This same basic pattern underlies a lot of the class-mimicking JavaScript libraries. And that's where ECMAScript 6 classes start.
+This basic pattern underlies a lot of the class-mimicking JavaScript libraries, and that's where ECMAScript 6 classes start.
 
 ## Class Declarations
 
-The simplest class form is the one that looks similar to other languages: the class declaration. Class declarations begin with the `class` keyword followed by the name of the class. The rest of the syntax looks similar to concise methods in object literals without requiring commas between them. For example, here's the class equivalent of the previous example:
+The simplest class form in ECMAScript 6 is the class declaration, which looks similar to classes other languages.
+
+### A Basic Class Declaration
+
+Class declarations begin with the `class` keyword followed by the name of the class. The rest of the syntax looks similar to concise methods in object literals, without requiring commas between them. For example, here's a simple class declaration:
 
 ```js
 class PersonClass {
@@ -56,22 +60,24 @@ console.log(typeof PersonClass);                    // "function"
 console.log(typeof PersonClass.prototype.sayName);  // "function"
 ```
 
-The class declaration `PersonClass` behaves quite similarly to `PersonType` from the previous example. Instead of defining a function as the constructor, class declarations allow you to define the constructor directly inside of the class using the special `constructor` method name. Since class methods use the concise syntax, there's no need to use the `function` keyword. All other method names have no special meaning, so you can add as many as you want.
+The class declaration `PersonClass` behaves quite similarly to `PersonType` from the previous example. But instead of defining a function as the constructor, class declarations allow you to define the constructor directly inside the class with the special `constructor` method name. Since class methods use the concise syntax, there's no need to use the `function` keyword. All other method names have no special meaning, so you can add as many methods as you want.
 
-I> Own properties, properties that occur on the instance rather than the prototype, can only be created inside of a class constructor or method. In the previous example, `name` is an own property. It's recommended to create all possible own properties inside of the constructor function so there's a single place that's responsible for all of them.
+I> *Own properties*, properties that occur on the instance rather than the prototype, can only be created inside a class constructor or method. In this example, `name` is an own property. I recommend creating all possible own properties inside the constructor function so a single place in the class is responsible for all of them.
 
-An interesting aspect of class declarations is that they are just syntactic sugar on top of the existing custom type declarations. The `PersonClass` declaration actually creates a function that has the behavior of the `constructor` method, which is why `typeof PersonClass` is `"function"`. Similarly, the `sayName()` method ends up as a method on `PersonClass.prototype`, similar to `PersonType.prototype` in the earlier example. These similarities allow you to mix custom types and classes without worrying too much about which you're using.
+Interestingly, class declarations are just syntactic sugar on top of the existing custom type declarations. The `PersonClass` declaration actually creates a function that has the behavior of the `constructor` method, which is why `typeof PersonClass` gives `"function"` as the result. The `sayName()` method also ends up as a method on `PersonClass.prototype` in this example, similar to the relationship between `sayName()` and `PersonType.prototype` in the previous example. These similarities allow you to mix custom types and classes without worrying too much about which you're using.
 
-Despite the similarities, there are some important differences to keep in mind:
+### Why to Use the Class Syntax
+
+Despite the similarities between classes and custom types, there are some important differences to keep in mind:
 
 1. Class declarations, unlike function declarations, are not hoisted. Class declarations act like `let` declarations and so exist in the temporal dead zone until execution reaches the declaration.
 1. All code inside of class declarations runs in strict mode automatically. There's no way to opt-out of strict mode inside of classes.
 1. All methods are non-enumerable. This is a significant change from custom types, where you need to use `Object.defineProperty()` to make a method non-enumerable.
-1. All methods have no `[[Construct]]` internal method and so throw an error if you try to call them with `new`.
+1. All methods lack an internal `[[Construct]]` method and will throw an error if you try to call them with `new`.
 1. Calling the class constructor without `new` throws an error.
 1. Attempting to overwrite the class name within a class method throws an error.
 
-With all of this in mind, the `PersonClass` declaration from the previous example is directly equivalent to the following:
+With all of this in mind, the `PersonClass` declaration from the previous example is directly equivalent to the following code, which doesn't use the class syntax:
 
 ```js
 // direct equivalent of PersonClass
@@ -108,13 +114,13 @@ let PersonType2 = (function() {
 }());
 ```
 
-The first thing to notice in this code is that there are two `PersonType2` declarations, a `let` declaration in the outer scope and a `const` declaration inside of the IIFE. This is how class methods are forbidden from overwriting the class name while code outside of the class is allowed to do so. The constructor function checks `new.target` to ensure that it's being called with `new`, otherwise an error is thrown. Next, the `sayName()` method is defined as nonenumerable and it also checks `new.target` to ensure that it wasn't called with `new`. The final step is to return the constructor function.
+First, notice that there are two `PersonType2` declarations: a `let` declaration in the outer scope and a `const` declaration inside the IIFE. This is how class methods are forbidden from overwriting the class name while code outside the class is allowed to do so. The constructor function checks `new.target` to ensure that it's being called with `new`, otherwise an error is thrown. Next, the `sayName()` method is defined as nonenumerable, and the method checks `new.target` to ensure that it wasn't called with `new`. The final step returns the constructor function.
 
-From this example, you can see that while it is possible to do everything that classes do without using new syntax, the class syntax makes all of the functionality a lot simpler than it would be otherwise.
+This example shows that while it's possible to do everything classes do without using the new syntax, the class syntax simplifies all of the functionality significantly.
 
 A> ### Constant Class Names
 A>
-A> The name of a class is specified as if using `const`, but only inside of the class itself. That means you can overwrite the class name outside of the class but not inside a class method. For example:
+A> The name of a class is only specified as if using `const` inside of the class itself. That means you can overwrite the class name outside of the class but not inside a class method. For example:
 A>
 A> ```js
 A> class Foo {
@@ -123,17 +129,19 @@ A>        Foo = "bar";    // throws an error when executed
 A>    }
 A> }
 A>
-A>// but this is okay
+A>// but this is okay after the class declaration
 A> Foo = "baz";
 A> ```
 A>
-A> In this code, the `Foo` inside of the class constructor is a separate binding than the `Foo` outside of the class. The internal `Foo` is defined as if it's a `const` and so cannot be overwritten, which means an error is thrown when an attempt is made to do so; the external `Foo` is defined as if it's a `let` declaration and so its value may be overwritten at any time.
+A> In this code, the `Foo` inside the class constructor is a separate binding than the `Foo` outside the class. The internal `Foo` is defined as if it's a `const` and cannot be overwritten; an error is thrown when the constructor attempts to overwrite `Foo` with any value. But since the external `Foo` is defined as if it's a `let` declaration, you can overwrite its value at any time.
 
 ## Class Expressions
 
-Classes and functions are similar in that they have two forms: declarations and expressions. Function and class declarations begin with an appropriate keyword (`function` or `class`, respectively) followed by an identifier. Functions have an expression form that doesn't require an identifier after `function`, and similarly, classes have an expression form that doesn't require an identifier after `class`.
+Classes and functions are similar in that they have two forms: declarations and expressions. Function and class declarations begin with an appropriate keyword (`function` or `class`, respectively) followed by an identifier. Functions have an expression form that doesn't require an identifier after `function`, and similarly, classes have an expression form that doesn't require an identifier after `class`. These *class expressions* are designed to be used in variable declarations or passed into functions as arguments.
 
-These *class expressions* are designed to be used in variable declarations or passed into functions as arguments. Here's the class expression equivalent of the previous examples:
+### A Basic Class Expression
+
+Here's the class expression equivalent of the previous `PersonClass` examples, followed by some code that uses it:
 
 ```js
 // class expressions do not require identifiers after "class"
@@ -166,7 +174,7 @@ I> Whether you use class declarations or class expressions is purely a matter of
 
 ### Named Class Expressions
 
-The previous section used an anonymous class expression in the example, but you can also name class expressions just like you can name function expressions. To do so, include an identifier after the `class` keyword:
+The previous section used an anonymous class expression in the example, but just like function expressions, you can also name class expressions. To do so, include an identifier after the `class` keyword like this:
 
 ```js
 let PersonClass = class PersonClass2 {
@@ -186,7 +194,7 @@ console.log(typeof PersonClass);        // "function"
 console.log(typeof PersonClass2);       // "undefined"
 ```
 
-In this example, the class expression is given a name, `PersonClass2`. The `PersonClass2` identifier exists only within the class definition so that it can be used inside of methods. Outside of the class, there is no `PersonClass2` binding, so `typeof PersonClass2` is `"undefined"`. To understand why this is, here's the equivalent declaration without using classes:
+In this example, the class expression is named `PersonClass2`. The `PersonClass2` identifier exists only within the class definition so that it can be used inside the class methods (such as the `sayName()` method in this example). Outside the class, `typeof PersonClass2` is `"undefined"` because no `PersonClass2` binding exists there. To understand why this is, look at an equivalent declaration that doesn't use classes:
 
 ```js
 // direct equivalent of PersonClass named class expression
@@ -217,13 +225,13 @@ let PersonClass = (function() {
 }());
 ```
 
-Creating a named class expression slightly changes what's happening in the JavaScript engine. For class declarations the outer binding (defined with `let`) has the same name as the inner binding (defined with `const`). Named class expressions use their name as the `const` definition, so in this case, `PersonClass2` is defined for use only inside of the class.
+Creating a named class expression slightly changes what's happening in the JavaScript engine. For class declarations, the outer binding (defined with `let`) has the same name as the inner binding (defined with `const`). A named class expression uses its name in the `const` definition, so `PersonClass2` is defined for use only inside the class.
 
-While the behavior of named class expressions is different from that of named function expressions, there are still a lot of similarities between the two. Both can be used as values, and that opens up a lot of possibilities.
+While named class expressions behave differently from named function expressions, there are still a lot of similarities between the two. Both can be used as values, and that opens up a lot of possibilities, which I'll cover next.
 
 ## Classes as First-Class Citizens
 
-In programming, something is said to be a *first-class citizen* when it can be used as a value, meaning it can be passed into a function, returned from a function, and assigned to a variable. JavaScript functions are first class citizens, sometimes just called first class functions, and that's part of what makes JavaScript unique. ECMAScript 6 continues this tradition by making classes first-class citizens as well. That allows classes to be used in a lot of different ways. For example, they can be passed into functions as arguments:
+In programming, something is said to be a *first-class citizen* when it can be used as a value, meaning it can be passed into a function, returned from a function, and assigned to a variable. JavaScript functions are first-class citizens (sometimes they're just called first class functions), and that's part of what makes JavaScript unique. ECMAScript 6 continues this tradition by making classes first-class citizens as well. That allows classes to be used in a lot of different ways. For example, they can be passed into functions as arguments:
 
 ```js
 function createObject(classDef) {
@@ -240,12 +248,12 @@ let obj = createObject(class {
 obj.sayHi();        // "Hi!"
 ```
 
-In this example, an anonymous class expression is passed into `createObject()`. An instance is then created by using `new` and that object is returned.
+In this example, the `createObject()` function is called with an anonymous class expression as an argument, creates an instance of that class with `new`, and returns the instance. The variable `obj` then stores the returned instance.
 
-Another interesting use of class expressions is to create singletons by immediately invoking the class constructor. To do so, you must use `new` with a class expression and include parentheses at the end. For example:
+Another interesting use of class expressions is creating singletons by immediately invoking the class constructor. To do so, you must use `new` with a class expression and include parentheses at the end. For example:
 
 ```js
-let person = new class PersonClass {
+let person = new class {
 
     constructor(name) {
         this.name = name;
@@ -266,7 +274,7 @@ The examples in this chapter so far have focused on classes with methods. But yo
 
 ## Accessor Properties
 
-While own properties should be created inside of class constructors, classes allow you to define accessor properties on the prototype. To create a getter, use the keyword `get` followed by a space followed by an identifier; to create a setter, do the same using the keyword `set`. For example:
+While own properties should be created inside class constructors, classes allow you to define accessor properties on the prototype. To create a getter, use the keyword `get` followed by a space followed by an identifier; to create a setter, do the same using the keyword `set`. For example:
 
 ```js
 class CustomHTMLElement {
@@ -290,7 +298,7 @@ console.log("set" in descriptor);   // true
 console.log(descriptor.enumerable); // false
 ```
 
-In this example, the `CustomHTMLElement` class is made as a wrapper around an existing DOM element. It has both a getter and setter for `html` that delegates to the `innerHTML` method on the element itself. This accessor property is created as non-enumerable, just like any other method would be, and is created on the `CustomHTMLElement.prototype`. The equivalent non-class representation is:
+In this code, the `CustomHTMLElement` class is made as a wrapper around an existing DOM element. It has both a getter and setter for `html` that delegates to the `innerHTML` method on the element itself. This accessor property is created on the `CustomHTMLElement.prototype` and, just like any other method would be, is created as non-enumerable. The equivalent non-class representation is:
 
 ```js
 // direct equivalent to previous example
@@ -323,13 +331,11 @@ let CustomHTMLElement = (function() {
 }());
 ```
 
-As with previous examples, this one shows just how much code you're saving by using a class instead of the non-class equivalent. The accessor property definition alone is almost the size of the equivalent class declaration.
-
-The similarities between objects literals and classes aren't quite over yet. Class methods and accessor properties can use computed names using the same syntax as object literals.
+As with previous examples, this one shows just how much code you can save by using a class instead of the non-class equivalent. The `html` accessor property definition alone is almost the size of the equivalent class declaration.
 
 ## Computed Member Names
 
-Class methods and accessor properties can have computed names. Instead of using an identifier, use square brackets around an expression (the same as with object literal computed names). For example:
+The similarities between object literals and classes aren't quite over yet. Class methods and accessor properties can also have computed names. Instead of using an identifier, use square brackets around an expression, which is the same syntax used for object literal computed names. For example:
 
 ```js
 let methodName = "sayName";
@@ -349,7 +355,9 @@ let me = new PersonClass("Nicholas");
 me.sayName();           // "Nicholas"
 ```
 
-This version of `PersonClass` uses a variable to assign the method name. The `methodName` variable contains the string `"sayName"`, which is then used to declare the method. The `sayName()` method is later accessed directly. Accessor properties can also use computed names in the same way:
+This version of `PersonClass` uses a variable to assign a name to a method inside its definition. The string `"sayName"` is assigned to the `methodName` variable, and then `methodName` used to declare the method. The `sayName()` method is later accessed directly.
+
+Accessor properties can use computed names in the same way, like this:
 
 ```js
 let propertyName = "html";
@@ -370,13 +378,13 @@ class CustomHTMLElement {
 }
 ```
 
-Here, the getter and setter for `html` are set using the variable `propertyName`. You can still access the property by using `.html`, it's just the definition that is affected.
+Here, the getter and setter for `html` are set using the `propertyName` variable. Accessing the property by using `.html` only affects the definition.
 
 You've seen that there are a lot of similarities between classes and object literals, with methods, accessor properties, and computed names. There's just one more similarity to cover: generators.
 
 ## Generator Methods
 
-When generators were introduced in Chapter 8,  you learned how to define a generator on an object literal by prepending a star (`*`) to the method name. The same syntax works for classes as well, allowing any method to be a generator. Here's an example:
+When generators were introduced in Chapter 8, you learned how to define a generator on an object literal by prepending a star (`*`) to the method name. The same syntax works for classes as well, allowing any method to be a generator. Here's an example:
 
 ```js
 class MyClass {
@@ -393,7 +401,7 @@ let instance = new MyClass();
 let iterator = instance.createIterator();
 ```
 
-This code creates a class called `MyClass` that has a generator method called `createIterator()`. The method returns an iterator whose values are hardcoded into the generator. While this is a useful capability, it's much more useful to define a default iterator for your class.
+This code creates a class called `MyClass` with a `createIterator()` generator method. The method returns an iterator whose values are hardcoded into the generator. Generator methods are useful when you have an object that represents a collection of values and you'd like to iterate over those values easily. Arrays, sets, and maps all have multiple generator methods to account for the different ways developers need to interact with their items. While generator methods are useful, it's much more useful to define a default iterator for your class if it represents a collection of values.
 
 You can define the default iterator for a class by using `Symbol.iterator` to define a generator method, such as:
 
@@ -424,13 +432,13 @@ for (let x of collection) {
 // 3
 ```
 
-This example uses a computed name for a generator method that delegates to the `values()` iterator of `this.items`. In this way, any instance of `Collection` can be used directly in a `for-of` loop or with the spread operator. It's a good idea to define a default iterator for any class that manages a collection of values.
+This example uses a computed name for a generator method that delegates to the `values()` iterator of the `this.items` array. Defining a default iterator is a good idea for any class that manages a collection of values because some collection-specific operations require the collection they operate on to have an iterator. Now, any instance of `Collection` can be used directly in a `for-of` loop or with the spread operator.
 
 Adding methods and accessor properties to a class prototype is useful when you want those to show up on object instances. If, on the other hand, you'd like methods or accessor properties on the class itself, then you'll need to use static members.
 
 ## Static Members
 
-Another common pattern in JavaScript is adding additional methods directly onto constructors to simulate static members. For example:
+Adding additional methods directly onto constructors to simulate static members is another common pattern in ECMAScript 5 and earlier. For example:
 
 ```js
 function PersonType(name) {
@@ -450,9 +458,7 @@ PersonType.prototype.sayName = function() {
 var person = PersonType.create("Nicholas");
 ```
 
-This code creates a factory method called `PersonType.create()`. In other programming languages, this would be considered a static method as it is not dependent on an instance of `PersonType` for its data.
-
-Classes simplify the creation of static members by using the formal `static` annotation before the method or accessor property name. Here's the equivalent of the last example:
+In other programming languages, the factory method called `PersonType.create()` would be considered a static method, as it doesn't depend on an instance of `PersonType` for its data. ECMAScript 6 classes simplify the creation of static members by using the formal `static` annotation before the method or accessor property name. For instance, here's the class equivalent of the last example:
 
 ```js
 class PersonClass {
@@ -476,14 +482,14 @@ class PersonClass {
 let person = PersonClass.create("Nicholas");
 ```
 
-The `PersonClass` definition has a single static method called `create()`. The method syntax is the same as for `sayName()` with the exception of the `static` keyword. You can use the `static` keyword on any method or accessor property definition within a class. The only restriction is that you cannot use `static` with the `constructor` method definition.
+The `PersonClass` definition has a single static method called `create()`. The method syntax is the same used for `sayName()` except for the `static` keyword. You can use the `static` keyword on any method or accessor property definition within a class. The only restriction is that you can't use `static` with the `constructor` method definition.
 
 W> Static members are not accessible from instances. You must always access static members from the class directly.
 
 
 ## Inheritance with Derived Classes
 
-Another problem with custom types in ECMAScript 5 and earlier was the extensive process necessary to implement inheritance. To properly inherit, you would need multiple steps. For instance:
+Prior to ECMAScript 6, another problem with custom types was the extensive process necessary to implement inheritance. Proper inheritance required multiple steps. For instance, consider this example:
 
 ```js
 function Rectangle(length, width) {
@@ -515,9 +521,9 @@ console.log(square instanceof Square);      // true
 console.log(square instanceof Rectangle);   // true
 ```
 
-Here, `Square` inherits from `Rectangle`, and to do so, it must overwrite `Square.prototype` with a new object created from `Rectangle.prototype` as well as call `Rectangle.call()`. These steps often confused newcomers to the language and were a source of errors for experienced developers.
+`Square` inherits from `Rectangle`, and to do so, it must overwrite `Square.prototype` with a new object created from `Rectangle.prototype` as well as call the `Rectangle.call()` method. These steps often confused newcomers to the language and were a source of errors for experienced developers.
 
-Classes make inheritance easier by using the familiar `extends` keyword to specify the function from which the class should inherit. The prototypes are automatically adjusted and you can access the base class constructor using `super()`. Here's the equivalent of the previous example:
+Classes make inheritance easier to implement by using the familiar `extends` keyword to specify the function from which the class should inherit. The prototypes are automatically adjusted, and you can access the base class constructor by calling the `super()` method. Here's the ECMAScript 6 equivalent of the previous example:
 
 ```js
 class Rectangle {
@@ -548,7 +554,7 @@ console.log(square instanceof Rectangle);   // true
 
 In this example, the `Square` class inherits from `Rectangle` using the `extends` keyword. The `Square` constructor uses `super()` to call the `Rectangle` constructor with the specified arguments. Note that unlike the ECMAScript 5 version of the code, the identifier `Rectangle` is only used within the class declaration (after `extends`).
 
-Using `super()` is a requirement of derived classes if you specify a constructor (if you don't, an error will occur). If you choose not to use a constructor, then `super()` is automatically called for you with all arguments upon creating a new instance of the class. For instance, the following two classes are identical:
+Classes that inherit from other classes are referred to as *derived classes*. Derived classes require you to use `super()` if you specify a constructor; if you don't, an error will occur. If you choose not to use a constructor, then `super()` is automatically called for you with all arguments upon creating a new instance of the class. For instance, the following two classes are identical:
 
 ```js
 class Square extends Rectangle {
@@ -564,7 +570,7 @@ class Square extends Rectangle {
 }
 ```
 
-The second class in this example shows the equivalent of the default constructor for all derived classes. All of the arguments are passed, in order, to the base class constructor. In this case, the functionality isn't quite correct because the `Square` constructor needs only one argument and so it's best to manually define the constructor.
+The second class in this example shows the equivalent of the default constructor for all derived classes. All of the arguments are passed, in order, to the base class constructor. In this case, the functionality isn't quite correct because the `Square` constructor needs only one argument, and so it's best to manually define the constructor.
 
 W> There are a few things to keep in mind when using `super()`:
 W>
@@ -589,7 +595,7 @@ class Square extends Rectangle {
 }
 ```
 
-In this code, `getArea()` is now defined as part of `Square` and therefore `Rectangle.prototype.getArea()` will no longer be called by any instances of `Square`. Of course, you can always decide to call the base class version of the method by using `super.getArea()`, such as:
+In this code, `getArea()` is now defined as part of `Square`, and therefore `Rectangle.prototype.getArea()` will no longer be called by any instances of `Square`. Of course, you can always decide to call the base class version of the method by using the `super.getArea()` method, like this:
 
 ```js
 class Square extends Rectangle {
@@ -604,11 +610,11 @@ class Square extends Rectangle {
 }
 ```
 
-Using `super` in this way is the same as discussed in Chapter 4: the `this` value is automatically set correctly so you can make a simple method call.
+Using `super` in this way is the same as discussed in Chapter 4 ("Easy Prototype Access With Super References"): the `this` value is automatically set correctly so you can make a simple method call.
 
 ### Inherited Static Members
 
-If a base class has static members then those static members are also available on the derived class. This maps to how inheritance works in other languages, but is a new concept for JavaScript. Here's an example:
+If a base class has static members, then those static members are also available on the derived class. This maps to how inheritance works in other languages, but is a new concept for JavaScript. Here's an example:
 
 ```js
 class Rectangle {
@@ -641,7 +647,7 @@ console.log(rect.getArea());                // 12
 console.log(rect instanceof Square);        // false
 ```
 
-In this code, a new static `create()` method is added to `Rectangle`. Through inheritance, that method is available as `Square.create()` and behaves in the same manner as `Rectangle.create()`.
+In this code, a new static `create()` method is added to the `Rectangle` class. Through inheritance, that method is available as `Square.create()` and behaves in the same manner as the `Rectangle.create()` method.
 
 ### Derived Classes from Expressions
 
@@ -668,7 +674,7 @@ console.log(x.getArea());               // 9
 console.log(x instanceof Rectangle);    // true
 ```
 
-This example defines `Rectangle` as an ECMAScript 5-style constructor while `Square` is a class. Since `Rectangle` has `[[Construct]]` and a prototype, the class can still inherit directly from it.
+This example defines `Rectangle` as an ECMAScript 5-style constructor while `Square` is a class. Since `Rectangle` has `[[Construct]]` and a prototype, the `Square` class can still inherit directly from it.
 
 Accepting any type of expression after `extends` allows for some powerful possibilities, such as dynamically determining what to inherit from. For example:
 
@@ -697,7 +703,7 @@ console.log(x.getArea());               // 9
 console.log(x instanceof Rectangle);    // true
 ```
 
-Here, the `getBase()` function is called directly as part of the class declaration. It returns `Rectangle`, which means this example is functionally equivalent to the previous one. And since you can determine the base dynamically, that means it's possible to create different inheritance approaches. For instance, you can effectively create mixins:
+The `getBase()` function is called directly as part of the class declaration. It returns `Rectangle`, which means this example is functionally equivalent to the previous one. And since you can determine the base class dynamically, that means it's possible to create different inheritance approaches. For instance, you can effectively create mixins:
 
 ```js
 let SerializableMixin = {
@@ -738,7 +744,7 @@ The instance of `Square` has both `getArea()` from `AreaMixin` and `serialize` f
 W> Even though any expression can be used after `extends`, not all expressions result in a valid class. Specifically, the following expression types causes errors:
 W>
 W> * `null`
-W> * generator functions (chapter 8)
+W> * generator functions (covered in Chapter 8)
 W>
 W> In these cases, attempting to create a new instance of the class will throw an error because there is no `[[Construct]]` to call.
 
@@ -778,12 +784,12 @@ colors.length = 0;
 console.log(colors[0]);             // "red"
 ```
 
-As you can see, using the classical form of JavaScript inheritance results in unexpected behavior. The `length` and numeric properties don't behave the same as the built-in array because this functionality isn't covered either by `Array.apply()` or by assigning the prototype.
+The `console.log()` output at the end of this code shows how using the classical form of JavaScript inheritance on an array results in unexpected behavior. The `length` and numeric properties on an instance of `MyArray` don't behave the same as they do for the built-in array because this functionality isn't covered either by `Array.apply()` or by assigning the prototype.
 
-One of the goals of ECMAScript 6 classes is to allow inheritance from all built-ins. In order to accomplish this, the inheritance model of classes is slightly different than the classical inheritance model found in ECMAScript 5 and earlier:
+One goal of ECMAScript 6 classes is to allow inheritance from all built-ins. In order to accomplish this, the inheritance model of classes is slightly different than the classical inheritance model found in ECMAScript 5 and earlier, in two big ways:
 
-* In ECMAScript 5 classical inheritance, the value of `this` is first created by the derived type (for example, `MyArray`) and then the base type constructor is called (`Array.apply()`). That means `this` starts out as an instance of `MyArray` and then is decorated with additional properties from `Array`.
-* In ECMAScript 6 class-based inheritance, the value of `this` is first created by the base (`Array`) and then modified by the derived class constructor (`MyArray`). The result is that `this` starts out with all of the built-in functionality of the base and correctly receives all functionality related to it.
+* In ECMAScript 5 classical inheritance, the value of `this` is first created by the derived type (for example, `MyArray`), and then the base type constructor (like the `Array.apply()` method) is called. That means `this` starts out as an instance of `MyArray` and then is decorated with additional properties from `Array`.
+* In ECMAScript 6 class-based inheritance, the value of `this` is first created by the base (`Array`) and then modified by the derived class constructor (`MyArray`). The result is that `this` starts out with all the built-in functionality of the base and correctly receives all functionality related to it.
 
 The following class-based special array works as you would expect:
 
@@ -800,11 +806,11 @@ colors.length = 0;
 console.log(colors[0]);             // undefined
 ```
 
-In this example, `MyArray` inherits directly from `Array` and therefore works in the exact same way. Interacting with numeric properties updates the `length` property, and manipulating the `length` property updates the numeric properties. That means not only can you properly inherit from `Array` to create your own derived array classes, you can also inherit from other builtins as well. ECMAScript 6 and derived classes have effectively removed the last special case of inheriting from builtins.
+In this example, `MyArray` inherits directly from `Array` and therefore works in the exact same way. Interacting with numeric properties updates the `length` property, and manipulating the `length` property updates the numeric properties. That means you can both properly inherit from `Array` to create your own derived array classes and inherit from other built-ins as well. With all this added functionality, ECMAScript 6 and derived classes have effectively removed the last special case of inheriting from built-ins, but that case is still worth exploring.
 
-### The @@species Property
+### The Symbol.species Property
 
-An interesting aspect of inheriting from builtins is that any method that returns an instance of the builtin will automatically return a derived class instance instead. So, if you have a derived class `MyArray` that inherits from `Array`, methods such as `slice()` return an instance of `MyArray`. For example:
+An interesting aspect of inheriting from builtins is that any method that returns an instance of the builtin will automatically return a derived class instance instead. So, if you have a derived class called `MyArray` that inherits from `Array`, methods such as `slice()` return an instance of `MyArray`. For example:
 
 ```js
 class MyArray extends Array {
@@ -818,9 +824,9 @@ console.log(items instanceof MyArray);      // true
 console.log(subitems instanceof MyArray);   // true
 ```
 
-In this code, the `slice()` method returns a `MyArray` instance. The `slice()` method is inherited from `Array` and returns an instance of `Array` normally. Behind the scenes, it's the `@@species` property that is making this change.
+In this code, the `slice()` method returns a `MyArray` instance. The `slice()` method is inherited from `Array` and returns an instance of `Array` normally. Behind the scenes, it's the `Symbol.species` property that is making this change.
 
-The `@@species` well-known symbol is used to define a static accessor property that returns a function. That function is a constructor to use whenever an instance of the class must be created inside of an instance method (instead of using the constructor). There are several builtin types that have `@@species` defined:
+The `Symbol.species` well-known symbol is used to define a static accessor property that returns a function. That function is a constructor to use whenever an instance of the class must be created inside of an instance method (instead of using the constructor). The following builtin types have `Symbol.species` defined:
 
 * `Array`
 * `ArrayBuffer` (discussed in Chapter 10)
@@ -830,7 +836,7 @@ The `@@species` well-known symbol is used to define a static accessor property t
 * `Set`
 * Typed Arrays (discussed in Chapter 10)
 
-Each of these types have a default `@@species` property that returns `this`, meaning that it will always return the constructor function. If you were to do the same on a custom class, the code would look like this:
+Each of these types has default `Symbol.species` property that returns `this`, meaning that the property will always return the constructor function. If you were to implement that functionality on a custom class, the code would look like this:
 
 ```js
 // several builtin types use species similar to this
@@ -849,7 +855,7 @@ class MyClass {
 }
 ```
 
-In this example, the `Symbol.species` well-known symbol is used to assign a static accessor property to `MyClass`. Note that there's only a getter without a setter, because it is not possible to change the species of a class. Any call to `this.constructor[Symbol.species]` returns `MyClass`. The `clone()` method uses that definition to return a new instance rather than directly using `MyClass`, which allows derived classes to override that value. For example:
+In this example, the `Symbol.species` well-known symbol is used to assign a static accessor property to `MyClass`. Note that there's only a getter without a setter, because changing the species of a class isn't possible. Any call to `this.constructor[Symbol.species]` returns `MyClass`. The `clone()` method uses that definition to return a new instance rather than directly using `MyClass`, which allows derived classes to override that value. For example:
 
 ```js
 class MyClass {
@@ -887,7 +893,9 @@ console.log(clone2 instanceof MyClass);             // true
 console.log(clone2 instanceof MyDerivedClass2);     // false
 ```
 
-Here, `DerivedClass1` inherits from `MyClass` and doesn't change the `@@species` property. When `clone()` is called, it returns an instance of `MyDerivedClass1` because `this.constructor[Symbol.species]` returns `MyDerivedClass1`. The `DerivedClass2` class inherits from `MyClass` and overrides `@@species` to return `MyClass`. When `clone()` is called on an instance of `DerivedClass2`, the return value is an instance of `MyClass`. Using `@@species`, any derived class can determine what type of value should be returned when a method returns an instance. And since `Array` uses `@@species`, you can make that change in a derived array class, such as:
+Here, `MyDerivedClass1` inherits from `MyClass` and doesn't change the `Symbol.species` property. When `clone()` is called, it returns an instance of `MyDerivedClass1` because `this.constructor[Symbol.species]` returns `MyDerivedClass1`. The `MyDerivedClass2` class inherits from `MyClass` and overrides `Symbol.species` to return `MyClass`. When `clone()` is called on an instance of `MyDerivedClass2`, the return value is an instance of `MyClass`. Using `Symbol.species`, any derived class can determine what type of value should be returned when a method returns an instance.
+
+For example, `Array` uses `Symbol.species` to specify the class to use for methods that return an array. In a class derived from `Array`, you can determine the type of object returned from the inherited methods, such as:
 
 ```js
 class MyArray extends Array {
@@ -904,11 +912,11 @@ console.log(subitems instanceof Array);     // true
 console.log(subitems instanceof MyArray);   // false
 ```
 
-This code overrides `@@species` on `MyArray`, which inherits from `Array`. All of the inherited methods that return arrays will now use an instance of `Array` instead of `MyArray`.
+This code overrides `Symbol.species` on `MyArray`, which inherits from `Array`. All of the inherited methods that return arrays will now use an instance of `Array` instead of `MyArray`.
 
-In general, you should use the `@@species` property whenever you might want to use `this.constructor` in a class method. Doing so allows derived classes to override the return type easily. Additionally, if you are creating derived classes from a class that has `@@species` defined, be sure to use that value instead of the constructor.
+In general, you should use the `Symbol.species` property whenever you might want to use `this.constructor` in a class method. Doing so allows derived classes to override the return type easily. Additionally, if you are creating derived classes from a class that has `Symbol.species` defined, be sure to use that value instead of the constructor.
 
-## new.target
+## Using new.target in Class Constructors
 
 In Chapter 3, you learned about `new.target` and how its value changes depending on how a function is called. You can also use `new.target` in class constructors to determine how the class is being invoked. In the simple case, `new.target` is equal to the constructor function for the class, as in this example:
 
@@ -925,7 +933,7 @@ class Rectangle {
 var obj = new Rectangle(3, 4);      // outputs true
 ```
 
-In this code, you can see that `new.target` is equivalent to `Rectangle` when `new Rectangle(3, 4)` is called. Since class constructors cannot be called without `new`, `new.target` is always defined inside of class constructors. However, the value may not always be the same.
+This code shows that `new.target` is equivalent to `Rectangle` when `new Rectangle(3, 4)` is called. Class constructors can't be called without `new`, so the `new.target` property is always defined inside of class constructors. But the value may not always be the same. Consider this code:
 
 ```js
 class Rectangle {
@@ -946,7 +954,7 @@ class Square extends Rectangle {
 var obj = new Square(3);      // outputs false
 ```
 
-Here, `Square` is calling the `Rectangle` constructor, so `new.target` is equal to `Square` when the `Rectangle` constructor is called. This is important because it gives each constructor the ability to alter its behavior based on how it's being called. For instance, you can create an abstract base class (one that cannot be instantiated directly) by using `new.target`:
+`Square` is calling the `Rectangle` constructor, so `new.target` is equal to `Square` when the `Rectangle` constructor is called. This is important because it gives each constructor the ability to alter its behavior based on how it's being called. For instance, you can create an abstract base class (one that can't be instantiated directly) by using `new.target` as follows:
 
 ```js
 // abstract base class
@@ -974,16 +982,16 @@ console.log(y instanceof Shape);    // true
 
 In this example, the `Shape` class constructor throws an error whenever `new.target` is `Shape`, meaning that `new Shape()` always throws an error. However, you can still use `Shape` as a base class, which is what `Rectangle` does. The `super()` call executes the `Shape` constructor and `new.target` is equal to `Rectangle` so the constructor continues without error.
 
-I> Since classes cannot be called without `new`, `new.target` is never `undefined` inside of a class constructor.
+I> Since classes can't be called without `new`, the `new.target` property is never `undefined` inside of a class constructor.
 
 ## Summary
 
-For those who have struggled to understand JavaScript in the absence of classes, ECMAScript 6 classes provide an easier way to become acclimated with the language without needing to completely throw away their understanding of inheritance. ECMAScript 6 classes start out as syntactic sugar for the classical inheritance model of ECMAScript 5, but add a lot of features to reduce mistakes.
+ECMAScript 6 classes make inheritance in JavaScript easier to use without needing to completely throw away any existing understanding of inheritance you might have from using other languages. ECMAScript 6 classes start out as syntactic sugar for the classical inheritance model of ECMAScript 5, but add a lot of features to reduce mistakes.
 
-ECMAScript 6 classes work with prototypal inheritance by defining non-static methods on the class prototype while static methods end up on the constructor itself. All methods are non-enumerable, which better matches the behavior of built-in objects for which methods are typically nonenumerable by default. Additionally, class constructors cannot be called without `new`, ensuring that you can't accidentally call a class as a function.
+ECMAScript 6 classes work with prototypal inheritance by defining non-static methods on the class prototype, while static methods end up on the constructor itself. All methods are non-enumerable, a feature that better matches the behavior of built-in objects for which methods are typically non-enumerable by default. Additionally, class constructors can't be called without `new`, ensuring that you can't accidentally call a class as a function.
 
-Class-based inheritance allows you to derive a class from another class, function, or expression. This ability means you can call a function to determine the correct base to inherit from, allowing you to use mixins and other different composition patterns to create a new class. Inheritance works in such a way that inheriting from built-in objects, such as `Array`, is now possible and works as expected.
+Class-based inheritance allows you to derive a class from another class, function, or expression. This ability means you can call a function to determine the correct base to inherit from, allowing you to use mixins and other different composition patterns to create a new class. Inheritance works in such a way that inheriting from built-in objects like `Array` is now possible and works as expected.
 
 You can use `new.target` in class constructors to behave differently depending on how the class is called. The most common use is to create an abstract base class that throws an error when instantiated directly but still allows inheritance via other classes.
 
-Overall, classes are an important addition to the language that provide a more concise syntax and better functionality for defining custom object types in a safe, consistent manner.
+Overall, classes are an important addition to JavaScript that provide a more concise syntax and better functionality for defining custom object types in a safe, consistent manner.
