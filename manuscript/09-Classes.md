@@ -1,11 +1,8 @@
 # Classes
 
-<!-- Is there a more descriptive title you might use here? Maybe "How Classes Work," "Introducing ECMAScript 6
-     Classes," or "Bringing Classes to JavaScript"? I would just avoid single-word titles and headings, globally. /JG -->
-
 Many developers have been confused by JavaScript's lack of classes ever since the language was created. Most formal object-oriented programming languages support classes and classical inheritance as the primary way of defining similar and related objects. From pre-ECMAScript 1 all the way through ECMAScript 5, this point of confusion led many libraries to create utilities designed to make JavaScript look like it had support for classes. While some JavaScript developers feel strongly that the language doesn't need classes, the number of libraries created specifically for this purpose led to the inclusion of classes in ECMAScript 6.
 
-Before exploring ECMAScript 6 classes, it's helpful to understand the underlying mechanisms that classes use, so this chapter starts by discussing how ECMAScript 5 developers achieved class-like behaivor. As you will see after that, however, ECMAScript 6 classes aren't exactly the same as classes in other languages. There's a uniqueness about them that embraces the dynamic nature of JavaScript.
+Before exploring ECMAScript 6 classes, it's helpful to understand the underlying mechanisms that classes use, so this chapter starts by discussing how ECMAScript 5 developers achieved class-like behavior. As you will see after that, however, ECMAScript 6 classes aren't exactly the same as classes in other languages. There's a uniqueness about them that embraces the dynamic nature of JavaScript.
 
 ## Class-Like Structures in ECMAScript 5
 
@@ -35,7 +32,7 @@ This basic pattern underlies a lot of the class-mimicking JavaScript libraries, 
 
 The simplest class form in ECMAScript 6 is the class declaration, which looks similar to classes other languages.
 
-###A Basic Class Declaration
+### A Basic Class Declaration
 
 Class declarations begin with the `class` keyword followed by the name of the class. The rest of the syntax looks similar to concise methods in object literals, without requiring commas between them. For example, here's a simple class declaration:
 
@@ -132,7 +129,7 @@ A>        Foo = "bar";    // throws an error when executed
 A>    }
 A> }
 A>
-A>// but this is okay after the class has been created:
+A>// but this is okay after the class declaration
 A> Foo = "baz";
 A> ```
 A>
@@ -197,10 +194,7 @@ console.log(typeof PersonClass);        // "function"
 console.log(typeof PersonClass2);       // "undefined"
 ```
 
-<!-- Perhaps specify the "methods" the identifier exists to be used with. I assume only methods defined on
-     the class would be able to use it, but wasn't completely clear. /JG -->
-
-In this example, the class expression is named `PersonClass2`. The `PersonClass2` identifier exists only within the class definition so that it can be used inside methods. Outside the class, `typeof PersonClass2` is `"undefined"` because no `PersonClass2` binding exists there. To understand why this is, look at an equivalent declaration that doesn't use classes:
+In this example, the class expression is named `PersonClass2`. The `PersonClass2` identifier exists only within the class definition so that it can be used inside the class methods (such as the `sayName()` method in this example). Outside the class, `typeof PersonClass2` is `"undefined"` because no `PersonClass2` binding exists there. To understand why this is, look at an equivalent declaration that doesn't use classes:
 
 ```js
 // direct equivalent of PersonClass named class expression
@@ -254,15 +248,12 @@ let obj = createObject(class {
 obj.sayHi();        // "Hi!"
 ```
 
-<!-- I took a stab at some clarifications below, as I had a bit of trouble following at first. If this suggestion doesn't
-     make sense, though, could you clarify differently? Referencing the code a bit more will help, I think. /JG -->
-
-In this example, the `createObject()` function takes an anonymous class expression as a parameter, creates an instance of that class with `new`, and returns the instance. To create `obj`, the `createObject()` function is passed an anonymous class expression containing a simple method.
+In this example, the `createObject()` function is called with an anonymous class expression as an argument, creates an instance of that class with `new`, and returns the instance. The variable `obj` then stores the returned instance.
 
 Another interesting use of class expressions is creating singletons by immediately invoking the class constructor. To do so, you must use `new` with a class expression and include parentheses at the end. For example:
 
 ```js
-let person = new class PersonClass {
+let person = new class {
 
     constructor(name) {
         this.name = name;
@@ -277,13 +268,7 @@ let person = new class PersonClass {
 person.sayName();       // "Nicholas"
 ```
 
-<!-- Just checking, is this class anonymous? The one under "A Basic Class Expression" doesn't use an identifier,
-     so I was unsure. /JG -->
-
 Here, the anonymous class expression is created and then executed immediately. This pattern allows you to use the class syntax for creating singletons without leaving a class reference available for inspection (remember that `PersonClass` only creates a binding inside of the class, not outside). The parentheses at the end are the indicator that you're calling a function while also allowing you to pass in an argument.
-
-<!-- For both of the use cases of class uses described in this section, perhaps discuss a practical applicaiton briefly,
-     if there's a chance that won't be obvious. /JG -->
 
 The examples in this chapter so far have focused on classes with methods. But you can also create accessor properties on classes using a syntax similar to object literals.
 
@@ -416,10 +401,7 @@ let instance = new MyClass();
 let iterator = instance.createIterator();
 ```
 
-<!-- Perhaps consider giving an example of how this capability is useful, to help the reader further understand why
-     defining a default iterator is more useful. /JG -->
-
-This code creates a class called `MyClass` with a `createIterator()` generator method. The method returns an iterator whose values are hardcoded into the generator. While this is a useful capability, it's much more useful to define a default iterator for your class.
+This code creates a class called `MyClass` with a `createIterator()` generator method. The method returns an iterator whose values are hardcoded into the generator. Generator methods are useful when you have an object that represents a collection of values and you'd like to iterate over those values easily. Arrays, sets, and maps all have multiple generator methods to account for the different ways developers need to interact with their items. While generator methods are useful, it's much more useful to define a default iterator for your class if it represents a collection of values.
 
 You can define the default iterator for a class by using `Symbol.iterator` to define a generator method, such as:
 
@@ -628,9 +610,7 @@ class Square extends Rectangle {
 }
 ```
 
-<!-- Could you specify a section in Ch. 4 below, in case the reader wants to flip back? /JG -->
-
-Using `super` in this way is the same as discussed in Chapter 4: the `this` value is automatically set correctly so you can make a simple method call.
+Using `super` in this way is the same as discussed in Chapter 4 ("Easy Prototype Access With Super References"): the `this` value is automatically set correctly so you can make a simple method call.
 
 ### Inherited Static Members
 
@@ -828,9 +808,7 @@ console.log(colors[0]);             // undefined
 
 In this example, `MyArray` inherits directly from `Array` and therefore works in the exact same way. Interacting with numeric properties updates the `length` property, and manipulating the `length` property updates the numeric properties. That means you can both properly inherit from `Array` to create your own derived array classes and inherit from other built-ins as well. With all this added functionality, ECMAScript 6 and derived classes have effectively removed the last special case of inheriting from built-ins, but that case is still worth exploring.
 
-<!-- Just flagging this section, since it uses @@ notation. /JG -->
-
-### The @@species Property
+### The Symbol.species Property
 
 An interesting aspect of inheriting from builtins is that any method that returns an instance of the builtin will automatically return a derived class instance instead. So, if you have a derived class called `MyArray` that inherits from `Array`, methods such as `slice()` return an instance of `MyArray`. For example:
 
@@ -846,9 +824,9 @@ console.log(items instanceof MyArray);      // true
 console.log(subitems instanceof MyArray);   // true
 ```
 
-In this code, the `slice()` method returns a `MyArray` instance. The `slice()` method is inherited from `Array` and returns an instance of `Array` normally. Behind the scenes, it's the `@@species` property that is making this change.
+In this code, the `slice()` method returns a `MyArray` instance. The `slice()` method is inherited from `Array` and returns an instance of `Array` normally. Behind the scenes, it's the `Symbol.species` property that is making this change.
 
-The `@@species` well-known symbol is used to define a static accessor property that returns a function. That function is a constructor to use whenever an instance of the class must be created inside of an instance method (instead of using the constructor). The following builtin types have `@@species` defined:
+The `Symbol.species` well-known symbol is used to define a static accessor property that returns a function. That function is a constructor to use whenever an instance of the class must be created inside of an instance method (instead of using the constructor). The following builtin types have `Symbol.species` defined:
 
 * `Array`
 * `ArrayBuffer` (discussed in Chapter 10)
@@ -858,7 +836,7 @@ The `@@species` well-known symbol is used to define a static accessor property t
 * `Set`
 * Typed Arrays (discussed in Chapter 10)
 
-Each of these types has default `@@species` property that returns `this`, meaning that the property will always return the constructor function. If you were to implement that functionality on a custom class, the code would look like this:
+Each of these types has default `Symbol.species` property that returns `this`, meaning that the property will always return the constructor function. If you were to implement that functionality on a custom class, the code would look like this:
 
 ```js
 // several builtin types use species similar to this
@@ -915,14 +893,9 @@ console.log(clone2 instanceof MyClass);             // true
 console.log(clone2 instanceof MyDerivedClass2);     // false
 ```
 
-<!-- Should "DerivedClass1" and "DerivedClass2" below be "MyDerivedClass1" and "MyDerivedClass2"? -->
+Here, `MyDerivedClass1` inherits from `MyClass` and doesn't change the `Symbol.species` property. When `clone()` is called, it returns an instance of `MyDerivedClass1` because `this.constructor[Symbol.species]` returns `MyDerivedClass1`. The `MyDerivedClass2` class inherits from `MyClass` and overrides `Symbol.species` to return `MyClass`. When `clone()` is called on an instance of `MyDerivedClass2`, the return value is an instance of `MyClass`. Using `Symbol.species`, any derived class can determine what type of value should be returned when a method returns an instance.
 
-Here, `DerivedClass1` inherits from `MyClass` and doesn't change the `@@species` property. When `clone()` is called, it returns an instance of `MyDerivedClass1` because `this.constructor[Symbol.species]` returns `MyDerivedClass1`. The `DerivedClass2` class inherits from `MyClass` and overrides `@@species` to return `MyClass`. When `clone()` is called on an instance of `DerivedClass2`, the return value is an instance of `MyClass`. Using `@@species`, any derived class can determine what type of value should be returned when a method returns an instance.
-
-<!-- Could you specify the "change" referred to below? It seems like that would be the type of value to be returned,
-     but it took me a moment to get that. /JG -->
-
-Since `Array` uses `@@species`, you can make that change in a derived array class, such as:
+For example, `Array` uses `Symbol.species` to specify the class to use for methods that return an array. In a class derived from `Array`, you can determine the type of object returned from the inherited methods, such as:
 
 ```js
 class MyArray extends Array {
@@ -939,9 +912,9 @@ console.log(subitems instanceof Array);     // true
 console.log(subitems instanceof MyArray);   // false
 ```
 
-This code overrides `@@species` on `MyArray`, which inherits from `Array`. All of the inherited methods that return arrays will now use an instance of `Array` instead of `MyArray`.
+This code overrides `Symbol.species` on `MyArray`, which inherits from `Array`. All of the inherited methods that return arrays will now use an instance of `Array` instead of `MyArray`.
 
-In general, you should use the `@@species` property whenever you might want to use `this.constructor` in a class method. Doing so allows derived classes to override the return type easily. Additionally, if you are creating derived classes from a class that has `@@species` defined, be sure to use that value instead of the constructor.
+In general, you should use the `Symbol.species` property whenever you might want to use `this.constructor` in a class method. Doing so allows derived classes to override the return type easily. Additionally, if you are creating derived classes from a class that has `Symbol.species` defined, be sure to use that value instead of the constructor.
 
 ## Using new.target in Class Constructors
 
@@ -1008,8 +981,6 @@ console.log(y instanceof Shape);    // true
 ```
 
 In this example, the `Shape` class constructor throws an error whenever `new.target` is `Shape`, meaning that `new Shape()` always throws an error. However, you can still use `Shape` as a base class, which is what `Rectangle` does. The `super()` call executes the `Shape` constructor and `new.target` is equal to `Rectangle` so the constructor continues without error.
-
-<!--When might a reader want to implement this sort of behavior? /JG -->
 
 I> Since classes can't be called without `new`, the `new.target` property is never `undefined` inside of a class constructor.
 
