@@ -627,6 +627,41 @@ let descriptor2 = Reflect.getOwnPropertyDescriptor(2, "name");
 
 The `Object.getOwnPropertyDescriptor()` method returns `undefined` because it coerces `2` into an object and that object doesn't have a `name` property. This is the standard behavior of the method when a property with the given name isn't found on an object. However, when `Reflect.getOwnPropertyDescriptor()` is called, an error is thrown immediately because it does not accept primitive values for the first argument.
 
+### The `ownKeys` Trap
+
+The `ownKeys` proxy trap intercepts the internal method `[[OwnPropertyKeys]]` and allows you to override that behavior by returning an array of values. This array is used in three places: `Object.getOwnPropertyNames()`, `Object.getOwnPropertySymbols()`, and `Object.assign()` (to determine which properties to copy). The default behavior, as implemented by `Reflect.ownKeys()`, is to return an array of all own property keys (both strings and symbols). The `Object.getOwnProperyNames()` method filters symbols out of the array and returns the result while `Object.getOwnPropertySymbols()` filters the strings out of the array and returns the result. The `Object.assign()` method uses the array with both strings and symbols.
+
+The `ownKeys` trap receives a single argument, the target, and must always return an array or array-like object (otherwise, an error is thrown). Using the `ownKeys` trap you can, for example, filter out certain property keys that you don't want used when `Object.getOwnPropertyNames()`, `Object.getOwnPropertySymbols()`, or `Object.assign()` are used. Suppose you don't want to include any property name that begins with an underscore character, a common notation in JavaScript indicating that a field is private. You can use the `ownKeys` trap to filter out those keys:
+
+```js
+let proxy = new Proxy({}, {
+    ownKeys(trapTarget) {
+        return Reflect.ownKeys(trapTarget).filter(key => {
+            return typeof key !== "string" || key[0] !== "_";
+        });
+    }
+});
+
+let nameSymbol = Symbol("name");
+
+proxy.name = "proxy";
+proxy._name = "private";
+proxy[nameSymbol] = "symbol";
+
+let names = Object.getOwnPropertyNames(proxy),
+    symbols = Object.getOwnPropertySymbols(proxy);
+
+console.log(names.length);      // 1
+console.log(names[0]);          // "proxy"
+
+console.log(symbols.length);    // 1
+console.log(symbols[0]);        // "Symbol(name)"
+```
+
+This example uses an `ownKeys` trap that first calls `Reflect.ownKeys()` to get the default list of keys for the target. Then, the `filter()` method is used to filter out keys that are strings and begin with an underscore character. The proxy object has three properties added, `name`, `_name`, and `nameSymbol`. When `Object.getOwnPropertyNames()` is called on `proxy`, only the `name` property is returned. Similarly, only `nameSymbol` is returned when `Object.getOwnPropertySymbols()` is called on `proxy`. The `_name` property doesn't appear in either result because it has been filtered out.
+
+While the `ownKeys` proxy trap allows you to alter the keys returned from a small set of operations, it does not affect more commonly used operations such as the `for-of` loop and `Object.keys()`. To alter those, you'll need to use the `enumerate` trap.
+
 ### Function Proxies Using the `apply` and `construct` traps
 
 Of all the proxy traps, only `apply` and `construct` require the proxy target to be a function. You learned in Chapter 3 that functions have two internal methods, `[[Call]]` and `[[Construct]]`, that are executed when a function is called without and with the `new` operator, respectively. The `apply` and `construct` traps correspond to those internal methods and let you override them. The `apply` trap receives, and `Reflect.apply()` expects, the following the arguments when a function is called without `new`:
@@ -738,7 +773,7 @@ NumbersProxy(1, 2, 3, 4);
 
 Here, the `apply` trap is throwing an error while the `construct` trap does input validation and returns a new instance using `Reflect.construct()`. Of course, you can accomplish the same thing without proxies if you use `new.target`.
 
-### Calling Constructors Without new
+#### Calling Constructors Without new
 
 Chapter 3 introduced the `new.target` metaproperty. To review, `new.target` is a reference to the function on which `new` is called, meaning that you can tell if a function was called using `new` or not by checking the value of `new.target`, such as:
 
@@ -787,7 +822,7 @@ console.log(instance.values);               // [1,2,3,4]
 
 The `NumbersProxy` function allows you to call `Numbers` without using `new` and have it behave as if `new` were used. To do so, the `apply` trap calls `Reflect.construct()` with the arguments passed into `apply`. Doing so means that `new.target` inside of `Numbers` is equal to `Numbers` itself and therefore no error is thrown. While this is a simple example of modifying `new.target`, you can also do so more directly.
 
-### Overriding Abstract Base Class Constructors
+#### Overriding Abstract Base Class Constructors
 
 You can go one step further and specify the third argument to `Reflect.construct()` as the specific value to assign to `new.target`. This is useful when a function is checking `new.target` against a known value, such as in the creation of an abstract base class constructor (discussed in Chapter 9). In an abstract base class constructor, `new.target` is expected to be something other than the class constructor itself, such as:
 
