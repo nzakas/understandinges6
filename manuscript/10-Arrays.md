@@ -1,16 +1,10 @@
-<!-- I've taken a stab at a more descriptive chapter title here, but if this doesn't work, please do replace with
-     something that fits the material better. /JG -->
-
 # Improved Array Capabilities
 
-<!-- It would be helpful to flesh this paragraph out, to set the stage and give an overview of what's in the
-     chapter. If anything in my suggestions doesn't make sense, could you revert and take a stab at it? -->
+The array is a foundational JavaScript object. But while other aspects of JavaScript have evolved over time, arrays remained the same until ECMAScript 5 introduced several methods to make them easier to use. ECMAScript 6 continues to improve arrays by adding a lot more functionality, like new creation methods, several useful convenience methods, and the ability to make typed arrays.
 
-The array is a foundational JavaScript object. But while other aspects of JavaScript have evolved over time, arrays remained the same until ECMAScript 5 introduced several methods to make them easier to use. Arrays still have quirks, but ECMAScript 6 continues to improve them by adding a lot more functionality, like new creation methods, several useful covenince methods, and the ability to make typed arrays.
+## Creating Arrays
 
-## Creating Normal Arrays
-
-Prior to ECMAScript 6, there were two primary ways to create arrays: the `Array` constructor and array literal syntax. Both approaches require listing array items individually and are otherwise fairly limited. Options for converting an array-like object (that is, an object with numeric indices and a `length` property) into an array were also limited and often required extra code. Such limitations are a bottleneck for large applications that do a lot of array manipulation. To make JavaScript arrays easier to manipulate, ECMAScript 6 adds the `Array.of()` and `Array.from()` methods.
+Prior to ECMAScript 6, there were two primary ways to create arrays: the `Array` constructor and array literal syntax. Both approaches require listing array items individually and are otherwise fairly limited. Options for converting an array-like object (that is, an object with numeric indices and a `length` property) into an array were also limited and often required extra code. To make JavaScript arrays easier to create, ECMAScript 6 adds the `Array.of()` and `Array.from()` methods.
 
 ### The Array.of() Method
 
@@ -26,7 +20,7 @@ items = new Array("2");
 console.log(items.length);          // 1
 console.log(items[0]);              // "2"
 
-let items = new Array(1, 2);        // length is 2
+let items = new Array(1, 2);
 console.log(items.length);          // 2
 console.log(items[0]);              // 1
 console.log(items[1]);              // 2
@@ -37,15 +31,12 @@ console.log(items[0]);              // 3
 console.log(items[1]);              // "2"
 ```
 
-<!-- I shuffled the examples above so that they appear in the same order they're described in the text; I don't think
-     that should introduce any errors, but did want to mention it, just in case. /JG -->
-
 When the `Array` constructor is passed a single numeric value, the `length` property of the array is set to that value. If a single non-numeric value is passed, then that value becomes the one and only item in the array; if multiple values are passed (numeric or not), then those values become items in the array. This behavior is both confusing and risky, as you may not always be aware of the type of data being passed.
 
 ECMAScript 6 introduces `Array.of()` to solve this problem. The `Array.of()` method works similar to the `Array` constructor, but it has no special case regarding a single numeric value. The `Array.of()` method always creates an array containing its arguments regardless of the number of arguments or the argument types. Here are some examples:
 
 ```js
-let items = Array.of(1, 2);         // length is 2
+let items = Array.of(1, 2);
 console.log(items.length);          // 2
 console.log(items[0]);              // 1
 console.log(items[1]);              // 2
@@ -71,17 +62,11 @@ let items = createArray(Array.of, value);
 
 In this code, the `createArray()` function accepts an array creator function and a value to insert into the array. You can pass `Array.of` as the first argument to `createArray()` to create a new array. It would be dangerous to pass `Array` directly if you cannot guarantee that `value` won't be a number.
 
-I> The `Array.of()` method does not use the `@@species` property (discussed in Chapter 9) to determine the type of return value. Instead, it uses the current constructor (`this` inside of `of()`) to determine the correct data type to return.
-
-<!-- Just flagging the @@species above, in case you'd like to change it to something else. /JG -->
+I> The `Array.of()` method does not use the `Symbol.species` property (discussed in Chapter 9) to determine the type of return value. Instead, it uses the current constructor (`this` inside of `of()`) to determine the correct data type to return.
 
 ### The Array.from() Method
 
 Converting non-array objects into actual arrays has always been cumbersome in JavaScript. For instance, if you have an `arguments` object (which is array-like) and want to use it like an array, then you'd need to convert it first. To convert an array-like object to an array in ECMAScript 5, you'd write a function such as:
-
-<!-- I assume readers are familiar with the concept of an `arguments` object, but if there's a chance they won't
-     immediately know why it's array-like, perhaps show an example of the object before showing the conversion
-     function. /JG -->
 
 ```js
 function makeArray(arrayLike) {
@@ -133,9 +118,7 @@ I> The `Array.from()` method also uses `this` to determine the type of array to 
 
 #### Mapping Conversion
 
-If you want to take array conversion a step further, you can provide `Array.from()` a mapping function as a second argument. That function would operate on each value from the array-like object and convert it to some final form before storing the result at the appropriate index in the final array. For example:
-
-<!-- Perhaps mention when might a reader want to pass a mapping function. /JG -->
+If you want to take array conversion a step further, you can provide `Array.from()` a mapping function as a second argument. That function operates on each value from the array-like object and converts it to some final form before storing the result at the appropriate index in the final array. For example:
 
 ```js
 function translate() {
@@ -171,9 +154,7 @@ This example passes `helper.add()` as the mapping function for the conversion. S
 
 #### Use on Iterables
 
-<!-- Just flagging @@iterator below, in case you want to change it for any reason. /JG -->
-
-The `Array.from()` method works on both array-like objects and iterables. That means the method can convert any object with an `@@iterator` property into an array. For example:
+The `Array.from()` method works on both array-like objects and iterables. That means the method can convert any object with a `Symbol.iterator` property into an array. For example:
 
 ```js
 let numbers = {
@@ -196,9 +177,6 @@ I> If an object is both array-like and iterable, then the iterator is used by `A
 ## New Methods on All Arrays
 
 Continuing the trend from ECMAScript 5, ECMAScript 6 adds several new methods to arrays. The `find()` and `findIndex()` methods are meant to aid developers using arrays with any values, while `fill()` and `copyWithin()` are inspired by use cases for typed arrays, a form of array introduced in ECMAScript 6 that uses only numbers.
-
-<!-- I might consider discussing fill() and copyWithin() under the "Typed Arrays" heading, since they're more
-     useful for typed arrays. /JG -->
 
 ### The find() and findIndex() Methods
 
@@ -265,10 +243,7 @@ numbers.copyWithin(2, 0);
 console.log(numbers.toString());    // 1,2,1,2
 ```
 
-<!-- The comment says the code above copies starting at index 0 rather than index 2; should the first sentence say
-     "This code pastes values into `numbers` beginning from index 2..." instead? /JG -->
-
-This code copies the values in `numbers` beginning from index 2, so both indices 2 and 3 will be overwritten. Passing `0` as the second argument to `copyWithin()` indicates to start copying values from index 0 and continue until there are no more elements to copy into.
+This code pastes values into `numbers` beginning from index 2, so both indices 2 and 3 will be overwritten. Passing `0` as the second argument to `copyWithin()` indicates to start copying values from index 0 and continue until there are no more elements to copy into.
 
 By default, `copyWithin()` always copies values up to the end of the array, but you can provide an optional third argument to limit how many elements will be overwritten. That third argument is an exclusive end index at which copying of values stops. Here's an example:
 
@@ -291,10 +266,6 @@ The use cases for `fill()` and `copyWithin()` may not be obvious to you at this 
 
 ## Typed Arrays
 
-<!-- For flow, I'd consider discussing array buffers and views before typed arrays. With a little massaging, I
-     think "Array Buffers," "Manipulating Array Buffers with Views," "Retreiving View Information," and "Reading and
-     Writing Data" could work before this heading. Then, all the info specific to typed arrays would be together. -->
-
 *Typed arrays* are special-purpose arrays designed to work with numeric types (not all types, as the name might imply). The origin of typed arrays can be traced to WebGL, a port of Open GL ES 2.0 designed for use in web pages with the `<canvas>` element. Typed arrays were created as part of the port to provide fast bitwise arithmetic in JavaScript.
 
 Arithmetic on native JavaScript numbers was too slow for WebGL because the numbers were stored in a 64-bit floating-point format and converted to 32-bit integers as needed. Typed arrays were introduced to circumvent this limitation and provide better performance for arithmetic operations. The concept is that any single number can be treated like an array of bits and thus can use the familiar methods available on JavaScript arrays.
@@ -305,16 +276,16 @@ ECMAScript 6 adopted typed arrays as a formal part of the language to ensure bet
 
 JavaScript numbers are stored in IEEE 754 format, which uses 64 bits to store a floating-point representation of the number. This format represents both integers and floats in JavaScript, with conversion between the two formats happening frequently as numbers change. Typed arrays allow the storage and manipulation of eight different numeric types:
 
-1. Signed 8-bit integer (`int8`)
-1. Unsigned 8-bit integer (`uint8`)
-1. Signed 16-bit integer (`int16`)
-1. Unsigned 16-bit integer (`uint16`)
-1. Signed 32-bit integer (`int32`)
-1. Unsigned 32-bit integer (`uint32`)
-1. 32-bit float (`float32`)
-1. 64-bit float (`float64`)
+1. Signed 8-bit integer (int8)
+1. Unsigned 8-bit integer (uint8)
+1. Signed 16-bit integer (int16)
+1. Unsigned 16-bit integer (uint16)
+1. Signed 32-bit integer (int32)
+1. Unsigned 32-bit integer (uint32)
+1. 32-bit float (float32)
+1. 64-bit float (float64)
 
-If you represent a number that fits in an `int8` as a normal JavaScript number, you'll waste 56 bits. Those bits might better be used to store additional `int8` values or any other number that requires less than 56 bits. Using bits more efficiently is one of the use cases typed arrays address.
+If you represent a number that fits in an int8 as a normal JavaScript number, you'll waste 56 bits. Those bits might better be used to store additional int8 values or any other number that requires less than 56 bits. Using bits more efficiently is one of the use cases typed arrays address.
 
 All of the operations and objects related to typed arrays are centered around these eight data types. In order to use them, though, you'll need to create an array buffer to store the data.
 
@@ -351,10 +322,7 @@ I> An array buffer always represents the exact number of bytes specified when it
 
 ### Manipulating Array Buffers with Views
 
-<!-- When you say "a particular format" below, do you mean a format specified by the programmer, or does each
-     view type produce data in a particular format? -->
-
-Array buffers represent memory locations, and *views* are the interfaces you'll use to manipulate that memory. A view operates on an array buffer or a subset of an array buffer's bytes, reading and writing data in a particular format. The `DataView` type is a generic view on an array buffer that allows you to operate on all eight numeric data types.
+Array buffers represent memory locations, and *views* are the interfaces you'll use to manipulate that memory. A view operates on an array buffer or a subset of an array buffer's bytes, reading and writing data in one of the numeric data types. The `DataView` type is a generic view on an array buffer that allows you to operate on all eight numeric data types.
 
 To use a `DataView`, first create an instance of `ArrayBuffer` and use it to create a new `DataView`. Here's an example:
 
@@ -401,33 +369,21 @@ Of course, reading information about memory isn't very useful on its own. You ne
 
 #### Reading and Writing Data
 
-For each of JavaScript's eight numeric data types, the `DataView` prototype has a method to write data and a method to read data from an array buffer. The method names all begin with either "set" or "get" and are followed by the data type abbreviation. For instance, here's a list of the read and write methods that can operate on `int8` and `uint8` values:
+For each of JavaScript's eight numeric data types, the `DataView` prototype has a method to write data and a method to read data from an array buffer. The method names all begin with either "set" or "get" and are followed by the data type abbreviation. For instance, here's a list of the read and write methods that can operate on int8 and uint8 values:
 
-<!-- Perhaps give only the int8 methods and the float methods, and note that there's a get/set for 16 and 32
-     bits, as well. Since they're all structured the same, that may be enough, but up to you. /JG -->
-
-* `getInt8(byteOffset, littleEndian)` - Read an `int8` starting at `byteOffset`
-* `setInt8(byteOffset, value, littleEndian)` - Write an `int8` starting at `byteOffset`
-* `getUint8(byteOffset, littleEndian)` - Read an `uint8` starting at `byteOffset`
-* `setUint8(byteOffset, value, littleEndian)` - Write an `uint8` starting at `byteOffset`
+* `getInt8(byteOffset, littleEndian)` - Read an int8 starting at `byteOffset`
+* `setInt8(byteOffset, value, littleEndian)` - Write an int8 starting at `byteOffset`
+* `getUint8(byteOffset, littleEndian)` - Read an uint8 starting at `byteOffset`
+* `setUint8(byteOffset, value, littleEndian)` - Write an uint8 starting at `byteOffset`
 
 The "get" methods accept two arguments: the byte offset to read from and an optional boolean indicating whether the value should be read as little-endian. (*Little-endian* means the least significant byte is at byte 0, instead of in the last byte.) The "set" methods accept three arguments: the byte offset to write at, the value to write, and an optional boolean indicating whether the value should be stored in little-endian format.
 
-<!-- * `getInt16(byteOffset, littleEndian)` - read an int16 starting at `byteOffset`
-* `setInt16(byteOffset, value, littleEndian)` - write an int16 starting at `byteOffset`
-* `getUint16(byteOffset, littleEndian)` - read an uint16 starting at `byteOffset`
-* `setUint16(byteOffset, value, littleEndian)` - write an uint16 starting at `byteOffset`
-* `getInt32(byteOffset, littleEndian)` - read an int32 starting at `byteOffset`
-* `setInt32(byteOffset, value, littleEndian)` - write an int32 starting at `byteOffset`
-* `getUint32(byteOffset, littleEndian)` - read an uint32 starting at `byteOffset`
-* `setUint32(byteOffset, value, littleEndian)` - write an uint32 starting at `byteOffset` -->
-
 Though I've only shown the methods you can use with 8-bit values, the same methods exist for operating on 16- and 32-bit values. Just replace the `8` in each name with `16` or `32`. Alongside all those integer methods, `DataView` also has the following read and write methods for floating point numbers:
 
-* `getFloat32(byteOffset, littleEndian)` - Read a `float32` starting at `byteOffset`
-* `setFloat32(byteOffset, value, littleEndian)` - Write a `float32` starting at `byteOffset`
-* `getFloat64(byteOffset, littleEndian)` - Read a `float64` starting at `byteOffset`
-* `setFloat64(byteOffset, value, littleEndian)` - Write a `float64` starting at `byteOffset`
+* `getFloat32(byteOffset, littleEndian)` - Read a float32 starting at `byteOffset`
+* `setFloat32(byteOffset, value, littleEndian)` - Write a float32 starting at `byteOffset`
+* `getFloat64(byteOffset, littleEndian)` - Read a float64 starting at `byteOffset`
+* `setFloat64(byteOffset, value, littleEndian)` - Write a float64 starting at `byteOffset`
 
 To see a "set" and a "get" method in action, consider the following example:
 
@@ -442,9 +398,9 @@ console.log(view.getInt8(0));       // 5
 console.log(view.getInt8(1));       // -1
 ```
 
-This code uses a two-byte array buffer to store two `int8` values. The first value is set at offset 0 and the second is at offset 1, reflecting that each value spans a full byte (8 bits). Those values are later retrieved from their positions with the `getInt8()` method. While this example uses `int8` values, you can use any of the eight numeric types with their corresponding methods.
+This code uses a two-byte array buffer to store two int8 values. The first value is set at offset 0 and the second is at offset 1, reflecting that each value spans a full byte (8 bits). Those values are later retrieved from their positions with the `getInt8()` method. While this example uses int8 values, you can use any of the eight numeric types with their corresponding methods.
 
-Views are interesting because they allow you to read and write in any format at any point in time, regardless of how data was previously stored. For instance, writing two `int8` values and reading the buffer with an `int16` method works just fine, as in this example:
+Views are interesting because they allow you to read and write in any format at any point in time, regardless of how data was previously stored. For instance, writing two int8 values and reading the buffer with an int16 method works just fine, as in this example:
 
 ```js
 let buffer = new ArrayBuffer(2),
@@ -478,10 +434,7 @@ The `DataView` object is perfect for use cases that mix different data types in 
 
 ECMAScript 6 typed arrays are actually type-specific views for array buffers. Instead of using a generic `DataView` object to operate on an array buffer, you can use objects that enforce specific data types. There are eight type-specific views corresponding to the eight numeric data types, plus an additional option for `uint8` values. Table 10-1 shows an abbreviated version of the complete list of type-specific views from section 22.2 of the ECMAScript 6 specification.
 
-<!-- Possible to add a table caption/title in Markdown? I've had a go, but not sure if this is the correct syntax. -->
-
-[Table 10-1: Some Type-Specific Views in ECMAScript 6](table_10-1)
-
+{ title="Table 10-1: Some Type-Specific Views in ECMAScript 6" }
 |Constructor Name|Element Size (in bytes)|Description                        |Equivalent C Type|
 |----------------|------------|-----------------------------------|-----------------|
 |`Int8Array`     |1           |8-bit two's complement signed integer|`signed char`|
@@ -498,9 +451,6 @@ The left column lists the typed array constructors, and the other columns descri
 
 Typed array operations only work on a particular type of data. For example, all operations on `Int8Array` use `int8` values. The size of an element in a typed array also depends on the type of array. While an element in an `Int8Array` is a single byte long, `Float64Array` uses eight bytes per element. Fortunately, the elements are accessed using numeric indices just like regular arrays, allowing you to avoid the somewhat awkward calls to the "set" and "get" methods of `DataView`.
 
-<!-- This box on element size seems like it could illuminate the discussion above well. I do suggest cutting
-     the note that was here on typed arrays not inheriting from Array, though since that's explained later. /JG -->
-
 A> ### Element Size
 A>
 A> Each typed array is made up of a number of elements, and the element size is the number of bytes each element represents. This value is stored on a `BYTES_PER_ELEMENT` property on each constructor and each instance, so you can easily query the element size:
@@ -514,8 +464,6 @@ A> console.log(ints.BYTES_PER_ELEMENT);            // 1
 A> ```
 
 #### Creating Type-Specific Views
-<!-- I'm a bit unhappy that this is a heading level 5, not sure what to do about it, though. - NZ -->
-<!-- I think making this a heading level 4 instead could work, since we're still talking about views. /JG -->
 
 Typed array constructors accept multiple different types of arguments, so there are a few ways to create typed arrays. First, you can create a new typed array by passing the same arguments `DataView` takes (an array buffer, an optional byte offset, and an optional byte length). For example:
 
@@ -532,9 +480,7 @@ console.log(view1.byteLength);              // 10
 console.log(view2.byteLength);              // 2
 ```
 
-<!-- Should the let statements be using "UInt8Array" instead, or should the text below say "Int8Array"? /JG -->
-
-In this code, the two views are both `UInt8Array` instances that use `buffer`. Both `view1` and `view2` have the same `buffer`, `byteOffset`, and `byteLength` properties that exist on `DataView` instances. It's easy to switch to using a typed array wherever you use a `DataView` so long as you only work with one numeric type.
+In this code, the two views are both `Int8Array` instances that use `buffer`. Both `view1` and `view2` have the same `buffer`, `byteOffset`, and `byteLength` properties that exist on `DataView` instances. It's easy to switch to using a typed array wherever you use a `DataView` so long as you only work with one numeric type.
 
 The second way to create a typed array is to pass a single number to the constructor. That number represents the number of elements (not bytes) to allocate to the array. The constructor will create a new buffer with the correct number of bytes to represent that number of array elements, and you can access the number of elements in the array by using the `length` property. For example:
 
@@ -555,7 +501,7 @@ W> If no argument is passed to a typed array constructor, the constructor acts a
 
 The third way to create a typed array is to pass an object as the only argument to the constructor. The object can be any of the following:
 
-* **A Typed Array** - Each element is copied into a new element on the new typed array. For example, if you pass an `int8` to the `Int16Array` constructor, the `int8` values would be copied into an `int16` array. The new typed array has a different array buffer than the one that was passed in.
+* **A Typed Array** - Each element is copied into a new element on the new typed array. For example, if you pass an int8 to the `Int16Array` constructor, the int8 values would be copied into an int16 array. The new typed array has a different array buffer than the one that was passed in.
 * **An Iterable** - The object's iterator is called to retrieve the items to insert into the typed array. The constructor will throw an error if any elements are invalid for the view type.
 * **An Array** - The elements of the array are copied into a new typed array. The constructor will throw an error if any elements are invalid for the type.
 * **An Array-Like Object** - Behaves the same as an array.
@@ -786,13 +732,8 @@ Three typed arrays are created from the original `ints` array in this example. T
 
 ## Summary
 
-<!-- Flagging @@species below, in case you'd like to change it. /JG -->
-
-ECMAScript 6 continues the work of ECMAScript 5 by making arrays more useful. There are two more ways to create arrays: the `Array.of()` and `Array.from()` methods. The `Array.from()` method can also convert iterables and array-like objects into arrays. Both methods are inherited by derived array classes and use the `@@species` property to determine what type of value should be returned.
+ECMAScript 6 continues the work of ECMAScript 5 by making arrays more useful. There are two more ways to create arrays: the `Array.of()` and `Array.from()` methods. The `Array.from()` method can also convert iterables and array-like objects into arrays. Both methods are inherited by derived array classes and use the `Symbol.species` property to determine what type of value should be returned.
 
 There are also several new methods on arrays. The `fill()` and `copyWithin()` methods allow you to alter array elements in-place. The `find()` and `findIndex()` methods are useful for finding the first element in an array that matches some criteria. The former returns the first element that fits the criteria, and the latter returns the element's index.
-
-<!-- Since the chapter says typed arrays aren't arrays multiple times, I wonder if we should rather call them "type-
-     specific views" globally instead. I assume "typed array" is the common usage, but wanted to mention. /JG -->
 
 Typed arrays are not technically arrays, as they do not inherit from `Array`, but they do look and behave a lot like arrays. Typed arrays contain one of eight different numeric data types and are built upon `ArrayBuffer` objects that represent the underlying bits of a number or series of numbers. Typed arrays are a more efficient way of doing bitwise arithmetic because the values are not converted back and forth between formats, as is the case with the JavaScript number type.
