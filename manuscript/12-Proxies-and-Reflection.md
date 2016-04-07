@@ -48,7 +48,6 @@ The reflection API, represented by the `Reflect` object, is a collection of meth
 |`preventExtensions`       | `Object.preventExtensions()` | `Reflect.preventExtensions()` |
 |`getOwnPropertyDescriptor`| `Object.getOwnPropertyDescriptor()` | `Reflect.getOwnPropertyDescriptor()` |
 |`defineProperty`          | `Object.defineProperty()` | `Reflect.defineProperty` |
-|`enumerate`               | `for-in` and `Object.keys()` | `Reflect.enumerate()` |
 |`ownKeys`                 | `Object.getOwnPropertyNames()` and `Object.getOwnPropertySymbols()` | `Reflect.ownKeys()` |
 |`apply`                   | Calling a function | `Reflect.apply()` |
 |`construct`               | Calling a function with `new` | `Reflect.construct()` |
@@ -660,7 +659,7 @@ console.log(symbols[0]);        // "Symbol(name)"
 
 This example uses an `ownKeys` trap that first calls `Reflect.ownKeys()` to get the default list of keys for the target. Then, the `filter()` method is used to filter out keys that are strings and begin with an underscore character. The proxy object has three properties added, `name`, `_name`, and `nameSymbol`. When `Object.getOwnPropertyNames()` is called on `proxy`, only the `name` property is returned. Similarly, only `nameSymbol` is returned when `Object.getOwnPropertySymbols()` is called on `proxy`. The `_name` property doesn't appear in either result because it has been filtered out.
 
-While the `ownKeys` proxy trap allows you to alter the keys returned from a small set of operations, it does not affect more commonly used operations such as the `for-of` loop and `Object.keys()`. To alter those, you'll need to use the `enumerate` trap.
+While the `ownKeys` proxy trap allows you to alter the keys returned from a small set of operations, it does not affect more commonly used operations such as the `for-of` loop and `Object.keys()`. Those cannot be altered using proxies.
 
 ### Function Proxies Using the `apply` and `construct` traps
 
