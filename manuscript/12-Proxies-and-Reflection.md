@@ -55,6 +55,8 @@ The reflection API, represented by the `Reflect` object, is a collection of meth
 
 Each of the traps overrides some built-in behavior of JavaScript objects, allowing you to intercept and modify the behavior. If you need to still use the built-in behavior, then you can use the corresponding reflection API method. The relationship between proxies and the reflection API becomes clear when you start creating proxies, so it's best to look at some examples.
 
+I> The original ECMAScript 6 specification had an additional trap called `enumerate` that was designed to alter how `for-in` and `Object.keys()` enumerated properties on an object. However, the `enumerate` trap was removed in ECMAScript 7 (also called ECMAScript 2016) as difficulties were discovered during implementation. The `enumerate` trap was never released in any JavaScript environment and is therefore not covered in this chapter.
+
 ## Creating a Proxy
 
 Proxies are created using the `Proxy` constructor and passing in two arguments, the target and a handler. A *handler* is an object that defines one or more traps. The proxy uses the default behavior for all operations except when traps are defined for that operation. To create a simple forwarding proxy, you can use a handler without any traps:
@@ -927,253 +929,173 @@ console.log(proxy.name);
 
 This example creates a revocable proxy and uses destructuring to assign the `proxy` and `revoke` variables to the properties of the same name on the object returned from `Proxy.revocable()`. After that, the `proxy` object can be used just like a nonrevocable proxy object, so `proxy.name` returns `"target"` because it passes through to `target.name`. Once the `revoke()` function is called, however, `proxy` no longer functions. Attempting to access `proxy.name` throws an error, as will any other operation that relies on proxy traps.
 
+## Solving the Array Problem
 
-
-<!--
-TODO: Continue and clean up below
-
-
+At the beginning of this chapter, I explained how the behavior of an array could not be accurately mimicked in JavaScript prior to ECMAScript 6. Proxies and the reflection API allow you to create an object that behaves in the same manner as the built-in `Array` type when properties are added and removed. To refresh your memory, here's the behavior that proxies help to mimick:
 
 ```js
-let target = { length: 0 },
-    proxy = new Proxy(target, {
+let colors = ["red", "green", "blue"];
+
+console.log(colors.length);         // 3
+
+colors[3] = "black";
+
+console.log(colors.length);         // 4
+console.log(colors[3]);             // "black"
+
+colors.length = 2;
+
+console.log(colors.length);         // 2
+console.log(colors[3]);             // undefined
+console.log(colors[2]);             // undefined
+console.log(colors[1]);             // "green"
+```
+
+There are a couple things going on in this example, so here's a break down:
+
+1. The `length` property is increased to 4 when `colors[3]` is assigned a value.
+1. The last two items in the array are deleted when the `length` property is set to 2.
+
+These two behaviors, which I'll call behavior #1 and behavior #2, are the only ones that need to be mimicked to accurately recreate how built-in arrays work. The next few sections describe how to make an object that correctly mimics these two behaviors.
+
+### Detecting Array Indices
+
+Keep in mind that assigning to an integer property key is a special case for arrays, as those are treated differently from non-integer keys. The specification gives some instructions on how to determine if a property key is an array index:
+
+> A String property name `P` is an array index if and only if `ToString(ToUint32(P))` is equal to `P` and `ToUint32(P)` is not equal to 2^32^−1.
+
+This operation can be implemented in JavaScript as the following:
+
+```js
+function toUint32(value) {
+    return Math.floor(Math.abs(Number(value))) % Math.pow(2, 32);
+}
+
+function isArrayIndex(key) {
+    let numericKey = toUint32(key);
+    return String(numericKey) == key && numericKey < (Math.pow(2, 32) - 1);
+}
+```
+
+The `toUint32()` function converts a given value into an unsigned 32-bit integer using an algorithm described in the specification. The `isArrayIndex()` function first converts the key into a uint32 and then performs the comparisons to determine if the key is an array index or not. With these utility functions available, you can start to implement an object that will mimic a built-in array.
+
+### Implementing Behavior #1
+
+You might have noticed that both behavior #1 and behavior #2 rely on the assignment of a property. That means you really only need to use the `set` proxy trap to accomplish both behaviors. To get started, here's an example that implements the first of the two array behaviors by incrementing the `length` property when an array index larger than `length - 1` is used:
+
+```js
+function toUint32(value) {
+    return Math.floor(Math.abs(Number(value))) % Math.pow(2, 32);
+}
+
+function isArrayIndex(key) {
+    let numericKey = toUint32(key);
+    return String(numericKey) == key && numericKey < (Math.pow(2, 32) - 1);
+}
+
+function createMyArray(length=0) {
+    return new Proxy({ length }, {
         set(trapTarget, key, value) {
 
-            let numericKey = Number(key),
-                keyIsInteger = Number.isInteger(numericKey);
+            // the special case
+            if (isArrayIndex(key)) {
+                let numericKey = Number(key);
 
-            if (key === "length" && value < trapTarget.length) {
-                for (let index = trapTarget.length; index >= value; index--) {
-                    Reflect.deleteProperty(trapTarget, index);
+                if (numericKey >= trapTarget.length) {
+                    Reflect.set(trapTarget, "length", numericKey + 1);
                 }
-            } else if (keyIsInteger && numericKey >= trapTarget.length) {
-                Reflect.set(trapTarget, "length", numericKey + 1);
             }
 
-            Reflect.set(trapTarget, key, value);
-        }
-    });
-
-console.log(proxy.length);      // 0
-
-proxy[0] = "proxy1";
-
-console.log(proxy.length);      // 1
-
-proxy[1] = "proxy2";
-
-console.log(proxy.length);      // 2
-
-proxy.length = 0;
-
-console.log(proxy.length);      // 0
-console.log(proxy[0]);          // undefined
-console.log(0 in proxy);        // false
-
-
-
-
-
-
-Many programming languages have what is referred to as a reflection API. *Reflection* is the term used for utilities that can inspect code and otherwise interact with code during runtime in a manner similar to the compiler or execution engine. For instance, a reflection API might allow you to determine the number of arguments for an arbitrary function or return a list of properties on a given object.
-
-If you've written JavaScript before you may be thinking that you've accomplished exactly these tasks. JavaScript has, for a long time, had reflection capabilities built into the language. The problem was that these capabilities were spread out and sometimes hidden. For instance, you can retrieve the number of arguments in a function by using the `length` property of functions and you can tell if an object property is enumerable by using the `propertyIsEnumerable()` method that each object inherits. ECMAScript 6 sought to begin cleaning up JavaScript reflection so that as much functionality as possible is centralized.
-
-## The Reflect Object
-
-The new reflection API for JavaScript is represented by the `Reflect` global object. This is an object and not a constructor despite beginning with an uppercase letter (as opposed to, for example, `Array` or `Object`). The `Reflect` object has no other purpose than to a be a container for reflection methods.
-
-Reflection methods are operations that previously were not exposed in JavaScript, and instead existed only as low-level primitive operations in the ECMAScript specification. With the introduction of proxies and other more complex ways of intercepting low-level operations, it because necessary to introduce references to the original low-level operations so that developers can have known safe implementations.
-
-While some of the reflection methods look similar to those already available, they do have subtle differences related to their lower-level relative to the existing methods. Pay close attention to how each method differs from an already existing method.
-
-## Property-Related Methods
-
-In ECMAScript 5, several new static methods were added to `Object` in order to work with object properties, such as `Object.defineProperty()`. During the course of ECMAScript 6 development, it was decided that several of these methods should be part of the reflection API and therefore should be present on `Reflect`. These methods are present both on `Object` and `Reflect`:
-
-* `Reflect.defineProperty()`
-* `Reflect.getOwnPropertyDescriptor()`
-* `Reflect.preventExtensions()`
-* `Reflect.isExtensible()`
-
-
-
-
-
-TODO
-
-1. apply()
-2. construct
-3. deleteProperty
-4. enumerate()
-5. get()
-6. getPrototypeOf()
-7. has()
-8. ownKeys() - includes all keys, including symbols, whether enumerable or not
-9. set()
-10. setPrototypeOf()
-
-
-
-# Proxies
-
-Proxies have a long and complicated history in ECMAScript 6. An early proposal was implemented by both Firefox and Chrome before TC-39 decided to change proxies in a very dramatic way. The changes were, in my opinion, for the better, as they smoothed out a lot of the rough edges from the original proxies proposal.
-
-Through experimentation, it was found that the vast majority of proxy uses revolved around a target object, in effect making proxies more of a filter in between a developer and an object rather than a standalone concept. Proxies were then reborn in a new form where the target object became part of the proxy definition. This was the proxy design that ultimately was standardized in ECMAScript 6.
-
-## Proxy Theory
-
-TODO
-
-## Creating Proxies
-
-TODO
-
-```js
-var proxy = new Proxy({}, {
-    get: function(target, property) {
-        return 35;
-    }
-});
-
-console.log(proxy.time);        // 35
-console.log(proxy.name);        // 35
-console.log(proxy.title);       // 35
-```
-
-## Extra
-
-`Array.isArray(new Proxy([], {}))` is true.
-
-
-## Uses
-
-
-### Defensive Objects
-
-Understanding how to intercept the `[[Get]]` operation is all that is necessary for creating "defensive" objects. I call them defensive because they behave like a defensive teenager trying to assert their independence of their parents' view of them ("I am *not* a child, why do you keep treating me like one?"). The goal is to throw an error whenever a nonexistent property is accessed ("I am `not` a duck, why do you keep treating me like one?"). This can be accomplished using the `get` trap and just a bit of code:
-
-```js
-function createDefensiveObject(target) {
-
-    return new Proxy(target, {
-        get: function(target, property) {
-            if (property in target) {
-                return target[property];
-            } else {
-                throw new ReferenceError("Property \"" + property + "\" does not exist.");
-            }
+            // always do this regardless of key type
+            return Reflect.set(trapTarget, key, value);
         }
     });
 }
+
+let colors = createMyArray(3);
+console.log(colors.length);         // 3
+
+colors[0] = "red";
+colors[1] = "green";
+colors[2] = "blue";
+
+console.log(colors.length);         // 3
+
+colors[3] = "black";
+
+console.log(colors.length);         // 4
+console.log(colors[3]);             // "black"
 ```
 
-The `createDefensiveObject()` function accepts a target object and creates a defensive object for it. The proxy has a `get` trap that checks the property when it's read. If the property exists on the target object, then the value of the property is returned. If, on the other hand, the property does not exist on the object, then an error is thrown. Here's an example:
+This example uses the `set` proxy trap to intercept the setting of an array index. If the key is an array index, then it is converted into a number (since keys are always passed as strings). Next, if that numeric value is greater than or equal to the current `length` property, then the `length` property is updated to be one more than the numeric key (setting an item in position 3 means the `length` must be 4). After that, the default behavior for setting a property is used via `Reflect.set()`, since you do want the property to receive the value as specified.
+
+The initial custom array is created by calling `createMyArray()` with a `length` of 3 and the values for those three items are added immediately afterward. The `length` property correctly remains 3 until the value `"black"` is assigned to position 3. At that point, `length` is set to 4.
+
+With behavior #1 working, it's now time to move on to behavior #2.
+
+### Implementing Behavior #2
+
+Whereas behavior #1 is used only when an array index is greater than or equal to the `length` property, behavior #2 does the opposite and removes array items when the `length` property is set to a smaller value than it previously contained. That means not only changing the `length` property, but also deleting all of the items that might otherwise exist. For instance, if an array with a `length` of 4 then has `length` set to 2, the items in position 2 and 3 are deleted. This can be accomplished inside of the `set` proxy trap alongside behavior #1:
 
 ```js
-let person = {
-    name: "Nicholas"
-};
-
-let defensivePerson = createDefensiveObject(person);
-
-console.log(defensivePerson.name);      // "Nicholas"
-console.log(defensivePerson.age);       // ReferenceError!
-```
-
-Here, the `name` property works as usual while `age` throws an error.
-Defensive objects allow existing properties to be read, but non-existent properties throw an error when read. However, you can still add new properties without error:
-
-
-```js
-var person = {
-    name: "Nicholas"
-};
-
-var defensivePerson = createDefensiveObject(person);
-
-console.log(defensivePerson.name);        // "Nicholas"
-
-defensivePerson.age = 13;
-console.log(defensivePerson.age);         // 13
-```
-
-So objects retain their ability to mutate unless you do something to change that. Properties can always be added but non-existent properties will throw an error when read rather than just returning `undefined`.
-
-You can then truly defend the interface of an object, disallowing additions and throwing an error when accessing a non-existent property, by using a couple of steps:
-
-```js
-function Person(name) {
-    this.name = name;
-
-    return createDefensiveObject(name);
+function toUint32(value) {
+    return Math.floor(Math.abs(Number(value))) % Math.pow(2, 32);
 }
-```
 
-TODO
+function isArrayIndex(key) {
+    let numericKey = toUint32(key);
+    return String(numericKey) == key && numericKey < (Math.pow(2, 32) - 1);
+}
 
-### Type Safety
+function createMyArray(length=0) {
+    return new Proxy({ length }, {
+        set(trapTarget, key, value) {
 
-The idea behind type safety is that each variable or property can only contain a particular type of value. In type-safe languages, the type is defined along with the declaration. In JavaScript, of course, there is no way to make such a declaration natively. However, many times properties are initialized with a value that indicates the type of data it should contain. For example:
+            // the special case
+            if (isArrayIndex(key)) {
+                let numericKey = Number(key);
 
-```js
-var person = {
-    name: "Nicholas",
-    age: 16
-};
-```
+                if (numericKey >= trapTarget.length) {
+                    Reflect.set(trapTarget, "length", numericKey + 1);
+                }
+            } else if (key === "length") {
+                let currentLength = Reflect.get(trapTarget, "length");
 
-In this code, it's easy to see that `name` should hold a string and `age` should hold a number. You wouldn't expect these properties to hold other types of data for as long as the object is used. Using proxies, it's possible to use this information to ensure that new values assigned to these properties are of the same type.
+                if (value < currentLength) {
+                    for (let index = currentLength; index >= value; index--) {
+                        Reflect.deleteProperty(trapTarget, index);
+                    }
+                }
 
-Since assignment is the operation to worry about (that is, assigning a new value to a property), you need to use the proxy `set` trap. The `set` trap gets called whenever a property value is set and receives four arguments: the target of the operation, the property name, the new value, and the receiver object. The target and the receiver are always the same (as best I can tell). In order to protect properties from having incorrect values, simply evaluate the current value against the new value and throw an error if they don't match:
+            }
 
-```js
-function createTypeSafeObject(object) {
-
-    return new Proxy(object, {
-          set: function(target, property, value) {
-              var currentType = typeof target[property],
-                  newType = typeof value;
-
-              if (property in target && currentType !== newType) {
-                  throw new Error("Property " + property + " must be a " + currentType + ".");
-              } else {
-                  target[property] = value;
-              }
-          }
+            // always do this regardless of key type
+            return Reflect.set(trapTarget, key, value);
+        }
     });
 }
+
+let colors = createMyArray(3);
+console.log(colors.length);         // 3
+
+colors[0] = "red";
+colors[1] = "green";
+colors[2] = "blue";
+colors[3] = "black";
+
+console.log(colors.length);         // 4
+
+colors.length = 2;
+
+console.log(colors.length);         // 2
+console.log(colors[3]);             // undefined
+console.log(colors[2]);             // undefined
+console.log(colors[1]);             // "green"
+console.log(colors[0]);             // "red"
 ```
 
-The `createTypeSafeObject()` method accepts an object and creates a proxy for it with a `set` trap. The trap uses `typeof` to get the type of the existing property and the value that was passed in. If the property already exists on the object and the types don't match, then an error is thrown. If the property either doesn't exist already or the types match, then the assignment happens as usual. This has the effect of allowing objects to receive new properties without error. For example:
+The `set` proxy trap in this code checks to see if `key` is `"length"` in order to adjust the rest of the object correctly. When that happens, the current length is first retrieved using `Reflect.get()` and compared against the new value. If the new value is less than the current length, then a `for` loop deletes all of the properties on the target that should no longer be available. The `for` loop goes backwards from the current array length (`currentLength`) of the array and deletes each property until it reaches the new array length (`value`).
 
-```js
-var person = {
-    name: "Nicholas"
-};
+This example adds four colors to start and then sets the `length` property to 2. Doing so effectively removes the items in positions 2 and 3, so they now return `undefined` when you attempt to access them. The `length` property is correctly set to 2 and the items in positions 0 and 1 are still accessible.
 
-var typeSafePerson = createTypeSafeObject(person);
-
-typeSafePerson.name = "Mike";        // succeeds, same type
-typeSafePerson.age = 13;             // succeeds, new property
-typeSafePerson.age = "red";          // throws an error, different types
-```
-
-In this code, the `name` property is changed without error because it's changed to another string. The `age` property is added as a number, and when the value is set to a string, an error is thrown. As long as the property is initialized to the proper type the first time, all subsequent changes will be correct. That means you need to initialize invalid values correctly. The quirk of `typeof null` returning "object" actually works well in this case, as a `null` property allows assignment of an object value later.
-
-As with defensive objects, you can also apply this method to constructors:
-
-```js
-function Person(name) {
-    this.name = name;
-    return createTypeSafeObject(this);
-}
-
-var person = new Person("Nicholas");
-
-console.log(person instanceof Person);    // true
-console.log(person.name);                 // "Nicholas"
-```
-
-Since proxies are transparent, the returned object has all of the same observable characteristics as a regular instance of `Person`, allowing you to create as many instances of a type-safe object while making the call to `createTypeSafeObject()` only once.
--->
+With both behaviors now implemented, you can easily create an object that mimics the behavior of built-in arrays. However, doing so with a function isn't as desirable as creating a class to encapsulate this behavior, so the next step is to implement this functionality as a class.
