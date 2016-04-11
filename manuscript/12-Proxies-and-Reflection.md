@@ -997,11 +997,13 @@ function createMyArray(length=0) {
     return new Proxy({ length }, {
         set(trapTarget, key, value) {
 
+            let currentLength = Reflect.get(trapTarget, "length");
+
             // the special case
             if (isArrayIndex(key)) {
                 let numericKey = Number(key);
 
-                if (numericKey >= trapTarget.length) {
+                if (numericKey >= currentLength) {
                     Reflect.set(trapTarget, "length", numericKey + 1);
                 }
             }
@@ -1051,15 +1053,16 @@ function createMyArray(length=0) {
     return new Proxy({ length }, {
         set(trapTarget, key, value) {
 
+            let currentLength = Reflect.get(trapTarget, "length");
+
             // the special case
             if (isArrayIndex(key)) {
                 let numericKey = Number(key);
 
-                if (numericKey >= trapTarget.length) {
+                if (numericKey >= currentLength) {
                     Reflect.set(trapTarget, "length", numericKey + 1);
                 }
             } else if (key === "length") {
-                let currentLength = Reflect.get(trapTarget, "length");
 
                 if (value < currentLength) {
                     for (let index = currentLength; index >= value; index--) {
@@ -1099,3 +1102,92 @@ The `set` proxy trap in this code checks to see if `key` is `"length"` in order 
 This example adds four colors to start and then sets the `length` property to 2. Doing so effectively removes the items in positions 2 and 3, so they now return `undefined` when you attempt to access them. The `length` property is correctly set to 2 and the items in positions 0 and 1 are still accessible.
 
 With both behaviors now implemented, you can easily create an object that mimics the behavior of built-in arrays. However, doing so with a function isn't as desirable as creating a class to encapsulate this behavior, so the next step is to implement this functionality as a class.
+
+### Implementing the MyArray Class
+
+The simplest way to create a class that uses a proxy is to define the class as usual and then return a proxy from the constructor. So the object returned with a class is instantiated is the proxy instead of the instance (the value of `this` inside the constructor). The instance becomes the target of the proxy and the proxy is returned as if it were the instance. That means the instance is completely private and cannot be accessed directly (it can be accessed indirectly through the proxy). Here's a simple example of returning a proxy from a class constructor:
+
+```js
+class Thing {
+    constructor() {
+        return new Proxy(this, {});
+    }
+}
+
+let myThing = new Thing();
+console.log(myThing instanceof Thing);      // true
+```
+
+In this example, the class `Thing` returns a proxy from its constructor. The proxy target is `this` and the proxy is returned from the constructor. That means `myThing` is actually a proxy even though it was created by calling the `Thing` constructor. Because proxies pass through their behavior to the target, `myThing` is still considered an instance of `Thing`, making the proxy completely transparent to anyone using the `Thing` class.
+
+With that in mind, it's fairly straightforward to create a custom array class using a proxy. The code is mostly the same as the code in the "Implementing Behavior #2" section. The same proxy code is used, but this time, it's used inside of a class constructor. Here's the complete example:
+
+```js
+function toUint32(value) {
+    return Math.floor(Math.abs(Number(value))) % Math.pow(2, 32);
+}
+
+function isArrayIndex(key) {
+    let numericKey = toUint32(key);
+    return String(numericKey) == key && numericKey < (Math.pow(2, 32) - 1);
+}
+
+class MyArray {
+    constructor(length=0) {
+        this.length = length;
+
+        return new Proxy(this, {
+            set(trapTarget, key, value) {
+
+                let currentLength = Reflect.get(trapTarget, "length");
+
+                // the special case
+                if (isArrayIndex(key)) {
+                    let numericKey = Number(key);
+
+                    if (numericKey >= currentLength) {
+                        Reflect.set(trapTarget, "length", numericKey + 1);
+                    }
+                } else if (key === "length") {
+
+                    if (value < currentLength) {
+                        for (let index = currentLength; index >= value; index--) {
+                            Reflect.deleteProperty(trapTarget, index);
+                        }
+                    }
+
+                }
+
+                // always do this regardless of key type
+                return Reflect.set(trapTarget, key, value);
+            }
+        });
+
+    }
+}
+
+
+let colors = new MyArray(3);
+console.log(colors instanceof MyArray);     // true
+
+console.log(colors.length);         // 3
+
+colors[0] = "red";
+colors[1] = "green";
+colors[2] = "blue";
+colors[3] = "black";
+
+console.log(colors.length);         // 4
+
+colors.length = 2;
+
+console.log(colors.length);         // 2
+console.log(colors[3]);             // undefined
+console.log(colors[2]);             // undefined
+console.log(colors[1]);             // "green"
+console.log(colors[0]);             // "red"
+```
+
+This code creates a `MyArray` class that returns a proxy from its constructor. The `length` property is added in the constructor (initialized to the value that is passed in or the default value of 0) and then a proxy is created and returned. This gives the `colors` variable the appearance of being just an instance of `MyArray` and has both behavior #1 and behavior #2.
+
+Although returning a proxy from a class constructor is easy, it does mean that a new proxy is created for every instance. There is a way to have all instances share one proxy -- it's a big more complicated and involves using the proxy as a prototype.
