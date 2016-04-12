@@ -582,9 +582,9 @@ This code uses the common convention of a leading underscore to indicate that a 
 In ECMAScript 5, it's possible to get close to having truly private data, by creating an object using a pattern such as this:
 
 ```js
-let Person = (function() {
+var Person = (function() {
 
-    let privateData = {},
+    var privateData = {},
         privateId = 0;
 
     function Person(name) {
