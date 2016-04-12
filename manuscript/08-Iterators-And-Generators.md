@@ -2,7 +2,7 @@
 
 Many programming languages have shifted from iterating over data with `for` loops, which require initializing variables to track position in a collection, to using iterator objects that programmatically return the next item in a collection. Iterators make working with collections of data easier, and ECMAScript 6 adds iterators to JavaScript. When coupled with new array methods and new types of collections (such as sets and maps), iterators are an important feature for efficient data processing.
 
-Iterators are an important addition to JavaScript and find their way into many parts of the language. There a new `for-of` loop that works with iterators, the spread (`...`) operator uses iterators, and iterators even make asynchronous programming easier.
+Iterators are an important addition to JavaScript and find their way into many parts of the language. There is a new `for-of` loop that works with iterators, the spread (`...`) operator uses iterators, and iterators even make asynchronous programming easier.
 
 This chapter covers the many uses of iterators, but first, it's important to understand some of the history of why iterators were added to JavaScript.
 
