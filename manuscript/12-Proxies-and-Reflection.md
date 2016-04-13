@@ -1,7 +1,5 @@
 # Proxies and Reflection
 
-W> This chapter is a work in progress. The content should be correct but may be incomplete.
-
 One of the goals shared by ECMAScript 5 and ECMAScript 6 is the continued demystifying of JavaScript functionality. Prior to ECMAScript 5, for example, there were nonenumerable and nonwritable object properties present in JavaScript environments, but there was no way for developers to define nonenumerable or nonwritable properties of their own. This led to inclusion of `Object.defineProperty()` in ECMAScript 5 to give developers the ability to do what JavaScript engines were already capable of doing.
 
 ECMAScript 6 continues the trend of giving developers the ability to do what JavaScript engines already do with built-in objects. To do that, the language had to expose more about how objects work, and the result was the creation of proxies. But before you can understand what proxies and are and what they can do, it's helpful to understand the type of problem that proxies are meant to address.
@@ -1299,5 +1297,143 @@ console.log("name" in thing);                   // true
 
 This code creates a `has` proxy trap on the prototype of `thing`. Because searching the prototype happens automatically when the `in` operator is used, the `has` trap isn't passed a `receiver` object like the `get` and `set` traps are. Instead, the `has` trap must operate only on `trapTarget`, which is equal to `target`. The first time the `in` operator is used in this example, the `has` trap is called because the property `name` doesn't exist as an own property of `thing`. When `thing.name` is given a value and then the `in` operator is used again, the `has` trap is not called because the operation stops after finding the own property `name` on `thing`.
 
+The prototype examples to this point have centered around objects created using `Object.create()`. But what if you want to create a class that has a proxy as a prototype? That's a bit more involved of a process.
 
+### Proxies as Prototypes on Classes
 
+Classes cannot be directly modified to use a proxy as a prototype because their `prototype` property is non-writable. You can, however, use a bit of misdirection to create a class that has a proxy as its prototype by using inheritance. To start, you need to create an ECMAScript 5-style type definition using a constructor function. You can then overwrite the prototype to be a proxy. Here's an example:
+
+```js
+function NoSuchProperty() {
+    // empty
+}
+
+NoSuchProperty.prototype = new Proxy({}, {
+    get(trapTarget, key, receiver) {
+        throw new ReferenceError(`${key} doesn't exist`);
+    }
+});
+
+let thing = new NoSuchProperty();
+
+// throws error due to `get` proxy trap
+let result = thing.name;
+```
+
+The `NoSuchProperty` function represents the base from which the class will inherit. There are no restrictions on the `prototype` property of functions, so you can overwrite it with a proxy. The `get` trap is used to throw an error when the property doesn't exist. The `thing` object is created as an instance of `NoSuchProperty` and throws an error when the nonexistent `name` property is accessed.
+
+The next step is to create a class that inherits from `NoSuchProperty`. You can simply use the `extends` syntax discussed in Chapter 9 to introduce the proxy into the class' prototype chain, like this:
+
+```js
+function NoSuchProperty() {
+    // empty
+}
+
+NoSuchProperty.prototype = new Proxy({}, {
+    get(trapTarget, key, receiver) {
+        throw new ReferenceError(`${key} doesn't exist`);
+    }
+});
+
+class Square extends NoSuchProperty {
+    constructor(length, width) {
+        super();
+        this.length = length;
+        this.width = width;
+    }
+}
+
+let shape = new Square(2, 6);
+
+let area1 = shape.length * shape.width;
+console.log(area1);                         // 12
+
+// throws an error because "wdth" doesn't exist
+let area2 = shape.length * shape.wdth;
+```
+
+The `Square` class inherits from `NoSuchProperty` so the proxy is in its prototype chain. The `shape` object is then created as a new instance of `Square` and has two own properties: `length` and `width`. Reading the values of those properties succeeds because the `get` proxy trap is never called. It's only when a property that doesn't exist on `shape` is accessed (`shape.wdth`, an obvious typo) that the `get` proxy trap is triggered and an error is thrown. That proves the proxy is in the prototype chain of `shape`, but it might not be obvious that the proxy is not the direct prototype of `shape`. In fact, the proxy is a couple of steps up the prototype chain from `shape`. You can see this more clearly by slightly altering the preceding example:
+
+```js
+function NoSuchProperty() {
+    // empty
+}
+
+// store a reference to the proxy that will be the prototype
+let proxy = new Proxy({}, {
+    get(trapTarget, key, receiver) {
+        throw new ReferenceError(`${key} doesn't exist`);
+    }
+});
+
+NoSuchProperty.prototype = proxy;
+
+class Square extends NoSuchProperty {
+    constructor(length, width) {
+        super();
+        this.length = length;
+        this.width = width;
+    }
+}
+
+let shape = new Square(2, 6);
+
+let shapeProto = Object.getPrototypeOf(shape);
+
+console.log(shapeProto === proxy);                  // false
+
+let secondLevelProto = Object.getPrototypeOf(shapeProto);
+
+console.log(secondLevelProto === proxy);            // true
+```
+
+This version of the code stores the proxy in a variable called `proxy` so it's easy to identify later. The prototype of `shape` is `Shape.prototype`, which is not a proxy. However, the prototype of `Shape.prototype` is the proxy that was inherited from `NoSuchProperty`. The inheritance adds another step in the prototype chain, and that matters because operations that might result in calling the `get` trap on `proxy` need to go through one extra step before getting there. If there's a property on `Shape.prototype`, then that will prevent the `get` proxy trap from being called. For instance:
+
+```js
+function NoSuchProperty() {
+    // empty
+}
+
+NoSuchProperty.prototype = new Proxy({}, {
+    get(trapTarget, key, receiver) {
+        throw new ReferenceError(`${key} doesn't exist`);
+    }
+});
+
+class Square extends NoSuchProperty {
+    constructor(length, width) {
+        super();
+        this.length = length;
+        this.width = width;
+    }
+
+    getArea() {
+        return this.length * this.width;
+    }
+}
+
+let shape = new Square(2, 6);
+
+let area1 = shape.length * shape.width;
+console.log(area1);                         // 12
+
+let area2 = shape.getArea();
+console.log(area2);                         // 12
+
+// throws an error because "wdth" doesn't exist
+let area3 = shape.length * shape.wdth;
+```
+
+Here, the `Square` class has a `getArea()` method. The `getArea()` method is automatically added to `Square.prototype` so when `shape.getArea()` is called, the search for the method `getArea()` starts on the `shape` instance and then proceeds to its prototype. Because `getArea()` is found on the prototype, the search stops and the proxy is never called. That is actually the behavior you want in this situation, as you wouldn't want to incorrectly throw an error when `getArea()` was called.
+
+Even thought it takes a little bit of extra code to create a class with a proxy in its prototype chain, it may be worth the effort if you need such functionality.
+
+## Summary
+
+Proxies are wrappers that allow you to intercept and alter low-level operations of the JavaScript engine. Prior to ECMAScript 6, there were certain objects (such as arrays) that displayed nonstandard behavior that could not otherwise be replicated in developer code. Proxies allow you to define your own nonstandard behavior for several low-level JavaScript operations that allow developers to replicate all of the behavior of built-in JavaScript objects through the use of several traps. These traps are called behind the scenes when various operations take place.
+
+A reflection API was also introduced in ECMAScript 6 to allow developers to implement the default behavior for each of the proxy traps. Each proxy trap has a corresponding method of the same name on the new `Reflect` object. Using a combination of proxy traps and reflection API methods, it's possible to filter some operations to behave differently only in certain conditions while defaulting to the built-in behavior.
+
+Revocable proxies are a special type of proxy that can be effectively disabled by using a revoke function. The revoke function terminates all functionality on the proxy, so any attempt interact with its properties throws an error. Revocable proxies are important for application security where third-party developers may need access to certain objects for a specified amount of time.
+
+While using proxies directly is the most powerful use case, you can also use a proxy as the prototype for another object. In that case, you are severely limited in the number of proxy traps you can effectively use. Only the `get`, `set`, and `has` proxy traps will ever be called on a proxy when it's used as a prototype and so there are a much smaller set of use cases.
