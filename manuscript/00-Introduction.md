@@ -45,7 +45,7 @@ This book is not for beginners who have never written JavaScript. You will need 
 
 **Chapter 9: Classes** introduces the first formal concept of classes in JavaScript. Often a point of confusion for those coming from other languages, the addition of class syntax in JavaScript makes the language more approachable to others and more concise for enthusiasts.
 
-**Chapter 10: Arrays** details the changes to native arrays and the interesting new ways they can be used in JavaScript.
+**Chapter 10: Improved Array Capabilities** details the changes to native arrays and the interesting new ways they can be used in JavaScript.
 
 **Chapter 11: Promises** introduces promises as a new part of the language. Promises were a grassroots effort that eventually took off and gained in popularity due to extensive library support. ECMAScript 6 formalizes promises and makes them available by default.
 
