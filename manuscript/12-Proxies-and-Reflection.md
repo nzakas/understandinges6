@@ -1191,3 +1191,85 @@ console.log(colors[0]);             // "red"
 This code creates a `MyArray` class that returns a proxy from its constructor. The `length` property is added in the constructor (initialized to the value that is passed in or the default value of 0) and then a proxy is created and returned. This gives the `colors` variable the appearance of being just an instance of `MyArray` and has both behavior #1 and behavior #2.
 
 Although returning a proxy from a class constructor is easy, it does mean that a new proxy is created for every instance. There is a way to have all instances share one proxy -- it's a big more complicated and involves using the proxy as a prototype.
+
+## Using a Proxy as a Prototype
+
+Proxies can be used as prototypes, but doing so is a bit more involved than the examples you've seen in this chapter thusfar. When a proxy is a prototype, the proxy traps are not called unless the default operation would normally continue on to the prototype. Here's a simple example:
+
+```js
+let target = {};
+let newTarget = Object.create(new Proxy(target, {
+
+    // never called
+    defineProperty(trapTarget, name, descriptor) {
+
+        // would cause an error if called
+        return false;
+    }
+}));
+
+Object.defineProperty(newTarget, "name", {
+    value: "newTarget"
+});
+
+console.log(newTarget.name);                    // "newTarget"
+console.log(newTarget.hasOwnProperty("name"));  // true
+```
+
+The `newTarget` object is created with a proxy as the prototype. Because `target` is the proxy target, that effectively means that the prototype of `newTarget` is actually `target` (because the proxy is transparent). That means proxy traps will only be called if an operation on `newTarget` would result in the operation continuing on to happen on `target`. The `Object.defineProperty()` method is called on `newTarget` to create an own property called `name`. This operation does not continue onto the prototype of the specified object, so the `defineProperty` trap on the proxy is never called and the `name` property is added to `newTarget` as an own property.
+
+While proxies are severely limited when used as prototypes, there are a few traps that are still useful.
+
+### Using the `get` Trap on a Prototype
+
+When the internal `[[Get]]` method is called to read a property, the operation looks first for own properties. If an own property with the given name isn't found, then it continues to the prototype and looks for a property there. This process continues until there are no further prototypes to check. Therefore, the `get` proxy trap will be called on a prototype whenever an own property of the given name doesn't exist. You can easily use this knowledge to create an object that throws an error whenever you try to access a property that doesn't exist:
+
+```js
+let target = {};
+let thing = Object.create(new Proxy(target, {
+    get(trapTarget, key, receiver) {
+        throw new ReferenceError(`${key} doesn't exist`);
+    }
+}));
+
+thing.name = "thing";
+
+console.log(thing.name);        // "thing"
+
+// throw an error
+let unknown = thing.unknown;
+```
+
+In this code, the `thing` object is created with a proxy as its prototype. The `get` trap throws an error whenever it's called to indicate that the given key doesn't exist on the object. When `thing.name` is read, the operation never calls the `get` trap on the prototype because the property exists on `thing`. The `get` trap is called only when a property that doesn't exist, `thing.unknown`, is accessed. The last line throws an error because `unknown` isn't an own property of `thing`, so the operation continues to the prototype. The `get` trap then throws an error. This type of behavior can be very useful in JavaScript where unknown properties silently return `undefined` instead of throwing an error (as happens in other languages).
+
+It's also important to understand that in this example, `trapTarget` and `receiver` are different objects. When a proxy is used as a prototype, the `trapTarget` is the prototype object itself while the `receiver` is the instance object. In this case, that means `trapTarget` is equal to `target` and `receiver` is equal to `thing`. That allows you access both to the original target of the proxy as well as the object on which the operation is meant to take place.
+
+### Using the `set` Trap on a Prototype
+
+The internal `[[Set]]` method also works first on own properties and then continues on to the prototype. When you assign a value to an object property, the value is assigned to the own property with the same name if it exists. If no own property with the given name exists, then the operation continues to the prototype. The tricky part is that even though the operation continues to the prototype, assigning to a non-existent property will create a property on the instance by default (not the prototype). Here's an example of the default behavior:
+
+```js
+let target = {};
+let thing = Object.create(new Proxy(target, {
+    set(trapTarget, key, value, receiver) {
+        return Reflect.set(trapTarget, key, value, receiver);
+    }
+}));
+
+console.log(thing.hasOwnProperty("name"));      // false
+
+// triggers the `set` proxy trap
+thing.name = "thing";
+
+console.log(thing.name);                        // "thing"
+console.log(thing.hasOwnProperty("name"));      // true
+
+// does not trigger the `set` proxy trap
+thing.name = "boo";
+
+console.log(thing.name);                        // "boo"
+```
+
+In this example, `target` starts out with no own properties. The `thing` object has a proxy as its prototype that defines a `set` trap to catch the creation of any new properties. When `thing.name` is assigned the value `"thing"`, the `set` proxy trap is called because `thing` doesn't have an own property called `name`. Inside of the `set` trap, `trapTarget` is equal to `target` and `receiver` is equal to `thing`. The result of the operation should be to create a new property on `thing`, and fortunately `Reflect.set()` implements this default behavior for you so long as you pass in `receiver` as the fourth argument.
+
+Once the `name` property is created on `thing`, setting `thing.name` to a different value will no longer call the `set` proxy trap. At that point, `name` is an own property so the `[[Set]]` operation never continues on to the prototype.
