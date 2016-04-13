@@ -1273,3 +1273,31 @@ console.log(thing.name);                        // "boo"
 In this example, `target` starts out with no own properties. The `thing` object has a proxy as its prototype that defines a `set` trap to catch the creation of any new properties. When `thing.name` is assigned the value `"thing"`, the `set` proxy trap is called because `thing` doesn't have an own property called `name`. Inside of the `set` trap, `trapTarget` is equal to `target` and `receiver` is equal to `thing`. The result of the operation should be to create a new property on `thing`, and fortunately `Reflect.set()` implements this default behavior for you so long as you pass in `receiver` as the fourth argument.
 
 Once the `name` property is created on `thing`, setting `thing.name` to a different value will no longer call the `set` proxy trap. At that point, `name` is an own property so the `[[Set]]` operation never continues on to the prototype.
+
+The `get` and `set` traps on proxies used as prototypes are called only when an own property of the given name doesn't exist. There's also one more proxy trap that behaves the same way.
+
+### Using the `has` Trap on a Prototype
+
+Recall from earlier in this chapter that the `has` trap intercepts the use of the `in` operator on objects. The `in` operator searches first for an object's own property with the given name and, if not found, continues to the prototype. If there's no own property on the prototype then the search continues through the prototype chain until it is found or there are no more prototypes to search. The `has` trap, therefore, is only called when the search has progressed to the proxy object in the prototype chain. When using a proxy as a prototype, that only happens when there is no own property of the given name. For example:
+
+```js
+let target = {};
+let thing = Object.create(new Proxy(target, {
+    has(trapTarget, key) {
+        return Reflect.has(trapTarget, key);
+    }
+}));
+
+// triggers the `has` proxy trap
+console.log("name" in thing);                   // false
+
+thing.name = "thing";
+
+// does not trigger the `has` proxy trap
+console.log("name" in thing);                   // true
+```
+
+This code creates a `has` proxy trap on the prototype of `thing`. Because searching the prototype happens automatically when the `in` operator is used, the `has` trap isn't passed a `receiver` object like the `get` and `set` traps are. Instead, the `has` trap must operate only on `trapTarget`, which is equal to `target`. The first time the `in` operator is used in this example, the `has` trap is called because the property `name` doesn't exist as an own property of `thing`. When `thing.name` is given a value and then the `in` operator is used again, the `has` trap is not called because the operation stops after finding the own property `name` on `thing`.
+
+
+
