@@ -494,7 +494,7 @@ One of the most important features of ECMAScript 5 was the ability to define pro
 1. `key` - the string or symbol for the property
 1. `descriptor` - the descriptor object for the property
 
-The `defineProperty` trap requires you to return `true` if the operation is successful and `false` if not.The `getOwnPropertyDescriptor` traps receives only `trapTarget` and `key`, and you are expected to return the descriptor. The corresponding `Reflect.defineProperty()` and `Reflect.getOwnPropertyDescriptor()` methods accept the same arguments as their proxy trap counterparts. Here's a simple example that just implements the default behavior for each trap:
+The `defineProperty` trap requires you to return `true` if the operation is successful and `false` if not. The `getOwnPropertyDescriptor` traps receives only `trapTarget` and `key`, and you are expected to return the descriptor. The corresponding `Reflect.defineProperty()` and `Reflect.getOwnPropertyDescriptor()` methods accept the same arguments as their proxy trap counterparts. Here's a simple example that just implements the default behavior for each trap:
 
 ```js
 let proxy = new Proxy({}, {
