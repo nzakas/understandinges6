@@ -546,18 +546,18 @@ console.log(proxy.name);                    // "proxy"
 let nameSymbol = Symbol("name");
 
 // throws error
-Object.defineProperty(proxy, nameSymbol , {
+Object.defineProperty(proxy, nameSymbol, {
     value: "proxy"
 });
 ```
 
 In this code, the `defineProperty` proxy trap returns `false` when `key` isn't a string and otherwise proceeds with the default behavior. When `Object.defineProperty()` is called with a key of `"name"`, it succeeds because the key is a string. When `Object.defineProperty()` is called with `nameSymbol`, then it throws an error because the `definePropert` trap returns `false`.
 
-I> You can also have `Object.defineProperty()` silently failed by returning `true` and not calling `Reflect.defineProperty()`. That will suppress the error while not actually defining the property.
+I> You can also have `Object.defineProperty()` silently fail by returning `true` and not calling `Reflect.defineProperty()`. That will suppress the error while not actually defining the property.
 
 #### Descriptor Object Restrictions
 
-The descriptor object passed to the `defineProperty` trap and returned from `getOwnPropertyDescriptor` trap are normalized and validated, respectively, to ensure consistent behavior when using `Object.defineProperty()` and `Object.getOwnPropertyDescriptor()`. To start, no matter what object is passed as the third argument to `Object.defineProperty()` only the properties `enumerable`, `configurable`, `value`, `writable`, `get`, and `set` will be on the descriptor object passed to the `defineProperty` trap. For example:
+The descriptor objects passed to the `defineProperty` trap and returned from `getOwnPropertyDescriptor` trap are normalized and validated, respectively, to ensure consistent behavior when using `Object.defineProperty()` and `Object.getOwnPropertyDescriptor()`. To start, no matter what object is passed as the third argument to `Object.defineProperty()` only the properties `enumerable`, `configurable`, `value`, `writable`, `get`, and `set` will be on the descriptor object passed to the `defineProperty` trap. For example:
 
 ```js
 let proxy = new Proxy({}, {
