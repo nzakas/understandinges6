@@ -551,7 +551,7 @@ Object.defineProperty(proxy, nameSymbol, {
 });
 ```
 
-In this code, the `defineProperty` proxy trap returns `false` when `key` isn't a string and otherwise proceeds with the default behavior. When `Object.defineProperty()` is called with a key of `"name"`, it succeeds because the key is a string. When `Object.defineProperty()` is called with `nameSymbol`, then it throws an error because the `definePropert` trap returns `false`.
+In this code, the `defineProperty` proxy trap returns `false` when `key` isn't a string and otherwise proceeds with the default behavior. When `Object.defineProperty()` is called with a key of `"name"`, it succeeds because the key is a string. When `Object.defineProperty()` is called with `nameSymbol`, then it throws an error because the `defineProperty` trap returns `false`.
 
 I> You can also have `Object.defineProperty()` silently fail by returning `true` and not calling `Reflect.defineProperty()`. That will suppress the error while not actually defining the property.
 
@@ -597,7 +597,7 @@ The property `name` is not allowable on property descriptors, so when `Object.ge
 
 #### Duplicate Descriptor Methods
 
-Once again, ECMAScript 6 has some confusingly similar methods, as `Object.defineProperty() and `Object.getOwnPropertyDescriptor()` appear to do the same thing as `Reflect.defineProperty()` and `Reflect.getOwnPropertyDescriptor()`, respectively. As with other method pairs discussed earlier in this chapter, there are some subtle but important differences.
+Once again, ECMAScript 6 has some confusingly similar methods, as `Object.defineProperty()` and `Object.getOwnPropertyDescriptor()` appear to do the same thing as `Reflect.defineProperty()` and `Reflect.getOwnPropertyDescriptor()`, respectively. As with other method pairs discussed earlier in this chapter, there are some subtle but important differences.
 
 The `Object.defineProperty()` and `Reflect.defineProperty()` method are exactly the same except for their return values. The `Object.defineProperty()` method returns the first argument whereas `Reflect.defineProperty()` returns a boolean value, `true` if the operation succeeded and `false` if not. For example:
 
@@ -665,7 +665,7 @@ While the `ownKeys` proxy trap allows you to alter the keys returned from a smal
 
 ### Function Proxies Using the `apply` and `construct` traps
 
-Of all the proxy traps, only `apply` and `construct` require the proxy target to be a function. You learned in Chapter 3 that functions have two internal methods, `[[Call]]` and `[[Construct]]`, that are executed when a function is called without and with the `new` operator, respectively. The `apply` and `construct` traps correspond to those internal methods and let you override them. The `apply` trap receives, and `Reflect.apply()` expects, the following the arguments when a function is called without `new`:
+Of all the proxy traps, only `apply` and `construct` require the proxy target to be a function. You learned in Chapter 3 that functions have two internal methods, `[[Call]]` and `[[Construct]]`, that are executed when a function is called without and with the `new` operator, respectively. The `apply` and `construct` traps correspond to those internal methods and let you override them. The `apply` trap receives, and `Reflect.apply()` expects, the following arguments when a function is called without `new`:
 
 1. `trapTarget` - the function being executed (the proxy's target)
 1. `thisArg` - the value of `this` inside of the function during the call
