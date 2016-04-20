@@ -11,7 +11,7 @@ If you've ever programmed in JavaScript, you've probably written code that looks
 ```js
 var colors = ["red", "green", "blue"];
 
-for (var i=0, len < colors.length; i < len; i++) {
+for (var i = 0, len = colors.length; i < len; i++) {
     console.log(colors[i]);
 }
 ```
@@ -63,17 +63,11 @@ The `createIterator()` function returns an object with a `next()` method. Each t
 
 As this example shows, writing iterators that behave according to the rules laid out in ECMAScript 6 is a bit complex.
 
-<!-- JZ: was this meant to be "in ECMAScript 5 is a bit complex" -->
-
 Fortunately, ECMAScript 6 also provides generators, which make creating iterator objects much simpler.
 
 ## What Are Generators?
 
-A *generator* is a function that returns an iterator. Generator functions are indicated by a star character (`*`) after the `function` keyword. It doesn't matter if the star is directly next to `function` or if there's some whitespace between it and the `*` character, as in this example:
-
-<!-- @Nicholas: I do think it would make sense to call out `yield` as new to ES6, on first usage. /JG -->
-
-<!-- JZ: agreed -->
+A *generator* is a function that returns an iterator. Generator functions are indicated by a star character (`*`) after the `function` keyword and use the new `yield` keyword. It doesn't matter if the star is directly next to `function` or if there's some whitespace between it and the `*` character, as in this example:
 
 ```js
 // generator
@@ -91,7 +85,7 @@ console.log(iterator.next().value);     // 2
 console.log(iterator.next().value);     // 3
 ```
 
-The `*` before `createIterator()` makes this function a generator. The `yield` keyword specifies values the resulting iterator should return when `next()` is called, in the order they should be returned. The iterator generated in this example has three different values to return on successive calls to the `next()` method: first `1`, then `2`, and finally `3`. A generator gets called like any other function, as shown when `iterator` is created.
+The `*` before `createIterator()` makes this function a generator. The `yield` keyword, also new to ECMAScript 6, specifies values the resulting iterator should return when `next()` is called, in the order they should be returned. The iterator generated in this example has three different values to return on successive calls to the `next()` method: first `1`, then `2`, and finally `3`. A generator gets called like any other function, as shown when `iterator` is created.
 
 Perhaps the most interesting aspect of generator functions is that they stop execution after each `yield` statement. For instance, after `yield 1` executes in this code, the function doesn't execute anything else until the iterator's `next()` method is called. At that point, `yield 2` executes. This ability to stop execution in the middle of a function is extremely powerful and leads to some interesting uses of generator functions (discussed in the "Advanced Iterator Functionality" section).
 
@@ -99,7 +93,7 @@ The `yield` keyword can be used with any value or expression, so you can write g
 
 ```js
 function *createIterator(items) {
-    for (let i=0; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
         yield items[i];
     }
 }
@@ -119,15 +113,28 @@ This example passes an array called `items` to the `createIterator()` generator 
 
 Generator functions are an important feature of ECMAScript 6, and since they are just functions, they can be used in all the same places. The rest of this section focuses on other useful ways to write generators.
 
+W> The `yield` keyword can only be used inside of generators. Use of `yield` anywhere else is a syntax error, including functions that are inside of generators, such as:
+W>
+W> ```js
+W> function *createIterator(items) {
+W>
+W>     items.forEach(function(item) {
+W>
+W>         // syntax error
+W>         yield item + 1;
+W>     });
+W> }
+W> ```
+W>
+W> Even though `yield` is technically inside of `createIterator()`, this code is a syntax error because `yield` cannot cross function boundaries. In this way, `yield` is similar to `return`, in that a nested function cannot return a value for its containing function.
+
 ### Generator Function Expressions
 
 You can use function expressions to create generators by just including a star (`*`) character between the `function` keyword and the opening parenthesis. For example:
 
-<!-- @Nicholas: Is there a time when using a generator function expression is particularly more useful than using a function declaration to create a generator? /JG -->
-
 ```js
 let createIterator = function *(items) {
-    for (let i=0; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
         yield items[i];
     }
 };
@@ -147,14 +154,6 @@ In this code, `createIterator()` is a generator function expression instead of a
 
 I> Creating an arrow function that is also a generator is not possible.
 
-<!-- JZ: it's good to mention that yield cannot be used in plain functions (as well as arrow functions) even if they're within generator:
-
-function* generator(collection) {
-  collection.forEach(x => yield x);
-}
-
- -->
-
 ### Generator Object Methods
 
 Because generators are just functions, they can be added to objects, too. For example, you can make a generator in an ECMAScript 5-style object literal with a function expression:
@@ -163,7 +162,7 @@ Because generators are just functions, they can be added to objects, too. For ex
 var o = {
 
     createIterator: function *(items) {
-        for (let i=0; i < items.length; i++) {
+        for (let i = 0; i < items.length; i++) {
             yield items[i];
         }
     }
@@ -178,7 +177,7 @@ You can also use the ECMAScript 6 method shorthand by prepending the method name
 var o = {
 
     *createIterator(items) {
-        for (let i=0; i < items.length; i++) {
+        for (let i = 0; i < items.length; i++) {
             yield items[i];
         }
     }
@@ -196,8 +195,6 @@ Closely related to iterators, an *iterable* is an object with a `Symbol.iterator
 I> All iterators created by generators are also iterables, as generators assign the `Symbol.iterator` property by default.
 
 At the beginning of this chapter, I mentioned the problem of tracking an index inside a `for` loop. Iterators are the first part of the solution to that problem. The `for-of` loop is the second part: it removes the need to track an index into a collection entirely, leaving you free to focus on working with the contents of the collection.
-
-<!-- @Nicholas/TR: Does `value` need to be in code font below? /JG -->
 
 A `for-of` loop calls `next()` on an iterable each time the loop executes and stores the `value` from the result object in a variable. The loop continues this process until the returned object's `done` property is `true`. Here's an example:
 
@@ -544,7 +541,7 @@ This result is more in line with what you'd expect when working with characters:
 
 The Document Object Model (DOM) has a `NodeList` type that represents a collection of elements in a document. For those who write JavaScript to run in web browsers, understanding the difference between `NodeList` objects and arrays has always been a bit difficult. Both `NodeList` objects and arrays use the `length` property to indicate the number of items, and both use bracket notation to access individual items. Internally, however, a `NodeList` and an array behave quite differently, which has led to a lot of confusion.
 
-With the addition of default iterators in ECMAScript 6, the DOM definition of `NodeList` specifically includes a default iterator that behaves in the same manner as the array default iterator. That means you can use `NodeList` in a `for-of` loop or any other place that uses an object's default iterator. For example:
+With the addition of default iterators in ECMAScript 6, the DOM definition of `NodeList` (included in the HTML specification rather than ECMAScript 6 itself) includes a default iterator that behaves in the same manner as the array default iterator. That means you can use `NodeList` in a `for-of` loop or any other place that uses an object's default iterator. For example:
 
 ```js
 var divs = document.getElementsByTagName("div");
@@ -555,8 +552,6 @@ for (let div of divs) {
 ```
 
 This code calls `getElementsByTagName()` to retrieve a `NodeList` that represents all of the `<div>` elements in the `document` object. The `for-of` loop then iterates over each element and outputs the element IDs, effectively making the code the same as it would be for a standard array.
-
-<!-- JZ: but it's not part of the ES spec, right? Which spec is it part of and how is the browser support? -->
 
 ## The Spread Operator and Non-Array Iterables
 
@@ -730,9 +725,7 @@ I> The spread operator and `for-of` ignore any value specified by a `return` sta
 
 ### Delegating Generators
 
-<!-- @Nicholas: Perhaps mention some of the cases referred to by "in some cases", to give readers a little more context. /JG -->
-
-In some cases, combining the values from two iterators into value is useful. Generators can delegate to other generators using a special form of `yield` with a star (`*`) character. As with generator definitions, where the star appears doesn't matter, as long as the star falls between the `yield` keyword and the generator function name. Here's an example:
+In some cases, combining the values from two iterators into one is useful. Generators can delegate to other generators using a special form of `yield` with a star (`*`) character. As with generator definitions, where the star appears doesn't matter, as long as the star falls between the `yield` keyword and the generator function name. Here's an example:
 
 ```js
 function *createNumberIterator() {
@@ -930,9 +923,6 @@ function run(taskDef) {
 
 Now that `result.value` is passed to `next()` as an argument, it's possible to pass data between `yield` calls, like this:
 
-<!-- @Nicholas: You can ignore my previous question here about what gets passed "back and forth." I must have given
-     it another read, edited it to clarify, and forgotten to delete the query. Apologies! /JG -->
-
 ```js
 run(function*() {
     let value = yield 1;
@@ -1037,22 +1027,25 @@ run(function*() {
 });
 ```
 
-<!-- @Nicholas -- perhaps worth mentioning Juriy's point in the text somewhere? /JG -->
-
-<!-- JZ: interesting how all of this complexity is replaced with async/await so long as readFile returns a promise.
-
-But really it's almost the same continuation mechanism, just with a slightly different implementation (next vs. then)
-
-(async function(){
-  let contents = await readFile('...');
-  doSomethingWith(contents);
-})();
-
- -->
-
 This example is performing the asynchronous `readFile()` operation without making any callbacks visible in the main code. Aside from `yield`, the code looks the same as synchronous code. As long as the functions performing asynchronous operations all conform to the same interface, you can write logic that reads like synchronous code.
 
 Of course, there are downsides to the pattern used in these examples--namely that you can't always be sure a function that returns a function is asynchronous. For now, though, it's only important that you understand the theory behind the task running. Using promises offers more powerful ways of scheduling asynchronous tasks, and Chapter 11 covers this topic further.
+
+A> ### Future Asynchronous Task Running
+A>
+A> At the time of my writing, there is ongoing work around bringing a simpler syntax to asynchronous task running in JavaScript. Work is progressing on an `await` syntax that would closely mirror the promise-based example in the preceding section. The basic idea is to use a function marked with `async` instead of a generator and use `await` instead of `yield` when calling a function, such as:
+A>
+A> ```js
+A> (async function() {
+A>     let contents = await readFile("config.json");
+A>     doSomethingWith(contents);
+A>     console.log("Done");
+A> });
+A> ```
+A>
+A> The `async` keyword before `function` indicates that the function is meant to run in an asynchronous manner. The `await` keyword signals that the function call to `readFile("config.json")` should return a promise, and if it doesn't, the response should be wrapped in a promise. Just as with the implementation of `run()` in the preceding section, `await` will throw an error if the promise is rejected and otherwise return the value from the promise.
+A>
+A> The `await` syntax is expected to be finalized in ECMAScript 2017 (ECMAScript 8).
 
 ## Summary
 
