@@ -118,8 +118,6 @@ The `Array.from()` call creates a new array based on the items in `arguments`. S
 
 I> The `Array.from()` method also uses `this` to determine the type of array to return.
 
-<!-- JZ: maybe also mention that `Array.from(arrayLike)` is practically identical to [...arrayLike] -->
-
 #### Mapping Conversion
 
 If you want to take array conversion a step further, you can provide `Array.from()` with a mapping function as a second argument. That function operates on each value from the array-like object and converts it to some final form before storing the result at the appropriate index in the final array. For example:
@@ -293,11 +291,7 @@ If you represent a number that fits in an int8 as a normal JavaScript number, yo
 
 All of the operations and objects related to typed arrays are centered around these eight data types. In order to use them, though, you'll need to create an array buffer to store the data.
 
-I> In this book, I will refer to these types by the abbreviations I showed in parentheses. Those abbreviations don't appear in actual JavaScript code; they're just a shorthand the community has adopted.
-
-<!-- Or perhaps something different, above. I do think it's helpful to explicitly state
-     those are abbreviations, since we're introducing a new concept at the same time.
-     /JG -->
+I> In this book, I will refer to these types by the abbreviations I showed in parentheses. Those abbreviations don't appear in actual JavaScript code; they're just a shorthand for the much longer descriptions.
 
 ### Array Buffers
 
@@ -426,13 +420,13 @@ console.log(view.getInt8(1));       // -1
 
 The call to `view.getInt16(0)` reads all bytes in the view and interprets those bytes as the number 1535. To understand why this happens, take a look at Figure 10-1, which shows what each `setInt8()` line does to the array buffer.
 
-![Figure 10-1: The array buffer after two method calls](images/Ch 10 Graphic.jpg)
+<!--![Figure 10-1: The array buffer after two method calls](images/Ch 10 Graphic.jpg)-->
 
-<!--```
+```
 new ArrayBuffer(2)      0000000000000000
 view.setInt8(0, 5);     0000010100000000
 view.setInt8(1, -1);    0000010111111111
-```-->
+```
 
 The array buffer starts with 16 bits that are all zero. Writing `5` to the first byte with `setInt8()` introduces a couple of 1s (in 8-bit representation, 5 is 00000101). Writing -1 to the second byte sets all bits in that byte to 1, which is the two's complement representation of -1. After the second `setInt8()` call, the array buffer contains 16 bits, and `getInt16()` reads those bits as a single 16-bit integer, which is 1535 in decimal.
 
@@ -560,7 +554,7 @@ console.log(ints[1]);              // 2
 
 In this code, a new `Int16Array` with two items is created. The items are read from and written to using their numeric indices, and those values are automatically stored and converted into int16 values as part of the operation. The similarities don't end there, though.
 
-<!-- JZ: maybe also mention length setter behavior (edit: I see that you mention index setter behavior later but not length one) -->
+I> Unlike regular arrays, you cannot change the size of a typed array using the `length` property. The `length` property is not writable, so any attempt to change it is ignored in non-strict mode and throws an error in strict mode.
 
 ### Common Methods
 
@@ -586,9 +580,7 @@ Typed arrays also include a large number of methods that are functionally equiva
 * `sort()`
 * `values()`
 
-Keep in mind that while these methods act like their counterparts on `Array.prototype`, they are not exactly the same. The typed array methods have additional checks for numeric type safety and, when an array is returned, will return a typed array instead of a regular array. Here's a simple example to demonstrate the difference:
-
-<!-- JZ: is it because TypedArray defines Symbol.species? -->
+Keep in mind that while these methods act like their counterparts on `Array.prototype`, they are not exactly the same. The typed array methods have additional checks for numeric type safety and, when an array is returned, will return a typed array instead of a regular array (due to `Symbol.species`). Here's a simple example to demonstrate the difference:
 
 ```js
 let ints = new Int16Array([25, 50]),
@@ -746,11 +738,7 @@ Three typed arrays are created from the original `ints` array in this example. T
 
 ## Summary
 
-ECMAScript 6 continues the work of ECMAScript 5 by making arrays more useful. There are two more ways to create arrays: the `Array.of()` and `Array.from()` methods. The `Array.from()` method can also convert iterables and array-like objects into arrays. Both methods are inherited by derived array classes
-
-<!-- JZ: as well as all the other methods -->
-
-and use the `Symbol.species` property to determine what type of value should be returned.
+ECMAScript 6 continues the work of ECMAScript 5 by making arrays more useful. There are two more ways to create arrays: the `Array.of()` and `Array.from()` methods. The `Array.from()` method can also convert iterables and array-like objects into arrays. Both methods are inherited by derived array classes and use the `Symbol.species` property to determine what type of value should be returned (other inherited methods also use `Symbol.species` when returning an array).
 
 There are also several new methods on arrays. The `fill()` and `copyWithin()` methods allow you to alter array elements in-place. The `find()` and `findIndex()` methods are useful for finding the first element in an array that matches some criteria. The former returns the first element that fits the criteria, and the latter returns the element's index.
 
