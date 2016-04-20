@@ -1,16 +1,12 @@
 # Introducing JavaScript Classes
 
-<!-- Maybe we could just call this chapter an introduction to classes in JS? /JG -->
-
 Unlike most formal object-oriented programming languages, JavaScript didn't support classes and classical inheritance as the primary way of defining similar and related objects when it was created. This left many developers confused, and from pre-ECMAScript 1 all the way through ECMAScript 5, many libraries created utilities to make JavaScript look like it supports classes. While some JavaScript developers do feel strongly that the language doesn't need classes, the number of libraries created specifically for this purpose led to the inclusion of classes in ECMAScript 6.
 
 While exploring ECMAScript 6 classes, it's helpful to understand the underlying mechanisms that classes use, so this chapter starts by discussing how ECMAScript 5 developers achieved class-like behavior. As you will see after that, however, ECMAScript 6 classes aren't exactly the same as classes in other languages. There's a uniqueness about them that embraces the dynamic nature of JavaScript.
 
 ## Class-Like Structures in ECMAScript 5
 
-In ECMAScript 5 and earlier, JavaScript had no classes. The closest equivalent to a class was creating a constructor and then assigning methods to the constructor's prototype, an approach called creating a custom type. For example:
-
-<!-- JZ: not sure if it's good idea to conflate this with typing system. Maybe better to say that there was simply a way to create objects of certain signature (i.e. with certain properties on them and/or on their prototype chain) -->
+In ECMAScript 5 and earlier, JavaScript had no classes. The closest equivalent to a class was creating a constructor and then assigning methods to the constructor's prototype, an approach typically called creating a custom type. For example:
 
 ```js
 function PersonType(name) {
@@ -171,13 +167,11 @@ console.log(typeof PersonClass);                    // "function"
 console.log(typeof PersonClass.prototype.sayName);  // "function"
 ```
 
-As this example demonstrates, class expressions do not require identifiers after `class`. Aside from the syntax, class expressions are exactly equivalent to class declarations.
+As this example demonstrates, class expressions do not require identifiers after `class`. Aside from the syntax, class expressions are functionally equivalent to class declarations.
 
-<!-- JZ: one difference is that, just like function declarations vs. expressions, class declarations vs. expressions could have different "name" property. (class{}).name === '' in case you're passing anonymous class somewhere; declarations always have identifier and so always have name -->
+In anonymous class expressions, as in the previous example, `PersonClass.name` is an empty string. When using a class declaration, `PersonClass.name` would be `"PersonClass"`.
 
-<!-- @Nicholas: Perhaps worth mentioning Juriy's point above in the text? /JG -->
-
-I> Whether you use class declarations or class expressions is purely a matter of style. Unlike function declarations and function expressions, both class declarations and class expressions are not hoisted, and so the choice has little bearing on the runtime behavior of the code.
+I> Whether you use class declarations or class expressions is mostly a matter of style. Unlike function declarations and function expressions, both class declarations and class expressions are not hoisted, and so the choice has little bearing on the runtime behavior of the code. The only significant difference is that anonymous class expressions have a `name` property that is an empty string while class declarations always have a `name` property equal to the class name (for instance, `PersonClass.name` is `"PersonClass"` when using a class declaration).
 
 ### Named Class Expressions
 
@@ -277,10 +271,7 @@ let person = new class {
 person.sayName();       // "Nicholas"
 ```
 
-Here, an anonymous class expression is created and then executed immediately. This pattern allows you to use the class syntax for creating singletons without leaving a class reference available for inspection. (Remember that `PersonClass` only creates a binding inside of the class, not outside.) The parentheses at the end are the indicator that you're calling a function while also allowing you to pass in an argument.
-
-<!-- @Nicholas: Could you clarify which parentheses the last sentence refers to above?
-     Would that be those around `"Nicholas"`? /JG -->
+Here, an anonymous class expression is created and then executed immediately. This pattern allows you to use the class syntax for creating singletons without leaving a class reference available for inspection. (Remember that `PersonClass` only creates a binding inside of the class, not outside.) The parentheses at the end of the class expression are the indicator that you're calling a function while also allowing you to pass in an argument.
 
 The examples in this chapter so far have focused on classes with methods. But you can also create accessor properties on classes using a syntax similar to object literals.
 
@@ -751,11 +742,9 @@ console.log(x.serialize());             // "{"length":3,"width":3}"
 
 In this example, mixins are used instead of classical inheritance. The `mixin()` function takes any number of arguments that represent mixin objects. It creates a function called `base` and assigns the properties of each mixin object to the prototype. The function is then returned so `Square` can use `extends`. Keep in mind that since `extends` is still used, you are required to call `super()` in the constructor.
 
-The instance of `Square` has both `getArea()` from `AreaMixin` and `serialize` from `SerializableMixin`. This is accomplished through prototypal inheritance. The `mixin()` function dynamically populates the prototype of a new function with all of the own properties of each mixin.
+The instance of `Square` has both `getArea()` from `AreaMixin` and `serialize` from `SerializableMixin`. This is accomplished through prototypal inheritance. The `mixin()` function dynamically populates the prototype of a new function with all of the own properties of each mixin. (Keep in mind that if multiple mixins have the same property, only the last property added will remain.)
 
-<!-- JZ: might be worth mentioning that this mixin doesn't take care of conflicting properties (diamond inheritance problem) -->
-
-W> Any expression can be used after `extends`, but not all expressions result in a valid class. Specifically, the following expression types causes errors:
+W> Any expression can be used after `extends`, but not all expressions result in a valid class. Specifically, the following expression types cause errors:
 W>
 W> * `null`
 W> * generator functions (covered in Chapter 8)
