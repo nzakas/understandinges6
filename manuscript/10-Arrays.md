@@ -11,7 +11,7 @@ Prior to ECMAScript 6, there were two primary ways to create arrays: the `Array`
 One reason ECMAScript 6 adds new creation methods to JavaScript is to help developers avoid a quirk of creating arrays with the `Array` constructor. The `new Array()` constructor actually behaves differently based on the type and number of arguments passed to it. For example:
 
 ```js
-items = new Array(2);
+let items = new Array(2);
 console.log(items.length);          // 2
 console.log(items[0]);              // undefined
 console.log(items[1]);              // undefined
@@ -20,7 +20,7 @@ items = new Array("2");
 console.log(items.length);          // 1
 console.log(items[0]);              // "2"
 
-let items = new Array(1, 2);
+items = new Array(1, 2);
 console.log(items.length);          // 2
 console.log(items[0]);              // 1
 console.log(items[1]);              // 2
