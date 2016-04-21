@@ -1065,7 +1065,7 @@ function createMyArray(length=0) {
             } else if (key === "length") {
 
                 if (value < currentLength) {
-                    for (let index = currentLength; index >= value; index--) {
+                    for (let index = currentLength - 1; index >= value; index--) {
                         Reflect.deleteProperty(trapTarget, index);
                     }
                 }
@@ -1151,7 +1151,7 @@ class MyArray {
                 } else if (key === "length") {
 
                     if (value < currentLength) {
-                        for (let index = currentLength; index >= value; index--) {
+                        for (let index = currentLength - 1; index >= value; index--) {
                             Reflect.deleteProperty(trapTarget, index);
                         }
                     }
