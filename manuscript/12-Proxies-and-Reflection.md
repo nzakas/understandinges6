@@ -962,7 +962,7 @@ These two behaviors, which I'll call behavior #1 and behavior #2, are the only o
 
 Keep in mind that assigning to an integer property key is a special case for arrays, as those are treated differently from non-integer keys. The specification gives some instructions on how to determine if a property key is an array index:
 
-> A String property name `P` is an array index if and only if `ToString(ToUint32(P))` is equal to `P` and `ToUint32(P)` is not equal to 2^32^−1.
+> A String property name `P` is an array index if and only if `ToString(ToUint32(P))` is equal to `P` and `ToUint32(P)` is not equal to 2^32^-1.
 
 This operation can be implemented in JavaScript as the following:
 
