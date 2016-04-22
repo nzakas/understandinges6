@@ -1194,7 +1194,7 @@ Although returning a proxy from a class constructor is easy, it does mean that a
 
 ## Using a Proxy as a Prototype
 
-Proxies can be used as prototypes, but doing so is a bit more involved than the examples you've seen in this chapter thusfar. When a proxy is a prototype, the proxy traps are not called unless the default operation would normally continue on to the prototype. Here's a simple example:
+Proxies can be used as prototypes, but doing so is a bit more involved than the examples you've seen in this chapter thus far. When a proxy is a prototype, the proxy traps are not called unless the default operation would normally continue on to the prototype. Here's a simple example:
 
 ```js
 let target = {};
