@@ -432,7 +432,10 @@ let worker = new Worker("module.js", { type: "module" });
 
 This example loads `module.js` as a module instead of a script by passing a second argument with `type` set to `"module"` (the `type` property is meant to mimic how the `type` attribute of `<script>` differentiates modules and scripts). The second argument is supported for all worker types in the browser.
 
-W> The `self.importScripts()` method is not available inside of worker modules like they are inside of worker scripts. That's because worker modules can use `import` to easily include other modules whereas worker scripts would otherwise have no other way to load additional JavaScript files.
+Worker modules are generally the same as worker scripts, but there are a couple of exceptions:
+
+* Worker scripts are limited to being loaded from the same origin as the web page in which they are referenced. Worker modules have this same default restriction, however, they can also load files that have appropriate Cross-Origin Resource Sharing (CORS) headers to allow access.
+* Worker scripts can use the `self.importScripts()` method to load additional scripts into the worker. In worker modules, `self.importScripts()` always fails because you should use `import` instead.
 
 ### Using Modules in Node.js
 
