@@ -1,24 +1,25 @@
-# Modules
+# Encapsulating Code With Modules
 
 One of the most error-prone and confusing aspects of JavaScript has long been the "shared everything" approach to loading code. Whereas other languages have concepts such as packages, JavaScript lagged behind, and everything defined in every file shared the same global scope. As web applications became more complex and the amount of JavaScript used grew, the "shared everything" approach began to show problems with naming collisions, security concerns, and more. One of the goals of ECMAScript 6 was to solve this problem and bring some order into JavaScript applications. That's where modules come in.
 
 ## What are Modules?
 
-*Modules* are JavaScript files that are loaded in a special mode (as opposed to *scripts*, which are loaded in the original way JavaScript worked). At the time of my writing, neither browsers nor Node.js have a way to natively load ECMAScript 6 modules, but both have indicated that there will need to be some sort of opt-in to do so. The reason this opt-in is necessary is because module files have very different semantics than non-module files:
+*Modules* are JavaScript files that are loaded in a different mode (as opposed to *scripts*, which are loaded in the original way JavaScript worked). The reason this different mode is necessary is because module files have very different semantics than script files:
 
 1. Module code automatically runs in strict mode and there's no way to opt-out of strict mode.
 1. Variables created in the top level of a module are not automatically added to the shared global scope. They exist only within the top-level scope of the module.
 1. The value of `this` in the top level of a module is `undefined`.
 1. Modules do not allow HTML-style comments within the code (a leftover feature from the early browser days).
 1. Modules must export anything that should be available to code outside of the module.
+1. Modules may import bindings from other modules.
 
 These differences may seem small at first glance, however, they represent a significant change in how JavaScript code is loaded and evaluated.
 
-Module JavaScript files are created just like any other JavaScript file: in a text editor and typically with the `.js` extension. The only difference during development is that you use some different syntax.
+The real power of modules is the ability to export and importing only those bindings that are required, rather than everything in a file. A good understanding of exporting and importing is fundamental to understanding how modules differ from scripts.
 
 ## Basic Exporting and Importing
 
-The `export` keyword is used to expose parts of published code to other modules. In the simplest case, you can place `export` in front of any variable, function, or class declaration to export it from the module. For example:
+The new `export` keyword is used to expose parts of published code to other modules. In the simplest case, you can place `export` in front of any variable, function, or class declaration to export it from the module. For example:
 
 ```js
 // export data
@@ -44,75 +45,63 @@ function subtract(num1, num2) {
     return num1 - num2;
 }
 
-// define a function
+// define a function...
 function multiply(num1, num2) {
     return num1 * num2;
 }
 
-// export later
+// ...and then export it later
 export multiply;
 ```
 
 There are a few things to notice in this example:
 
 1. Every declaration is exactly the same as it would otherwise be without the `export` keyword.
-1. Both function and class declarations require a name. You cannot export anonymous functions or classes using this syntax (unless using the `default` keyword discussed later in this chapter)
+1. Exported function and class declarations require a name. You cannot export anonymous functions or classes using this syntax (unless using the `default` keyword, discussed later in this chapter)
 1. You need not always export the declaration, you can also export references, as with `multiply` in this example.
 1. Any variables, functions, or classes that are not explicitly exported remain private to the module. In this example, `subtract()` is not exported and is therefore not accessible from outside the module.
-
-An important limitation of `export` is that it must be used in the top-level of the module. For instance, this is a syntax error:
-
-```js
-if (flag) {
-    export flag;    // syntax error
-}
-```
-
-This example is a syntax error because `export` is inside of an `if` statement. Exports cannot be conditional or done dynamically in any way. Part of the benefit of module syntax is so the JavaScript engine can staticly determine what will be exported. As such, you can only use `export` at the top-level of a module.
-
-W> If you are using a transpiler like Babel.js, you may find that `export` can be used anywhere. This only works when code is converted to ECMAScript 5 and will not work with a native ECMAScript 6 module system.
 
 Once you have a module with exports, you can access the functionality in another module by using the `import` keyword. An `import` statement has two parts: the identifiers you're importing and the module from which those identifiers should be imported. The basic form is as follows:
 
 ```js
-import { identifier1, identifier2 } from "module";
+import { identifier1, identifier2 } from "example.js";
 ```
 
-The curly braces after `import` indicate the identifiers to import from the given module. The keyword `from` is used to indicate the module from which to import the given identifiers. The module is specified using a string. At the time of my writing, it is still undecided what module identifiers will look like. They may end up being full file paths (such as "../mymodule.js"), file paths without extensions (such as "../mymodule"), or something else. This likely won't be determined until browsers and Node.js begin implementing modules natively.
+The curly braces after `import` indicate the bindings to import from the given module. The keyword `from` is used to indicate the module from which to import the given bindings. The module is specified using a string representing the path to the module. Browsers use the same format as you might pass to `<script>` whereas Node.js follows its traditional conventions of differentiating between local files and packages based on a filesystem prefix (for example, `example` for a package and `./example` for a local file). Specific differences in how browsers and Node.js load modules are discussed later in this chapter.
 
-I> Even though it looks similar, the list of identifiers to import is not a destructured object.
+I> Even though it looks similar, the list of bindings to import is not a destructured object.
 
-When importing an identifier from a module, the identifier acts as if it were defined using `const`. That means you cannot define another variable with the same name, use the identifier prior to the `import` statement, or change its value.
+When importing a binding from a module, the binding acts as if it were defined using `const`. That means you cannot define another variable with the same name, use the identifier prior to the `import` statement, or change its value.
 
-Suppose that the first example in this section is in a module named `"example"`. You can import and use identifiers from that module in a number of ways. You can just import one identifier:
+Suppose that the first example in this section is in a module named `"example.js"`. You can import and use bindings from that module in a number of ways. You can just import one identifier:
 
 ```js
 // import just one
-import { sum } from "example";
+import { sum } from "example.js";
 
 console.log(sum(1, 2));     // 3
 
 sum = 1;        // error
 ```
 
-This example imports only `sum()` from the example module. Even though the example module exports more than just that one function, they are not exposed here. If you try to assign a new value to `sum`, the result is an error, as you cannot reassign imported identifiers.
+This example imports only the `sum()` function from the example module. Even though the example module exports more than just that one function, they are not exposed here. If you try to assign a new value to `sum`, the result is an error, as you cannot reassign imported bindings.
 
-If you want to import multiple identifiers from the example module, you can explicitly list them out:
+If you want to import multiple bindings from the example module, you can explicitly list them out:
 
 ```js
 // import multiple
-import { sum, multiply, magicNumber } from "example";
+import { sum, multiply, magicNumber } from "example.js";
 console.log(sum(1, magicNumber));   // 8
 console.log(multiply(1, 2));        // 2
 ```
 
-Here, three identifiers are imported from the example module: `sum`, `multiply`, and `magicNumber`. They are then used as if they were locally defined.
+Here, three bindings are imported from the example module: `sum`, `multiply`, and `magicNumber`. They are then used as if they were locally defined.
 
 There's also a special case that allows you to import the entire module as a single object. All of the exports are then available on that object as properties. For example:
 
 ```js
 // import everything
-import * as example from "example";
+import * as example from "example.js";
 console.log(example.sum(1,
         example.magicNumber));          // 8
 console.log(example.multiply(1, 2));    // 2
@@ -123,16 +112,36 @@ In this code, the entirety of the example module is loaded into an object called
 Keep in mind that the code inside of a module will only ever be executed once, regardless of the number of times it's used in an `import` statement. Consider the following:
 
 ```js
-import { sum } from "example";
-import { multiply } from "example";
-import { magicNumber } from "example";
+import { sum } from "example.js";
+import { multiply } from "example.js";
+import { magicNumber } from "example.js";
 ```
 
-Even though there are three `import` statements in this module, the code in `"example"` will only be executed once. The instantiated module is then kept in memory and reused whenever another `import` statement references it. It doesn't matter if the `import` statements are all in the module, or are spread across multiple modules - they each will use the same module instance.
+Even though there are three `import` statements in this module, the code in `"example"` will only be executed once. The instantiated module is then kept in memory and reused whenever another `import` statement references it. It doesn't matter if the `import` statements are all in the module, or are spread across multiple modules -- they each will use the same module instance.
+
+A> ### Syntax Limitation
+A>
+A> An important limitation of both `export` and `import` is that they must be used outside of other statements. For instance, this is a syntax error:
+A>
+A> ```js
+A> if (flag) {
+A>     export flag;    // syntax error
+A> }
+A> ```
+A>
+A> This example is a syntax error because `export` is inside of an `if` statement. Exports cannot be conditional or done dynamically in any way. Part of the benefit of module syntax is so the JavaScript engine can staticly determine what will be exported. As such, you can only use `export` at the top-level of a module. Similarly, you cannot use `import` inside of a statement:
+A>
+A> ```js
+A> if (!flag) {
+A>     import flag from "example.js";    // syntax error
+A> }
+A> ```
+A>
+A> The `export` and `import` keywords are designed to be static so that tools such as text editors can easily tell what information is available. For that reason, you can't dynamically export or import bindings, and that reason requires the syntax limitation of using `export` and `import` outside of either statements.
 
 ## Renaming Exports and Imports
 
-Sometimes the original name of a variable, function, or class isn't what you want to use. It's possible to change the name of an export both during the export and when the identifier is being imported.
+Sometimes the original name of a variable, function, or class isn't what you want to use. It's possible to change the name of an export both during the export and during the import.
 
 In the first case, suppose you have a function that you'd like to export with a different name. You can use the `as` keyword to specify the name that the function should be known as outside of the module:
 
@@ -147,13 +156,13 @@ export { sum as add };
 Here, the `sum()` function (`sum` is the *local name*) is exported as `add()` (`add` is the *exported name*). That means when another module wants to import this function, it will have to use the name `add` instead:
 
 ```js
-import { add } from "example";
+import { add } from "example.js";
 ```
 
 If the module importing the function wants to use a different name, it can also use `as`:
 
 ```js
-import { add as sum } from "example";
+import { add as sum } from "example.js";
 console.log(typeof add);            // "undefined"
 console.log(sum(1, 2));             // 3
 ```
@@ -162,7 +171,7 @@ This code imports the `add()` function (the *import name*) and renames it to `su
 
 A> ### Imported Bindings
 A>
-A> A subtle but important point about the `import` statements is that they create bindings to variables, functions, and classes rather than simply referencing them. That means even though you cannot change an imported identifier, it can still change on its own. For example, suppose you have this module:
+A> A subtle but important point about the `import` statements is that they create read-only bindings to variables, functions, and classes rather than simply referencing them (as is the case with normal variables). That means even though you cannot change an imported identifier, it can still be changed by the module that exported it. For example, suppose you have this module:
 A>
 A> ```js
 A> export var name = "Nicholas";
@@ -174,7 +183,7 @@ A>
 A> When you import `name` and `setName()`, you can see that `setName()` is able to change the value of `name`:
 A>
 A> ```js
-A> import { name, setName } from "example";
+A> import { name, setName } from "example.js";
 A>
 A> console.log(name);       // "Nicholas"
 A> setName("Greg");
@@ -216,16 +225,12 @@ You can import a default value from a module using the following syntax:
 
 ```js
 // import the default
-import sum from "example";
+import sum from "example.js";
 
 console.log(sum(1, 2));     // 3
 ```
 
-This import statement imports the default from the module `"example"`. Note that there are no curly braces used in this case, as would be with a non-default export. The local name `sum` is used to represent the function that the module exports. This syntax is the cleanest as it's anticipated to be the dominant form of import on the web, allowing you to use already-existing object, such as:
-
-```js
-import $ from "jquery";
-```
+This import statement imports the default from the module `"example.js"`. Note that there are no curly braces used in this case, as would be with a non-default export. The local name `sum` is used to represent the function that the module exports. This syntax is the cleanest as it's anticipated to be the dominant form of import on the web, allowing you to use already-existing object.
 
 For modules that export both a default and one or more non-defaults, you can import them with one statement. For instance, suppose you have this module:
 
@@ -240,7 +245,7 @@ export default function(num1, num2) {
 You can then import both `color` and the default function using the following:
 
 ```js
-import sum, { color } from "example";
+import sum, { color } from "example.js";
 
 console.log(sum(1, 2));     // 3
 console.log(color);         // "red"
@@ -258,38 +263,38 @@ console.log(sum(1, 2));     // 3
 console.log(color);         // "red"
 ```
 
-In this code, the default export (`default`) is renamed to `sum` and the additional `color` export is also imported. This example is equivalent to the previous example.
+In this code, the default export (`default`) is renamed to `sum` and the additional `color` export is also imported. This example is equivalent to the preceding example.
 
 ## Re-exporting
 
-There may be a time when you'd like to re-export something that your module has imported. You can do this using the patterns already discussed in this chapter, such as:
+There may be a time when you'd like to re-export something that your module has imported (for instance, if you are creating a library out of several small modules). You can do this using the patterns already discussed in this chapter, such as:
 
 ```js
-import { sum } from "example";
+import { sum } from "example.js";
 export { sum }
 ```
 
 However, there's also a single statement that can accomplish the same thing:
 
 ```js
-export { sum } from "example";
+export { sum } from "example.js";
 ```
 
 This form of `export` looks into the specified module for the declaration of `sum` and then exports it. Of course, you can also choose to export a different name for the same thing:
 
 ```js
-export { sum as add } from "example";
+export { sum as add } from "example.js";
 ```
 
-Here, `sum` is imported from `"example"` and then exported as `add`.
+Here, `sum` is imported from `"example.js"` and then exported as `add`.
 
 If you'd like to export everything from another module, you can use the `*` pattern:
 
 ```js
-export * from "example";
+export * from "example.js";
 ```
 
-By exporting everything, you're including the default as well as any named exports, which may affect what you can export from your module. For instance, if `"example"` has a default export, you'll be unable to define a new default export when using this syntax.
+By exporting everything, you're including the default as well as any named exports, which may affect what you can export from your module. For instance, if `"example.js"` has a default export, you'll be unable to define a new default export when using this syntax.
 
 ## Importing Without Bindings
 
