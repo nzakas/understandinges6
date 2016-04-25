@@ -331,6 +331,113 @@ In this example, the module is imported and executed, so `pushAll()` is added to
 
 I> Imports without bindings are most likely to be used to create polyfills and shims.
 
+## Loading Modules
+
+While ECMAScript 6 defined the syntax for modules, it didn't define how to load them. This is part of the complexity of a specification that is supposed to be agnostic to implementation environments. Rather than trying to create a single specification that would work for all JavaScript environments, ECMAScript 6 chose to specify only the syntax and abstract out the loading mechanism to an internal operation called ` HostResolveImportedModule`, which was left undefined. It was then up to web browsers and Node.js to decide how to implement `HostResolveImportedModule` in such a way that it made sense for their environment.
+
+### Using Modules in Web Browsers
+
+Even before ECMAScript 6, web browsers had multiple ways of including JavaScript in an web application:
+
+1. Loading files of JavaScript code using the `<script>` element with the `src` attribute specifying a location from which to load the code.
+1. Embedding JavaScript code inline using the `<script>` element without the `src` attribute.
+1. Loading files of JavaScript code to execute as a worker (such as a web worker or service worker).
+
+In order to fully support modules, web browsers had to update each of these script loading mechanisms. These details are defined in HTML specification and summarized in the following sections.
+
+#### Using Modules With `<script>`
+
+The default behavior of the `<script>` element is to load JavaScript files as scripts (not modules). This happens when the `type` attribute is missing and also when the `type` attribute contains a JavaScript content type (such as `"text/javascript"`). The `<script>` element can then execute inline code or load the file specified in `src`. To support modules, a new value for `type` was added: `"module"`. When `type` is `"module"`, any inline code or code contained in the file specified by `src` is loaded as a module instead of a script. Here's a simple example:
+
+```html
+<!-- load a module JavaScript file -->
+<script type="module" src="module.js"></script>
+
+<!-- include a module inline -->
+<script type="module">
+
+import { sum } from "example.js";
+
+let result = sum(1, 2);
+
+</script>
+```
+
+The first `<script>` element in this example loads an external module file using the `src` attribute. The only difference from loading a script is that `type` is `"module"`. The second `<script>` element contains a module that is embedded directly in the web page. The variable `result` is not exposed globally because it exists only within the module (as defined by the `<script>` element) and is therefore not added to `window` as a property.
+
+As you can see, including modules in web pages is fairly simple and similar to including scripts. However, there are some differences in how modules are loaded.
+
+I> You may have noticed that `"module"` is not a content type like `"text/javascript"`. Module JavaScript files are served with the same content type as script JavaScript files, so it's not possible to differentiate solely based on content type. Also, browsers ignore `<script>` elements when the `type` is unrecognized, so browsers that don't support modules will automatically ignore `<script type="module">`, providing good backwards-compatibility.
+
+#### Module Loading Sequence in Web Browsers
+
+Modules are unique in that, unlike scripts, they may specify that other files must be loaded in order to execute correctly (using `import`). In order to support this, `<script type="module">` always acts as if the `defer` attribute is applied. The `defer` attribute is optional for loading script files but is always applied for loading module files. That means the module file begins downloading as soon as the HTML parser encounters `<script type="module">` with a `src` attribute but does not execute until after the document has been completely parsed. Also, modules are executed in the order in which they appear, so the first `<script type="module">` is always guaranteed to execute before the second, even if one of them contains inline code instead of specifying `src`. For example:
+
+```html
+<!-- this will execute first -->
+<script type="module" src="module1.js"></script>
+
+<!-- this will execute second -->
+<script type="module">
+import { sum } from "example.js";
+
+let result = sum(1, 2);
+</script>
+
+<!-- this will execute third -->
+<script type="module" src="module2.js"></script>
+```
+
+These three `<script>` elements execute in the order they are specified, so `module1.js` is guaranteed to execute before the inline module, and the inline module is guaranteed to execute before `module2.js`.
+
+Complicating the matter is that each module may `import` from one or more other modules. That's why modules are parsed completely first to identify all `import` statements. Each `import` statement then triggers a fetch (either from the network or from the cache), and the module isn't executed until all of the `import` resources have first been loaded and executed.
+
+All of the modules, both those explicitly included using `<script type="module">` and those implicitly included using `import`, are loaded and executed in order. In the preceding example, the complete loading sequence is:
+
+1. Download and parse `module1.js`
+1. Recursively download and parse `import` resources in `module1.js`
+1. Parse the inline module
+1. Recursively download and parse `import` resources the inline module
+1. Download and parse `module2.js`
+1. Recursively download and parse `import` resources in `module2.js`
+
+Once loading is complete, nothing is executed until after the document has been completely parsed. Once document parsing is complete, then the following takes place:
+
+1. Recursively execute `import` resources for `module1.js`
+1. Execute `module1.js`
+1. Recursively execute `import` resources for the inline module
+1. Execute the inline module
+1. Recursively execute `import` resources for `module2.js`
+1. Execute `module2.js`
+
+Notice that the inline module acts like the other two modules except that the code doesn't first have to be downloaded. Otherwise, the sequence of loading `import` resources and executing modules is exactly the same.
+
+I> The `async` and `defer` attribute are ignored on `<script type="module">`. There is only one way to load modules, and that is the default way that behaves as if `defer` is already present.
+
+#### Loading Modules as Workers
+
+Workers, such as web workers and service workers, execute JavaScript code outside of the web page context. Creating a new worker involves creating a new instance `Worker` (or another class) and passing in the location of JavaScript file. The default loading mechanism is to load files as scripts, such as:
+
+```js
+// load script.js as a script
+let worker = new Worker("script.js");
+```
+
+To support loading modules, a second argument was added to these constructors in the HTML standard. The second argument is an object with a `type` property with a default value of `"script"`. You can set `type` to `"module"` in order to load module files:
+
+```js
+// load module.js as a module
+let worker = new Worker("module.js", { type: "module" });
+```
+
+This example loads `module.js` as a module instead of a script by passing a second argument with `type` set to `"module"` (the `type` property is meant to mimic how the `type` attribute of `<script>` differentiates modules and scripts). The second argument is supported for all worker types in the browser.
+
+W> The `self.importScripts()` method is not available inside of worker modules like they are inside of worker scripts. That's because worker modules can use `import` to easily include other modules whereas worker scripts would otherwise have no other way to load additional JavaScript files.
+
+### Using Modules in Node.js
+
+TODO
+
 ## Summary
 
 ECMAScript 6 adds modules to the language as a way to package up and encapsulate functionality. Modules behave differently than scripts, as they do not modify the global scope with their top-level variables, functions, and classes, and `this` is `undefined`. In order to work differently than scripts, modules must be loaded using a different mode.
