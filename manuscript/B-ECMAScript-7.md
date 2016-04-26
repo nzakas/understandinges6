@@ -65,6 +65,46 @@ console.log(num2);              // 1
 
 In this example, `num1` is incremented before the exponentiation operator is applied, so `num1` becomes 3 and the result of the operation is 9. For `num2`, the value remains 2 for the exponentiation operation and then is decremented to 1.
 
-## Array.prototype.includes
+## Array.prototype.includes()
 
-TODO
+You might recall that ECMAScript 6 added `String.prototype.includes()` in order to find if certain substrings exist within a given string. The original plan was to also introduce `Array.prototype.includes()` in ECMAScript 6 to continue the trend of treating strings and arrays similarly. However, the specification for `Array.prototype.includes()` was incomplete by the ECMAScript 6 deadline, and so `Array.prototype.includes()` ended up in ECMAScript 2016 instead.
+
+The `Array.prototype.includes()` method accepts accept two arguments: the value to search for and an optional index from which to start the search. When the second argument is provided, `includes()` starts the match from that index (the default is `0`). The return value is `true` when the value is found inside of the array and `false` if not. For example:
+
+```js
+let values = [1, 2, 3];
+
+console.log(values.includes(1));        // true
+console.log(values.includes(0));        // false
+
+// start the search from index 2
+console.log(values.includes(1, 2));     // false
+```
+
+In this example, `values.includes()` returns `true` for the value of `1` and `false` for the value of `0`, which is not in the array. When the second argument is used to start the search at index 2 (which contains the value `3`), `values.includes()` returns `false` because the number `1` is not found between index 2 and the end of the array.
+
+### Value Comparison
+
+The value comparison perform by the `includes()` method uses the `===` with one exception: `NaN` is considered equal to `NaN` even though `NaN === NaN` evaluates to `false`. This is different than the behavior of `indexOf()`, which strictly uses `===` for comparison. For example:
+
+```js
+let values = [1, NaN, 2];
+
+console.log(values.indexOf(NaN));       // -1
+console.log(values.includes(NaN));      // true
+```
+
+In this example, `values.indexOf()` returns `-1` for `NaN` even though it is contained in `values`. On the other hand, `values.includes()` returns `true` for `NaN` because of the different value comparison used.
+
+W> Because of the difference in how `NaN` is treated, I recommend using `includes()` instead of `indexOf()` whenever you want to check just for the existence of a value in an array and don't need to know the index. If you need to know where in the array a value exists, then you have to use `indexOf()`.
+
+Another quirk of this implementation is that `+0` and -0` are considered to be equal. In this case, the behavior of `indexOf()` and `includes()` is the same:
+
+```js
+let values = [1, +0, 2];
+
+console.log(values.indexOf(-0));        // 1
+console.log(values.includes(-0));       // true
+```
+
+Here, both `indexOf()` and `includes()` find `+0` when `-0` is passed because the two values are considered equal. Note that this is different than the behavior of `Object.is()`, which considers `+0` and `-0` to be different values.
