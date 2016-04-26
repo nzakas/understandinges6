@@ -412,7 +412,21 @@ Once loading is complete, nothing is executed until after the document has been 
 
 Notice that the inline module acts like the other two modules except that the code doesn't first have to be downloaded. Otherwise, the sequence of loading `import` resources and executing modules is exactly the same.
 
-I> The `async` and `defer` attribute are ignored on `<script type="module">`. There is only one way to load modules, and that is the default way that behaves as if `defer` is already present.
+I> The `defer` attribute is ignored on `<script type="module">` because it already behaves as if `defer` is applied.
+
+#### Asynchronous Module Loading in Web Browsers
+
+You may already be familiar with the `async` attribute on the `<script>` element. When used with scripts, `async` causes the script file to be executed as soon as the file is completely downloaded and parsed. Additionally, the order of `async` scripts in the document does not affect the order in which the scripts are executed -- they are always executed as soon as they finish downloading without waiting for the containing document to finish parsing.
+
+The `async` attribute can be applied to modules as well. When `async` is used on `<script type="module">`, the module is executed in a similar manner as a script. The only difference is that all of the `import` resources for the module are downloaded before the module itself is executed. So you are guaranteed that the module will have all of its resources downloaded in order to execute, but you cannot guarantee when the module will execute. Consider the following:
+
+```html
+<!-- no guarantee which one of these will execute first -->
+<script type="module" async src="module1.js"></script>
+<script type="module" async src="module2.js"></script>
+```
+
+In this example, there are two module files loaded asynchronously. It's not possible to tell which module will execute first simply by looking at this code. If `module1.js` finishes downloading first (including all of its `import` resources), then it will execute first; if `module2.js` finishes downloading first, then it will execute first. The only guarantees are that `module1.js` will have all of its `import` resources downloading before it is executed and the same for `module2.js`.
 
 #### Loading Modules as Workers
 
