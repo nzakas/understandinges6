@@ -67,7 +67,7 @@ Once you have a module with exports, you can access the functionality in another
 import { identifier1, identifier2 } from "example.js";
 ```
 
-The curly braces after `import` indicate the bindings to import from the given module. The keyword `from` is used to indicate the module from which to import the given bindings. The module is specified using a string representing the path to the module. Browsers use the same format as you might pass to `<script>` whereas Node.js follows its traditional conventions of differentiating between local files and packages based on a filesystem prefix (for example, `example` for a package and `./example` for a local file). Specific differences in how browsers and Node.js load modules are discussed later in this chapter.
+The curly braces after `import` indicate the bindings to import from the given module. The keyword `from` is used to indicate the module from which to import the given bindings. The module is specified using a string representing the path to the module. Browsers use the same format as you might pass to `<script>`, which means you must include a file extension, whereas Node.js follows its traditional conventions of differentiating between local files and packages based on a filesystem prefix (for example, `example` for a package and `./example` for a local file) and does not require file extensions. Specific differences in how browsers and Node.js load modules are discussed later in this chapter.
 
 I> Even though it looks similar, the list of bindings to import is not a destructured object.
 
