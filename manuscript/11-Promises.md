@@ -1098,6 +1098,22 @@ Here, `p1` is a built-in promise that is passed to the `MyPromise.resolve()` met
 
 If an instance of `MyPromise` is passed to the `MyPromise.resolve()` or `MyPromise.reject()` methods, it will just be returned directly without being resolved. In all other ways these two methods behave the same as `Promise.resolve()` and `Promise.reject()`.
 
+A> ### Future Asynchronous Task Running
+A>
+A> At the time of my writing, there is ongoing work around bringing a simpler syntax to asynchronous task running in JavaScript. Work is progressing on an `await` syntax that would closely mirror the promise-based example in the preceding section. The basic idea is to use a function marked with `async` instead of a generator and use `await` instead of `yield` when calling a function, such as:
+A>
+A> ```js
+A> (async function() {
+A>     let contents = await readFile("config.json");
+A>     doSomethingWith(contents);
+A>     console.log("Done");
+A> });
+A> ```
+A>
+A> The `async` keyword before `function` indicates that the function is meant to run in an asynchronous manner. The `await` keyword signals that the function call to `readFile("config.json")` should return a promise, and if it doesn't, the response should be wrapped in a promise. Just as with the implementation of `run()` in the preceding section, `await` will throw an error if the promise is rejected and otherwise return the value from the promise.
+A>
+A> The `await` syntax is expected to be finalized in ECMAScript 2017 (ECMAScript 8).
+
 ## Summary
 
 Promises are designed to improve asynchronous programming in JavaScript by giving you more control and composability over asynchronous operations than events and callbacks can. Promises schedule jobs to be added to the JavaScript engine's job queue for execution later, while a second job queue tracks promise fulfillment and rejection handlers to ensure proper execution.
