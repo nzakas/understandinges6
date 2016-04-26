@@ -1031,22 +1031,6 @@ This example is performing the asynchronous `readFile()` operation without makin
 
 Of course, there are downsides to the pattern used in these examples--namely that you can't always be sure a function that returns a function is asynchronous. For now, though, it's only important that you understand the theory behind the task running. Using promises offers more powerful ways of scheduling asynchronous tasks, and Chapter 11 covers this topic further.
 
-A> ### Future Asynchronous Task Running
-A>
-A> At the time of my writing, there is ongoing work around bringing a simpler syntax to asynchronous task running in JavaScript. Work is progressing on an `await` syntax that would closely mirror the promise-based example in the preceding section. The basic idea is to use a function marked with `async` instead of a generator and use `await` instead of `yield` when calling a function, such as:
-A>
-A> ```js
-A> (async function() {
-A>     let contents = await readFile("config.json");
-A>     doSomethingWith(contents);
-A>     console.log("Done");
-A> });
-A> ```
-A>
-A> The `async` keyword before `function` indicates that the function is meant to run in an asynchronous manner. The `await` keyword signals that the function call to `readFile("config.json")` should return a promise, and if it doesn't, the response should be wrapped in a promise. Just as with the implementation of `run()` in the preceding section, `await` will throw an error if the promise is rejected and otherwise return the value from the promise.
-A>
-A> The `await` syntax is expected to be finalized in ECMAScript 2017 (ECMAScript 8).
-
 ## Summary
 
 Iterators are an important part of ECMAScript 6 and are at the root of several key language elements. On the surface, iterators provide a simple way to return a sequence of values using a simple API. However, there are far more complex ways to use iterators in ECMAScript 6.
