@@ -67,7 +67,7 @@ Once you have a module with exports, you can access the functionality in another
 import { identifier1, identifier2 } from "example.js";
 ```
 
-The curly braces after `import` indicate the bindings to import from the given module. The keyword `from` is used to indicate the module from which to import the given bindings. The module is specified using a string representing the path to the module. Browsers use the same format as you might pass to `<script>`, which means you must include a file extension, whereas Node.js follows its traditional conventions of differentiating between local files and packages based on a filesystem prefix (for example, `example` for a package and `./example` for a local file) and does not require file extensions. Specific differences in how browsers and Node.js load modules are discussed later in this chapter.
+The curly braces after `import` indicate the bindings to import from the given module. The keyword `from` is used to indicate the module from which to import the given bindings. The module is specified using a string representing the path to the module. Browsers use the same format as you might pass to `<script>`, which means you must include a file extension, whereas Node.js follows its traditional conventions of differentiating between local files and packages based on a filesystem prefix (for example, `example` for a package and `./example.js` for a local file). Specific differences in how browsers and Node.js load modules are discussed later in this chapter.
 
 I> Even though it looks similar, the list of bindings to import is not a destructured object.
 
@@ -451,9 +451,12 @@ Worker modules are generally the same as worker scripts, but there are a couple 
 * Worker scripts are limited to being loaded from the same origin as the web page in which they are referenced. Worker modules have this same default restriction, however, they can also load files that have appropriate Cross-Origin Resource Sharing (CORS) headers to allow access.
 * Worker scripts can use the `self.importScripts()` method to load additional scripts into the worker. In worker modules, `self.importScripts()` always fails because you should use `import` instead.
 
+<!--
+    Note: Node.js is still debating the right way to load modules. I'd really like to include that description in this chapter and it looks like they will be getting close to resolution soon (in the next few weeks). I'd like to leave a placeholder here to come back after initial edits are complete to write this section.
 ### Using Modules in Node.js
 
 TODO
+-->
 
 ## Summary
 
@@ -462,3 +465,5 @@ ECMAScript 6 adds modules to the language as a way to package up and encapsulate
 You must export any functionality you'd like to make available to consumers of a module. Variables, functions, and classes can all be exported, and there is also one default export allowed per module. After exporting, another module can import all or some of the exported names. These names act as if defined by `let`, and so operate as block bindings that cannot be redeclared in the same module.
 
 Modules need not export anything if they are manipulating something in the global scope. In that case, it's possible to import from such a module without introducing any bindings into the module scope.
+
+Because modules must run in a different mode, browsers introduced `<script type="module">` to signal that the source file or inline code should be executed as a module. Module files loaded with `<script type="module">` are loaded as if the `defer` attribute is applied to them, with modules executed in the order in which they appear in the containing document once the document is fully parsed.
