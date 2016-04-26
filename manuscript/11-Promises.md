@@ -120,7 +120,7 @@ In this code, `readFile()` doesn't actually start reading the file immediately; 
 
 ### The Promise Lifecycle
 
-Each promise goes through a short lifecycle starting in the *pending* state, which is an indicator that the asynchronous operation has not yet completed. The promise in the last example is in the pending state as soon as the `readFile()` function returns it. Once the asynchronous operation completes, the promise is considered *settled* and enters one of two possible states:
+Each promise goes through a short lifecycle starting in the *pending* state, which is an indicator that the asynchronous operation has not yet completed (meaning the promise is *unsettled*). The promise in the last example is in the pending state as soon as the `readFile()` function returns it. Once the asynchronous operation completes, the promise is considered *settled* and enters one of two possible states:
 
 1. *Fulfilled*: The promise's asynchronous operation has completed successfully
 1. *Rejected*: The promise's asynchronous operation didn't complete successfully, either due to an error or some other cause.
@@ -198,10 +198,6 @@ I> Each call to `then()` or `catch()` creates a new job to be executed when the 
 ### Creating Unsettled Promises
 
 New promises are created using the `Promise` constructor. This constructor accepts a single argument--a function called the *executor*, which contains the code to initialize the promise. The executor is passed two functions called `resolve()` and `reject()` as arguments. The `resolve()` function is called when the executor has finished successfully to signal that the promise is ready to be resolved, while the `reject()` function indicates that the executor has failed.
-
-<!-- Perhaps explicitly state what makes a promise "unsettled," and why unsettled
-     promises are useful. I'm not sure that will be quite clear to all readers by
-     the end of the section. /JG -->
 
 Here's an example that uses a promise in Node.js to implement the `readFile()` function from earlier in this chapter:
 
@@ -387,10 +383,7 @@ p1.catch(function(value) {
 
 This example is similar to the last except that `Promise.reject()` is used on `thenable`. When `thenable.then()` executes, a new promise is created in the rejected state with a value of 42. That value is then passed to the rejection handler for `p1`.
 
-<!-- Peprhaps elaborate on how these two methods make working with non-promise thenables
-     easier. I'm not sure it will be completely clear to all readers. /JG -->
-
-`Promise.resolve()` and `Promise.reject()` work like this to allow you to easily work with non-promise thenables. When you're unsure if an object is a promise, passing the object through `Promise.resolve()` or `Promise.reject()` (depending on your anticipated result) is the best way to find out because promises just pass through unchanged.
+`Promise.resolve()` and `Promise.reject()` work like this to allow you to easily work with non-promise thenables. A lot of libraries used thenables prior to promises being introduced in ECMAScript 6, so the ability to convert thenables into formal promises is important for backwards-compatibility with previously existing libraries. When you're unsure if an object is a promise, passing the object through `Promise.resolve()` or `Promise.reject()` (depending on your anticipated result) is the best way to find out because promises just pass through unchanged.
 
 ### Executor Errors
 
@@ -489,10 +482,7 @@ setTimeout(function() {
 }, 1000);
 ```
 
-<!-- When you say "after its creation" Below, do you mean after `rejected` is
-     created? /Jg -->
-
-Here, the `rejectionHandled` event is emitted when the rejection handler is finally called. If the rejection handler were attached directly to `rejected` after its creation, then the event wouldn't be emitted. The rejection handler would instead be called during the same turn of the event loop where `rejected` was created, which isn't useful.
+Here, the `rejectionHandled` event is emitted when the rejection handler is finally called. If the rejection handler were attached directly to `rejected` after `rejected` is created, then the event wouldn't be emitted. The rejection handler would instead be called during the same turn of the event loop where `rejected` was created, which isn't useful.
 
 To properly track potentially unhandled rejections, use the `rejectionHandled` and `unhandledRejection` events to keep a list of potentially unhandled rejections. Then wait some period of time to inspect the list. For example:
 
@@ -620,16 +610,10 @@ Finished
 
 The call to `p1.then()` returns a second promise on which `then()` is called. The second `then()` fulfillment handler is only called after the first promise has been resolved. If you unchain this example, it looks like this:
 
-<!-- Does the "same as" comment below mean "let p1 ..." is the same as all
-     the code that follows? Perhaps clarify that with something in the text outside the
-     code. /JG -->
-
 ```js
 let p1 = new Promise(function(resolve, reject) {
     resolve(42);
 });
-
-// same as
 
 let p2 = p1.then(function(value) {
     console.log(value);
@@ -640,7 +624,7 @@ p2.then(function() {
 });
 ```
 
-As you might have guessed, the call to `p2.then()` also returns a promise. This example just doesn't use that promise.
+In this unchained version of the code, the result of `p1.then()` is stored in `p2`, and then `p2.then()` is called to add the final fulfillment handler. As you might have guessed, the call to `p2.then()` also returns a promise. This example just doesn't use that promise.
 
 ### Catching Errors
 
@@ -1057,11 +1041,7 @@ Inside the `step()` function, if there's more work to do, then `result.done` is 
 
 A rejection handler stores any rejection results in an error object. The `task.throw()` method passes that error object back into the iterator, and if an error is caught in the task, `result` is assigned to the next yield result. Finally, `step()` is called inside `catch()` to continue.
 
-<!-- Could you clarify the sentenece, "In fact, any function may be used with any return
-     value because the result is always converted into a promise" in the paragraph below?
-     /JG -->
-
-This `run()` function can run any generator that uses `yield` to achieve asynchronous code without exposing promises (or callbacks) to the developer. In fact, any function may be used with any return value because the result is always converted into a promise. That means both synchronous and asynchronous methods work correctly when called using `yield`, and you never have to check that the return value is a promise.
+This `run()` function can run any generator that uses `yield` to achieve asynchronous code without exposing promises (or callbacks) to the developer. In fact, since the return value of the function call is always coverted into a promise, the function can even return something other than a promise. That means both synchronous and asynchronous methods work correctly when called using `yield`, and you never have to check that the return value is a promise.
 
 The only concern is ensuring that asynchronous functions like `readFile()` return a promise that correctly identifies its state. For Node.js built-in methods, that means you'll have to convert those methods to return promises instead of using callbacks.
 
