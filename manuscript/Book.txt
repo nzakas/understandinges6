@@ -13,3 +13,4 @@
 12-Proxies-and-Reflection.md
 13-Modules.md
 A-Other-Changes.md
+B-ECMAScript-7.md
