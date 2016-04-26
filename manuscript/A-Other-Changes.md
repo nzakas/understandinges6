@@ -4,7 +4,7 @@ Along with the changes already mentioned in the book, ECMAScript 6 has made some
 
 ## Working with Integers
 
-A lot of confusion has been caused over the years related to JavaScript's single number type that is used to represent both integers and floats. The language goes through great pains to ensure that developers don't need to worry about the details, but problems still leak through from time to time. ECMAScript 6 seeks to address this by making it easier to identify and work with integers.
+A lot of confusion has been related to JavaScript's single number encoding, IEEE 754, that is used to represent both integers and floats. The language goes through great pains to ensure that developers don't need to worry about the details, but problems still leak through from time to time. ECMAScript 6 seeks to address this by making it easier to identify and work with integers.
 
 ### Identifying Integers
 
@@ -20,7 +20,7 @@ In this code, `Number.isInteger()` returns `true` for both `25` and `25.0` even 
 
 ### Safe Integers
 
-However, all is not so simple with integers. JavaScript can only accurately represent integers between -2^53^ and 2^53^, and outside of this "safe" range, binary representations end up reused for multiple numeric values. For example:
+IEEE 754 can only accurately represent integers between -2^53^ and 2^53^, and outside of this "safe" range, binary representations end up reused for multiple numeric values. That means JavaScript can only safely represent integers within the IEEE 754 range before problems become apparent. For example:
 
 ```js
 console.log(Math.pow(2, 53));      // 9007199254740992
@@ -29,7 +29,7 @@ console.log(Math.pow(2, 53) + 1);  // 9007199254740992
 
 This example doesn't contain a typo, two different numbers end up represented by the same JavaScript integer. The effect becomes more prevalent the further the value is outside of the safe range.
 
-ECMAScript 6 introduces `Number.isSafeInteger()` to better identify integers that can accurately be represented in the language. There is also `Number.MAX_SAFE_INTEGER` and `Number.MIN_SAFE_INTEGER` that represent the upper and lower bounds of the same range, respectively. The `Number.isSafeInteger()` method ensures that a value is an integer and falls within the safe range of integer values:
+ECMAScript 6 introduces `Number.isSafeInteger()` to better identify integers that can accurately be represented in the language, and also adds `Number.MAX_SAFE_INTEGER` and `Number.MIN_SAFE_INTEGER` that represent the upper and lower bounds of the same range, respectively. The `Number.isSafeInteger()` method ensures that a value is an integer and falls within the safe range of integer values:
 
 ```js
 var inside = Number.MAX_SAFE_INTEGER,
@@ -48,7 +48,7 @@ Most of the time, you only want to deal with safe integers when doing integer ar
 
 ## New Math Methods
 
-The aforementioned new emphasis on gaming and graphics in JavaScript led to the realization that many mathematical calculations could be done more efficiently by a JavaScript engine than with pure JavaScript code. Optimization strategies like asm.js, which works on a subset of JavaScript to improve performance, need more information to perform calculations in the fastest way possible. It's important, for instance, to know whether the numbers should be treated as 32-bit integers or as 64-bit floats.
+The new emphasis on gaming and graphics that led to the inclusion of typed arrays in JavaScript also led to the realization that many mathematical calculations could be done more efficiently by a JavaScript engine. Optimization strategies like asm.js, which works on a subset of JavaScript to improve performance, need more information to perform calculations in the fastest way possible. It's important, for instance, to know whether the numbers should be treated as 32-bit integers or as 64-bit floats so hardware-based operations can be used (which are much faster than software-based operations).
 
 As a result, ECMAScript 6 adds several new methods to the `Math` object. These new methods are important for improving the speed of common mathematical calculations, and therefore, improving the speed of applications that must perform many calculations (such as graphics programs). The new methods are listed below.
 
@@ -107,7 +107,7 @@ Additionally, ECMAScript 6 formally specifies valid identifiers in terms of [Uni
 
 The `ID_Start` and `ID_Continue` derived core properties are defined in Unicode Identifier and Pattern Syntax as a way to identify symbols that are appropriate for use in identifiers such as variables and domain names (the specification is not specific to JavaScript).
 
-## Formalizing the __proto__ Property
+## Formalizing the `__proto__` Property
 
 Even before ECMAScript 5 was finished, several JavaScript engines already implemented a custom property called `__proto__` that could be used to both get and set `[[Prototype]]`. Effectively, `__proto__` was an early precursor to both the `Object.getPrototypeOf()` and `Object.setPrototypeOf()` methods. It was unrealistic to expect all JavaScript engines to remove this property, so ECMAScript 6 also formalized the `__proto__` behavior. However, the formalization is in Appendix B along with this warning:
 
