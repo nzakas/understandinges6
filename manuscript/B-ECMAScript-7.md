@@ -69,7 +69,7 @@ In this example, `num1` is incremented before the exponentiation operator is app
 
 You might recall that ECMAScript 6 added `String.prototype.includes()` in order to find if certain substrings exist within a given string. The original plan was to also introduce `Array.prototype.includes()` in ECMAScript 6 to continue the trend of treating strings and arrays similarly. However, the specification for `Array.prototype.includes()` was incomplete by the ECMAScript 6 deadline, and so `Array.prototype.includes()` ended up in ECMAScript 2016 instead.
 
-The `Array.prototype.includes()` method accepts accept two arguments: the value to search for and an optional index from which to start the search. When the second argument is provided, `includes()` starts the match from that index (the default is `0`). The return value is `true` when the value is found inside of the array and `false` if not. For example:
+The `Array.prototype.includes()` method accepts two arguments: the value to search for and an optional index from which to start the search. When the second argument is provided, `includes()` starts the match from that index (the default is `0`). The return value is `true` when the value is found inside of the array and `false` if not. For example:
 
 ```js
 let values = [1, 2, 3];
@@ -85,7 +85,7 @@ In this example, `values.includes()` returns `true` for the value of `1` and `fa
 
 ### Value Comparison
 
-The value comparison perform by the `includes()` method uses the `===` with one exception: `NaN` is considered equal to `NaN` even though `NaN === NaN` evaluates to `false`. This is different than the behavior of `indexOf()`, which strictly uses `===` for comparison. For example:
+The value comparison performed by the `includes()` method uses the `===` with one exception: `NaN` is considered equal to `NaN` even though `NaN === NaN` evaluates to `false`. This is different than the behavior of `indexOf()`, which strictly uses `===` for comparison. For example:
 
 ```js
 let values = [1, NaN, 2];
