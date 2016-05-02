@@ -98,7 +98,7 @@ In this example, `values.indexOf()` returns `-1` for `NaN` even though it is con
 
 W> Because of the difference in how `NaN` is treated, I recommend using `includes()` instead of `indexOf()` whenever you want to check just for the existence of a value in an array and don't need to know the index. If you need to know where in the array a value exists, then you have to use `indexOf()`.
 
-Another quirk of this implementation is that `+0` and -0` are considered to be equal. In this case, the behavior of `indexOf()` and `includes()` is the same:
+Another quirk of this implementation is that `+0` and `-0` are considered to be equal. In this case, the behavior of `indexOf()` and `includes()` is the same:
 
 ```js
 let values = [1, +0, 2];
