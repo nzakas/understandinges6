@@ -2,16 +2,15 @@
 
 Symbols are a primitive type introduced in ECMAScript 6, joining the existing primitive types: strings, numbers, booleans, `null`, and `undefined`. Symbols began as a way to create private object members, a feature JavaScript developers wanted for a long time. Before symbols, any property with a string name was easy to access regardless of the obscurity of the name, and the "private names" feature was meant to let developers create non-string property names. That way, normal techniques for detecting these private names wouldn't work.
 
-The private names proposal eventually evolved into ECMAScript 6 symbols, and this chapter will teach you how to use symbols effectively. While the implementation details remained the same (that is, they added non-string values for property names), the goal of privacy was dropped. Instead, symbol properties are categorized separately from other object properties. They're non-enumerable by default, but are still discoverable.
-
+The private names proposal eventually evolved into ECMAScript 6 symbols, and this chapter will teach you how to use symbols effectively. While the implementation details remained the same (that is, they added non-string values for property names), the goal of privacy was dropped. Instead, symbol properties are categorized separately from other object properties.
 
 ## Creating Symbols
 
 Symbols are unique among JavaScript primitives in that they don't have a literal form, like `true` for booleans or `42` for numbers. You can create a symbol by using the global `Symbol` function, as in this example:
 
 ```js
-var firstName = Symbol();
-var person = {};
+let firstName = Symbol();
+let person = {};
 
 person[firstName] = "Nicholas";
 console.log(person[firstName]);     // "Nicholas"
@@ -24,8 +23,8 @@ W> Because symbols are primitive values, calling `new Symbol()` throws an error 
 The `Symbol` function also accepts an optional argument that is the description of the symbol. The description itself cannot be used to access the property, but is used for debugging purposes. For example:
 
 ```js
-var firstName = Symbol("first name");
-var person = {};
+let firstName = Symbol("first name");
+let person = {};
 
 person[firstName] = "Nicholas";
 
@@ -41,7 +40,7 @@ A>
 A>Since symbols are primitive values, you can use the `typeof` operator to determine if a variable contains a symbol. ECMAScript 6 extends `typeof` to return `"symbol"` when used on a symbol. For example:
 A>
 A>```js
-A>var symbol = Symbol("test symbol");
+A>let symbol = Symbol("test symbol");
 A>console.log(typeof symbol);         // "symbol"
 A>```
 A>
@@ -52,17 +51,17 @@ A>While there are other indirect ways of determining whether a variable is a sym
 You can use symbols anywhere you'd use a computed property name. You've already seen bracket notation used with symbols in this chapter, but you can use symbols in computed object literal property names as well as with `Object.defineProperty()` and `Object.defineProperties()` calls, such as:
 
 ```js
-var firstName = Symbol("first name");
+let firstName = Symbol("first name");
 
 // use a computed object literal property
-var person = {
+let person = {
     [firstName]: "Nicholas"
 };
 
 // make the property read only
 Object.defineProperty(person, firstName, { writable: false });
 
-var lastName = Symbol("last name");
+let lastName = Symbol("last name");
 
 Object.defineProperties(person, {
     [lastName]: {
@@ -86,8 +85,8 @@ You may find that you want different parts of your code to use the same symbols.
 When you want to create a symbol to be shared, use the `Symbol.for()` method instead of calling the `Symbol()` method. The `Symbol.for()` method accepts a single parameter, which is a string identifier for the symbol you want to create. That parameter is also used as the symbol's description. For example:
 
 ```js
-var uid = Symbol.for("uid");
-var object = {};
+let uid = Symbol.for("uid");
+let object = {};
 
 object[uid] = "12345";
 
@@ -98,15 +97,15 @@ console.log(uid);               // "Symbol(uid)"
 The `Symbol.for()` method first searches the global symbol registry to see if a symbol with the key `"uid"` exists. If so, the method returns the existing symbol. If no such symbol exists, then a new symbol is created and registered to the global symbol registry using the specified key. The new symbol is then returned. That means subsequent calls to `Symbol.for()` using the same key will return the same symbol, as follows:
 
 ```js
-var uid = Symbol.for("uid");
-var object = {
+let uid = Symbol.for("uid");
+let object = {
     [uid]: "12345"
 };
 
 console.log(object[uid]);       // "12345"
 console.log(uid);               // "Symbol(uid)"
 
-var uid2 = Symbol.for("uid");
+let uid2 = Symbol.for("uid");
 
 console.log(uid === uid2);      // true
 console.log(object[uid2]);      // "12345"
@@ -118,13 +117,13 @@ In this example, `uid` and `uid2` contain the same symbol and so they can be use
 Another unique aspect of shared symbols is that you can retrieve the key associated with a symbol in the global symbol registry by calling the `Symbol.keyFor()` method. For example:
 
 ```js
-var uid = Symbol.for("uid");
+let uid = Symbol.for("uid");
 console.log(Symbol.keyFor(uid));    // "uid"
 
-var uid2 = Symbol.for("uid");
+let uid2 = Symbol.for("uid");
 console.log(Symbol.keyFor(uid2));   // "uid"
 
-var uid3 = Symbol("uid");
+let uid3 = Symbol("uid");
 console.log(Symbol.keyFor(uid3));   // undefined
 ```
 
@@ -139,7 +138,7 @@ Type coercion is a significant part of JavaScript, and there's a lot of flexibil
 The examples in this chapter have used `console.log()` to indicate the output for symbols, and that works because `console.log()` calls `String()` on symbols to create useful output. You can use `String()` directly to get the same result. For instance:
 
 ```js
-var uid = Symbol.for("uid"),
+let uid = Symbol.for("uid"),
     desc = String(uid);
 
 console.log(desc);              // "Symbol(uid)"
@@ -148,7 +147,7 @@ console.log(desc);              // "Symbol(uid)"
 The `String()` function calls `uid.toString()` and the symbol's string description is returned. If you try to concatenate the symbol directly with a string, however, an error will be thrown:
 
 ```js
-var uid = Symbol.for("uid"),
+let uid = Symbol.for("uid"),
     desc = uid + "";            // error!
 ```
 
@@ -157,7 +156,7 @@ Concatenating `uid` with an empty string requires that `uid` first be coerced in
 Similarly, you cannot coerce a symbol to a number. All mathematical operators cause an error when applied to a symbol. For example:
 
 ```js
-var uid = Symbol.for("uid"),
+let uid = Symbol.for("uid"),
     sum = uid / 1;            // error!
 ```
 
@@ -170,12 +169,12 @@ The `Object.keys()` and `Object.getOwnPropertyNames()` methods can retrieve all 
 The return value of `Object.getOwnPropertySymbols()` is an array of own property symbols. For example:
 
 ```js
-var uid = Symbol.for("uid");
-var object = {
+let uid = Symbol.for("uid");
+let object = {
     [uid]: "12345"
 };
 
-var symbols = Object.getOwnPropertySymbols(object);
+let symbols = Object.getOwnPropertySymbols(object);
 
 console.log(symbols.length);        // 1
 console.log(symbols[0]);            // "Symbol(uid)"
@@ -241,7 +240,7 @@ Object.defineProperty(MyObject, Symbol.hasInstance, {
     }
 });
 
-var obj = new MyObject();
+let obj = new MyObject();
 
 console.log(obj instanceof MyObject);       // false
 ```
@@ -261,7 +260,7 @@ Object.defineProperty(SpecialNumber, Symbol.hasInstance, {
     }
 });
 
-var two = new Number(2),
+let two = new Number(2),
     zero = new Number(0);
 
 console.log(two instanceof SpecialNumber);    // true
@@ -345,7 +344,8 @@ let hasLengthOf10 = {
         return value.length === 10 ? [value.substring(0, 10)] : null;
     },
     [Symbol.replace] = function(value, replacement) {
-        return value.length === 10 ? replacement + value.substring(10) : value;
+        return value.length === 10 ?
+            replacement + value.substring(10) : value;
     },
     [Symbol.search] = function(value) {
         return value.length === 10 ? 0 : -1;
@@ -431,7 +431,7 @@ Temperature.prototype[Symbol.toPrimitive] = function(hint) {
     }
 };
 
-var freezing = new Temperature(32);
+let freezing = new Temperature(32);
 
 console.log(freezing + "!");            // "32 degrees!"
 console.log(freezing / 2);              // 16
@@ -488,7 +488,7 @@ function Person(name) {
 
 Person.prototype[Symbol.toStringTag] = "Person";
 
-var me = new Person("Nicholas");
+let me = new Person("Nicholas");
 
 console.log(me.toString());                         // "[object Person]"
 console.log(Object.prototype.toString.call(me));    // "[object Person]"
@@ -507,7 +507,7 @@ Person.prototype.toString = function() {
     return this.name;
 };
 
-var me = new Person("Nicholas");
+let me = new Person("Nicholas");
 
 console.log(me.toString());                         // "Nicholas"
 console.log(Object.prototype.toString.call(me));    // "[object Person]"
@@ -530,7 +530,7 @@ Person.prototype.toString = function() {
     return this.name;
 };
 
-var me = new Person("Nicholas");
+let me = new Person("Nicholas");
 
 console.log(me.toString());                         // "Nicholas"
 console.log(Object.prototype.toString.call(me));    // "[object Array]"
@@ -543,7 +543,7 @@ Changing the string tag for native objects is also possible. Just assign to `Sym
 ```js
 Array.prototype[Symbol.toStringTag] = "Magic";
 
-var values = [];
+let values = [];
 
 console.log(Object.prototype.toString.call(values));    // "[object Magic]"
 ```
@@ -561,7 +561,7 @@ While future code will undoubtedly not use the `with` statement, ECMAScript 6 st
 To understand the complexity of this task, consider the following code:
 
 ```js
-var values = [1, 2, 3],
+let values = [1, 2, 3],
     colors = ["red", "green", "blue"],
     color = "black";
 
