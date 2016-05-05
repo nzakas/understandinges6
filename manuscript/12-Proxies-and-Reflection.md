@@ -381,11 +381,7 @@ In this example, you can use `target` and `proxy` interchangeably and get the sa
 
 The confusing aspect of `Reflect.getPrototypeOf()` and `Reflect.setPrototypeOf()` is that they look suspiciously similar to the `Object.getPrototypeOf()` and `Object.setPrototypeOf()` methods. While both sets of methods perform similar operations, there are some distinct differences between the two.
 
-To begin, `Object.getPrototypeOf()` and `Object.setPrototypeOf()` are higher-level operations that were created for developer use from the start. The `Reflect.getPrototypeOf()` and `Reflect.setPrototypeOf()` methods are lower-level operations that expose some behavior that was previously not intended for developers. The methods on `Reflect` are meant to give access to the previously internal-only `[[GetPrototypeOf]]` and `[[SetPrototypeOf]]` operations. You can think of the relationship between these two sets of methods as `Object.getPrototypeOf()` calls the `Reflect.getPrototypeOf()` method, and `Object.setPrototypeOf()` calls the `Reflect.setPrototypeOf()` method. While this isn't strictly true according to the specification, it's still a good way to describe their relationship.
-
-<!-- I'm a bit confused above. Do the Object.XX methods call the Reflect.XX methods?
-     I'm not quite sure all readers will follow why that's a good way to think
-     of it, if it's not quite true. /JG -->
+To begin, `Object.getPrototypeOf()` and `Object.setPrototypeOf()` are higher-level operations that were created for developer use from the start. The `Reflect.getPrototypeOf()` and `Reflect.setPrototypeOf()` methods are lower-level operations that expose some behavior that was previously not intended for developers. The methods on `Reflect` are meant to give access to the previously internal-only `[[GetPrototypeOf]]` and `[[SetPrototypeOf]]` operations. So, `Reflect.getPrototypeOf()` is the wrapper for the internal `[[GetPrototypeOf]]` operation with some input validation (the same relationship exists for `Reflect.setPrototypeOf()` and `[[SetPrototypeOf]]`). The corresponding methods on `Object` also call `[[GetPrototypeOf]]` and `[[SetPrototypeOf]]`, but they perform a few steps before the call and inspect the return value to determine how it should behave.
 
 The `Reflect.getPrototypeOf()` method throws an error if its argument is not an object, while `Object.getPrototypeOf()` first coerces the value into an object before performing the operation. If you were to pass a number into each method, you'd get a different result:
 
