@@ -38,9 +38,6 @@ Proxies allow you to intercept low-level object operations on the target that ar
 
 The reflection API, represented by the `Reflect` object, is a collection of methods that provide the default behavior for the same low-level operations that proxies can override. There is a `Reflect` method for every proxy trap. Those methods have the same name and are passed the same arguments as their respective proxy traps. Table 11-1 summarizes this behavior.
 
-<!-- I'm adding a table callout to the text above, but maybe we can just show the caption
-     in bold to avoid the formatting issue we had in an earlier chapter? /JG -->
-
 **Table 11-1: Proxy traps in JavaScript**
 
 | Proxy Trap               | Overrides the Behavior Of | Default Behavior |
@@ -654,9 +651,7 @@ The `Object.getOwnPropertyDescriptor()` method returns `undefined` because it co
 
 The `ownKeys` proxy trap intercepts the internal method `[[OwnPropertyKeys]]` and allows you to override that behavior by returning an array of values. This array is used in three methods: the `Object.getOwnPropertyNames()` method, the `Object.getOwnPropertySymbols()` method, and the `Object.assign()` method. (The `Object.assign()` method uses the array to determine which properties to copy.)
 
-<!-- Could you specify what thing's "default behavior" is referred to below? /JG -->
-
-The default behavior as implemented by the `Reflect.ownKeys()` method is to return an array of all own property keys, including both strings and symbols. The `Object.getOwnProperyNames()` method filters symbols out of the array and returns the result while `Object.getOwnPropertySymbols()` filters the strings out of the array and returns the result. The `Object.assign()` method uses the array with both strings and symbols.
+The default behavior for the `ownKeys` trap is implemented by the `Reflect.ownKeys()` method and returns an array of all own property keys, including both strings and symbols. The `Object.getOwnProperyNames()` method filters symbols out of the array and returns the result while `Object.getOwnPropertySymbols()` filters the strings out of the array and returns the result. The `Object.assign()` method uses the array with both strings and symbols.
 
 The `ownKeys` trap receives a single argument, the target, and must always return an array or array-like object; otherwise, an error is thrown. You can use the `ownKeys` trap to, for example, filter out certain property keys that you don't want used when the `Object.getOwnPropertyNames()` method, the `Object.getOwnPropertySymbols()` method, or the `Object.assign()` method is used. Suppose you don't want to include any property names that begin with an underscore character, a common notation in JavaScript indicating that a field is private. You can use the `ownKeys` trap to filter out those keys as follows:
 
@@ -820,10 +815,7 @@ console.log(instance.values);               // [1,2,3,4]
 Numbers(1, 2, 3, 4);
 ```
 
-<!-- Could you specify which example the text in parentheses refers to, below? The
-     immediately previous subsection has two examples. /JG -->
-
-This example throws an error when `Numbers()` is called without using `new` (similar to the example in the previous section, but without using a proxy). Writing code like this is much simpler than using a proxy and is preferable if your only goal is to prevent calling the function without `new`. But sometimes you aren't in control of the function whose behavior needs to be modified. In that case, using a proxy makes sense.
+This example throws an error when `Numbers()` is called without using `new` (similar to the example in "Validating Function Parameters", but without using a proxy). Writing code like this is much simpler than using a proxy and is preferable if your only goal is to prevent calling the function without `new`. But sometimes you aren't in control of the function whose behavior needs to be modified. In that case, using a proxy makes sense.
 
 Suppose that the `Numbers` function is defined in code you can't modify. You know that the code relies on `new.target` and want to avoid that check while still calling the function. The behavior when using `new` is already set, so you can just use the `apply` trap:
 
