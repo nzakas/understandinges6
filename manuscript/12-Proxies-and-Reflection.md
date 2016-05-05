@@ -923,20 +923,14 @@ The `PersonProxy` object is a proxy of the `Person` class constructor. Class con
 
 ## Revocable Proxies
 
-<!-- Would it be okay to replace "nonrevocable" with "irrevocable" below? -->
-
 Normally, a proxy can't be unbound from its target once the proxy has been created. All of the examples to this point in this chapter have used nonrevocable proxies. But there may be situations when you want to revoke a proxy so that it can no longer be used. You'll find it most helpful to revoke proxies when you want to provide an object through an API for security purposes and maintain the ability to cut off access to some functionality at any point in time.
 
 You can create revocable proxies with the `Proxy.revocable()` method, which takes the same arguments as the `Proxy` constructor--a target object and the proxy handler. The return value is an object with the following properties:
 
-1. `proxy` - the proxy object itself
+1. `proxy` - the proxy object that can be revoked
 1. `revoke` - the function to call to revoke the proxy
 
 When the `revoke()` function is called, no further operations can be performed through the `proxy`. Any attempt to interact with the proxy object in a way that would trigger a proxy trap throws an error. For example:
-
-<!-- Does revoke() revoke all proxies, or just certain proxies? The paragraph after the
-     code makes it sound like anything relying on proxies would fail after the revoke()
-     call, but perhaps add something to the text above to clarify. /JG -->
 
 ```js
 let target = {
@@ -953,7 +947,7 @@ revoke();
 console.log(proxy.name);
 ```
 
-This example creates a revocable proxy. It uses destructuring to assign the `proxy` and `revoke` variables to the properties of the same name on the object returned by the `Proxy.revocable()` method. After that, the `proxy` object can be used just like a nonrevocable proxy object, so `proxy.name` returns `"target"` because it passes through to `target.name`. Once the `revoke()` function is called, however, `proxy` no longer functions. Attempting to access `proxy.name` throws an error, as will any other operation that relies on proxy traps.
+This example creates a revocable proxy. It uses destructuring to assign the `proxy` and `revoke` variables to the properties of the same name on the object returned by the `Proxy.revocable()` method. After that, the `proxy` object can be used just like a nonrevocable proxy object, so `proxy.name` returns `"target"` because it passes through to `target.name`. Once the `revoke()` function is called, however, `proxy` no longer functions. Attempting to access `proxy.name` throws an error, as will any other operation that would trigger a trap on `proxy`.
 
 ## Solving the Array Problem
 
@@ -984,10 +978,6 @@ There are two particularly important behaviors to notice in this example:
 
 These two behaviors are the only ones that need to be mimicked to accurately recreate how built-in arrays work. The next few sections describe how to make an object that correctly mimics them.
 
-<!-- In the interest of making the section headings below a bit more clear, perhaps
-     consider not using the "behavior #1" and "behavior #2" references. I've had a go,
-     but do see what you think. /JG -->
-
 ### Detecting Array Indices
 
 Keep in mind that assigning to an integer property key is a special case for arrays, as those are treated differently from non-integer keys. The ECMAScript 6 specification gives these instructions on how to determine if a property key is an array index:
@@ -1009,7 +999,7 @@ function isArrayIndex(key) {
 
 The `toUint32()` function converts a given value into an unsigned 32-bit integer using an algorithm described in the specification. The `isArrayIndex()` function first converts the key into a uint32 and then performs the comparisons to determine if the key is an array index or not. With these utility functions available, you can start to implement an object that will mimic a built-in array.
 
-### length Increase on Adding New Elements
+### Increasing length when Adding New Elements
 
 You might have noticed that both array behaviors I described rely on the assignment of a property. That means you really only need to use the `set` proxy trap to accomplish both behaviors. To get started, here's an example that implements the first of the two behaviors by incrementing the `length` property when an array index larger than `length - 1` is used:
 
@@ -1258,11 +1248,7 @@ While proxies are severely limited when used as prototypes, there are a few trap
 
 When the internal `[[Get]]` method is called to read a property, the operation looks for own properties first. If an own property with the given name isn't found, then the operation continues to the prototype and looks for a property there. The process continues until there are no further prototypes to check.
 
-<!-- Or perhaps something else after "knowledge" below, if "prevent unexpected behavior
-     when accessing properties that you can't guarantee will exist" isn't quite right. I
-     just might start with the high-level issue we're stopping. /JG -->
-
-Thanks to that process, if you set up a `get` proxy trap, the trap will be called on a prototype whenever an own property of the given name doesn't exist. You can use this knowledge prevent unexpected behavior when accessing properties that you can't guarantee will exist. Just create an object that throws an error whenever you try to access a property that doesn't exist:
+Thanks to that process, if you set up a `get` proxy trap, the trap will be called on a prototype whenever an own property of the given name doesn't exist. You can use the `get` trap to prevent unexpected behavior when accessing properties that you can't guarantee will exist. Just create an object that throws an error whenever you try to access a property that doesn't exist:
 
 ```js
 let target = {};
@@ -1288,22 +1274,16 @@ It's important to understand that in this example, `trapTarget` and `receiver` a
 
 ### Using the `set` Trap on a Prototype
 
-<!-- What happens when the operation continues to the prototype if the property
-     does exist on the prototype? -->
+The internal `[[Set]]` method also checks for own properties and then continues to the prototype if needed. When you assign a value to an object property, the value is assigned to the own property with the same name if it exists. If no own property with the given name exists, then the operation continues to the prototype. The tricky part is that even though the assignment operation continues to the prototype, assigning a value to that property will create a property on the instance (not the prototype) by default, regardless of whether a property of that name exists on the prototype.
 
-The internal `[[Set]]` method also checks for own properties and then continues to the prototype if needed. When you assign a value to an object property, the value is assigned to the own property with the same name if it exists. If no own property with the given name exists, then the operation continues to the prototype. The tricky part is that even though the assignment operation continues to the prototype, if the property doesn't exist at all, assigning a value to that property will create a property on the instance (not the prototype) by default.
-
-Here's an example showing the default behavior:
-
-<!-- I'm not quite sure I see what the trap's goal is in this example. Until now, traps
-     have been used to modify behaviors, but this trap doesn't modify the default
-     behavior. It may be helpful to explain why one might use a trap this way
-     in the text. /JG -->
+To get a better idea of when the `set` trap will be called on a prototype and when it won't, consider the following example showing the default behavior:
 
 ```js
 let target = {};
 let thing = Object.create(new Proxy(target, {
     set(trapTarget, key, value, receiver) {
+
+        if (key ===)
         return Reflect.set(trapTarget, key, value, receiver);
     }
 }));
@@ -1348,16 +1328,6 @@ thing.name = "thing";
 // does not trigger the `has` proxy trap
 console.log("name" in thing);                   // true
 ```
-
-<!-- I'm a bit confused about this example, as the trap doesn't seem to change what
-     would happen here even if `thing` weren't defined with a proxy. Could you explain
-     how one might make use of the trap?
-
-     Would it make sense to tweak the example? For instance, what if you put a `name`
-     property on `target` and also printed `thing` to the console? I noticed that if I
-     did that, I got `true` for the first `console.log("name" in thing)` line, but when I
-     printed `thing`, all I saw was `{}`. After `thing.name = "thing"`, I got
-     `{"name":"thing"}`. (Just ignore this suggestion if I'm off base!) /JG -->
 
 This code creates a `has` proxy trap on the prototype of `thing`. Because searching the prototype happens automatically when the `in` operator is used, the `has` trap isn't passed a `receiver` object like the `get` and `set` traps are. Instead, the `has` trap must operate only on `trapTarget`, which is equal to `target`. The first time the `in` operator is used in this example, the `has` trap is called because the property `name` doesn't exist as an own property of `thing`. When `thing.name` is given a value and then the `in` operator is used again, the `has` trap is not called because the operation stops after finding the own property `name` on `thing`.
 
