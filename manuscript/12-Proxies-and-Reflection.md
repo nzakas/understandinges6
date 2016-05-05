@@ -540,15 +540,11 @@ This example defines a property called `"name"` on the proxy with the `Object.de
 
 The `defineProperty` trap requires you to return a boolean value to indicate whether the operation was successful. When `true` is returned, `Object.defineProperty()` succeeds as usual; when `false` is returned, `Object.defineProperty()` throws an error. You can use this functionality to restrict the kinds of properties that the `Object.defineProperty()` method can define. For instance, if you want to prevent symbol properties from being defined, you could check that the key is a string and return `false` if not, like this:
 
-<!-- I might remind readers here why this check can prevent symbol properties from being
-     defined in case they don't immediately make the mental leap. Is that the best
-     way to ensure a property isn't a symbol? /JG -->
-
 ```js
 let proxy = new Proxy({}, {
     defineProperty(trapTarget, key, descriptor) {
 
-        if (typeof key !== "string") {
+        if (typeof key === "symbol") {
             return false;
         }
 
@@ -571,7 +567,7 @@ Object.defineProperty(proxy, nameSymbol, {
 });
 ```
 
-In this code, the `defineProperty` proxy trap returns `false` when `key` isn't a string and otherwise proceeds with the default behavior. When `Object.defineProperty()` is called with `"name"` as the key, the method succeeds because the key is a string. When `Object.defineProperty()` is called with `nameSymbol`, it throws an error because the `defineProperty` trap returns `false`.
+In this code, the `defineProperty` proxy trap returns `false` when `key` is a symbol and otherwise proceeds with the default behavior. When `Object.defineProperty()` is called with `"name"` as the key, the method succeeds because the key is a string. When `Object.defineProperty()` is called with `nameSymbol`, it throws an error because the `defineProperty` trap returns `false`.
 
 I> You can also have `Object.defineProperty()` silently fail by returning `true` and not calling the `Reflect.defineProperty()` method. That will suppress the error while not actually defining the property.
 
