@@ -32,7 +32,7 @@ I> This nonstandard behavior is why arrays are considered exotic objects in ECMA
 
 ## What are Proxies and Reflection?
 
-You can create a proxy to use in place of another object (called the *target*) by calling the `new Proxy()` function. The proxy *virtualizes* the target so that the proxy and the target appear to be the same object to functionality using the proxy.
+You can create a proxy to use in place of another object (called the *target*) by calling `new Proxy()`. The proxy *virtualizes* the target so that the proxy and the target appear to be the same object to functionality using the proxy.
 
 Proxies allow you to intercept low-level object operations on the target that are otherwise internal to the JavaScript engine. These low-level operations are intercepted using a *trap*, which is a function that responds to a specific operation.
 
@@ -58,8 +58,6 @@ The reflection API, represented by the `Reflect` object, is a collection of meth
 |`ownKeys`                 | `Object.getOwnPropertyNames()` and `Object.getOwnPropertySymbols()` | `Reflect.ownKeys()` |
 |`apply`                   | Calling a function | `Reflect.apply()` |
 |`construct`               | Calling a function with `new` | `Reflect.construct()` |
-
-<!-- Should we be including parentheses after trap names, like we do for methods? -->
 
 Each trap overrides some built-in behavior of JavaScript objects, allowing you to intercept and modify the behavior. If you still need to use the built-in behavior, then you can use the corresponding reflection API method. The relationship between proxies and the reflection API becomes clear when you start creating proxies, so it's best to dive in and look at some examples.
 
