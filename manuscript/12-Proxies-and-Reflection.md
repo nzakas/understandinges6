@@ -1,12 +1,12 @@
-# Proxies and Reflection
+# Proxies and the Reflection API
 
-One of the goals shared by ECMAScript 5 and ECMAScript 6 is the continued demystifying of JavaScript functionality. Prior to ECMAScript 5, for example, there were nonenumerable and nonwritable object properties present in JavaScript environments, but there was no way for developers to define nonenumerable or nonwritable properties of their own. This led to inclusion of `Object.defineProperty()` in ECMAScript 5 to give developers the ability to do what JavaScript engines were already capable of doing.
+ECMAScript 5 and ECMAScript 6 were both developed with demystifying JavaScript functionality in mind. For example, JavaScript environments contained nonenumerable and nonwritable object properties before ECMAScript 5, but developers couldn't define their own nonenumerable or nonwritable properties. ECMAScript 5 included the `Object.defineProperty()` method to allow developers to do what JavaScript engines could do already.
 
-ECMAScript 6 continues the trend of giving developers the ability to do what JavaScript engines already do with built-in objects. To do that, the language had to expose more about how objects work, and the result was the creation of proxies. But before you can understand what proxies and are and what they can do, it's helpful to understand the type of problem that proxies are meant to address.
+ECMAScript 6 gives developers further access to JavaScript engine capabilities by adding built-in objects. To do that, the language had to expose more about how objects work. *Proxies*, wrappers that allow you to intercept and alter low-level operations of the JavaScript engine, were created to help do that. To help you understand what proxies and are and what they can do, this chapter starts by describing the problem that proxies are meant to address, then discusses how to create proxies and how to use them effectively.
 
 ## The Array Problem
 
-The JavaScript array object has a long history of having behaviors that developers cannot mimic in their own objects. The `length` property is affected by assigning values to specific array items, and you can modify array items by modifying the `length` property. For example:
+The JavaScript array object behaves in ways that developers couldn't mimic in their own objects before ECMASCript 6. An array's `length` property is affected when you assign values to specific array items, and you can modify array items by modifying the `length` property. For example:
 
 ```js
 let colors = ["red", "green", "blue"];
@@ -26,15 +26,22 @@ console.log(colors[2]);             // undefined
 console.log(colors[1]);             // "green"
 ```
 
-Here, the array `colors` starts out with three items. Assigning to `colors[3]` automatically increments the `length` property to four. Setting the `length` property back to two removes the last two items in the array, leaving only the first two items. There is nothing in ECMAScript 5 that allows developers to achieve this same behavior. And this is why proxies were created.
+The `colors` array starts with three items. Assigning `"black"` to `colors[3]` automatically increments the `length` property to `4`. Setting the `length` property to `2` removes the last two items in the array, leaving only the first two items. Nothing in ECMAScript 5 allows developers to achieve this behavior, which is why proxies exist in ECMAScript 6.
 
 I> This nonstandard behavior is why arrays are considered exotic objects in ECMAScript 6.
 
 ## What are Proxies and Reflection?
 
-A proxy, created using `new Proxy()`, is an object that you use in place of another object (called the *target*). The proxy virtualizes the target, which means that the proxy and the target appear to be the same object to functionality using the proxy. Proxies, however, allow you to intercept low-level object operations on the target that are otherwise internal to the JavaScript engine. These low-level operations are intercepted using a *trap*, which is a function that responds to a specific operation.
+You can create a proxy to use in place of another object (called the *target*) by calling the `new Proxy()` function. The proxy *virtualizes* the target so that the proxy and the target appear to be the same object to functionality using the proxy.
 
-The reflection API, represented by the `Reflect` object, is a collection of methods that provide the default behavior for the same low-level operations that proxies can override. There is a `Reflect` method for every proxy trap, and those methods have the same name and are passed the same arguments as their respective proxy trap. The following table contains all of the proxy traps.
+Proxies allow you to intercept low-level object operations on the target that are otherwise internal to the JavaScript engine. These low-level operations are intercepted using a *trap*, which is a function that responds to a specific operation.
+
+The reflection API, represented by the `Reflect` object, is a collection of methods that provide the default behavior for the same low-level operations that proxies can override. There is a `Reflect` method for every proxy trap. Those methods have the same name and are passed the same arguments as their respective proxy traps. Table 11-1 summarizes this behavior.
+
+<!-- I'm adding a table callout to the text above, but maybe we can just show the caption
+     in bold to avoid the formatting issue we had in an earlier chapter? /JG -->
+
+**Table 11-1: Proxy traps in JavaScript**
 
 | Proxy Trap               | Overrides the Behavior Of | Default Behavior |
 |--------------------------|---------------------------|------------------|
@@ -52,14 +59,15 @@ The reflection API, represented by the `Reflect` object, is a collection of meth
 |`apply`                   | Calling a function | `Reflect.apply()` |
 |`construct`               | Calling a function with `new` | `Reflect.construct()` |
 
+<!-- Should we be including parentheses after trap names, like we do for methods? -->
 
-Each of the traps overrides some built-in behavior of JavaScript objects, allowing you to intercept and modify the behavior. If you need to still use the built-in behavior, then you can use the corresponding reflection API method. The relationship between proxies and the reflection API becomes clear when you start creating proxies, so it's best to look at some examples.
+Each trap overrides some built-in behavior of JavaScript objects, allowing you to intercept and modify the behavior. If you still need to use the built-in behavior, then you can use the corresponding reflection API method. The relationship between proxies and the reflection API becomes clear when you start creating proxies, so it's best to dive in and look at some examples.
 
 I> The original ECMAScript 6 specification had an additional trap called `enumerate` that was designed to alter how `for-in` and `Object.keys()` enumerated properties on an object. However, the `enumerate` trap was removed in ECMAScript 7 (also called ECMAScript 2016) as difficulties were discovered during implementation. The `enumerate` trap no longer exists in any JavaScript environment and is therefore not covered in this chapter.
 
-## Creating a Proxy
+## Creating a Simple Proxy
 
-Proxies are created using the `Proxy` constructor and passing in two arguments, the target and a handler. A *handler* is an object that defines one or more traps. The proxy uses the default behavior for all operations except when traps are defined for that operation. To create a simple forwarding proxy, you can use a handler without any traps:
+When you use the `Proxy` constructor to make a proxy, you'll pass it two arguments: the target and a handler. A *handler* is an object that defines one or more traps. The proxy uses the default behavior for all operations except when traps are defined for that operation. To create a simple forwarding proxy, you can use a handler without any traps:
 
 ```js
 let target = {};
@@ -75,7 +83,7 @@ console.log(proxy.name);        // "target"
 console.log(target.name);       // "target"
 ```
 
-In this example, `proxy` forwards all operations directly to `target`. The property `name` is created on `target` when `proxy.name` is assigned `"proxy"`. The proxy itself is not storing this property, it's simply forwarding the operation to `target`. Similarly, the values of `proxy.name` and `target.name` are the same because they are both references to `target.name`. That also means setting `target.name` to a new value results in `proxy.name` reflecting the same change. Of course, proxies without traps aren't very interesting, so what happens when you define a trap?
+In this example, `proxy` forwards all operations directly to `target`. When `"proxy"` is assigned to the `proxy.name` property, `name` is created on `target`. The proxy itself is not storing this property; it's simply forwarding the operation to `target`. Similarly, the values of `proxy.name` and `target.name` are the same because they are both references to `target.name`. That also means setting `target.name` to a new value causes `proxy.name` to reflect the same change. Of course, proxies without traps aren't very interesting, so what happens when you define a trap?
 
 ### Validating Properties Using the `set` Trap
 
