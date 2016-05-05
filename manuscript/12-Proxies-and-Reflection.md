@@ -83,18 +83,18 @@ console.log(target.name);       // "target"
 
 In this example, `proxy` forwards all operations directly to `target`. When `"proxy"` is assigned to the `proxy.name` property, `name` is created on `target`. The proxy itself is not storing this property; it's simply forwarding the operation to `target`. Similarly, the values of `proxy.name` and `target.name` are the same because they are both references to `target.name`. That also means setting `target.name` to a new value causes `proxy.name` to reflect the same change. Of course, proxies without traps aren't very interesting, so what happens when you define a trap?
 
-### Validating Properties Using the `set` Trap
+## Validating Properties Using the `set` Trap
 
-Suppose you want to create an object whose property values must be numbers. That means every new property added to the object must be validated and an error thrown if the value is not a number. To accomplish this, you must define a `set` trap that overrides the default behavior of setting a value. The `set` trap receives four arguments:
+Suppose you want to create an object whose property values must be numbers. That means every new property added to the object must be validated, and an error must be thrown if the value isn't a number. To accomplish this, you could define a `set` trap that overrides the default behavior of setting a value. The `set` trap receives four arguments:
 
 1. `trapTarget` - the object that will receive the property (the proxy's target)
 1. `key` - the property key (string or symbol) to write to
 1. `value` - the value being written to the property
 1. `receiver` - the object on which the operation took place (usually the proxy)
 
-The corresponding reflection method is `Reflect.set()`, which is the default behavior for this operation. The `Reflect.set()` method accepts the same four arguments as the `set` proxy trap, making the method easy to use inside of the trap. The trap should return `true` if the property was set or `false` if not (`Reflect.set()` returns the correct value based on if the operation succeeded).
+The corresponding reflection method is the `Reflect.set()` method, which is the default behavior for this operation. The `Reflect.set()` method accepts the same four arguments as the `set` proxy trap, making the method easy to use inside of the trap. The trap should return `true` if the property was set or `false` if not. (The `Reflect.set()` method returns the correct value based on if the operation succeeded.)
 
-To validate the value of properties, you use the `set` trap and inspect the `value` that is passed in. Here's an example:
+To validate the values of properties, you'd use the `set` trap and inspect the `value` that is passed in. Here's an example:
 
 ```js
 let target = {
@@ -130,17 +130,17 @@ console.log(target.name);       // "proxy"
 proxy.anotherName = "proxy";
 ```
 
-This example defines a proxy trap that validates the value of any new property added to `target`. When `proxy.count = 1` is executed, the `set` trap is called. The `trapTarget` is equal to `target`, `key` is `"count"`, `value` is `1`, and `receiver` (not used in this example) is `proxy`. Because there is no existing property named `count` in `target`, the value is validated by passing it to `Number` and comparing to `NaN`. If the result is `NaN`, then the property value is not numeric and an error is thrown. However, since `count` was set to `1`, the new property is added by calling `Reflect.set()` with the same four arguments that were passed to the trap.
+This code defines a proxy trap that validates the value of any new property added to `target`. When `proxy.count = 1` is executed, the `set` trap is called. The `trapTarget` value is equal to `target`, `key` is `"count"`, `value` is `1`, and `receiver` (not used in this example) is `proxy`. Because there is no existing property named `count` in `target`, proxy validates `value` by passing it to `Number` and comparing to `NaN`. If the result is `NaN`, then the property value is not numeric and an error is thrown. Since this code sets `count` to `1`, the proxy calls `Reflect.set()` with the same four arguments that were passed to the trap to add the new property.
 
-When `proxy.name` is assigned a string, the operation completes successfully. Since `target` already has a `name` property, that property is omitted from the validation check by using `trapTarget.hasOwnProperty()`. This ensure that previously-existing non-numeric property values are still supported.
+When `proxy.name` is assigned a string, the operation completes successfully. Since `target` already has a `name` property, that property is omitted from the validation check by calling the `trapTarget.hasOwnProperty()` method. This ensures that previously-existing non-numeric property values are still supported.
 
-When `proxy.anotherName` is assigned a string, however, an error is thrown. The `anotherName` property doesn't exist on the target, so its value is validated. Because `"proxy"` is not a numeric value, the error is thrown.
+When `proxy.anotherName` is assigned a string, however, an error is thrown. The `anotherName` property doesn't exist on the target, so its value needs to be validated. During validation, the error is thrown because `"proxy"` isn't a numeric value.
 
-Whereas the `set` proxy trap lets you intercept when properties are being written to, the `get` proxy trap lets you intercept when properties are being read.
+Where the `set` proxy trap lets you intercept when properties are being written to, the `get` proxy trap lets you intercept when properties are being read.
 
-### Object Shape Validation Using the `get` Trap
+## Object Shape Validation Using the `get` Trap
 
-One of the interesting, and sometimes confusing, aspects of JavaScript is that reading nonexistent properties does not throw an error. Instead, the value `undefined` is used for the property value. For example:
+One of the interesting, and sometimes confusing, aspects of JavaScript is that reading nonexistent properties doesn't throw an error. Instead, the value `undefined` is used for the property value, as in this example:
 
 ```js
 let target = {};
@@ -148,17 +148,19 @@ let target = {};
 console.log(target.name);       // undefined
 ```
 
-In most other languages, attempting to read `target.name` throws an error because the property doesn't exist. JavaScript, however, uses the value `undefined` for `target.name`. If you've ever worked on a large code base, this behavior can cause significant problems, especially when you have a typo in the property name. With proxies, you can save yourself from this problem by having object shape validation.
+In most other languages, attempting to read `target.name` throws an error because the property doesn't exist. But JavaScript just uses `undefined` for the value of the `target.name` property. If you've ever worked on a large code base, you've probably seen how this behavior can cause significant problems, especially when there's a typo in the property name. Proxies can help you save yourself from this problem by having object shape validation.
 
-An *object shape* is the collection of properties and methods available on the object. JavaScript engines use the object shape to optimize the code, often creating classes to represent the objects. If you can safely assume that an object will only have the same properties and methods it began with (using `Object.preventExtensions()`, `Object.seal()`, or `Object.freeze()`) then it can be helpful to throw an error when you try to access a nonexistent property. Such object shape validation is easy to do using proxies.
+An *object shape* is the collection of properties and methods available on the object. JavaScript engines use object shapes to optimize code, often creating classes to represent the objects. If you can safely assume an object will always have the same properties and methods it began with (a behavior you can enforce with the `Object.preventExtensions()` method, the `Object.seal()` method, or the `Object.freeze()` method), then throwing an error on attempts to access nonexistent properties can be helpful. Proxies make such object shape validation easy.
 
-Since property validation only has to be done when a property is read, you need to use the `get` trap. The `get` trap is called whenever a property is read, even if that property doesn't exist on the object. There are three arguments passed to the `get` trap:
+Since property validation only has to happen when a property is read, you'd use the `get` trap. The `get` trap is called when a property is read, even if that property doesn't exist on the object, and it takes three arguments:
 
 1. `trapTarget` - the object from which the property is read (the proxy's target)
-1. `key` - the property key (string or symbol) to read
+1. `key` - the property key (a string or symbol) to read
 1. `receiver` - the object on which the operation took place (usually the proxy)
 
-These arguments mirror those for the `set` trap, with the noticeable difference being there is no `value` argument. The `Reflect.get()` method accepts these same three arguments and returns the property's default value. You can use these to throw an error when a property doesn't exist on the target:
+These arguments mirror the `set` trap's arguments, with one noticeable difference. There's no `value` argument here because `get` traps don't write values. The `Reflect.get()` method accepts the same three arguments as the `get` trap and returns the property's default value.
+
+You can use the `get` trap and `Reflect.get()` to throw an error when a property doesn't exist on the target, as follows:
 
 ```js
 let proxy = new Proxy({}, {
@@ -179,13 +181,13 @@ console.log(proxy.name);            // "proxy"
 console.log(proxy.nme);             // throws error
 ```
 
-In this example, the `get` trap is used to intercept property read operations. The `in` operator is used to determine if the property already exists on the `receiver`. The `receiver` is used with `in` instead of `trapTarget` in case `receiver` is a proxy with a `has` trap. Using `trapTarget` would sidestep the `has` trap and potentially give you the wrong result. An error is thrown if the property doesn't exist, and otherwise, the default behavior is used.
+In this example, the `get` trap intercepts property read operations. The `in` operator is used to determine if the property already exists on the `receiver`. The `receiver` is used with `in` instead of `trapTarget` in case `receiver` is a proxy with a `has` trap, a trap type I'll cover in the next section. Using `trapTarget` in this case would sidestep the `has` trap and potentially give you the wrong result. An error is thrown if the property doesn't exist, and otherwise, the default behavior is used.
 
-This code allows new properties to be added, such as adding `proxy.name`, which is written to and read from without any problem. The last line contains a typo, `proxy.nme`, which should probably be `proxy.name`. This throws an error because `nme` does not exist as a property.
+This code allows new properties like `proxy.name` to be added, written to, and read from with no problems. The last line contains a typo: `proxy.nme` should probably be `proxy.name` instead. This throws an error because `nme` doesn't exist as a property.
 
-### Hiding Property Existence Using the `has` Trap
+## Hiding Property Existence Using the `has` Trap
 
-The `in` operator determines if a property exists on a given object and returns `true` if there is either an own property or a prototype property matching the name or symbol. For example:
+The `in` operator determines whether a property exists on a given object and returns `true` if there is either an own property or a prototype property matching the name or symbol. For example:
 
 ```js
 let target = {
@@ -196,14 +198,14 @@ console.log("value" in target);     // true
 console.log("toString" in target);  // true
 ```
 
-Both `value` and `toString` exist on `object`, so in both cases the `in` operator returns `true`. The `value` property is an own property while `toString` is a prototype property (inherited from `Object`). Proxies allow you to intercept this operation and return a different value for `in` by using the `has` trap.
+Both `value` and `toString` exist on `object`, so in both cases the `in` operator returns `true`. The `value` property is an own property while `toString` is a prototype property (inherited from `Object`). Proxies allow you to intercept this operation and return a different value for `in` with the `has` trap.
 
-The `has` trap is called whenever the `in` operator is used. When called, there are two arguments passed to the `has` trap:
+The `has` trap is called whenever the `in` operator is used. When called, two arguments are passed to the `has` trap:
 
-1. `trapTarget` - the object from which the property is read (the proxy's target)
+1. `trapTarget` - the object the property is read from (the proxy's target)
 1. `key` - the property key (string or symbol) to check
 
-The `Reflect.has()` method accepts these same arguments and returns the default response for the `in` operator. Using the `has` trap and `Reflect.has()` allows you to alter the behavior of `in` for some properties while falling back to default behavior for others. For instance, suppose you just want to hide the `value` property, you can do so like this:
+The `Reflect.has()` method accepts these same arguments and returns the default response for the `in` operator. Using the `has` trap and `Reflect.has()` allows you to alter the behavior of `in` for some properties while falling back to default behavior for others. For instance, suppose you just want to hide the `value` property. You can do so like this:
 
 ```js
 let target = {
@@ -228,7 +230,7 @@ console.log("name" in proxy);       // true
 console.log("toString" in proxy);   // true
 ```
 
-The `has` trap for `proxy` checks to see if `key` is `"value"`, and if so, returns `false`. Otherwise, the default behavior is used via `Reflect.has()`. The result is that the `in` operator returns `false` for the `value` property even though it actually does exist on the target. The other properties, `name` and `toString`, correctly return `true` when used with the `in` operator.
+The `has` trap for `proxy` checks to see if `key` is `"value"` returns `false` if so. Otherwise, the default behavior is used via a call to the `Reflect.has()` method. As a result, the `in` operator returns `false` for the `value` property even though `value` actually exists on the target. The other properties, `name` and `toString`, correctly return `true` when used with the `in` operator.
 
 ### Preventing Property Deletion with the `deleteProperty` Trap
 
