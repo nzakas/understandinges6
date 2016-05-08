@@ -169,6 +169,7 @@ Much like constants in other languages, the `maxItems` variable can't be assigne
 #### Declaring Objects with Const - 김두형
 
 A `const` declaration prevents modification of the binding and not of the value itself. That means `const` declarations for objects do not prevent modification of those objects. For example:
+`const` 선언은 binding 의 수정을 막고, 그 자체 값의 수정을 막지는 않는다. 그것은 객체를 위한 `const` 선언이 그 객체의 수정을 막는 것은 아님을 의미한다. 예를 들면:
 
 ```js
 const person = {
@@ -185,6 +186,7 @@ person = {
 ```
 
 Here, the binding `person` is created with an initial value of an object with one property. It's possible to change `person.name` without causing an error because this changes what `person` contains and doesn't change the value that `person` is bound to. When this code attempts to assign a value to `person` (thus attempting to change the binding), an error will be thrown. This subtlety in how `const` works with objects is easy to misunderstand. Just remember: `const` prevents modification of the binding, not modification of the bound value.
+여기서 `person` binding 은 하나의 프로퍼티를 가진 객체의 초기값과 함께 생성되었다. `person.name` 을 바꾸는 것은 에러를 발생시키는 것 없이 가능하다. 왜냐하면 이것은 `person` 이 포함하는 값을 바꾸고 `person` 에 바인딩된(bound) 값을 바꾸지는 않기 때문이다. 이 코드가 `person` 에 값을 할당하려고 시도할 때 (binding 을 바꾸려고 시도하므로), 에러가 발생할 것이다. `const` 가 객체와 함께 어떻게 작동하는 지에 대한 이 미묘함은 오해하기 쉽다. 이것만 기억해라: `const` 는 bind 된 값(bound value)의 수정이 아닌, binding 의 수정을 막는다.
 
 ### The Temporal Dead Zone
 
