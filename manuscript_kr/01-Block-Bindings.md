@@ -112,7 +112,7 @@ if (condition) {
 
 This `let` declaration doesn't throw an error because it creates a new variable called `count` within the `if` statement, instead of creating `count` in the surrounding block. Inside the `if` block, this new variable shadows the global `count`, preventing access to it until execution leaves the block.
 
-### Constant Declarations
+### Constant Declarations - 서동현
 
 You can also define variables in ECMAScript 6 with the `const` declaration syntax. Variables declared using `const` are considered *constants*, meaning their values cannot be changed once set. For this reason, every `const` variable must be initialized on declaration, as shown in this example:
 
@@ -166,7 +166,7 @@ maxItems = 6;      // throws error
 
 Much like constants in other languages, the `maxItems` variable can't be assigned a new value later on. However, unlike constants in other language, the value a constant holds may be modified if it is an object.
 
-#### Declaring Objects with Const
+#### Declaring Objects with Const - 김두형
 
 A `const` declaration prevents modification of the binding and not of the value itself. That means `const` declarations for objects do not prevent modification of those objects. For example:
 
@@ -215,7 +215,7 @@ The variable `value` isn't in the TDZ when the `typeof` operation executes becau
 
 The TDZ is just one unique aspect of block bindings. Another unique aspect has to do with their use inside of loops.
 
-## Block Binding in Loops
+## Block Binding in Loops - 원필현
 
 Perhaps one area where developers most want block level scoping of variables is within `for` loops, where the throwaway counter variable is meant to be used only inside the loop. For instance, it's not uncommon to see code like this in JavaScript:
 
@@ -279,7 +279,7 @@ funcs.forEach(function(func) {
 
 This version uses an IIFE inside of the loop. The `i` variable is passed to the IIFE, which creates its own copy and stores it as `value`. This is the value used by the function for that iteration, so calling each function returns the expected value as the loop counts up from 0 to 9. Fortunately, block-level binding with `let` and `const` in ECMAScript 6 can simplify this loop for you.
 
-### Let Declarations in Loops
+### Let Declarations in Loops - 신일용
 
 A `let` declaration simplifies loops by effectively mimicking what the IIFE does in the previous example. On each iteration, the loop creates a new variable and initializes it to the value of the variable with the same name from the previous iteration. That means you can omit the IIFE altogether and get the results you expect, like this:
 
@@ -322,7 +322,7 @@ In this example, the `for-in` loop shows the same behavior as the `for` loop. Ea
 
 I> It's important to understand that the behavior of `let` declarations in loops is a specially-defined behavior in the specification and is not necessarily related to the non-hoisting characteristics of `let`. In fact, early implementations of `let` did not have this behavior, as it was added later on in the process.
 
-### Constant Declarations in Loops
+### Constant Declarations in Loops - 김병규
 
 The ECMAScript 6 specification doesn't explicitly disallow `const` declarations in loops; however, there are different behaviors based on the type of loop you're using. For a normal `for` loop, you can use `const` in the initializer, but the loop will throw a warning if you attempt to change the value. For example:
 
@@ -363,7 +363,7 @@ funcs.forEach(function(func) {
 
 This code functions almost exactly the same as the second example in the "Let Declarations in Loops" section. The only difference is that the value of `key` cannot be changed inside the loop. The `for-in` and `for-of` loops work with `const` because the loop initializer creates a new binding on each iteration through the loop rather than attempting to modify the value of an existing binding (as was the case with the previous example using `for` instead of `for-in`).
 
-## Global Block Bindings
+## Global Block Bindings - 진유정
 
 Another way in which `let` and `const` are different from `var` is in their global scope behavior. When `var` is used in the global scope, it creates a new global variable, which is a property on the global object (`window` in browsers). That means you can accidentally overwrite an existing global using `var`, such as:
 
@@ -395,7 +395,7 @@ Here, a new `let` declaration for `RegExp` creates a binding that shadows the gl
 
 I> You may still want to use `var` in the global scope if you have a code that should be available from the global object. This is most common in a browser when you want to access code across frames or windows.
 
-## Emerging Best Practices for Block Bindings
+## Emerging Best Practices for Block Bindings - 정재훈
 
 While ECMAScript 6 was in development, there was widespread belief you should use `let` by default instead of `var` for variable declarations. For many JavaScript developers, `let` behaves exactly the way they thought `var` should have behaved, and so the direct replacement makes logical sense. In this case, you would use `const` for variables that needed modification protection.
 
