@@ -1,10 +1,30 @@
 # Block Bindings
 
-Traditionally, the way variable declarations work has been one tricky part of programming in JavaScript. In most C-based languages, variables (or *bindings*) are created at the spot where the declaration occurs. In JavaScript, however, this is not the case. Where your variables are actually created depends on how you declare them, and ECMAScript 6 offers options to make controlling scope easier. This chapter demonstrates why classic `var` declarations can be confusing, introduces block-level bindings in ECMAScript 6, and then offers some best practices for using them.
+Traditionally, the way variable declarations work has been one tricky part of programming in JavaScript. 
+
+전통적으로, 변수 선언 동작 방식은 자바스크립트 프로그래밍에서 까다로운 부분을 가지고 있다.
+
+In most C-based languages, variables (or *bindings*) are created at the spot where the declaration occurs. 
+
+대부분의 C 기반은 언어들에서, 변수(또는 *bindings*)는 선언이 발생된 지점에서 생성된다.
+
+In JavaScript, however, this is not the case.
+
+그러나, 자바스크립트에서는 그렇지 않다.
+
+Where your variables are actually created depends on how you declare them, and ECMAScript 6 offers options to make controlling scope easier. 
+
+변수가 실제적으로 생성되는 곳은 변수를 어떻게 선언했는지에 의존한다, 그리고 ECMAScript 6 은 유효 범위를 쉽게 제어할 수 있는 옵션을 제공한다.
+
+This chapter demonstrates why classic `var` declarations can be confusing, introduces block-level bindings in ECMAScript 6, and then offers some best practices for using them.
+
+이번 장에서는 전형적인 `var` 선언이 왜 혼란을 줄 수 있는지 실례를 들어가며 보여준다, ECMAScript 6 에서 block-level 바인딩을 소개한다, 그런 다음 그것들의 사용한 좋은 사용 방법들을 제공한다.
 
 ## Var Declarations and Hoisting
 
-Variable declarations using `var` are treated as if they are at the top of the function (or global scope, if declared outside of a function) regardless of where the actual declaration occurs; this is called *hoisting*. For a demonstration of what hoisting does, consider the following function definition:
+Variable declarations using `var` are treated as if they are at the top of the function (or global scope, if declared outside of a function) regardless of where the actual declaration occurs; this is called *hoisting*. 
+
+For a demonstration of what hoisting does, consider the following function definition:
 
 ```js
 function getValue(condition) {
@@ -26,7 +46,11 @@ function getValue(condition) {
 }
 ```
 
-If you are unfamiliar with JavaScript, then you might expect the variable `value` to only be created if `condition` evaluates to true. In fact, the variable `value` is created regardless. Behind the scenes, the JavaScript engine changes the `getValue` function to look like this:
+If you are unfamiliar with JavaScript, then you might expect the variable `value` to only be created if `condition` evaluates to true. 
+
+In fact, the variable `value` is created regardless. 
+
+Behind the scenes, the JavaScript engine changes the `getValue` function to look like this:
 
 ```js
 function getValue(condition) {
@@ -46,22 +70,40 @@ function getValue(condition) {
 }
 ```
 
-The declaration of `value` is hoisted to the top, while the initialization remains in the same spot. That means the variable `value` is actually still accessible from within the `else` clause. If accessed from there, the variable would just have a value of `undefined` because it hasn't been initialized.
+The declaration of `value` is hoisted to the top, while the initialization remains in the same spot. 
 
-It often takes new JavaScript developers some time to get used to declaration hoisting, and misunderstanding this unique behavior can end up causing bugs. For this reason, ECMAScript 6 introduces block level scoping options to make the controlling a variable's lifecycle a little more powerful.
+That means the variable `value` is actually still accessible from within the `else` clause. 
+
+If accessed from there, the variable would just have a value of `undefined` because it hasn't been initialized.
+
+It often takes new JavaScript developers some time to get used to declaration hoisting, and misunderstanding this unique behavior can end up causing bugs. 
+
+For this reason, ECMAScript 6 introduces block level scoping options to make the controlling a variable's lifecycle a little more powerful.
 
 ## Block-Level Declarations
 
-Block-level declarations are those that declare variables that are inaccessible outside of a given block scope. Block scopes, also called lexical scopes, are created:
+Block-level declarations are those that declare variables that are inaccessible outside of a given block scope. 
 
-1. Inside of a function
-1. Inside of a block (indicated by the `{` and `}` characters)
+Block scopes, also called lexical scopes, are created:
+
+1. 
+
+Inside of a function
+1. 
+
+Inside of a block (indicated by the `{` and `}` characters)
 
 Block scoping is how many C-based languages work, and the introduction of block-level declarations in ECMAScript 6 is intended to bring that same flexibility (and uniformity) to JavaScript.
 
 ### Let Declarations
 
-The `let` declaration syntax is the same as the syntax for `var`. You can basically replace `var` with `let` to declare a variable, but limit the variable's scope to only the current code block (there are a few other subtle differences discussed a bit later, as well). Since `let` declarations are not hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block, so that they are available to the entire block. Here's an example:
+The `let` declaration syntax is the same as the syntax for `var`. 
+
+You can basically replace `var` with `let` to declare a variable, but limit the variable's scope to only the current code block (there are a few other subtle differences discussed a bit later, as well). 
+
+Since `let` declarations are not hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block, so that they are available to the entire block. 
+
+Here's an example:
 
 ```js
 function getValue(condition) {
@@ -83,11 +125,17 @@ function getValue(condition) {
 }
 ```
 
-This version of the `getValue` function behaves much closer to how you'd expect it to in other C-based languages. Since the variable `value` is declared using `let` instead of `var`, the declaration isn't hoisted to the top of the function definition, and the variable `value` is no longer accessible once execution flows out of the `if` block. If `condition` evaluates to false, then `value` is never declared or initialized.
+This version of the `getValue` function behaves much closer to how you'd expect it to in other C-based languages. 
+
+Since the variable `value` is declared using `let` instead of `var`, the declaration isn't hoisted to the top of the function definition, and the variable `value` is no longer accessible once execution flows out of the `if` block. 
+
+If `condition` evaluates to false, then `value` is never declared or initialized.
 
 ### No Redeclaration
 
-If an identifier has already been defined in a scope, then using the identifier in a `let` declaration inside that scope causes an error to be thrown. For example:
+If an identifier has already been defined in a scope, then using the identifier in a `let` declaration inside that scope causes an error to be thrown. 
+
+For example:
 
 ```js
 var count = 30;
@@ -96,7 +144,11 @@ var count = 30;
 let count = 40;
 ```
 
-In this example, `count` is declared twice: once with `var` and once with `let`. Because `let` will not redefine an identifier that already exists in the same scope, the `let` declaration will throw an error. On the other hand, no error is thrown if a `let` declaration creates a new variable with the same name as a variable in its containing scope, as demonstrated in the following code:
+In this example, `count` is declared twice: once with `var` and once with `let`. 
+
+Because `let` will not redefine an identifier that already exists in the same scope, the `let` declaration will throw an error. 
+
+On the other hand, no error is thrown if a `let` declaration creates a new variable with the same name as a variable in its containing scope, as demonstrated in the following code:
 
 ```js
 var count = 30;
@@ -110,7 +162,9 @@ if (condition) {
 }
 ```
 
-This `let` declaration doesn't throw an error because it creates a new variable called `count` within the `if` statement, instead of creating `count` in the surrounding block. Inside the `if` block, this new variable shadows the global `count`, preventing access to it until execution leaves the block.
+This `let` declaration doesn't throw an error because it creates a new variable called `count` within the `if` statement, instead of creating `count` in the surrounding block. 
+
+Inside the `if` block, this new variable shadows the global `count`, preventing access to it until execution leaves the block.
 
 ### Constant Declarations - 서동현
 
