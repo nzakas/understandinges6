@@ -2,7 +2,6 @@
 
 **[Chapter 1: Block Bindings](./01-Block-Bindings.md#block-bindings)**
 
-> talks about `let` and `const`, the block-level replacement for `var`.
 > `var`를 대체할 block-level, `let` 과 `const` 에 관하여 이야기 한다.
 
 * [Var Declarations and Hoisting](./01-Block-Bindings.md#var-declarations-and-hoisting)
