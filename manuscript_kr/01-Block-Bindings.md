@@ -323,8 +323,11 @@ In this example, the `for-in` loop shows the same behavior as the `for` loop. Ea
 I> It's important to understand that the behavior of `let` declarations in loops is a specially-defined behavior in the specification and is not necessarily related to the non-hoisting characteristics of `let`. In fact, early implementations of `let` did not have this behavior, as it was added later on in the process.
 
 ### Constant Declarations in Loops - 김병규
+반복문에서의 상수 선언
 
 The ECMAScript 6 specification doesn't explicitly disallow `const` declarations in loops; however, there are different behaviors based on the type of loop you're using. For a normal `for` loop, you can use `const` in the initializer, but the loop will throw a warning if you attempt to change the value. For example:
+
+ECMAScript 6 정의에서는 반복분에서 `const` 선언을 사용하는것을 명시적으로 막진 않는다. 하지만 사용하는 반복문의 유형에 따라 다르게 작동한다. 일반적인 'for'반복문의 경우  `const`를 사용하여 초기화 할 수 있지만, 그 값을 바꾸려고할때 반복문은 warning을 뱉을것이다. 예를들어: 
 
 ```js
 var funcs = [];
@@ -339,7 +342,11 @@ for (const i = 0; i < 10; i++) {
 
 In this code, the `i` variable is declared as a constant. The first iteration of the loop, where `i` is 0, executes successfully. An error is thrown when `i++` executes because it's attempting to modify a constant. As such, you can only use `const` to declare a variable in the loop initializer if you are not modifying that variable.
 
+이 코드에서, i 변수는 상수로 선언되어 있다. 반복분의 첫번째 반복에서, 'i'는 0이고 정상적으로 작동한다. 에러는 'i++'이 실행될 때 상수를 수정하려 하기 때문에 발생한다. 이처럼 반복문에서 'const' 사용하여 변수를 선언하는 것은 반복문에서 초기화한 변수를 수정하려 하지 않을때만 사용할 수 있다.
+
 When used in a `for-in` or `for-of` loop, on the other hand, a `const` variable behaves the same as a `let` variable. So the following should not cause an error:
+
+반면에 'for-in' 이나 'for-of' 반복문을 사용할때는, 'const'변수는 'let'으로 선언한 변수와 똑같이 돌아간다. 그래서 아래 코드는 에러를 뱉지 않는다.
 
 ```js
 var funcs = [],
@@ -362,6 +369,8 @@ funcs.forEach(function(func) {
 ```
 
 This code functions almost exactly the same as the second example in the "Let Declarations in Loops" section. The only difference is that the value of `key` cannot be changed inside the loop. The `for-in` and `for-of` loops work with `const` because the loop initializer creates a new binding on each iteration through the loop rather than attempting to modify the value of an existing binding (as was the case with the previous example using `for` instead of `for-in`).
+
+이 코드의 함수들은 두번째 예제인 "Let Declarations in Loops"와 거의 흡사하다. 단 하나의 차이점은 반복분 안에서 `key`가 변할수 없다는 것이다. 'for-in' 와 'for-of' 반복분은 'const'와 잘 작동하는데 이는 반복문의 초기화가 기존에 바인딩 되었던 값을 변경하려하지않고, 각각의 반복에서 새롭게 생성되어 바인딩되기 때문이다. (이전 'for' 반본문 대신 'for-in'을 사용하면)
 
 ## Global Block Bindings - 진유정
 
