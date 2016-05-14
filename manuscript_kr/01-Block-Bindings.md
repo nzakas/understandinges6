@@ -512,33 +512,33 @@ I> You may still want to use `var` in the global scope if you have a code that s
 
 While ECMAScript 6 was in development, there was widespread belief you should use `let` by default instead of `var` for variable declarations. 
 
-ECMAScript 6 으로 개발하는 동안, 기본적으로 변수 선언을 위해 `var` 를 사용하는 대신 `let` 를 사용해야 하는 것이 널리 퍼진 통념이다.
+ECMAScript 6 으로 개발하는 경우, 변수 선언을 위해 `var` 를 사용하는 대신 `let` 를 사용해야 하는 것이 기본적으로 널리 퍼진 통념이다.
 
 For many JavaScript developers, `let` behaves exactly the way they thought `var` should have behaved, and so the direct replacement makes logical sense.
 
-많은 자바스크립트 개발자들을 위해, `let` 은 자바스크립트 개발자들이 `var` 가 동작해야 한다고 생각하는 방법으로 정확하게 동작한다, 그래서 직접적으로 교체하는 것이 논리적으로 이해가 된다.
+많은 자바스크립트 개발자들을 위해, `let` 은 자바스크립트 개발자들이 `var` 가 동작해야 한다고 생각하는 방법으로 정확하게 동작한다, 그래서 직접적인 교체는 논리적으로 이해가 된다.
 
 In this case, you would use `const` for variables that needed modification protection.
 
-이 경우에 있어서, 수정되는 것을 막을 필요가 있는 변수를 위해 'const' 를 사용할 수 있다.
+이 경우에는, 수정되는 것을 막을 필요가 있는 변수를 위해 'const' 를 사용할 것이다.
 
 However, as more developers migrated to ECMAScript 6, an alternate approach gained popularity: use `const` by default and only use `let` when you know a variable's value needs to change.
 
-그러나, 더 많은 개발자들은 ECMAScript 6 로 이주한것 처럼, 번갈아 사용하는 접근법은 인기를 얻었다: 기본적으로 `const` 를 사용하고 변수의 값이 변경될 필요가 있을 때 `let` 을 사용한다.
+그러나, 많은 개발자들은 ECMAScript 6 로 이주한것 처럼, 선택가능한 접근법은 인기를 얻었다: 기본적으로 `const` 를 사용하고 변수의 값이 변경될 필요가 있을 때만 `let` 을 사용한다.
 
 The rationale is that most variables should not change their value after initialization because unexpected value changes are a source of bugs.
 
-그 이유는 예기치 않은 변수의 변경은 소스의 버그이기 때문에 대부분 변수들은 초기화 한 후에 변경되지 않아야 한다는 것이다.
+그 이유는 예기치 않은 변수의 변경은 버그를 가진 소스이기 때문에 대부분 변수들은 초기화 한 후에 변경되지 않아야 한다는 것이다.
 
 This idea has a significant amount of traction and is worth exploring in your code as you adopt ECMAScript 6.
 
-이러한 아이디어는 당신의 코드를 ECMASCript 6 로 채택함으로써 충분하며 살펴볼 가치가 있다.
+이러한 아이디어는 ECMASCript 6 를 채택함으로 충분하고 당신의 코드를 살펴볼 가치가 있다.
 
 ## Summary
 
 The `let` and `const` block bindings introduce lexical scoping to JavaScript. 
 
-`let` 과 `const` 블록 바인딩은 자바스크립트에 어휘를 살펴보는 것으로 소개하였다.
+`let` 과 `const` 블록 바인딩을 자바스크립트 어휘를 살펴보는 것으로 소개하였다.
 
 These declarations are not hoisted and only exist within the block in which they are declared.
 
@@ -546,7 +546,7 @@ These declarations are not hoisted and only exist within the block in which they
 
 This offers behavior that is more like other languages and less likely to cause unintentional errors, as variables can now be declared exactly where they are needed.
 
-이제 변수가 필요한 곳에 정확히 선언될 수 있으므로, 이것은 다른 언어들과 더 가깝게 동작하고 뜻하지 않은 에러 발생을 더 적게 한다.
+이제 변수가 꼭 필요한 곳에 선언될 수 있으므로, 이것은 좀 더 다른 언어들처럼 동작하고 뜻하지 않은 에러 발생을 더 적게 한다.
 
 As a side effect, you cannot access variables before they are declared, even with safe operators such as `typeof`. 
 
@@ -554,28 +554,28 @@ As a side effect, you cannot access variables before they are declared, even wit
 
 Attempting to access a block binding before its declaration results in an error due to the binding's presence in the temporal dead zone (TDZ).
 
-바인딩은 temporal dead zone(TDZ) 에 있기 때문에, 선언되기 전에 블록 바인딩에 접근하려고 시도하는 것은 에러를 야기한다.
+바인딩은 temporal dead zone(TDZ) 에 있기 때문에, 선언되기 전 블록 바인딩에 접근하려고 시도하는 것은 에러를 야기한다.
 
 In many cases, `let` and `const` behave in a manner similar to `var`; however, this is not true for loops. 
 
-많은 경우들에서, `let` 과 `const` 는 `var` 와 비슷하게 동작한다. 그러나, for 루프에서는 사실이 아니다.
+많은 경우들에서, `let` 과 `const` 는 `var` 와 비슷한 방식으로 동작한다. 그러나, for 루프에서는 사실이 아니다.
 
 For both `let` and `const`, `for-in` and `for-of` loops create a new binding with each iteration through the loop. 
 
-`let` 과 `const` 둘 다, `for-in` 과 `for-of` 루프에서는 각각의 새로운 바인딩을 만든다.
+`for-in` 과 `for-of` 루프에서 `let` 과 `const` 둘 다, 루프의 각 반복마다 새로운 바인딩을 만든다.
 
-That means functions created inside the loop body can access the loop bindings values as they are during the current iteration, rather than as they were after the loop's final iteration (the behavior with `var`). 
+That means functions created inside the loop body can access the loop bindings values as they are during the current iteration, rather than as they were after the loop's final iteration (the behavior with `var`).
 
-그것은 루프의 마지막 반복에서 찾는 것보다(`var` 의 동작) 루프 안에서 만들어진 함수는 현재 반복되는 동안 루프에 바인딩된 변수에 접근할 수 있다는 것을 의미한다.
+그것은 루프의 마지막 반복후에 있는것 보다는(`var` 의 동작), 루프 안에서 만들어진 함수는 현재 반복 동안 루프에 바인딩된 변수에 접근할 수 있다는 것을 의미한다.
 
 The same is true for `let` declarations in `for` loops, while attempting to use `const` declarations in a `for` loop may result in an error.
 
-`for` 루프에서 `const` 선언을 사용하려는 것은 에러를 야기할 수 있다, `for` 루프안에 `let` 선언에 있어서도 마찬가지다.
+`for` 루프 안에 `let` 선언도 마찬가지다, `for` 루프 안에서 `const` 선언을 사용하려는 경우 에러를 야기할 수 있다.
 
 The current best practice for block bindings is to use `const` by default and only use `let` when you know a variable's value needs to change. 
 
-현재 block 바인딩을 위한 좋은 연습은 기본적으로 `const` 를 사용하고 오직 변수의 값이 변할 필요가 있다는 것을 알고 있을 때 `let` 을 사용하는 것이다
+현재 block 바인딩의 좋은 연습은 기본적으로 `const` 를 사용하고 오직 변수의 값이 변할 필요가 있을 때만 `let` 을 사용하는 것이다.
 
 This ensures a basic level of immutability in code that can help prevent certain types of errors.
 
-이것은 확실한 타입 에러를 예방할 수 있는 코드에서 기본적인 불변성의 수준을 보장한다.
+이것은 확실한 타입 에러를 예방할 수 있는 코드에 불변성의 기본적인 수준을 보장한다.
