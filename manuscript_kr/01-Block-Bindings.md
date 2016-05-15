@@ -399,9 +399,9 @@ This code functions almost exactly the same as the second example in the "Let De
 
 이 코드의 함수들은 두번째 예제인 "Let Declarations in Loops"와 거의 흡사하다. 단 하나의 차이점은 반복분 안에서 `key`가 변할수 없다는 것이다. 'for-in' 와 'for-of' 반복분은 'const'와 잘 작동하는데 이는 반복문의 초기화가 기존에 바인딩 되었던 값을 변경하려하지않고, 각각의 반복에서 새롭게 생성되어 바인딩되기 때문이다. (이전 'for' 반본문 대신 'for-in'을 사용하면)
 
-## Global Block Bindings - 진유정
+## Global Block Bindings
 
-Another way in which `let` and `const` are different from `var` is in their global scope behavior. When `var` is used in the global scope, it creates a new global variable, which is a property on the global object (`window` in browsers). That means you can accidentally overwrite an existing global using `var`, such as:
+전역 범위에서 `let`과 `const`는 `var`와 다르게 동작한다. 전역 범위에서 `var`를 사용할 때, 새로운 전역 변수를 생성한다. 전역 변수는 전역 객체의 프로퍼티이다(브라우저에서는 `window` 객체). 이 것은 `var`를 사용해서 뜻하지 않게 존재하는 전역을 덮어쓸 수도 있다는 걸 의미한다. 다음 예제처럼 : 
 
 ```js
 // in a browser
@@ -412,9 +412,9 @@ var ncz = "Hi!";
 console.log(window.ncz);        // "Hi!"
 ```
 
-Even though the `RegExp` global is defined on `window`, it is not safe from being overwritten by a `var` declaration. This example declares a new global variable `RegExp` that overwrites the original. Similarly, `ncz` is defined as a global variable and immediately defined as a property on `window`. This is the way JavaScript has always worked.
+`window`에 `RegExp`이 정의되어 있더라도, 이것은 `var` 선언으로 인해 덮어써질 수 있어 안전하지 않다. 이 예제는 원본을 덮어쓰는 새로운 전역 변수 `RegExp`를 선언하는 예제이다. 비슷하게, `ncz`도 전역 변수로 선언되자마자 `window`의 프로퍼티로 정의된다. 자바스크립트는 늘 이렇게 동작한다.
 
-If you instead use `let` or `const` in the global scope, a new binding is created in the global scope but no property is added to the global object. That also means you cannot overwrite a global variable using `let` or `const`, you can only shadow it. Here's an example:
+만약 전역 범위에서 `let`이나 `const`를 대신 사용한다면, 새로운 바인딩이 전역 범위에 생성되지만 전역 객체의 프로퍼티로 추가되지는 않는다. 이것은 `let`이나 `const`를 사용하면 전역 변수를 덮어쓸 수 없다는 것이고, 단지 그림자처럼 사용할 수 있다. 여기 예제가 있다 :
 
 ```js
 // in a browser
@@ -427,9 +427,9 @@ console.log(ncz);                       // "Hi!"
 console.log("ncz" in window);           // false
 ```
 
-Here, a new `let` declaration for `RegExp` creates a binding that shadows the global `RegExp`. That means `window.RegExp` and `RegExp` are not the same, so there is no disruption to the global scope. Also, the `const` declaration for `ncz` creates a binding but does not create a property on the global object. This capability makes `let` and `const` a lot safer to use in the global scope when you don't want to create properties on the global object.
+`RegExp`에 대한 새로운 `let` 선언은 전역 `RegExp`의 그림자 바인딩을 생성한다. 이것은 `window.RegExp`와 `RegExp`는 같지 않으며, 전역 범위에 지장을 주지 않는다는 걸 의미한다. 또한, `ncz`에 대한 `const` 선언은 바인딩을 생성하지만, 전역 객체의 프로퍼티를 생성하지 않는다. 전역 객체의 프로퍼티를 생성하고 싶지 않을 때, `let`과 `const`를 이용한 이 기능은 전역 범위를 훨씬 안전하게 사용할 수 있게 만든다.
 
-I> You may still want to use `var` in the global scope if you have a code that should be available from the global object. This is most common in a browser when you want to access code across frames or windows.
+I> 만약 당신이 전역 객체를 사용할 수 있어야 하는 코드가 있다면, 여전히 전역 범위의 `var`를 사용할 수 있다. 이것이 프레임이나 창을 넘어 코드를 접근하기 원할 때 브라우저 안의 가장 일반적인 방법이다.
 
 ## Emerging Best Practices for Block Bindings
 
