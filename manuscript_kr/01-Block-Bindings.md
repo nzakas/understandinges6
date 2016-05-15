@@ -420,7 +420,7 @@ Here, a new `let` declaration for `RegExp` creates a binding that shadows the gl
 
 I> You may still want to use `var` in the global scope if you have a code that should be available from the global object. This is most common in a browser when you want to access code across frames or windows.
 
-## Emerging Best Practices for Block Bindings - 정재훈
+## Emerging Best Practices for Block Bindings
 
 ECMAScript 6 으로 개발하는 경우, 변수 선언을 위해 `var` 를 사용하는 대신 `let` 를 사용해야 하는 것이 기본적으로 널리 퍼진 통념이다.
 많은 자바스크립트 개발자들을 위해, `let` 은 자바스크립트 개발자들이 `var` 가 동작해야 한다고 생각하는 방법으로 정확하게 동작한다,
