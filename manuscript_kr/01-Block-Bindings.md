@@ -217,8 +217,6 @@ The TDZ is just one unique aspect of block bindings. Another unique aspect has t
 
 ## Block Binding in Loops - 원필현
 
-## 루프 내의 블록 바인딩
-
 Perhaps one area where developers most want block level scoping of variables is within `for` loops, where the throwaway counter variable is meant to be used only inside the loop. For instance, it's not uncommon to see code like this in JavaScript:
 
 아마도 개발자의 대부분이 원하는 변수의 블록 레벨 유효 영역은 `for` 루프 안이고, 한번 쓰고 버리는(throwaway) 카운터 변수는 오직 루프 내에서 사용하기로 정해져 있다. 예를 들면, 자바스크립트에서 이와 같은 코드를 볼 일이 드물지 않다.
@@ -251,11 +249,9 @@ In this example, the variable `i` only exists within the `for` loop. Once the lo
 
 ### Functions in Loops
 
-### 루프 내의 함수
-
 The characteristics of `var` have long made creating functions inside of loops problematic, because the loop variables are accessible from outside the scope of the loop. Consider the following code:
 
-`var`의 특징은 루프 내에서 함수 생성을 문제가 되게 한다. 왜냐하면 루프 변수는 루프의 범위 밖에서 접근 가능하다. 다음 코드를 살펴보자.
+`var`의 특징은 루프 안에서 함수를 만드는 것에 대해 오랫동안 문제를 가지고 있었다, 루프 변수는 루프의 범위 밖에서 접근할 수 있기 때문이다. 다음 코드를 살펴보자.
 
 ```js
 var funcs = [];
@@ -272,7 +268,7 @@ funcs.forEach(function(func) {
 You might ordinarily expect this code to print the numbers 0 to 9, but it outputs the number 10 ten times in a row. That's because `i` is shared across each iteration of the loop, meaning the functions created inside the loop all hold a reference to the same variable. The variable `i` has a value of `10` once the loop completes, and so when `console.log(i)` is called, that value prints each time.
 
 당신은 이 코드를 0에서 9까지 출력할 것으로 예상할 것이다. 그러나 이것은 숫자 10을 10번 출력한다.
-왜냐하면 `i`는 루프의 각 반복 사이에서 공유되기 때문이다. 루프 내에서 생성된 함수의 의미는 모두 같은 변수를 참조한다는 것이다. 한번 루프가 완료되면 변수 `i`는 10의 값을 가지고, 그래서 `console.log(i)`가 호출될 때, 그때마다 그 값을 출력한다.
+왜냐하면 `i`는 루프의 각 반복 사이에서 공유되기 때문이다. 루프 내에서 생성된 함수의 의미는 모두 같은 변수를 참조한다는 것이다. 한번 루프가 완료되면 변수 `i`는 `10`의 값을 가지고, 그래서 `console.log(i)`가 호출될 때, 그때마다 그 값을 출력한다.
 
 To fix this problem, developers use immediately-invoked function expressions (IIFEs) inside of loops to force a new copy of the variable they want to iterate over to be created, as in this example:
 
