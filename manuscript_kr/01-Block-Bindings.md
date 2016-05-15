@@ -166,9 +166,7 @@ maxItems = 6;      // throws error
 
 Much like constants in other languages, the `maxItems` variable can't be assigned a new value later on. However, unlike constants in other language, the value a constant holds may be modified if it is an object.
 
-#### Declaring Objects with Const (Const 로 객체 선언하기) - 김두형
-
-A `const` declaration prevents modification of the binding and not of the value itself. That means `const` declarations for objects do not prevent modification of those objects. For example:
+#### Declaring Objects with Const
 
 `const` 선언은 binding 의 수정을 막고, 그 자체 값의 수정을 막지는 않는다. 객체를 위한 `const` 선언이 해당 객체의 수정을 막는 것은 아님을 의미한다. 예를 들면:
 
@@ -186,13 +184,9 @@ person = {
 };
 ```
 
-Here, the binding `person` is created with an initial value of an object with one property. It's possible to change `person.name` without causing an error because this changes what `person` contains and doesn't change the value that `person` is bound to. When this code attempts to assign a value to `person` (thus attempting to change the binding), an error will be thrown. This subtlety in how `const` works with objects is easy to misunderstand. Just remember: `const` prevents modification of the binding, not modification of the bound value.
-
 여기서 `person` binding 은 하나의 프로퍼티를 가진 객체의 초기값으로 생성되었다. `person.name` 을 바꾸는 것은 에러 발생 없이 가능하다. 왜냐하면 이것은 `person` 이 포함하는 값을 바꾸고 `person` 에 바인딩된(bound) 값을 바꾸지는 않기 때문이다. 이 코드가 `person` 에 값을 할당하려고 시도할 때 (binding 을 바꾸려고 시도하므로), 에러가 발생할 것이다. `const` 가 객체와 함께 어떻게 작동하는 지에 대한 이 미묘함은 오해하기 쉽다. 이것만 기억하도록 하자: `const` 는 bind 된 값(bound value)의 수정이 아닌, binding 의 수정을 막는다.
 
 ### The Temporal Dead Zone
-
-A variable declared with either `let` or `const` cannot be accessed until after the declaration. Attempting to do so results in a reference error, even when using normally safe operations such as the `typeof` operation in this example:
 
 `let` 이나 `const` 로 선언된 변수는 선언 이후까지는 접근될 수 없다. 심지어 이 예제에서 typeof 명령어(operation)와 같은, 일반적으로 안전한 명령어를 사용할때도 reference error 를 발생시킨다:  
 
@@ -203,15 +197,9 @@ if (condition) {
 }
 ```
 
-Here, the variable `value` is defined and initialized using `let`, but that statement is never executed because the previous line throws an error. The issue is that `value` exists in what the JavaScript community has dubbed the *temporal dead zone* (TDZ). The TDZ is never named explicitly in the ECMAScript specification, but the term is often used to describe why `let` and `const` declarations are not accessible before their declaration. This section covers some subtleties of declaration placement that the TDZ causes, and although the examples shown all use `let`, note that the same information applies to `const`.
-
 여기서, `value` 변수는 `let` 을 사용해서 정의되고 초기화 되지만, 이전 라인에서 에러를 던지기 때문에 수행문(statement)은 결코 실행되지 않는다. 이 문제는 `value` 가 JavaScript 커뮤니티에서 *temporal dead zone* (TDZ) 이라고 불러온 곳에 존재한다는 것을 의미한다. TDZ 는 ECMAScript 스펙에서 명시적으로 이름지어지지 않았지만, 종종 왜 `let` 과 `const` 선언이 선언 이전에 접근할 수 없는지 설명하기 위해서 사용된다. 이 섹션은 TDZ 가 야기하는 선언 배치의 미묘함을 설명한다, 비록 모든 예제에 `let` 을 사용했지만, 같은 정보가 `const` 에도 적용되는 것에 주의하도록 한다.
 
-When a JavaScript engine looks through an upcoming block and finds a variable declaration, it either hoists the declaration to the top of the function or global scope (for `var`) or places the declaration in the TDZ (for `let` and `const`). Any attempt to access a variable in the TDZ results in a runtime error. That variable is only removed from the TDZ, and therefore safe to use, once execution flows to the variable declaration.
-
 JavaScript 엔진은 다음 블록을 찾아보고 변수 선언을 발견하면, 그 선언을 (`var` 의 경우) 해당 함수나 global scope 또는 (`let` 과 `const` 의 경우) TDZ 내 선언부의 최상단으로 호이스팅(hoist) 한다. TDZ 안에서는 모든 변수에 접근하기 위한 시도시에 runtime error 를 발생시킨다. 그 변수는 오직 TDZ 에서만 제거되므로, 변수 선언 후에는 사용하기 안전하다.
-
-This is true anytime you attempt to use a variable declared with `let` or `const`  before it's been defined. As the previous example demonstrated, this even applies to the normally safe `typeof` operator. You can, however, use `typeof` on a variable outside of the block where that variable is declared, though it may not give the results you're after. Consider this code:
 
 이것은 `let` 이나 `const` 로 선언한 변수를 정의하기 전에 사용하려고 하면 언제나 적용된다. 이전 예제가 보았듯이, 심지어 일반적으로 안전한 `typeof` 명령어에도 적용된다. 비록 원하는 결과가 나오진 않겠지만, 변수가 선언된 블록의 바깥에서 변수에 `typeof` 를 사용할 수 있다. 아래 코드를 참고해보자:
 
@@ -226,11 +214,7 @@ if (condition) {
 
 The variable `value` isn't in the TDZ when the `typeof` operation executes because it occurs outside of the block in which `value` is declared. That means there is no `value` binding, and `typeof` simply returns `"undefined"`.
 
-`value` 가 선언된 곳이 블록 바깥에 있기 때문에, `typeof` 명령어를 실행했을때 변수 `value` 는 TDZ 안에 있지 않다. 그것은 `value` binding 이 없음을 의미하고, `typeof` 는 단순하게 `"undefined"` 를 반환한다.
-
 The TDZ is just one unique aspect of block bindings. Another unique aspect has to do with their use inside of loops.
-
-TDZ 는 단지 block bindings 의 한가지 특징이다. 반복문 안에서의 사용시에도 또 다른 특징이 있다.
 
 
 ## Block Binding in Loops - 원필현
@@ -297,9 +281,7 @@ funcs.forEach(function(func) {
 
 This version uses an IIFE inside of the loop. The `i` variable is passed to the IIFE, which creates its own copy and stores it as `value`. This is the value used by the function for that iteration, so calling each function returns the expected value as the loop counts up from 0 to 9. Fortunately, block-level binding with `let` and `const` in ECMAScript 6 can simplify this loop for you.
 
-### Let Declarations in Loops (반복문에서의 Let 선언) - 신일용
-
-A `let` declaration simplifies loops by effectively mimicking what the IIFE does in the previous example.On each iteration, the loop creates a new variable and initializes it to the value of the variable with the same name from the previous iteration. That means you can omit the IIFE altogether and get the results you expect, like this:
+### Let Declarations in Loops
 
 `let` 선언은 이전 예제에서 IIFE 가 하는 것을 모방해서 효과적으로 반복문(loop)을 단순화한다.각 이터레이션에서, 반복문은 새 변수를 만들고 그것을 이전 이터레이션에서와 같은 이름의 변수 값에 초기화한다.아래코드처럼, 그것은 IIFE 를 생략하고도 기대하던 결과를 얻을 수 있다는 의미이다:
 
@@ -316,8 +298,6 @@ funcs.forEach(function(func) {
     func();     // outputs 0, then 1, then 2, up to 9
 })
 ```
-
-This loop works exactly like the loop that used `var` and an IIFE but is, arguably, cleaner. The `let` declaration creates a new variable `i` each time through the loop, so each function created inside the loop gets its own copy of `i`. Each copy of `i` has the value it was assigned at the beginning of the loop iteration in which it was created. The same is true for `for-in` and `for-of` loops, as shown here:
 
 이 반복문은 `var` 와 IIFE 를 사용한 반복문과 똑같이, 그러나 더 깔끔하게 동작한다.`let` 선언은 반복할때마다 매번 새 변수 `i` 를 만들어서, 반복문 안에서 만들어진 각 함수는 각 반복(loop)시에 `i` 의 사본을 얻을 수 있다.각 `i` 의 사본은 그것이 만들어지는 반복(loop iteration)의 시작시에 할당된 값을 가진다. 아래에서 볼 수 있듯이 `for-in` 과 `for-of` 반복문에서도 마찬가지이다:
 
@@ -340,11 +320,7 @@ funcs.forEach(function(func) {
 });
 ```
 
-In this example, the `for-in` loop shows the same behavior as the `for` loop. Each time through the loop, a new `key` binding is created, and so each function has its own copy of the `key` variable. The result is that each function outputs a different value. If `var` were used to declare `key`, all functions would output `"c"`.
-
 위 예제에서, `for-in` 반복문은 `for` 반복문과 같은 동작을 보여준다. 반복시마다, 새로운 `key` binding 이 생성되어서, 각 함수는 각 반복시의 변수 `key` 의 복사본을 가진다. 각 함수가 다른 값을 출력하는 결과를 볼 수 있다. 만약 `var` 이 `key` 선언에 사용되었다면, 모든 함수는 `"c"` 를 출력했을 것이다.
-
-I> It's important to understand that the behavior of `let` declarations in loops is a specially-defined behavior in the specification and is not necessarily related to the non-hoisting characteristics of `let`. In fact, early implementations of `let` did not have this behavior, as it was added later on in the process.
 
 I> 반복문에서의 `let` 선언의 동작이 명세에 특별하게 정의된 동작이라는 것과 `let` 의 non-hoisting 특성에 반드시 연관된 것은 아니라는 것을 이해하는 것이 중요하다. 사실, 진행과정에서 나중에 추가된 것으로, `let` 의 초기 구현은 이러한 동작을 가지고 있지 않았다.
 
