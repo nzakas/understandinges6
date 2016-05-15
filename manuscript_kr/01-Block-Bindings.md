@@ -1,39 +1,17 @@
 # Block Bindings
 
-Traditionally, the way variable declarations work has been one tricky part of programming in JavaScript. 
-
 전통적으로, 변수 선언 동작 방식은 자바스크립트 프로그래밍에서 까다로운 부분을 가지고 있다.
-
-In most C-based languages, variables (or *bindings*) are created at the spot where the declaration occurs. 
-
 대부분의 C 기반은 언어들에서, 변수(또는 *bindings*)는 선언이 발생된 지점에서 생성된다.
-
-In JavaScript, however, this is not the case.
-
 그러나, 자바스크립트에서는 그렇지 않다.
-
-Where your variables are actually created depends on how you declare them,
-and ECMAScript 6 offers options to make controlling scope easier.
-
-변수가 실제적으로 생성되는 곳은 변수를 어떻게 선언했는지에 의존한다,
+변수가 실제로 생성되는 곳은 변수를 어떻게 선언했는지에 의존한다,
 그리고 ECMAScript 6 은 유효 범위를 쉽게 제어할 수 있는 옵션을 제공한다.
-
-This chapter demonstrates why classic `var` declarations can be confusing, introduces block-level bindings in ECMAScript 6,
-and then offers some best practices for using them.
-
 이번 장에서는 전형적인 `var` 선언이 왜 혼란을 줄 수 있는지 실례를 들어가며 보여준다, ECMAScript 6 에서 block-level 바인딩을 소개한다,
-그런 다음 그것들의 사용한 좋은 사용 방법들을 제공한다.
+그런 다음 그것들을 사용한 좋은 연습 방법을 제공한다.
 
 ## Var Declarations and Hoisting
 
-Variable declarations using `var` are treated as if they are at the top of the function(or global scope,
-if declared outside of a function) regardless of where the actual declaration occurs;
-this is called *hoisting*.
-
-`var` 를 사용한 변수 선언은 실제 선언이 발생한 곳에 상관없이 마치 함수의 맨 위(또는 만약 함수의 밖에 선언되어 있다면 global scope)에 있는 것처럼 처리되었다.
-이것을 호이스팅이라고 부른다.
-
-For a demonstration of what hoisting does, consider the following function definition:
+`var` 를 사용한 변수 선언은 실제 선언이 발생한 곳에 상관없이 마치 함수의 맨 위(또는 만약 함수의 밖에 선언되어 있다면 global scope)에 있는 것처럼 처리되었다;
+이것을 *hoisting*이라고 부른다.
 
 호이스팅이 무엇인지에 대한 예제로, 다음 함수 정의를 고려했다.
 
@@ -57,16 +35,8 @@ function getValue(condition) {
 }
 ```
 
-If you are unfamiliar with JavaScript, then you might expect the variable `value` to only be created if `condition` evaluates to true. 
-
 만약 당신이 자바스크립트에 익숙하지 않다면, 당신은 변수 `value` 가 오직 if `condition` 이 true 일 경우에 만들어진다고 예상할 것이다.
-
-In fact, the variable `value` is created regardless.
-
 실제로, 변수 `value` 는 상관없이 만들어진다.
-
-Behind the scenes, the JavaScript engine changes the `getValue` function to look like this:
-
 이면에서, 자바스크립트 엔진은 `getValue` 함수를 아래처럼 변경한다.
 
 ```js
@@ -87,59 +57,27 @@ function getValue(condition) {
 }
 ```
 
-The declaration of `value` is hoisted to the top, while the initialization remains in the same spot. 
-
 초기화는 같은 지점에 남아있고, `value` 의 선언은 맨 위로 호이스팅 된다.
-
-That means the variable `value` is actually still accessible from within the `else` clause. 
-
 변수 `value` 는 실제로 `else` 절 안으로 부터 여전히 접근할 수 있다는 것을 의미한다.
-
-If accessed from there, the variable would just have a value of `undefined` because it hasn't been initialized.
-
 접근된다면, 변수는 초기화되지 않았기 때문에, `undefined` 값을 가질 것이다.
-
-It often takes new JavaScript developers some time to get used to declaration hoisting,
-and misunderstanding this unique behavior can end up causing bugs.
-
 종종 새로운 자바스크립트 개발자들은 호이스팅 선언에 익숙해 지는데 시간이 걸린다, 그리고 이 독특한 동작의 착오는 버그를 발생시킬 수 있다.
-
-For this reason, ECMAScript 6 introduces block level scoping options to make the controlling a variable's lifecycle a little more powerful.
-
 이러한 이유로, ECMAScript 6 은 더 강력하게 변수의 생명주기를 제어하기 위해 block level 유효 범위 옵션을 도입하였다.
 
 ## Block-Level Declarations
 
-Block-level declarations are those that declare variables that are inaccessible outside of a given block scope.
-
 Block-level declarations 은 선언된 변수의 블록 범위 밖에서 접근할 수 없는 것이다.
-
-Block scopes, also called lexical scopes, are created:
-
 블록 범위, 또는 어휘 범위라 불리며 다음 처럼 만들어 진다.
 
 1. Inside of a function
 2. Inside of a block (indicated by the `{` and `}` characters)
 
-Block scoping is how many C-based languages work, and the introduction of block-level declarations in ECMAScript 6 is intended to bring that same flexibility (and uniformity) to JavaScript.
-
 블록 범위는 많은 C 기반의 언어들에서 동작하는 방법이다, 그리고 ECMAScript 6 에 block-level declarations 의 도입은 자바스크립트에 유연성(그리고 통일성)을 가져오는 것이라고 생각한다.
 
 ### Let Declarations
 
-The `let` declaration syntax is the same as the syntax for `var`. 
-
 `let` 선언 문법은 `var` 의 문법과 같다.
-
-You can basically replace `var` with `let` to declare a variable, but limit the variable's scope to only the current code block (there are a few other subtle differences discussed a bit later, as well).
-
 당신은 기본적으로 변수를 선언하기 위해 `var` 을 `let` 으로 대체할 수 있다, 그러나 변수의 범위는 오직 현재 코드 블록으로 제한된다.(또한, 좀 있다가 논의할 몇가지 다른 차이가 있다.)
-
-Since `let` declarations are not hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block, so that they are available to the entire block. 
-
 `let` 선언은 선언된 블록의 맨 위로 호이스팅 되지 않기 때문에, 전체 블록에서 사용할 수 있도록 항상 `let` 을 블록의 처음에 위치하는 것이 나을 것이다.
-
-Here's an example:
 
 여기에 예제가 있다.
 
@@ -163,26 +101,13 @@ function getValue(condition) {
 }
 ```
 
-This version of the `getValue` function behaves much closer to how you'd expect it to in other C-based languages.
-
 이 버전의 `getValue` 함수는 다른 C 기반의 언어들에서 기대하는 방식과 훨씬 가깝게 동작한다.
-
-Since the variable `value` is declared using `let` instead of `var`, the declaration isn't hoisted to the top of the function definition, and the variable `value` is no longer accessible once execution flows out of the `if` block. 
-
 변수 `value` 는 `var` 대신에 `let` 사용하여 선언되었기 때문에, 선언은 함수의 맨 위로 호이스팅되지 않는다, 그리고 변수 `value` 는 더이상 `if` 블록의 밖에 실행 흐름에서 접근할 수 없다.
-
-If `condition` evaluates to false, then `value` is never declared or initialized.
-
 만약 `condition` 의 값이 false 라면, 그때 `value` 는 결코 선언되거나 초기화되지 않는다.
 
 ### No Redeclaration
 
-If an identifier has already been defined in a scope,
-then using the identifier in a `let` declaration inside that scope causes an error to be thrown.
-
 만약 하나의 식별자가 이미 어떤 범위에 선언되어 있다면, 그때 선언된 범위안에서 `let` 선언으로 식별자를 사용하는 것은 에러를 발생시킨다.(식별자 = 선언된 변수인 듯)
-
-For example:
 
 예를 들어
 
@@ -193,16 +118,8 @@ var count = 30;
 let count = 40;
 ```
 
-In this example, `count` is declared twice: once with `var` and once with `let`. 
-
 이 예제에서, `count` 는 `var` 와 `let` 으로 중복 선언되었다.
-
-Because `let` will not redefine an identifier that already exists in the same scope, the `let` declaration will throw an error. 
-
 `let` 은 같은 범위 안에 이미 존재하는 식별자로 재정의 될 수 없기 때문에, `let` 선언은 에러를 발생할 것이다.
-
-On the other hand, no error is thrown if a `let` declaration creates a new variable with the same name as a variable in its containing scope, as demonstrated in the following code:
-
 반면에, 다음 코드의 실제 예제처럼 만약 `let` 선언은 변수를 포함하는 범위에 같은 이름으로 새로운 변수를 만든다면 에러를 발생시키지 않는다.
 
 ```js
@@ -217,12 +134,7 @@ if (condition) {
 }
 ```
 
-This `let` declaration doesn't throw an error because it creates a new variable called `count` within the `if` statement, instead of creating `count` in the surrounding block.
-
 주변 블록에 `count` 를 만드는것 대신에, `if` 절 안에 새로운 변수 `count` 를 만들기 때문에 이 `let` 선언은 에러를 발생시키지 않는다.
-
-Inside the `if` block, this new variable shadows the global `count`, preventing access to it until execution leaves the block.
-
 `if` 블록 안에, 이 새로운 변수는 전역 `count` 를 가리고, 실행이 블록을 떠나기 전까지 전역 `count` 로 접근을 막는다.
 
 ### Constant Declarations - 서동현
@@ -510,72 +422,28 @@ I> You may still want to use `var` in the global scope if you have a code that s
 
 ## Emerging Best Practices for Block Bindings - 정재훈
 
-While ECMAScript 6 was in development, there was widespread belief you should use `let` by default instead of `var` for variable declarations. 
-
 ECMAScript 6 으로 개발하는 경우, 변수 선언을 위해 `var` 를 사용하는 대신 `let` 를 사용해야 하는 것이 기본적으로 널리 퍼진 통념이다.
-
-For many JavaScript developers, `let` behaves exactly the way they thought `var` should have behaved, and so the direct replacement makes logical sense.
-
-많은 자바스크립트 개발자들을 위해, `let` 은 자바스크립트 개발자들이 `var` 가 동작해야 한다고 생각하는 방법으로 정확하게 동작한다, 그래서 직접적인 교체는 논리적으로 이해가 된다.
-
-In this case, you would use `const` for variables that needed modification protection.
-
-이 경우에는, 수정되는 것을 막을 필요가 있는 변수를 위해 'const' 를 사용할 것이다.
-
-However, as more developers migrated to ECMAScript 6, an alternate approach gained popularity: use `const` by default and only use `let` when you know a variable's value needs to change.
+많은 자바스크립트 개발자들을 위해, `let` 은 자바스크립트 개발자들이 `var` 가 동작해야 한다고 생각하는 방법으로 정확하게 동작한다,
+그래서 직접적인 교체는 논리적으로 이해가 된다.
+이 경우, 수정되는 것을 막을 필요가 있는 변수를 위해 'const' 를 사용할 것이다.
 
 그러나, 많은 개발자들은 ECMAScript 6 로 이주한것 처럼, 선택가능한 접근법은 인기를 얻었다: 기본적으로 `const` 를 사용하고 변수의 값이 변경될 필요가 있을 때만 `let` 을 사용한다.
-
-The rationale is that most variables should not change their value after initialization because unexpected value changes are a source of bugs.
-
 그 이유는 예기치 않은 변수의 변경은 버그를 가진 소스이기 때문에 대부분 변수들은 초기화 한 후에 변경되지 않아야 한다는 것이다.
-
-This idea has a significant amount of traction and is worth exploring in your code as you adopt ECMAScript 6.
-
 이러한 아이디어는 ECMASCript 6 를 채택함으로 충분하고 당신의 코드를 살펴볼 가치가 있다.
 
 ## Summary
 
-The `let` and `const` block bindings introduce lexical scoping to JavaScript. 
-
 `let` 과 `const` 블록 바인딩을 자바스크립트 어휘를 살펴보는 것으로 소개하였다.
-
-These declarations are not hoisted and only exist within the block in which they are declared.
-
 이 선언들은 호이스팅되지 않고 오직 선언된 곳의 블록 안에 존재한다.
-
-This offers behavior that is more like other languages and less likely to cause unintentional errors, as variables can now be declared exactly where they are needed.
-
 이제 변수가 꼭 필요한 곳에 선언될 수 있으므로, 이것은 좀 더 다른 언어들처럼 동작하고 뜻하지 않은 에러 발생을 더 적게 한다.
-
-As a side effect, you cannot access variables before they are declared, even with safe operators such as `typeof`. 
-
 부작용으로, 예를 들어 `typeof` 와 같은 안전한 명령어들도, 선언되기 전에 변수에 접근할 수 없다.
-
-Attempting to access a block binding before its declaration results in an error due to the binding's presence in the temporal dead zone (TDZ).
-
 바인딩은 temporal dead zone(TDZ) 에 있기 때문에, 선언되기 전 블록 바인딩에 접근하려고 시도하는 것은 에러를 야기한다.
 
-In many cases, `let` and `const` behave in a manner similar to `var`; however, this is not true for loops. 
 
 많은 경우들에서, `let` 과 `const` 는 `var` 와 비슷한 방식으로 동작한다. 그러나, for 루프에서는 사실이 아니다.
-
-For both `let` and `const`, `for-in` and `for-of` loops create a new binding with each iteration through the loop. 
-
 `for-in` 과 `for-of` 루프에서 `let` 과 `const` 둘 다, 루프의 각 반복마다 새로운 바인딩을 만든다.
-
-That means functions created inside the loop body can access the loop bindings values as they are during the current iteration, rather than as they were after the loop's final iteration (the behavior with `var`).
-
 그것은 루프의 마지막 반복후에 있는것 보다는(`var` 의 동작), 루프 안에서 만들어진 함수는 현재 반복 동안 루프에 바인딩된 변수에 접근할 수 있다는 것을 의미한다.
-
-The same is true for `let` declarations in `for` loops, while attempting to use `const` declarations in a `for` loop may result in an error.
-
 `for` 루프 안에 `let` 선언도 마찬가지다, `for` 루프 안에서 `const` 선언을 사용하려는 경우 에러를 야기할 수 있다.
 
-The current best practice for block bindings is to use `const` by default and only use `let` when you know a variable's value needs to change. 
-
 현재 block 바인딩의 좋은 연습은 기본적으로 `const` 를 사용하고 오직 변수의 값이 변할 필요가 있을 때만 `let` 을 사용하는 것이다.
-
-This ensures a basic level of immutability in code that can help prevent certain types of errors.
-
 이것은 확실한 타입 에러를 예방할 수 있는 코드에 불변성의 기본적인 수준을 보장한다.
