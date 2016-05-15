@@ -241,10 +241,9 @@ The variable `value` isn't in the TDZ when the `typeof` operation executes becau
 
 The TDZ is just one unique aspect of block bindings. Another unique aspect has to do with their use inside of loops.
 
+## Block Binding in Loops
 
-## Block Binding in Loops - 원필현
-
-Perhaps one area where developers most want block level scoping of variables is within `for` loops, where the throwaway counter variable is meant to be used only inside the loop. For instance, it's not uncommon to see code like this in JavaScript:
+아마도 개발자의 대부분이 원하는 변수의 블록 레벨 유효 영역은 `for` 루프 안이고, 한번 쓰고 버리는(throwaway) 카운터 변수는 오직 루프 내에서 사용하기로 정해져 있다. 예를 들면, 자바스크립트에서 이와 같은 코드를 볼 일이 드물지 않다.
 
 ```js
 for (var i = 0; i < 10; i++) {
@@ -255,7 +254,7 @@ for (var i = 0; i < 10; i++) {
 console.log(i);                     // 10
 ```
 
-In other languages, where block level scoping is the default, this example should work as intended, and only the `for` loop should have access to the `i` variable. In JavaScript, however, the variable `i` is still accessible after the loop is completed because the `var` declaration gets hoisted. Using `let` instead, as in the following code, should give the intended behavior:
+다른 언어에서 블록 레벨 범위은 기본이고, 예제는 의도대로 동작할 것이다, 그리고 오직 `for` 루프만 `i` 변수에 접근할 수 있어야 한다. 그러나, 자바스크립트에서는 `var` 선언이 호이스팅 되기 떄문에 `i` 변수는 loop가 완료된 후에도 여전히 접근 가능하다. 다음 코드에서와 같이, `let`을 대신 사용하여 의도된 동작을 할 것이다.
 
 ```js
 for (let i = 0; i < 10; i++) {
@@ -266,11 +265,11 @@ for (let i = 0; i < 10; i++) {
 console.log(i);
 ```
 
-In this example, the variable `i` only exists within the `for` loop. Once the loop is complete, the variable is no longer accessible elsewhere.
+이 예제에서, `i` 변수는 오로지 `for` 루프 내에서만 존재한다. 한번 루프가 완료되면, 변수는 더이상 다른곳에서 접근할 수 없다.
 
 ### Functions in Loops
 
-The characteristics of `var` have long made creating functions inside of loops problematic, because the loop variables are accessible from outside the scope of the loop. Consider the following code:
+`var`의 특징은 루프 안에서 함수를 만드는 것에 대해 오랫동안 문제를 가지고 있었다, 루프 변수는 루프의 범위 밖에서 접근할 수 있기 때문이다. 다음 코드를 살펴보자.
 
 ```js
 var funcs = [];
@@ -284,9 +283,10 @@ funcs.forEach(function(func) {
 });
 ```
 
-You might ordinarily expect this code to print the numbers 0 to 9, but it outputs the number 10 ten times in a row. That's because `i` is shared across each iteration of the loop, meaning the functions created inside the loop all hold a reference to the same variable. The variable `i` has a value of `10` once the loop completes, and so when `console.log(i)` is called, that value prints each time.
+당신은 이 코드를 0에서 9까지 출력할 것으로 예상할 것이다. 그러나 이것은 숫자 10을 10번 출력한다.
+왜냐하면 `i`는 루프의 각 반복 사이에서 공유되기 때문이다. 루프 내에서 생성된 함수의 의미는 모두 같은 변수를 참조한다는 것이다. 한번 루프가 완료되면 변수 `i`는 `10`의 값을 가지고, 그래서 `console.log(i)`가 호출될 때, 그때마다 그 값을 출력한다.
 
-To fix this problem, developers use immediately-invoked function expressions (IIFEs) inside of loops to force a new copy of the variable they want to iterate over to be created, as in this example:
+이 문제를 고치기 위해서, 개발자들은 반복해서 생성되기 원하는 변수의 새 복사본을 강제로 만드려고 루프 내부에서 즉시 실행 함수(IIFE)를 사용한다, 이 예제와 같이:
 
 ```js
 var funcs = [];
@@ -304,7 +304,7 @@ funcs.forEach(function(func) {
 });
 ```
 
-This version uses an IIFE inside of the loop. The `i` variable is passed to the IIFE, which creates its own copy and stores it as `value`. This is the value used by the function for that iteration, so calling each function returns the expected value as the loop counts up from 0 to 9. Fortunately, block-level binding with `let` and `const` in ECMAScript 6 can simplify this loop for you.
+이 버전은 루프 내부에서 즉시 실행 함수(IIFE)를 사용한다.`i` 변수는 즉시실행함수(IIFE)에 전달된다, 자신의 복사본을 생성하고 `value`로 저장한다. 이 값은 함수에 의해 반복을 위해서 사용된다, 그래서 각 함수 호출은 0부터 9까지 루프에서 증가된 기대값을 반환한다. 다행스럽게도, ECMAScript6의 `let`과 `const`를 이용한 블록 바인딩은 이 루프를 단순화 할 수 있다.
 
 ### Let Declarations in Loops
 
