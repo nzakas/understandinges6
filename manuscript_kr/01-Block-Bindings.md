@@ -241,7 +241,7 @@ The variable `value` isn't in the TDZ when the `typeof` operation executes becau
 
 The TDZ is just one unique aspect of block bindings. Another unique aspect has to do with their use inside of loops.
 
-## Block Binding in Loops - 원필현
+## Block Binding in Loops
 
 아마도 개발자의 대부분이 원하는 변수의 블록 레벨 유효 영역은 `for` 루프 안이고, 한번 쓰고 버리는(throwaway) 카운터 변수는 오직 루프 내에서 사용하기로 정해져 있다. 예를 들면, 자바스크립트에서 이와 같은 코드를 볼 일이 드물지 않다.
 
