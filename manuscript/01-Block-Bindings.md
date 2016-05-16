@@ -115,7 +115,7 @@ This `let` declaration doesn't throw an error because it creates a new variable 
 ### Constant Declarations
 
 You can also define variables in ECMAScript 6 with the `const` declaration syntax. Variables declared using `const` are considered *constants*, meaning their values cannot be changed once set. For this reason, every `const` variable must be initialized on declaration, as shown in this example:
-또한 ECMAScript 6 에서는 const 구문을 사용한 변수를 선언 할 수 있습니다. const를 사용하여 선언된 변수는 상수 입니다. 이 말은 변수 값을 한 번 설정하면 바꿀 수 없다는 것입니다. 이러한 이유 때문에 모든 const 변수는 아래 예제와 같이 선언 할 때 초기화 해주어야만 합니다.
+
 ```js
 // Valid constant
 const maxItems = 30;
@@ -125,12 +125,12 @@ const name;
 ```
 
 The `maxItems` variable is initialized, so its `const` declaration should work without a problem. The `name` variable, however, would cause a syntax error if you tried to run the program containing this code, because `name` is not initialized.
-maxItems 변수는 초기화가 되어서 const 선언에 문제가 없습니다 하지만 name 변수는 이 코드대로 프로그램을 돌린다면 초기화 되지 않았기 때문에 syntax error가 발생할 것입니다.
+
 
 #### Constants vs Let Declarations
 
 Constants, like `let` declarations, are block-level declarations. That means constants are no longer accessible once execution flows out of the block in which they were declared, and declarations are not hoisted, as demonstrated in this example:
-Let 선언 같은 상수는 블록 레벨의 선언 입니다. 이 말은 상수는 그 상수들이 선언된 블록을 한 번 실행하고 나가면 더 이상 접근이 불가 합니다. 그리고 이 선언은 hoist 하지 않습니다.  아래 예제로 보여주겠습니다.
+
 ```js
 if (condition) {
     const maxItems = 5;
@@ -142,9 +142,9 @@ if (condition) {
 ```
 
 In this code, the constant `maxItems` is declared within an `if` statement. Once the statement finishes executing, `maxItems` is not accessible outside of that block.
-이 코드에서 상수 maxItems는 if문 안에 선언 되었습니다. 한 번 if문의 수행이 끝나면 maxItems 는 블록 밖에서 접근 할 수 없습니다.
+
 In another similarity to `let`, a `const` declaration throws an error when made with an identifier for an already-defined variable in the same scope. It doesn't matter if that variable was declared using `var` (for global or function scope) or `let` (for block scope). For example, consider this code:
-Let과 또 하나의 비슷한 점은 const 선언 시 같은 영역 안에 같은 이름의 변수가 이미 선언 되어있으면 error가 발생한다는 것입니다. 만약 변수가 var(전역 또는 함수 범위로) 또는 let(블록 범위로)로 선언되었다면 문제 없습니다. 예를 들어 아래 코드를 봅시다.
+
 ```js
 var message = "Hello!";
 let age = 25;
@@ -155,9 +155,9 @@ const age = 30;
 ```
 
 The two `const` declarations would be valid alone, but given the previous `var` and `let` declarations in this case, neither will work as intended.
-이 두 const 선언은 혼자쓰이면 유효하지만 이 경우 앞에 주어진 var, let 선언은  둘 다 의도한대로 동작 하지 않을 것입니다.
+
 Despite those similarities, there is one big difference between `let` and `const` to remember. Attempting to assign a `const` to a previously defined constant will throw an error, in both strict and non-strict modes:
-let과 const는 이렇게 비슷하지만 한가지 큰 차이가 있다는것을 알아야합니다. strict모드와 non-strict모드 둘다 기정의된 상수 const를 할당하려하면 에러가 발생할 것입니다
+
 ```js
 const maxItems = 5;
 
@@ -165,7 +165,7 @@ maxItems = 6;      // throws error
 ```
 
 Much like constants in other languages, the `maxItems` variable can't be assigned a new value later on. However, unlike constants in other language, the value a constant holds may be modified if it is an object.
-다른 언어의 상수와 같이  maxItems 변수는 나중에 새 값을 할당할 수 없습니다. 그러나 다른 언어와 달리 만약 객체라면 수정된 값을 가지고 있을 수 있습니다
+
 #### Declaring Objects with Const
 
 A `const` declaration prevents modification of the binding and not of the value itself. That means `const` declarations for objects do not prevent modification of those objects. For example:
