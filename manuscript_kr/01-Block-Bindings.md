@@ -237,9 +237,9 @@ if (condition) {
 }
 ```
 
-The variable `value` isn't in the TDZ when the `typeof` operation executes because it occurs outside of the block in which `value` is declared. That means there is no `value` binding, and `typeof` simply returns `"undefined"`.
+`value` 가 선언된 곳이 블록 바깥에 있기 때문에, `typeof` 명령어를 실행했을때 변수 `value` 는 TDZ 안에 있지 않다. 그것은 `value` binding 이 없음을 의미하고, `typeof` 는 단순하게 `"undefined"` 를 반환한다. 
 
-The TDZ is just one unique aspect of block bindings. Another unique aspect has to do with their use inside of loops.
+TDZ 는 단지 block bindings 의 한가지 특징이다. 반복문 안에서의 사용시에도 또 다른 특징이 있다.
 
 ## Block Binding in Loops
 
