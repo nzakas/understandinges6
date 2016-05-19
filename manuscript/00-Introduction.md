@@ -1,6 +1,6 @@
 # Introduction
 
-The JavaScript core language features are defined in a standard called ECMA-262. The language defined in this standard is called ECMAScript. The JavaScript uses in the browser and the JavaScript uses in Node.js environments are supersets of ECMAScript. Browsers and Node.js increase functionality through additional objects and methods, but the core of the language remains as defined in ECMAScript. The ongoing development of ECMA-262 is vital to the success of JavaScript as a whole, and this book covers the changes brought about by the most recent major update to the language: ECMAScript 6.
+The JavaScript core language features are defined in a standard called ECMA-262. The language defined in this standard is called ECMAScript. What you know as JavaScript in browsers and Node.js is actually a superset of ECMAScript. Browsers and Node.js add more functionality through additional objects and methods, but the core of the language remains as defined in ECMAScript. The ongoing development of ECMA-262 is vital to the success of JavaScript as a whole, and this book covers the changes brought about by the most recent major update to the language: ECMAScript 6.
 
 ## The Road to ECMAScript 6
 
@@ -18,22 +18,15 @@ ECMAScript 6 reached feature complete status in 2015 and was formally dubbed "EC
 
 ## About This Book
 
-It will take time for ECMAScript 6 to be adopted and implementated to the point where developers can expect all environments to be at least ECMAScript 6 compatible, but you can gain a lot from a good understanding of what the future of JavaScript looks like. That's where this book comes in. My hope is that you'll read this book to learn about ECMAScript 6 features now, so that you'll be ready to start using them as soon as you need to.
-
-<!-- Or perhaps something else, above, if my suggestions don't seem quite right. I just
-     think having a bit of cushion leading into the "about this book" type material
-     below will be helpful signposting for readers. /JG -->
+A good understanding of ECMAScript 6 features is key for all JavaScript developers going forward. The language features introduced in ECMAScript 6 represent the foundation upon which JavaScript applications will be built for the foreseeable future. That's where this book comes in. My hope is that you'll read this book to learn about ECMAScript 6 features so that you'll be ready to start using them as soon as you need to.
 
 ### Browser and Node.js Compatibility
 
 Many JavaScript environments, such as web browsers and Node.js, are actively working on implementing ECMAScript 6. This book doesn't attempt to address the inconsistencies between implementations and instead focuses on what the specification defines as the correct behavior. As such, it's possible that your JavaScript environment may not conform to the behavior described in this book.
 
-<!-- I would consider mentioning Babel here, or another environment where you know
-     the code should work, in case readers want to play with the examples. /JG -->
-
 ### Who This Book is For
 
-This book is intended as a guide for those who are already familiar with JavaScript and ECMAScript 5. While a deep understanding of the language isn't necessary to use this book, it will help you understand the differences between ECMAScript 5 and 6. In particular, this book is aimed at intermediate-to-advanced JavaScript developers (both browser and Node.js environments) who want to learn about the future of the language.
+This book is intended as a guide for those who are already familiar with JavaScript and ECMAScript 5. While a deep understanding of the language isn't necessary to use this book, it will help you understand the differences between ECMAScript 5 and 6. In particular, this book is aimed at intermediate-to-advanced JavaScript developers (both browser and Node.js environments) who want to learn about the latest developments in the language.
 
 This book is not for beginners who have never written JavaScript. You will need to have a good basic understanding of the language to make use of this book.
 
@@ -73,8 +66,30 @@ Each of this book's thirteen chapters covers a different aspect of ECMAScript 6.
 
 ### Conventions Used
 
-<!-- Perhaps add a short section discussing conventions used, like the way you show
-     output in code listings. /JG -->
+The following typographical conventions are used in this book:
+
+* *Italics* introduces new term or filenames
+* `Constant width` indicates a piece of code.
+
+Additionally, longer code examples are contained in constant width code blocks such as:
+
+```js
+function doSomething() {
+    // empty
+}
+```
+
+Within a code block, comments to the right of a `console.log()` statement indicate the output you'll see in the browser or Node.js console when the code is execute, for example:
+
+```js
+console.log("Hi");      // "Hi"
+```
+
+If a line of code in a code block throws an error, this is also indicated to the right of the code:
+
+```js
+doSomething();          // error!
+```
 
 ### Help and Support
 
@@ -87,7 +102,9 @@ If you have questions as you read this book, please send a message to my mailing
 
 ## Acknowledgments
 
-<!-- For the print version, perhaps consider thanking folks who worked on the print book, in addition to online supporters. /JG -->
+Thanks to Jennifer Griffith-Delgado, Alison Law, and everyone at No Starch Press for their support and help with this book. Their understanding and patience as my productivity slowed to a crawl during my extended illness is something I will never forget.
+
+I'm grateful for the watchful eye of Juriy Zaytsev as tech editor and to Dr. Axel Rauschmayer for his feedback and several conversations that helped to clarify some of the concepts discussed in this book.
 
 Thanks to everyone who submitted fixes to the version of this book that is hosted on GitHub: ShMcK, Ronen Elster, Rick Waldron, blacktail, Paul Salaets, Lonniebiz, Igor Skuhar, jakub-g, David Chang, Kevin Sweeney, Kyle Simpson, Peter Bakondy, Philip Borisov, Shaun Hickson, Steven Foote, kavun, Dan Kielp, Darren Huskie, Jakub Narębski, Jamund Ferguson, Josh Lubaway, Marián Rusnák, Nikolas Poniros, Robin Pokorný, Roman Lo, Yang Su, alexyans, robertd, 404, Aaron Dandy, AbdulFattah Popoola, Adam Richeimer, Ahmad Ali, Aleksandar Djindjic, Arjunkumar, Ben Regenspan, Carlo Costantini, Dmitri Suvorov, Erik Sundahl, Ethan Brown, Eugene Zubarev, Francesco Pongiluppi, Jake Champion, Jeremy Caney, Joe Eames, Juriy Zaytsev, Kale Worsley, Kevin Lozandier, Lewis Ellis, Mohsen Azimi, Navaneeth Kesavan, Nick Bottomley, Niels Dequeker, Pahlevi Fikri Auliya, Prayag Verma, Raj Anand, Ross Gerbasi, Roy Ling, Sarbbottam Bandyopadhyay, and Shidhin.
 
