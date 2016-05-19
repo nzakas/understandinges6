@@ -1,8 +1,8 @@
-# Minor Changes in ECMAScript 7 (2016)
+# ECMAScript 7 (2016)
 
-The development of ECMAScript 6 took about four years, and after that, TC39 decided that such a long development process was unsustainable. Instead, they moved to a yearly release cycle to ensure new language features would make it into development sooner.
+The development of ECMAScript 6 took about four years, and after that, TC-39 decided that such a long development process was unsustainable. Instead, they moved to a yearly release cycle to ensure new language features would make it into development sooner.
 
-More frequent releases mean that each new edition of ECMAScript should have fewer new features than ECMAScript 6. To signify this change, new versions of the specification no longer prominently feature the edition number, and instead refer to the year in which the specification was published. As a result, ECMAScript 6 is also known as ECMAScript 2015, and ECMAScript 7 is formally known as ECMAScript 2016. TC39 expects to use the year-based naming system for all future ECMAScript editions.
+More frequent releases mean that each new edition of ECMAScript should have fewer new features than ECMAScript 6. To signify this change, new versions of the specification no longer prominently feature the edition number, and instead refer to the year in which the specification was published. As a result, ECMAScript 6 is also known as ECMAScript 2015, and ECMAScript 7 is formally known as ECMAScript 2016. TC-39 expects to use the year-based naming system for all future ECMAScript editions.
 
 ECMAScript 2016 was finalized in March 2016 and contained only two additions to the language: a new mathematical operator and a new array method. Both are covered in this appendix.
 
