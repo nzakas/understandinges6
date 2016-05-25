@@ -215,6 +215,12 @@ let PersonClass = (function() {
 
     Object.defineProperty(PersonClass2.prototype, "sayName", {
         value: function() {
+
+            // make sure the method wasn't called with new
+            if (typeof new.target !== "undefined") {
+                throw new Error("Method cannot be called with new.");
+            }
+
             console.log(this.name);
         },
         enumerable: false,
