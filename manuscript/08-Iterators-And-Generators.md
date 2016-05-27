@@ -472,7 +472,8 @@ No iterator is specified, so the default iterator functions will be used. The de
 
 Arrays and sets return their values by default, while maps return the same array format that can be passed into the `Map` constructor. Weak sets and weak maps, on the other hand, do not have built-in iterators. Managing weak references means there's no way to know exactly how many values are in these collections, which also means there's no way to iterate over them.
 
-A> Destructuring and for-of Loops
+A> ### Destructuring and for-of Loops
+A>
 A> The behavior of the default constructor for maps is also helpful when used in `for-of` loops with destructuring, as in this example:
 A>
 A> ```js
