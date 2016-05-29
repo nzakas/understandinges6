@@ -52,7 +52,7 @@ function multiply(num1, num2) {
 export multiply;
 ```
 
-There are a few things to notice in this example. First, apart from the `export` keyword, every declaration is exactly the same as it would be otherwise. Each exported functioni or class also has a name; that's because exported function and class declarations require a name. You cannot export anonymous functions or classes using this syntax unless you use the `default` keyword (discussed in detail later in this chapter).
+There are a few things to notice in this example. First, apart from the `export` keyword, every declaration is exactly the same as it would be otherwise. Each exported function or class also has a name; that's because exported function and class declarations require a name. You cannot export anonymous functions or classes using this syntax unless you use the `default` keyword (discussed in detail later in this chapter).
 
 Next, consider the `multiply()` function, which isn't exported when it's defined. That works because you need not always export a declaration: you can also export references. Finally, notice that this example doesn't export the `subtract()` function. That function won't be accessible from outside this module because any variables, functions, or classes that are not explicitly exported remain private to the module.
 
