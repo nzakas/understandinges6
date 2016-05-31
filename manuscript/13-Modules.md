@@ -1,6 +1,6 @@
 # Encapsulating Code With Modules
 
-JavaScript's "shared everything" approach to loading code is one of the most error-prone and confusing aspects of the languange. Other languages use concepts such as packages to define code scope, but before ECMAScript 6, everything defined in every JavaScript file of an application shared one global scope. As web applications became more complex and started using even more JavaScript code, that approach caused problems like naming collisions and security concerns. One goal of ECMAScript 6 was to solve the scope problem and bring some order to JavaScript applications. That's where modules come in.
+JavaScript's "shared everything" approach to loading code is one of the most error-prone and confusing aspects of the language. Other languages use concepts such as packages to define code scope, but before ECMAScript 6, everything defined in every JavaScript file of an application shared one global scope. As web applications became more complex and started using even more JavaScript code, that approach caused problems like naming collisions and security concerns. One goal of ECMAScript 6 was to solve the scope problem and bring some order to JavaScript applications. That's where modules come in.
 
 ## What are Modules?
 
@@ -259,7 +259,7 @@ console.log(color);         // "red"
 
 The comma separates the default local name from the non-defaults (which are also surrounded by curly braces). Keep in mind that the default must come before the non-defaults in the `import` statement.
 
-As with exporting defaults, you import defauts with the renaming syntax, too:
+As with exporting defaults, you import defaults with the renaming syntax, too:
 
 ```js
 // equivalent to previous example
