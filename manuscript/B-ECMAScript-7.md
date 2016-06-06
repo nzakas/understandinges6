@@ -6,7 +6,6 @@ More frequent releases mean that each new edition of ECMAScript should have fewe
 
 ECMAScript 2016 was finalized in March 2016 and contained only two additions to the language: a new mathematical operator and a new array method. Both are covered in this appendix.
 
-
 ## The Exponentiation Operator
 
 The only change to JavaScript syntax introduced in ECMAScript 2016 is the *exponentiation operator*, which is a mathematical operation that applies an exponent to a base. JavaScript already had the `Math.pow()` method to perform exponentiation, but JavaScript was also one of the only languages that required a method rather than a formal operator. (And some developers argue an operator is easier to read and reason about.)
@@ -24,9 +23,7 @@ This example calculates 5^2^, which is equal to 25. You can still use `Math.pow(
 
 ### Order of Operations
 
-The exponentiation operator has the highest precedence of all operators in JavaScript.
-<!-- JZ: but what about --/++ still taking precedence as explained later on? Is it highest precedence among all non-unary operators? -->
-That means it is applied first to any compound operation, as in this example:
+The exponentiation operator has the highest precedence of all binary operators in JavaScript (unary operators have higher precedence than `**`). That means it is applied first to any compound operation, as in this example:
 
 ```js
 let result = 2 * 5 ** 2;
