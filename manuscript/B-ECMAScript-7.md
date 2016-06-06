@@ -1,11 +1,10 @@
-# ECMAScript 7 (2016)
+# Understanding ECMAScript 7 (2016)
 
 The development of ECMAScript 6 took about four years, and after that, TC-39 decided that such a long development process was unsustainable. Instead, they moved to a yearly release cycle to ensure new language features would make it into development sooner.
 
 More frequent releases mean that each new edition of ECMAScript should have fewer new features than ECMAScript 6. To signify this change, new versions of the specification no longer prominently feature the edition number, and instead refer to the year in which the specification was published. As a result, ECMAScript 6 is also known as ECMAScript 2015, and ECMAScript 7 is formally known as ECMAScript 2016. TC-39 expects to use the year-based naming system for all future ECMAScript editions.
 
 ECMAScript 2016 was finalized in March 2016 and contained only two additions to the language: a new mathematical operator and a new array method. Both are covered in this appendix.
-
 
 ## The Exponentiation Operator
 
@@ -24,7 +23,7 @@ This example calculates 5^2^, which is equal to 25. You can still use `Math.pow(
 
 ### Order of Operations
 
-The exponentiation operator has the highest precedence of all operators in JavaScript. That means it is applied first to any compound operation, as in this example:
+The exponentiation operator has the highest precedence of all binary operators in JavaScript (unary operators have higher precedence than `**`). That means it is applied first to any compound operation, as in this example:
 
 ```js
 let result = 2 * 5 ** 2;
