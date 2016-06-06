@@ -68,8 +68,8 @@ Each of this book's thirteen chapters covers a different aspect of ECMAScript 6.
 
 The following typographical conventions are used in this book:
 
-* *Italics* introduces new term or filenames
-* `Constant width` indicates a piece of code.
+* *Italics* introduces new terms
+* `Constant width` indicates a piece of code or filename
 
 Additionally, longer code examples are contained in constant width code blocks such as:
 
