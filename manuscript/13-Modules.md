@@ -1,16 +1,10 @@
 # Encapsulating Code With Modules
 
-JavaScript's "shared everything" approach to loading code is one of the most error-prone and confusing aspects of the languange. Other languages use concepts such as packages to define code scope, but before ECMAScript 6, everything defined in every JavaScript file of an application shared one global scope.
-
-<!-- JZ: unless frames -->
-
-As web applications became more complex and started using even more JavaScript code, that approach caused problems like naming collisions and security concerns. One goal of ECMAScript 6 was to solve the scope problem and bring some order to JavaScript applications. That's where modules come in.
+JavaScript's "shared everything" approach to loading code is one of the most error-prone and confusing aspects of the languange. Other languages use concepts such as packages to define code scope, but before ECMAScript 6, everything defined in every JavaScript file of an application shared one global scope. As web applications became more complex and started using even more JavaScript code, that approach caused problems like naming collisions and security concerns. One goal of ECMAScript 6 was to solve the scope problem and bring some order to JavaScript applications. That's where modules come in.
 
 ## What are Modules?
 
-*Modules* are JavaScript files that are loaded in a different mode (as opposed to *scripts*, which are loaded in the original way JavaScript worked). This different mode is necessary because module files have very different semantics than script files:
-
-<!-- hm, but technically modules are not supposed to be _files_, are they? they are nothing more than code with different parsing/binding behavior. It will probably live in a file, but I imagine it doesn't have to (if environment provides API for evaluating code as module, then you might as well pass it a string to that API and so on) -->
+*Modules* are JavaScript files that are loaded in a different mode (as opposed to *scripts*, which are loaded in the original way JavaScript worked). This different mode is necessary because modules have very different semantics than scripts:
 
 1. Module code automatically runs in strict mode, and there's no way to opt-out of strict mode.
 1. Variables created in the top level of a module aren't automatically added to the shared global scope. They exist only within the top-level scope of the module.
@@ -74,11 +68,11 @@ The curly braces after `import` indicate the bindings to import from a given mod
 
 I> The list of bindings to import looks similar to a destructured object, but it isn't one.
 
-When importing a binding from a module, the binding acts as if it were defined using `const`. That means you can't define another variable with the same name, use the identifier before the `import` statement, or change its value.
+When importing a binding from a module, the binding acts as if it were defined using `const`. That means you can't define another variable with the same name (including importing another binding of the same name), use the identifier before the `import` statement, or change its value.
 
 ### Importing a Single Binding
 
-Suppose that the first example in the "Basic Exporting" section is in a module with the filename *example.js*. You can import and use bindings from that module in a number of ways. For instance, you can just import one identifier:
+Suppose that the first example in the "Basic Exporting" section is in a module with the filename `example.js`. You can import and use bindings from that module in a number of ways. For instance, you can just import one identifier:
 
 ```js
 // import just one
@@ -89,7 +83,7 @@ console.log(sum(1, 2));     // 3
 sum = 1;        // error
 ```
 
-Even though *example.js* exports more than just that one function this example imports only the `sum()` function. If you try to assign a new value to `sum`, the result is an error, as you can't reassign imported bindings.
+Even though `example.js` exports more than just that one function this example imports only the `sum()` function. If you try to assign a new value to `sum`, the result is an error, as you can't reassign imported bindings.
 
 ### Importing Multiple Bindings
 
@@ -116,7 +110,7 @@ console.log(example.sum(1,
 console.log(example.multiply(1, 2));    // 2
 ```
 
-In this code, all exported bindings in *example.js* are loaded into an object called `example`. The named exports (the `sum()` function, the `multiple()` function, and `magicNumber`) are then accessible as properties on `example`.
+In this code, all exported bindings in `example.js` are loaded into an object called `example`. The named exports (the `sum()` function, the `multiple()` function, and `magicNumber`) are then accessible as properties on `example`.
 
 Keep in mind, however, that no matter how many times you use a module in `import` statements, the module will only be executed once. After the code to import the module executes, the instantiated module is kept in memory and reused whenever another `import` statement references it. Consider the following:
 
@@ -126,14 +120,7 @@ import { multiply } from "example.js";
 import { magicNumber } from "example.js";
 ```
 
-<!-- JZ: maybe also mention what happens when they're overwritten? Which takes precedence? You mention immutability earlier but this could still be unclear.
-
-import { sum } from "foo.js"
-import { sum } from "bar.js"
-
--->
-
-Even though there are three `import` statements in this module, *example.js* will only be executed once. If other modules in the same application were to import bindings from *example.js*, those modules would use the same module instance this code uses.
+Even though there are three `import` statements in this module, `example.js` will only be executed once. If other modules in the same application were to import bindings from `example.js`, those modules would use the same module instance this code uses.
 
 A> ### Module Syntax Limitations
 A>
@@ -158,7 +145,7 @@ A> You can't dynamically import bindings for the same reason you can't dynamical
 
 ### A Subtle Quirk of Imported Bindings
 
-ECMAScript 6's `import` statements create read-only bindings to variables, functions, and classes rather than simply referencing the original bindings like normal variables. Even though you can't change an imported identifier, the module that exports that identifier can. For example, suppose you want to use this module:
+ECMAScript 6's `import` statements create read-only bindings to variables, functions, and classes rather than simply referencing the original bindings like normal variables. Even though the module that imports the binding can't change its value, the module that exports that identifier can. For example, suppose you want to use this module:
 
 ```js
 export var name = "Nicholas";
@@ -178,8 +165,6 @@ console.log(name);       // "Greg"
 name = "Nicholas";       // error
 ```
 The call to `setName("Greg")` goes back into the module from which `setName()` was exported and executes there, setting `name` to `"Greg"` instead. Note this change is automatically reflected on the imported `name` binding. That's because `name` is the local name for the exported `name` identifier. The `name` used in the code above and the `name` used in the module being imported from aren't the same.
-
-<!-- JZ: I find this chapter a bit confusing since it almost warns about read-only but then shows how it's actually mutable. Not sure if just me or if could be made clearer. -->
 
 ## Renaming Exports and Imports
 
@@ -251,7 +236,7 @@ import sum from "example.js";
 console.log(sum(1, 2));     // 3
 ```
 
-This import statement imports the default from the module *example.js*. Note that no curly braces are used, unlike you'd see in a non-default import. The local name `sum` is used to represent whatever default function the module exports. This syntax is the cleanest, and the creators of ECMAScript 6 expect it to be the dominant form of import on the Web, allowing you to use an already-existing object.
+This import statement imports the default from the module `example.js`. Note that no curly braces are used, unlike you'd see in a non-default import. The local name `sum` is used to represent whatever default function the module exports. This syntax is the cleanest, and the creators of ECMAScript 6 expect it to be the dominant form of import on the Web, allowing you to use an already-existing object.
 
 For modules that export both a default and one or more non-default bindings, you can import all exported bindings with one statement. For instance, suppose you have this module:
 
@@ -286,8 +271,6 @@ console.log(color);         // "red"
 
 In this code, the default export (`default`) is renamed to `sum` and the additional `color` export is also imported. This example is equivalent to the preceding example.
 
-<!-- JZ: I like how the sections are broken into export/import. This is really easy and interesting to follow. -->
-
 ## Re-exporting a Binding
 
 There may be a time when you'd like to re-export something that your module has imported (for instance, if you're creating a library out of several small modules). You can re-export an imported value with the patterns already discussed in this chapter as follows:
@@ -317,7 +300,7 @@ If you'd like to export everything from another module, you can use the `*` patt
 export * from "example.js";
 ```
 
-By exporting everything, you're including the default as well as any named exports, which may affect what you can export from your module. For instance, if *example.js* has a default export, you'd be unable to define a new default export when using this syntax.
+By exporting everything, you're including the default as well as any named exports, which may affect what you can export from your module. For instance, if `example.js` has a default export, you'd be unable to define a new default export when using this syntax.
 
 ## Importing Without Bindings
 
@@ -419,21 +402,21 @@ Each module may `import` from one or more other modules, which complicates matte
 
 All modules, both those explicitly included using `<script type="module">` and those implicitly included using `import`, are loaded and executed in order. In the preceding example, the complete loading sequence is:
 
-1. Download and parse *module1.js*.
-1. Recursively download and parse `import` resources in *module1.js*.
+1. Download and parse `module1.js`.
+1. Recursively download and parse `import` resources in `module1.js`.
 1. Parse the inline module.
 1. Recursively download and parse `import` resources in the inline module.
-1. Download and parse *module2.js*.
-1. Recursively download and parse `import` resources in *module2.js*
+1. Download and parse `module2.js`.
+1. Recursively download and parse `import` resources in `module2.js`
 
 Once loading is complete, nothing is executed until after the document has been completely parsed. After document parsing completes, the following actions happen:
 
-1. Recursively execute `import` resources for *module1.js*.
-1. Execute *module1.js*.
+1. Recursively execute `import` resources for `module1.js`.
+1. Execute `module1.js`.
 1. Recursively execute `import` resources for the inline module.
 1. Execute the inline module.
-1. Recursively execute `import` resources for *module2.js*.
-1. Execute *module2.js*.
+1. Recursively execute `import` resources for `module2.js`.
+1. Execute `module2.js`.
 
 Notice that the inline module acts like the other two modules except that the code doesn't have to be downloaded first. Otherwise, the sequence of loading `import` resources and executing modules is exactly the same.
 
