@@ -70,7 +70,7 @@ As a result, ECMAScript 6 added several methods to the `Math` object to improve 
 * `Math.tanh(x)` Returns the hyperbolic tangent of `x`.
 * `Math.trunc(x)` Removes fraction digits from a float and returns an integer.
 
-It's beyond the scope of this book to explain each new method and what it does in detail. But if your application needs to a reasonably common calculation, be sure to check the new `Math` methods before implementing it yourself.
+It's beyond the scope of this book to explain each new method and what it does in detail. But if your application needs to do a reasonably common calculation, be sure to check the new `Math` methods before implementing it yourself.
 
 ## Unicode Identifiers
 
@@ -109,7 +109,11 @@ The `ID_Start` and `ID_Continue` derived core properties are defined in Unicode 
 
 ## Formalizing the `__proto__` Property
 
-Even before ECMAScript 5 was finished, several JavaScript engines already implemented a custom property called `__proto__` that could be used to both get and set the `[[Prototype]]` property. Effectively, `__proto__` was an early precursor to both the `Object.getPrototypeOf()` and `Object.setPrototypeOf()` methods. Expecting all JavaScript engines to remove this property is unrealistic, so ECMAScript 6 also formalized the `__proto__` behavior. But the formalization appears in Appendix B of ECMA-262 along with this warning:
+Even before ECMAScript 5 was finished, several JavaScript engines already implemented a custom property called `__proto__` that could be used to both get and set the `[[Prototype]]` property. Effectively, `__proto__` was an early precursor to both the `Object.getPrototypeOf()` and `Object.setPrototypeOf()` methods. Expecting all JavaScript engines to remove this property is unrealistic, so ECMAScript 6 also formalized the `__proto__` behavior.
+
+<!-- JZ: IIRC, there was a lot of __proto__ usage in libraries like lodash which would break the web -->
+
+ But the formalization appears in Appendix B of ECMA-262 along with this warning:
 
 > These features are not considered part of the core ECMAScript language. Programmers should not use or assume the existence of these features and behaviours when writing new ECMAScript code. ECMAScript implementations are discouraged from implementing these features unless the
 implementation is part of a web browser or is required to run the same legacy ECMAScript code that web browsers encounter.

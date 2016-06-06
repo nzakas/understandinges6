@@ -1,4 +1,4 @@
-# ECMAScript 7 (2016)
+# Understanding ECMAScript 7 (2016)
 
 The development of ECMAScript 6 took about four years, and after that, TC-39 decided that such a long development process was unsustainable. Instead, they moved to a yearly release cycle to ensure new language features would make it into development sooner.
 
@@ -24,7 +24,9 @@ This example calculates 5^2^, which is equal to 25. You can still use `Math.pow(
 
 ### Order of Operations
 
-The exponentiation operator has the highest precedence of all operators in JavaScript. That means it is applied first to any compound operation, as in this example:
+The exponentiation operator has the highest precedence of all operators in JavaScript.
+<!-- JZ: but what about --/++ still taking precedence as explained later on? Is it highest precedence among all non-unary operators? -->
+That means it is applied first to any compound operation, as in this example:
 
 ```js
 let result = 2 * 5 ** 2;
