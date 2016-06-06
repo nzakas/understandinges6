@@ -1,10 +1,16 @@
 # Encapsulating Code With Modules
 
-JavaScript's "shared everything" approach to loading code is one of the most error-prone and confusing aspects of the language. Other languages use concepts such as packages to define code scope, but before ECMAScript 6, everything defined in every JavaScript file of an application shared one global scope. As web applications became more complex and started using even more JavaScript code, that approach caused problems like naming collisions and security concerns. One goal of ECMAScript 6 was to solve the scope problem and bring some order to JavaScript applications. That's where modules come in.
+JavaScript's "shared everything" approach to loading code is one of the most error-prone and confusing aspects of the languange. Other languages use concepts such as packages to define code scope, but before ECMAScript 6, everything defined in every JavaScript file of an application shared one global scope.
+
+<!-- JZ: unless frames -->
+
+As web applications became more complex and started using even more JavaScript code, that approach caused problems like naming collisions and security concerns. One goal of ECMAScript 6 was to solve the scope problem and bring some order to JavaScript applications. That's where modules come in.
 
 ## What are Modules?
 
-*Modules* are JavaScript files that are loaded in a different mode (as opposed to *scripts*, which are loaded in the original way JavaScript worked). The reason this different mode is necessary is because module files have very different semantics than script files:
+*Modules* are JavaScript files that are loaded in a different mode (as opposed to *scripts*, which are loaded in the original way JavaScript worked). This different mode is necessary because module files have very different semantics than script files:
+
+<!-- hm, but technically modules are not supposed to be _files_, are they? they are nothing more than code with different parsing/binding behavior. It will probably live in a file, but I imagine it doesn't have to (if environment provides API for evaluating code as module, then you might as well pass it a string to that API and so on) -->
 
 1. Module code automatically runs in strict mode, and there's no way to opt-out of strict mode.
 1. Variables created in the top level of a module aren't automatically added to the shared global scope. They exist only within the top-level scope of the module.
@@ -13,7 +19,7 @@ JavaScript's "shared everything" approach to loading code is one of the most err
 1. Modules must export anything that should be available to code outside of the module.
 1. Modules may import bindings from other modules.
 
-These differences may seem small at first glance, but they represent a significant change in how JavaScript code is loaded and evaluated, which I will discuss over the course of this chapter. The real power of modules is the ability to export and importing only those bindings that are required, rather than everything in a file. A good understanding of exporting and importing is fundamental to understanding how modules differ from scripts.
+These differences may seem small at first glance, but they represent a significant change in how JavaScript code is loaded and evaluated, which I will discuss over the course of this chapter. The real power of modules is the ability to export and import only bindings you need, rather than everything in a file. A good understanding of exporting and importing is fundamental to understanding how modules differ from scripts.
 
 ## Basic Exporting
 
@@ -52,19 +58,19 @@ function multiply(num1, num2) {
 export multiply;
 ```
 
-There are a few things to notice in this example. First, apart from the `export` keyword, every declaration is exactly the same as it would be otherwise. Each exported function or class also has a name; that's because exported function and class declarations require a name. You cannot export anonymous functions or classes using this syntax unless you use the `default` keyword (discussed in detail later in this chapter).
+There are a few things to notice in this example. First, apart from the `export` keyword, every declaration is exactly the same as it would be otherwise. Each exported function or class also has a name; that's because exported function and class declarations require a name. You can't export anonymous functions or classes using this syntax unless you use the `default` keyword (discussed in detail in the "Default Values in Modules" section).
 
 Next, consider the `multiply()` function, which isn't exported when it's defined. That works because you need not always export a declaration: you can also export references. Finally, notice that this example doesn't export the `subtract()` function. That function won't be accessible from outside this module because any variables, functions, or classes that are not explicitly exported remain private to the module.
 
 ## Basic Importing
 
-Once you have a module with exports, you can access the functionality in another module by using the `import` keyword. An `import` statement has two parts: the identifiers you're importing and the module from which those identifiers should be imported. The basic form is as follows:
+Once you have a module with exports, you can access the functionality in another module by using the `import` keyword. The two parts of an `import` statement are the identifiers you're importing and the module from which those identifiers should be imported. This is the statement's basic form:
 
 ```js
 import { identifier1, identifier2 } from "example.js";
 ```
 
-The curly braces after `import` indicate the bindings to import from a given module. The keyword `from` indicates the module from which to import the given binding. The module is specified by a string representing the path to the module. Browsers use the same path format as you might pass to the `<script>` element, which means you must include a file extension. Node.js, on the other hand, follows its traditional convention of differentiating between local files and packages based on a filesystem prefix; for example, `example` would be a package and `./example.js` would be a local file. Specific details on how browsers and Node.js load modules are discussed later in this chapter.
+The curly braces after `import` indicate the bindings to import from a given module. The keyword `from` indicates the module from which to import the given binding. The module is specified by a string representing the path to the module. Browsers use the same path format you might pass to the `<script>` element, which means you must include a file extension. Node.js, on the other hand, follows its traditional convention of differentiating between local files and packages based on a filesystem prefix. For example, `example` would be a package and `./example.js` would be a local file. I'll discuss specific details on how browsers and Node.js load modules in the "Loading Modules" section, after finishing the basics of importing and exporting.
 
 I> The list of bindings to import looks similar to a destructured object, but it isn't one.
 
@@ -72,7 +78,7 @@ When importing a binding from a module, the binding acts as if it were defined u
 
 ### Importing a Single Binding
 
-Suppose that the first example in this section is in a module with the filename *example.js*. You can import and use bindings from that module in a number of ways. For instance, you can just import one identifier:
+Suppose that the first example in the "Basic Exporting" section is in a module with the filename *example.js*. You can import and use bindings from that module in a number of ways. For instance, you can just import one identifier:
 
 ```js
 // import just one
@@ -83,7 +89,7 @@ console.log(sum(1, 2));     // 3
 sum = 1;        // error
 ```
 
-Even though *example.js* exports more than just that one function this example imports only the `sum()` function. If you try to assign a new value to `sum`, the result is an error, as you cannot reassign imported bindings.
+Even though *example.js* exports more than just that one function this example imports only the `sum()` function. If you try to assign a new value to `sum`, the result is an error, as you can't reassign imported bindings.
 
 ### Importing Multiple Bindings
 
@@ -120,6 +126,13 @@ import { multiply } from "example.js";
 import { magicNumber } from "example.js";
 ```
 
+<!-- JZ: maybe also mention what happens when they're overwritten? Which takes precedence? You mention immutability earlier but this could still be unclear.
+
+import { sum } from "foo.js"
+import { sum } from "bar.js"
+
+-->
+
 Even though there are three `import` statements in this module, *example.js* will only be executed once. If other modules in the same application were to import bindings from *example.js*, those modules would use the same module instance this code uses.
 
 A> ### Module Syntax Limitations
@@ -133,7 +146,7 @@ A> }
 A> ```
 A>The `export` statement is inside an `if` statement, which isn't allowed. Exports cannot be conditional or done dynamically in any way. One reason module syntax exists is to let the JavaScript engine staticly determine what will be exported. As such, you can only use `export` at the top-level of a module.
 A>
-A> Similarly, you can't use `import` inside of a statement or a function, so this code also gives a syntax error:
+A> Similarly, you can't use `import` inside of a statement; you can only use it at the top-level. That means this code also gives a syntax error:
 A>
 A> ```js
 A> function tryImport() {
@@ -145,7 +158,7 @@ A> You can't dynamically import bindings for the same reason you can't dynamical
 
 ### A Subtle Quirk of Imported Bindings
 
-ECMAScript 6's `import` statements create read-only bindings to variables, functions, and classes rather than simply referencing the original bindings (as is the case with normal variables). Even though you can't change an imported identifier, the module that exports that identifier can. For example, suppose you want to use this module:
+ECMAScript 6's `import` statements create read-only bindings to variables, functions, and classes rather than simply referencing the original bindings like normal variables. Even though you can't change an imported identifier, the module that exports that identifier can. For example, suppose you want to use this module:
 
 ```js
 export var name = "Nicholas";
@@ -164,7 +177,9 @@ console.log(name);       // "Greg"
 
 name = "Nicholas";       // error
 ```
-The call to `setName("Greg")` goes back into the module from which `setName()` was exported and executes there, setting `name` to `"Greg"` instead. Note this change is automatically reflected on the imported `name` binding. That's because `name` is the local name for the exported `name` identifier; the `name` used in the code above and the `name` used in the module being imported from aren't the same.
+The call to `setName("Greg")` goes back into the module from which `setName()` was exported and executes there, setting `name` to `"Greg"` instead. Note this change is automatically reflected on the imported `name` binding. That's because `name` is the local name for the exported `name` identifier. The `name` used in the code above and the `name` used in the module being imported from aren't the same.
+
+<!-- JZ: I find this chapter a bit confusing since it almost warns about read-only but then shows how it's actually mutable. Not sure if just me or if could be made clearer. -->
 
 ## Renaming Exports and Imports
 
@@ -194,11 +209,11 @@ console.log(typeof add);            // "undefined"
 console.log(sum(1, 2));             // 3
 ```
 
-This code imports the `add()` function (the *import name*) and renames it to `sum()` (the local name). That means there is no identifier named `add` in this module.
+This code imports the `add()` function using the *import name* and renames it to `sum()` (the local name). That means there is no identifier named `add` in this module.
 
 ## Default Values in Modules
 
-The module syntax is really optimized for exporting and importing default values from modules, as this pattern was quite common in other module systems (such as CommonJS). The *default value* for a module is a single variable, function, or class as specified by the `default` keyword, and you can only set one default export per module. Using the `default` keyword with multiple exports is a syntax error.
+The module syntax is really optimized for exporting and importing default values from modules, as this pattern was quite common in other module systems, like CommonJS (another specification for using JavaScript outside the browser). The *default value* for a module is a single variable, function, or class as specified by the `default` keyword, and you can only set one default export per module. Using the `default` keyword with multiple exports is a syntax error.
 
 ### Exporting Default Values
 
@@ -212,10 +227,10 @@ export default function(num1, num2) {
 
 This module exports a function as its default value. The `default` keyword indicates that this is a default export. The function doesn't require a name because the module itself represents the function.
 
-You can also specify an identifier as being the default export by using the renaming syntax as follows:
+You can also specify an identifier as the default export by using the renaming syntax as follows:
 
 ```js
-// equivalent to previous example
+
 function sum(num1, num2) {
     return num1 + num2;
 }
@@ -223,7 +238,7 @@ function sum(num1, num2) {
 export { sum as default };
 ```
 
-The `as default` specifies that `sum` should be the default export of the module. This syntax is equivalent to the previous example.
+Using `as default` specifies that `sum` should be the default export of the module. This syntax is equivalent to the previous `export` example.
 
 ### Importing Default Values
 
@@ -257,9 +272,9 @@ console.log(sum(1, 2));     // 3
 console.log(color);         // "red"
 ```
 
-The comma separates the default local name from the non-defaults (which are also surrounded by curly braces). Keep in mind that the default must come before the non-defaults in the `import` statement.
+The comma separates the default local name from the non-defaults, which are also surrounded by curly braces. Keep in mind that the default must come before the non-defaults in the `import` statement.
 
-As with exporting defaults, you import defaults with the renaming syntax, too:
+As with exporting defaults, you can import defauts with the renaming syntax, too:
 
 ```js
 // equivalent to previous example
@@ -271,6 +286,8 @@ console.log(color);         // "red"
 
 In this code, the default export (`default`) is renamed to `sum` and the additional `color` export is also imported. This example is equivalent to the preceding example.
 
+<!-- JZ: I like how the sections are broken into export/import. This is really easy and interesting to follow. -->
+
 ## Re-exporting a Binding
 
 There may be a time when you'd like to re-export something that your module has imported (for instance, if you're creating a library out of several small modules). You can re-export an imported value with the patterns already discussed in this chapter as follows:
@@ -280,7 +297,7 @@ import { sum } from "example.js";
 export { sum }
 ```
 
-That works, but there's also a single statement that does the same thing:
+That works, but a single statement can also do the same thing:
 
 ```js
 export { sum } from "example.js";
@@ -300,7 +317,7 @@ If you'd like to export everything from another module, you can use the `*` patt
 export * from "example.js";
 ```
 
-By exporting everything, you're including the default as well as any named exports, which may affect what you can export from your module. For instance, if *example.js* has a default export, you'll be unable to define a new default export when using this syntax.
+By exporting everything, you're including the default as well as any named exports, which may affect what you can export from your module. For instance, if *example.js* has a default export, you'd be unable to define a new default export when using this syntax.
 
 ## Importing Without Bindings
 
@@ -339,7 +356,7 @@ I> Imports without bindings are most likely to be used to create polyfills and s
 
 ## Loading Modules
 
-While ECMAScript 6 defines the syntax for modules, it doesn't define how to load them. This is part of the complexity of a specification that's supposed to be agnostic to implementation environments. Rather than trying to create a single specification that would work for all JavaScript environments, ECMAScript 6 specifies only the syntax and abstracts out the loading mechanism to an undefined internal operation called `HostResolveImportedModule`. Web browsers and Node.js are left to decide how to implement `HostResolveImportedModule` in a way that makes sense for their respective environments.
+While ECMAScript 6 defines the syntax for modules, it doesn't define how to load them. This is part of the complexity of a specification that's supposed to be agnostic to implementation environments. Rather than trying to create a single specification that would work for all JavaScript environments, ECMAScript 6 specifies only the syntax and abstracts out the loading mechanism to an undefined internal operation called ` HostResolveImportedModule`. Web browsers and Node.js are left to decide how to implement `HostResolveImportedModule` in a way that makes sense for their respective environments.
 
 ### Using Modules in Web Browsers
 
@@ -353,7 +370,7 @@ In order to fully support modules, web browsers had to update each of these mech
 
 #### Using Modules With `<script>`
 
-The default behavior of the `<script>` element is to load JavaScript files as scripts (not modules). This happens when the `type` attribute is missing and also when the `type` attribute contains a JavaScript content type (such as `"text/javascript"`). The `<script>` element can then execute inline code or load the file specified in `src`. To support modules, the `"module"` value was added as a `type` option. Setting `type` to `"module"` tells the browser to load any inline code or code contained in the file specified by `src` as a module instead of a script. Here's a simple example:
+The default behavior of the `<script>` element is to load JavaScript files as scripts (not modules). This happens when the `type` attribute is missing or when the `type` attribute contains a JavaScript content type (such as `"text/javascript"`). The `<script>` element can then execute inline code or load the file specified in `src`. To support modules, the `"module"` value was added as a `type` option. Setting `type` to `"module"` tells the browser to load any inline code or code contained in the file specified by `src` as a module instead of a script. Here's a simple example:
 
 ```html
 <!-- load a module JavaScript file -->
@@ -402,21 +419,21 @@ Each module may `import` from one or more other modules, which complicates matte
 
 All modules, both those explicitly included using `<script type="module">` and those implicitly included using `import`, are loaded and executed in order. In the preceding example, the complete loading sequence is:
 
-1. Download and parse `module1.js`
-1. Recursively download and parse `import` resources in `module1.js`
-1. Parse the inline module
-1. Recursively download and parse `import` resources the inline module
-1. Download and parse `module2.js`
-1. Recursively download and parse `import` resources in `module2.js`
+1. Download and parse *module1.js*.
+1. Recursively download and parse `import` resources in *module1.js*.
+1. Parse the inline module.
+1. Recursively download and parse `import` resources in the inline module.
+1. Download and parse *module2.js*.
+1. Recursively download and parse `import` resources in *module2.js*
 
 Once loading is complete, nothing is executed until after the document has been completely parsed. After document parsing completes, the following actions happen:
 
-1. Recursively execute `import` resources for `module1.js`
-1. Execute `module1.js`
-1. Recursively execute `import` resources for the inline module
-1. Execute the inline module
-1. Recursively execute `import` resources for `module2.js`
-1. Execute `module2.js`
+1. Recursively execute `import` resources for *module1.js*.
+1. Execute *module1.js*.
+1. Recursively execute `import` resources for the inline module.
+1. Execute the inline module.
+1. Recursively execute `import` resources for *module2.js*.
+1. Execute *module2.js*.
 
 Notice that the inline module acts like the other two modules except that the code doesn't have to be downloaded first. Otherwise, the sequence of loading `import` resources and executing modules is exactly the same.
 
@@ -426,7 +443,7 @@ I> The `defer` attribute is ignored on `<script type="module">` because it alrea
 
 You may already be familiar with the `async` attribute on the `<script>` element. When used with scripts, `async` causes the script file to be executed as soon as the file is completely downloaded and parsed. The order of `async` scripts in the document doesn't affect the order in which the scripts are executed, though. The scripts are always executed as soon as they finish downloading without waiting for the containing document to finish parsing.
 
-The `async` attribute can be applied to modules as well. Using `async` on `<script type="module">` causes the module to execute in a manner similar to a script. The only difference is that all `import` resources for the module are downloaded before the module itself is executed. That guarantees all resources the module needs to function will be downloaded before the module executes; you just can't guarantee *when* the module will execute. Consider the following:
+The `async` attribute can be applied to modules as well. Using `async` on `<script type="module">` causes the module to execute in a manner similar to a script. The only difference is that all `import` resources for the module are downloaded before the module itself is executed. That guarantees all resources the module needs to function will be downloaded before the module executes; you just can't guarantee *when* the module will execute. Consider the following code:
 
 ```html
 <!-- no guarantee which one of these will execute first -->
@@ -474,5 +491,4 @@ Modules need not export anything if they are manipulating something in the globa
 
 Because modules must run in a different mode, browsers introduced `<script type="module">` to signal that the source file or inline code should be executed as a module. Module files loaded with `<script type="module">` are loaded as if the `defer` attribute is applied to them. Modules are also executed in the order in which they appear in the containing document once the document is fully parsed.
 
-<!-- @Nicholas: Just thought I'd add a placeholder here to add a bit about the Node.js
-     section to the summary! :) /JG -->
+<!-- TODO: Don't forget to add a bit about the Node.js section to the summary. -->
