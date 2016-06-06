@@ -98,21 +98,19 @@ let target = {
 };
 
 let proxy = new Proxy(target, {
-        set(trapTarget, key, value, receiver) {
+    set(trapTarget, key, value, receiver) {
 
-            // ignore existing properties so as not to affect them
-            if (!trapTarget.hasOwnProperty(key)) {
-                if (Object.is(Number(value), NaN)) {
-                    throw new TypeError("Property must be a number.");
-                }
+        // ignore existing properties so as not to affect them
+        if (!trapTarget.hasOwnProperty(key)) {
+            if (isNaN(NaN)) {
+                throw new TypeError("Property must be a number.");
             }
-
-            // add the property
-            return Reflect.set(trapTarget, key, value, receiver);
         }
-    });
 
-<!-- JZ: `Object.is(Number(value), NaN)` <-- I think this is what `isNaN(value)` would do as well -->
+        // add the property
+        return Reflect.set(trapTarget, key, value, receiver);
+    }
+});
 
 // adding a new property
 proxy.count = 1;
@@ -128,7 +126,7 @@ console.log(target.name);       // "proxy"
 proxy.anotherName = "proxy";
 ```
 
-This code defines a proxy trap that validates the value of any new property added to `target`. When `proxy.count = 1` is executed, the `set` trap is called. The `trapTarget` value is equal to `target`, `key` is `"count"`, `value` is `1`, and `receiver` (not used in this example) is `proxy`. There is no existing property named `count` in `target`, so the proxy validates `value` by passing it to `Number` and comparing to `NaN`. If the result is `NaN`, then the property value is not numeric and an error is thrown. Since this code sets `count` to `1`, the proxy calls `Reflect.set()` with the same four arguments that were passed to the trap to add the new property.
+This code defines a proxy trap that validates the value of any new property added to `target`. When `proxy.count = 1` is executed, the `set` trap is called. The `trapTarget` value is equal to `target`, `key` is `"count"`, `value` is `1`, and `receiver` (not used in this example) is `proxy`. There is no existing property named `count` in `target`, so the proxy validates `value` by passing it to `isNaN()`. If the result is `NaN`, then the property value is not numeric and an error is thrown. Since this code sets `count` to `1`, the proxy calls `Reflect.set()` with the same four arguments that were passed to the trap to add the new property.
 
 When `proxy.name` is assigned a string, the operation completes successfully. Since `target` already has a `name` property, that property is omitted from the validation check by calling the `trapTarget.hasOwnProperty()` method. This ensures that previously-existing non-numeric property values are still supported.
 
@@ -359,8 +357,6 @@ let proxy = new Proxy(target, {
         return Reflect.setPrototypeOf(trapTarget, proto);
     }
 });
-
-<!-- JZ: or just `getPrototypeOf: Reflect.getPrototypeOf`, right? -->
 
 let targetProto = Object.getPrototypeOf(target);
 let proxyProto = Object.getPrototypeOf(proxy);
@@ -818,9 +814,9 @@ console.log(instance.values);               // [1,2,3,4]
 Numbers(1, 2, 3, 4);
 ```
 
-This example throws an error when `Numbers()` is called without using `new`, which is similar to the example in the "Validating Function Parameters" section but doesn't use a proxy. Writing code like this is much simpler than using a proxy and is preferable if your only goal is to prevent calling the function without `new`. But sometimes you aren't in control of the function whose behavior needs to be modified. In that case, using a proxy makes sense.
+This example throws an error when `Numbers` is called without using `new`, which is similar to the example in the "Validating Function Parameters" section but doesn't use a proxy. Writing code like this is much simpler than using a proxy and is preferable if your only goal is to prevent calling the function without `new`. But sometimes you aren't in control of the function whose behavior needs to be modified. In that case, using a proxy makes sense.
 
-Suppose the `Numbers()` function is defined in code you can't modify. You know that the code relies on `new.target` and want to avoid that check while still calling the function. The behavior when using `new` is already set, so you can just use the `apply` trap:
+Suppose the `Numbers` function is defined in code you can't modify. You know that the code relies on `new.target` and want to avoid that check while still calling the function. The behavior when using `new` is already set, so you can just use the `apply` trap:
 
 ```js
 function Numbers(...values) {
@@ -955,8 +951,6 @@ This example creates a revocable proxy. It uses destructuring to assign the `pro
 ## Solving the Array Problem
 
 At the beginning of this chapter, I explained how developers couldn't mimic the behavior of an array accurately in JavaScript prior to ECMAScript 6. Proxies and the reflection API allow you to create an object that behaves in the same manner as the built-in `Array` type when properties are added and removed. To refresh your memory, here's an example showing the behavior that proxies help to mimick:
-
-<!-- JZ: another option is to just subclass Array, of course, now that it's possible in ES6 -->
 
 ```js
 let colors = ["red", "green", "blue"];
@@ -1126,8 +1120,6 @@ The `set` proxy trap in this code checks to see if `key` is `"length"` in order 
 
 This example adds four colors to `colors` and then sets the `length` property to 2. That effectively removes the items in positions 2 and 3, so they now return `undefined` when you attempt to access them. The `length` property is correctly set to 2 and the items in positions 0 and 1 are still accessible.
 
-<!-- JZ: would this still work with push/pop/etc. I don't remember if they set length implicitly or not -->
-
 With both behaviors implemented, you can easily create an object that mimics the behavior of built-in arrays. But doing so with a function isn't as desirable as creating a class to encapsulate this behavior, so the next step is to implement this functionality as a class.
 
 ### Implementing the MyArray Class
@@ -1289,14 +1281,9 @@ To get a better idea of when the `set` trap will be called on a prototype and wh
 let target = {};
 let thing = Object.create(new Proxy(target, {
     set(trapTarget, key, value, receiver) {
-
-        if (key ===)
         return Reflect.set(trapTarget, key, value, receiver);
     }
 }));
-
-<!-- JZ: if key===? -->
-
 
 console.log(thing.hasOwnProperty("name"));      // false
 
