@@ -215,6 +215,7 @@ function readFile(filename) {
             // check for errors
             if (err) {
                 reject(err);
+                return;
             }
 
             // the read succeeded
