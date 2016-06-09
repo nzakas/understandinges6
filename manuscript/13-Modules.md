@@ -61,7 +61,7 @@ Next, consider the `multiply()` function, which isn't exported when it's defined
 Once you have a module with exports, you can access the functionality in another module by using the `import` keyword. The two parts of an `import` statement are the identifiers you're importing and the module from which those identifiers should be imported. This is the statement's basic form:
 
 ```js
-import { identifier1, identifier2 } from "example.js";
+import { identifier1, identifier2 } from "./example.js";
 ```
 
 The curly braces after `import` indicate the bindings to import from a given module. The keyword `from` indicates the module from which to import the given binding. The module is specified by a string representing the path to the module. Browsers use the same path format you might pass to the `<script>` element, which means you must include a file extension. Node.js, on the other hand, follows its traditional convention of differentiating between local files and packages based on a filesystem prefix. For example, `example` would be a package and `./example.js` would be a local file. I'll discuss specific details on how browsers and Node.js load modules in the "Loading Modules" section, after finishing the basics of importing and exporting.
@@ -76,7 +76,7 @@ Suppose that the first example in the "Basic Exporting" section is in a module w
 
 ```js
 // import just one
-import { sum } from "example.js";
+import { sum } from "./example.js";
 
 console.log(sum(1, 2));     // 3
 
@@ -85,13 +85,15 @@ sum = 1;        // error
 
 Even though `example.js` exports more than just that one function this example imports only the `sum()` function. If you try to assign a new value to `sum`, the result is an error, as you can't reassign imported bindings.
 
+W> Make sure to include `/`, `./`, or `../` at the beginning of the file you're importing for best compatibility across browsers and Node.js.
+
 ### Importing Multiple Bindings
 
 If you want to import multiple bindings from the example module, you can explicitly list them out as follows:
 
 ```js
 // import multiple
-import { sum, multiply, magicNumber } from "example.js";
+import { sum, multiply, magicNumber } from "./example.js";
 console.log(sum(1, magicNumber));   // 8
 console.log(multiply(1, 2));        // 2
 ```
@@ -104,7 +106,7 @@ There's also a special case that allows you to import the entire module as a sin
 
 ```js
 // import everything
-import * as example from "example.js";
+import * as example from "./example.js";
 console.log(example.sum(1,
         example.magicNumber));          // 8
 console.log(example.multiply(1, 2));    // 2
@@ -115,9 +117,9 @@ In this code, all exported bindings in `example.js` are loaded into an object ca
 Keep in mind, however, that no matter how many times you use a module in `import` statements, the module will only be executed once. After the code to import the module executes, the instantiated module is kept in memory and reused whenever another `import` statement references it. Consider the following:
 
 ```js
-import { sum } from "example.js";
-import { multiply } from "example.js";
-import { magicNumber } from "example.js";
+import { sum } from "./example.js";
+import { multiply } from "./example.js";
+import { magicNumber } from "./example.js";
 ```
 
 Even though there are three `import` statements in this module, `example.js` will only be executed once. If other modules in the same application were to import bindings from `example.js`, those modules would use the same module instance this code uses.
@@ -137,7 +139,7 @@ A> Similarly, you can't use `import` inside of a statement; you can only use it 
 A>
 A> ```js
 A> function tryImport() {
-A>     import flag from "example.js";    // syntax error
+A>     import flag from "./example.js";    // syntax error
 A> }
 A> ```
 A>
@@ -156,7 +158,7 @@ export function setName(newName) {
 When you import those two bindings, the `setName()` function can change the value of `name`:
 
 ```js
-import { name, setName } from "example.js";
+import { name, setName } from "./example.js";
 
 console.log(name);       // "Nicholas"
 setName("Greg");
@@ -183,13 +185,13 @@ export { sum as add };
 Here, the `sum()` function (`sum` is the *local name*) is exported as `add()` (`add` is the *exported name*). That means when another module wants to import this function, it will have to use the name `add` instead:
 
 ```js
-import { add } from "example.js";
+import { add } from "./example.js";
 ```
 
 If the module importing the function wants to use a different name, it can also use `as`:
 
 ```js
-import { add as sum } from "example.js";
+import { add as sum } from "./example.js";
 console.log(typeof add);            // "undefined"
 console.log(sum(1, 2));             // 3
 ```
@@ -243,7 +245,7 @@ You can import a default value from a module using the following syntax:
 
 ```js
 // import the default
-import sum from "example.js";
+import sum from "./example.js";
 
 console.log(sum(1, 2));     // 3
 ```
@@ -263,7 +265,7 @@ export default function(num1, num2) {
 You can import both `color` and the default function using the following `import` statement:
 
 ```js
-import sum, { color } from "example.js";
+import sum, { color } from "./example.js";
 
 console.log(sum(1, 2));     // 3
 console.log(color);         // "red"
@@ -288,28 +290,28 @@ In this code, the default export (`default`) is renamed to `sum` and the additio
 There may be a time when you'd like to re-export something that your module has imported (for instance, if you're creating a library out of several small modules). You can re-export an imported value with the patterns already discussed in this chapter as follows:
 
 ```js
-import { sum } from "example.js";
+import { sum } from "./example.js";
 export { sum }
 ```
 
 That works, but a single statement can also do the same thing:
 
 ```js
-export { sum } from "example.js";
+export { sum } from "./example.js";
 ```
 
 This form of `export` looks into the specified module for the declaration of `sum` and then exports it. Of course, you can also choose to export a different name for the same value:
 
 ```js
-export { sum as add } from "example.js";
+export { sum as add } from "./example.js";
 ```
 
-Here, `sum` is imported from `"example.js"` and then exported as `add`.
+Here, `sum` is imported from `"./example.js"` and then exported as `add`.
 
 If you'd like to export everything from another module, you can use the `*` pattern:
 
 ```js
-export * from "example.js";
+export * from "./example.js";
 ```
 
 By exporting everything, you're including the default as well as any named exports, which may affect what you can export from your module. For instance, if `example.js` has a default export, you'd be unable to define a new default export when using this syntax.
@@ -337,7 +339,7 @@ Array.prototype.pushAll = function(items) {
 This is a valid module even though there are no exports or imports. This code can be used both as a module and a script. Since it doesn't export anything, you can use a simplified import to execute the module code without importing any bindings:
 
 ```js
-import "example.js";
+import "./example.js";
 
 let colors = ["red", "green", "blue"];
 let items = [];
@@ -374,7 +376,7 @@ The default behavior of the `<script>` element is to load JavaScript files as sc
 <!-- include a module inline -->
 <script type="module">
 
-import { sum } from "example.js";
+import { sum } from "./example.js";
 
 let result = sum(1, 2);
 
@@ -399,7 +401,7 @@ The `defer` attribute is optional for loading script files but is always applied
 
 <!-- this will execute second -->
 <script type="module">
-import { sum } from "example.js";
+import { sum } from "./example.js";
 
 let result = sum(1, 2);
 </script>
