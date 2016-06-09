@@ -212,7 +212,19 @@ export default function(num1, num2) {
 
 This module exports a function as its default value. The `default` keyword indicates that this is a default export. The function doesn't require a name because the module itself represents the function.
 
-You can also specify an identifier as the default export by using the renaming syntax as follows:
+You can also specify an identifier as the default export by by placing it after `export default`, such as:
+
+```js
+function sum(num1, num2) {
+    return num1 + num2;
+}
+
+export default sum;
+```
+
+Here, the `sum()` function is defined first and later exported as the default value of the module. You may want to choose this approach if the default value needs to be calculated.
+
+A third way to specify an identifier as the default export is by using the renaming syntax as follows:
 
 ```js
 
@@ -223,7 +235,7 @@ function sum(num1, num2) {
 export { sum as default };
 ```
 
-Using `as default` specifies that `sum` should be the default export of the module. This syntax is equivalent to the previous `export` example.
+The identifier `default` has special meaning in a renaming export and indicates a value should be the default for the module. Because `default` is a keyword in JavaScript, it can't be used for a variable, function, or class name (it can be used as a property name). So the use of `default` to rename an export is a special case to create a consistency with how non-default exports are defined. This syntax is useful if you want to use a single `export` statement to specify multiple exports, including the default, at once.
 
 ### Importing Default Values
 
