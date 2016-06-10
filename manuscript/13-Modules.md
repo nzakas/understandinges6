@@ -112,7 +112,7 @@ console.log(example.sum(1,
 console.log(example.multiply(1, 2));    // 2
 ```
 
-In this code, all exported bindings in `example.js` are loaded into an object called `example`. The named exports (the `sum()` function, the `multiple()` function, and `magicNumber`) are then accessible as properties on `example`.
+In this code, all exported bindings in `example.js` are loaded into an object called `example`. The named exports (the `sum()` function, the `multiple()` function, and `magicNumber`) are then accessible as properties on `example`. This import format is called a *namespace import* because the `example` object doesn't exist inside of the `example.js` file and is instead created to be used as a namespace object for all of the exported members of `example.js`.
 
 Keep in mind, however, that no matter how many times you use a module in `import` statements, the module will only be executed once. After the code to import the module executes, the instantiated module is kept in memory and reused whenever another `import` statement references it. Consider the following:
 
