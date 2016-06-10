@@ -64,7 +64,7 @@ Once you have a module with exports, you can access the functionality in another
 import { identifier1, identifier2 } from "./example.js";
 ```
 
-The curly braces after `import` indicate the bindings to import from a given module. The keyword `from` indicates the module from which to import the given binding. The module is specified by a string representing the path to the module. Browsers use the same path format you might pass to the `<script>` element, which means you must include a file extension. Node.js, on the other hand, follows its traditional convention of differentiating between local files and packages based on a filesystem prefix. For example, `example` would be a package and `./example.js` would be a local file. I'll discuss specific details on how browsers and Node.js load modules in the "Loading Modules" section, after finishing the basics of importing and exporting.
+The curly braces after `import` indicate the bindings to import from a given module. The keyword `from` indicates the module from which to import the given binding. The module is specified by a string representing the path to the module (called the *module specifier*). Browsers use the same path format you might pass to the `<script>` element, which means you must include a file extension. Node.js, on the other hand, follows its traditional convention of differentiating between local files and packages based on a filesystem prefix. For example, `example` would be a package and `./example.js` would be a local file. I'll discuss specific details on how browsers and Node.js load modules in the "Loading Modules" section, after finishing the basics of importing and exporting.
 
 I> The list of bindings to import looks similar to a destructured object, but it isn't one.
 
@@ -470,13 +470,52 @@ This example loads `module.js` as a module instead of a script by passing a seco
 
 Worker modules are generally the same as worker scripts, but there are a couple of exceptions. First, worker scripts are limited to being loaded from the same origin as the web page in which they are referenced, but worker modules aren't quite as limited. Although worker modules have the same default restriction, they can also load files that have appropriate Cross-Origin Resource Sharing (CORS) headers to allow access. Second, while a worker script can use the `self.importScripts()` method to load additional scripts into the worker, `self.importScripts()` always fails on worker modules because you should use `import` instead.
 
+### Browser Module Specifier Resolution
+
+All of the examples to this point in the chapter have used a relative module specifier path such as `"./example.js"`. Browsers require module specifiers to be in one of the following formats:
+
+* Begin with `/` to resolve from the root directory
+* Begin with `./` to resolve from the current directory
+* Begin with `../` to resolve from the parent directory
+* URL format
+
+For example, suppose you have a module file located at `https://www.example.com/modules/module.js` that contains the following code:
+
+```js
+// imports from https://www.example.com/modules/example1.js
+import { first } from "./example1.js";
+
+// imports from https://www.example.com/example2.js
+import { second } from "../example2.js";
+
+// imports from https://www.example.com/example3.js
+import { third } from "/example3.js";
+
+// imports from https://www2.example.com/example4.js
+import { fourth } from "https://www2.example.com/example4.js";
+```
+
+Each of the module specifiers in this example is valid for use in a browser, including the complete URL in the final line (you'd need to be sure `ww2.example.com` has properly configured its Cross-Origin Resource Sharing (CORS) headers to allow cross-domain loading). These are the only module specifier formats that browsers can resolve by default (though the not-yet-complete module loader specification will provide ways to resolve other formats). That means some normal looking module specifiers are actually invalid in browsers and will result in an error, such as:
+
+```js
+// invalid - doesn't begin with /, ./, or ../
+import { first } from "example.js";
+
+// invalid - doesn't begin with /, ./, or ../
+import { second } from "example/index.js";
+```
+
+Each of these module specifiers cannot be loaded by the browser. The two module specifiers are in an invalid format (missing the correct beginning characters) even though both will work when used as the value of `src` in a `<script>` tag. This is an intentional difference in behavior between `<script>` and `import`.
+
+Of course, these are just the rules for importing modules in browsers. Every JavaScript engine defines their own rules for how modules are loaded and imported. Next, I'll explain how Node.js handles modules and there are some significant differences from the way that browsers handle them.
+
 ### Using Modules in Node.js
 
 While adding support for modules in web browsers was fairly straightforward, adding modules to Node.js was a bit more involved. From the beginning, Node.js has supported the CommonJS module system and would need to continue supporting that format for the foreseeable future. Node.js needed to support JavaScript modules importing CommonJS modules and CommonJS modules importing JavaScript modules. The end result was to create a new file extension, `.mjs`, to use instead of `.js` whenever a file contains an JavaScript module.
 
 W> Node.js support for JavaScript modules hasn't been implemented at the time of my writing, so it's possible the details could change during implementation. Make sure to read the most current Node.js documentation about JavaScript module support.
 
-#### Module Resolution and Lookup Sequence
+#### Node.js Module Specifier Resolution
 
 The `.mjs` file extension signifies to Node.js that the file should be loaded as a JavaScript module. Node.js traditionally supported the `.js` and `.json` file extensions to load JavaScript and JSON files, respectively. The `.mjs` file extension has the highest precedence amongst the three file extensions, so Node.js will always look for `.mjs` files first whenever an extension is not present in the `import` statement (you must include the `.json` file extension explicitly to load a JSON file). Consider the following example:
 
