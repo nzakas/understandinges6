@@ -367,7 +367,7 @@ p1.then(function(value) {
 
 In this example, `Promise.resolve()` calls `thenable.then()` so that a promise state can be determined. The promise state for `thenable` is fulfilled because `resolve(42)` is called inside the `then()` method. A new promise called `p1` is created in the fulfilled state with the value passed from `thenable` (that is, 42), and the fulfillment handler for `p1` receives 42 as the value.
 
-The same process can be used with `Promise.reject()` to create a rejected promise from a thenable:
+The same process can be used to create a rejected promise from a thenable:
 
 ```js
 let thenable = {
@@ -376,7 +376,7 @@ let thenable = {
     }
 };
 
-let p1 = Promise.reject(thenable);
+let p1 = Promise.resolve(thenable);
 p1.catch(function(value) {
     console.log(value);     // 42
 });
