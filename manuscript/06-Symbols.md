@@ -340,17 +340,17 @@ The ability to define these properties on an object allows you to create objects
 ```js
 // effectively equivalent to /^.{10}$/
 let hasLengthOf10 = {
-    [Symbol.match] = function(value) {
+    [Symbol.match]: function(value) {
         return value.length === 10 ? [value.substring(0, 10)] : null;
     },
-    [Symbol.replace] = function(value, replacement) {
+    [Symbol.replace]: function(value, replacement) {
         return value.length === 10 ?
             replacement + value.substring(10) : value;
     },
-    [Symbol.search] = function(value) {
+    [Symbol.search]: function(value) {
         return value.length === 10 ? 0 : -1;
     },
-    [Symbol.split] = function(value) {
+    [Symbol.split]: function(value) {
         return value.length === 10 ? ["", ""] : [value];
     }
 };
