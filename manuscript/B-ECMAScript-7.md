@@ -4,7 +4,7 @@ The development of ECMAScript 6 took about four years, and after that, TC-39 dec
 
 More frequent releases mean that each new edition of ECMAScript should have fewer new features than ECMAScript 6. To signify this change, new versions of the specification no longer prominently feature the edition number, and instead refer to the year in which the specification was published. As a result, ECMAScript 6 is also known as ECMAScript 2015, and ECMAScript 7 is formally known as ECMAScript 2016. TC-39 expects to use the year-based naming system for all future ECMAScript editions.
 
-ECMAScript 2016 was finalized in March 2016 and contained only two additions to the language: a new mathematical operator and a new array method. Both are covered in this appendix.
+ECMAScript 2016 was finalized in March 2016 and contained only three additions to the language: a new mathematical operator, a new array method, and a new syntax error. Both are covered in this appendix.
 
 ## The Exponentiation Operator
 
@@ -112,3 +112,46 @@ console.log(values.includes(-0));       // true
 ```
 
 Here, both `indexOf()` and `includes()` find `+0` when `-0` is passed because the two values are considered equal. Note that this is different than the behavior of the `Object.is()` method, which considers `+0` and `-0` to be different values.
+
+## Change to Function-Scoped Strict Mode
+
+When strict mode was introduced in ECMAScript 5, the language was quite a bit simpler than it became in ECMAScript 6. Despite that, ECMAScript 6 still allowed you to specify strict mode using the `"use strict"` directive either in the global scope (which would make all code run in strict mode) or in a function scope (so only the function would run in strict mode). The latter ended up being a problem in ECMAScript 6 due to the more complex ways that parameters could be defined, specifically, with destructuring and default parameter values. To understand the problem, consider the following code:
+
+```js
+function doSomething(first = this) {
+    "use strict";
+
+    return first;
+}
+```
+
+Here, the named parameter `first` is assigned a default value of `this`. What would you expect the value of `first` to be? The ECMAScript 6 specification instructed JavaScript engines to treat the parameters as being run in strict mode in this case, so `this` should be equal to `undefined`. However, implementing parameters running in strict mode when `"use strict"` is present inside the function turned out to be quite difficult because parameter default values can be functions as well. This difficulty led to most JavaScript engines not implementing this feature (so `this` would be equal to the global object).
+
+As a result of the implementation difficulty, ECMAScript 2016 makes it illegal to have a `"use strict"` directive inside of a function whose parameters are either destructured or have default values. Only *simple parameter lists*, those that don't contain destructuring or default values, are allowed when `"use strict"` is present in the body of a function. Here are some examples:
+
+```js
+// okay - using simple parameter list
+function okay(first, second) {
+    "use strict";
+
+    return first;
+}
+
+// syntax error
+function notOkay1(first, second=first) {
+    "use strict";
+
+    return first;
+}
+
+// syntax error
+function notOkay2({ first, second }) {
+    "use strict";
+
+    return first;
+}
+```
+
+You can still use `"use strict"` with simple parameter lists, which is why `okay()` works as you would expect (the same as it would in ECMAScript 5). The `notOkay1()` function is a syntax error because you can no longer use `"use strict"` in functions with default parameter values. Similarly, the `notOkay2()` function is a syntax error because you can't use `"use strict" in a function with destructured parameters.
+
+Overall, this change removes both a point of confusion for JavaScript developers and an implementation problem for JavaScript engines.
