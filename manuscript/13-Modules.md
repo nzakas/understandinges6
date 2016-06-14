@@ -49,7 +49,7 @@ function multiply(num1, num2) {
 }
 
 // ...and then export it later
-export multiply;
+export { multiply };
 ```
 
 There are a few things to notice in this example. First, apart from the `export` keyword, every declaration is exactly the same as it would be otherwise. Each exported function or class also has a name; that's because exported function and class declarations require a name. You can't export anonymous functions or classes using this syntax unless you use the `default` keyword (discussed in detail in the "Default Values in Modules" section).
