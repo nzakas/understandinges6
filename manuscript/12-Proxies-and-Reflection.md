@@ -102,7 +102,7 @@ let proxy = new Proxy(target, {
 
         // ignore existing properties so as not to affect them
         if (!trapTarget.hasOwnProperty(key)) {
-            if (isNaN(NaN)) {
+            if (isNaN(value)) {
                 throw new TypeError("Property must be a number.");
             }
         }
