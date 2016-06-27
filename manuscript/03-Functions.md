@@ -259,8 +259,8 @@ function add(first = second, second) {
     return first + second;
 }
 
-console.log(add(1, 1));             // 2
-console.log(add(undefined, 1));     // throws error
+console.log(add(1, 1));         // 2
+console.log(add(undefined, 1)); // throws error
 ```
 
 The call to `add(undefined, 1)` throws an error because `second` is defined after `first` and is therefore unavailable as a default value. To understand why that happens, it's important to revisit temporal dead zones.
