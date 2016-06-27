@@ -358,7 +358,7 @@ class PersonClass {
     [methodName]() {
         console.log(this.name);
     }
-};
+}
 
 let me = new PersonClass("Nicholas");
 me.sayName();           // "Nicholas"
