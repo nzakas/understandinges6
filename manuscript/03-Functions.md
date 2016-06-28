@@ -686,7 +686,7 @@ var person = new Person("Nicholas");
 var anotherPerson = new AnotherPerson("Nicholas");  // error!
 ```
 
-In this code, `new.target` must be `Person` in order to work correctly. When `new AnotherPerson("Nicholas")` is called, `new.target` is set to `AnotherPerson`, so the subsequent call to `Person.call(this, name)` will throw an error even though `new.target` is defined.
+In this code, `new.target` must be `Person` in order to work correctly. When `new AnotherPerson("Nicholas")` is called, the subsequent call to `Person.call(this, name)` will throw an error because `new.target` is `undefined` inside of the `Person` constructor (it was called without `new`).
 
 W> Warning: Using `new.target` outside of a function is a syntax error.
 
