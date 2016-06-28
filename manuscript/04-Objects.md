@@ -415,14 +415,12 @@ The call to `super.getGreeting()` is the same as `Object.getPrototypeOf(this).ge
 ```js
 let friend = {
     getGreeting: function() {
-        return super.getGreeting() + ", hi!";
+        return super.getGreeting() + ", hi!"; // syntax error!
     }
 };
-
-friend.getGreeting();       // throws error!
 ```
 
-This example uses a named property with a function, and the call to `friend.getGreeting()` throws an error because `super` is invalid in this context.
+This example uses a named property with a function, and the call to `super.getGreeting()` results in a syntax error because `super` is invalid in this context.
 
 The `super` reference is really powerful when you have multiple levels of inheritance, because in that case, `Object.getPrototypeOf()` no longer works in all circumstances. For example:
 
