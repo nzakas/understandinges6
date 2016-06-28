@@ -129,7 +129,7 @@ An internal `[[PromiseState]]` property is set to `"pending"`, `"fulfilled"`, or
 
 The `then()` method is present on all promises and takes two arguments. The first argument is a function to call when the promise is fulfilled. Any additional data related to the asynchronous operation is passed to this fulfillment function. The second argument is a function to call when the promise is rejected. Similar to the fulfillment function, the rejection function is passed any additional data related to the rejection.
 
-I> Any object that implements the `then()` method in this way is called a *thenable*. All promises are thenables, but all thenables are not promises.
+I> Any object that implements the `then()` method in this way is called a *thenable*. All promises are thenables, but not all thenables are promises.
 
 Both arguments to `then()` are optional, so you can listen for any combination of fulfillment and rejection. For example, consider this set of `then()` calls:
 
