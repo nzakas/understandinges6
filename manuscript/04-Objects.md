@@ -415,7 +415,8 @@ The call to `super.getGreeting()` is the same as `Object.getPrototypeOf(this).ge
 ```js
 let friend = {
     getGreeting: function() {
-        return super.getGreeting() + ", hi!"; // syntax error!
+        // syntax error
+        return super.getGreeting() + ", hi!";
     }
 };
 ```
@@ -499,7 +500,7 @@ function shareGreeting() {
 
 This example defines `person` with a single method called `getGreeting()`. The `[[HomeObject]]` for `getGreeting()` is `person` by virtue of assigning the function directly to an object. The `shareGreeting()` function, on the other hand, has no `[[HomeObject]]` specified because it wasn't assigned to an object when it was created. In most cases, this difference isn't important, but it becomes very important when using `super` references.
 
-Any reference to `super` uses the `[[HomeObject]]` to determine what to do. The first step is to call `Object.getPrototypeOf()` on the `[[HomeObject]]` to retrieve a reference to the prototype. Then, the prototype is searched for a function with the same name. Last, the `this`-binding is set and the method is called. If a function has no `[[HomeObject]]`, or has a different `[[HomeObject]]` than expected, then this process won't work and an error is thrown, as in this code snippet:
+Any reference to `super` uses the `[[HomeObject]]` to determine what to do. The first step is to call `Object.getPrototypeOf()` on the `[[HomeObject]]` to retrieve a reference to the prototype. Then, the prototype is searched for a function with the same name. Last, the `this` binding is set and the method is called. Here's an example:
 
 ```js
 let person = {
@@ -516,41 +517,10 @@ let friend = {
 };
 Object.setPrototypeOf(friend, person);
 
-function getGlobalGreeting() {
-    return super.getGreeting() + ", yo!";
-}
-
 console.log(friend.getGreeting());  // "Hello, hi!"
-
-getGlobalGreeting();                // throws error
 ```
 
-Calling `friend.getGreeting()` returns a string, while calling `getGlobalGreeting()` throws an error for improper use of the `super` keyword. Since the `getGlobalGreeting()` function has no `[[HomeObject]]`, it's not possible to perform a lookup.
-
-Interestingly, the situation doesn't change if `getGlobalGreeting()` is later assigned as a method on the `friend` object, like this:
-
-```js
-// prototype is person
-let friend = {
-    getGreeting() {
-        return super.getGreeting() + ", hi!";
-    }
-};
-Object.setPrototypeOf(friend, person);
-
-function getGlobalGreeting() {
-    return super.getGreeting() + ", yo!";
-}
-
-console.log(friend.getGreeting());  // "Hello, hi!"
-
-// assign getGreeting to the global function
-friend.getGreeting = getGlobalGreeting;
-
-friend.getGreeting();               // throws error
-```
-
-Here the `getGlobalGreeting()` function overwrites the previously-defined `getGreeting()` method on the `friend` object. Calling `friend.getGreeting()` at that point results in an error as well, because it's now calling the `getGlobalGreeting()` method, which does not have a `[[HomeObject]]`. The value of `[[HomeObject]]` is only set when the function is first created, so even assigning the method onto an object doesn't fix the problem.
+Calling `friend.getGreeting()` returns a string, which combines the value from `person.getGreeting()` with `", hi!". The `[[HomeObject]]` of `friend.getGreeting()` is `friend`, and the prototype of `friend` is `person`, so `super.getGreeting()` is equivalent to `person.getGreeting.call(this)`.
 
 ## Summary
 
@@ -564,4 +534,4 @@ Enumeration order for own properties is now clearly defined in ECMAScript 6. Whe
 
 It's now possible to modify an object's prototype after it's already created, thanks to ECMAScript 6's `Object.setPrototypeOf()` method.
 
-Finally, you can use the `super` keyword to call methods on an object's prototype. It can be used either standalone as a method, such as `super()`, or as a reference to the prototype itself, such as `super.getGreeting()`. In both cases, the `this`-binding is set up automatically to work with the current value of `this`.
+Finally, you can use the `super` keyword to call methods on an object's prototype. The `this` binding inside a method invoked using `super` is set up to automatically work with the current value of `this`.
