@@ -450,7 +450,7 @@ Table 10-1 shows an abbreviated version of the complete list of type-specific vi
 |`Int16Array`    |2           |16-bit two's complement signed integer|`short`|
 |`Uint16Array`   |2           |16-bit unsigned integer             |`unsigned short`|
 |`Int32Array`    |4           |32-bit two's complement signed integer|`int`|
-|`Uint32Array`   |4           |32-bit unsigned integer unsigned    |`int`|
+|`Uint32Array`   |4           |32-bit unsigned integer    |`int`|
 |`Float32Array`  |4           |32-bit IEEE floating point          |`float`|
 |`Float64Array`  |8           |64-bit IEEE floating point          |`double`|
 

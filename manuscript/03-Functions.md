@@ -442,7 +442,7 @@ b b
 
 The `arguments` object always correctly reflects the parameters that were passed into a function regardless of rest parameter usage.
 
-That's all you really need to know about rest parameters to get started using them. The next section continues the parameter discussion with the spread operator, which is closely related to rest parameters.
+That's all you really need to know about rest parameters to get started using them.
 
 
 ## Increased Capabilities of the Function Constructor
