@@ -51,7 +51,7 @@ The reflection API, represented by the `Reflect` object, is a collection of meth
 |`preventExtensions`       | `Object.preventExtensions()` | `Reflect.preventExtensions()` |
 |`getOwnPropertyDescriptor`| `Object.getOwnPropertyDescriptor()` | `Reflect.getOwnPropertyDescriptor()` |
 |`defineProperty`          | `Object.defineProperty()` | `Reflect.defineProperty` |
-|`ownKeys`                 | `Object.getOwnPropertyNames()` and `Object.getOwnPropertySymbols()` | `Reflect.ownKeys()` |
+|`ownKeys`                 | `Object.getOwnPropertyNames()`, `Object.keys()` and `Object.getOwnPropertySymbols()` | `Reflect.ownKeys()` |
 |`apply`                   | Calling a function | `Reflect.apply()` |
 |`construct`               | Calling a function with `new` | `Reflect.construct()` |
 
