@@ -6,7 +6,7 @@ ECMAScript 6 functions make a big leap forward, taking into account years of com
 
 ## Functions with Default Parameter Values
 
-Functions in JavaScript are unique in that they allow any number of parameters to be passed, regardless of the number of parameters declared in the function definition. This allows you to define functions that can handle different numbers of parameters, often by just filling in default values when parameters aren't provided. This section covers how default parameters work both in and prior to ECMAScript 6, along with some important information on the `arguments` object, using expressions as parameters, and another TDZ.
+Functions in JavaScript are unique in that they allow any number of arguments to be passed, regardless of the number of parameters declared in the function definition. This allows you to define functions that can handle different numbers of arguments, often by just filling in default values when parameters aren't provided. This section covers how default parameters work both in and prior to ECMAScript 6, along with some important information on the `arguments` object, using expressions as parameters, and another TDZ.
 
 ### Simulating Default Parameter Values in ECMAScript 5
 
@@ -71,7 +71,7 @@ makeRequest("/foo", 500, function(body) {
 
 ECMAScript 6 considers `url` to be required, which is why `"/foo"` is passed in all three calls to `makeRequest()`. The two parameters with a default value are considered optional.
 
-It's possible to specify default values for any arguments, including those that appear before arguments without default values in the function declaration. For example, this is fine:
+It's possible to specify default values for any parameters, including those that appear before parameters without default values in the function declaration. For example, this is fine:
 
 ```js
 function makeRequest(url, timeout = 2000, callback) {
@@ -252,7 +252,7 @@ console.log(add(1));        // 7
 
 This example sets `second` equal to the value returned by `getValue(first)`, so while `add(1, 1)` still returns 2, `add(1)` returns 7 (1 + 6).
 
-The ability to reference parameters from default parameter assignments works only for previous arguments, so earlier arguments do not have access to later arguments. For example:
+The ability to reference parameters from default parameter assignments works only for previous items, so earlier parameters do not have access to later ones. For example:
 
 ```js
 function add(first = second, second) {
@@ -355,7 +355,7 @@ console.log(bookData.author);   // "Nicholas C. Zakas"
 console.log(bookData.year);     // 2015
 ```
 
-This function mimics the `pick()` method from the *Underscore.js* library, which returns a copy of a given object with some specified subset of the original object's properties. This example defines only one argument and expects the first argument to be the object from which to copy properties. Every other argument passed is the name of a property that should be copied on the result.
+This function mimics the `pick()` method from the *Underscore.js* library, which returns a copy of a given object with some specified subset of the original object's properties. This example defines only one parameter and expects the first argument to be the object from which to copy properties. Every other argument passed is the name of a property that should be copied on the result.
 
 There are a couple of things to notice about this `pick()` function. First, it's not at all obvious that the function can handle more than one parameter. You could define several more parameters, but you would always fall short of indicating that this function can take any number of parameters. Second, because the first parameter is named and used directly, when you look for the properties to copy, you have to start in the `arguments` object at index 1 instead of index 0. Remembering to use the appropriate indices with `arguments` isn't necessarily difficult, but it's one more thing to keep track of.
 
@@ -412,7 +412,7 @@ let object = {
 };
 ```
 
-This restriction exists because object literal setters are restricted to a single argument. Rest parameters are, by definition, an infinite number of arguments, so they're not allowed in this context.
+This restriction exists because object literal setters are restricted to a single parameter. Rest parameters are, by definition, an infinite number of arguments, so they're not allowed in this context.
 
 #### How Rest Parameters Affect the arguments Object
 
@@ -797,7 +797,7 @@ I> Note: Arrow functions also have a `name` property that follows the same rule 
 
 ### Arrow Function Syntax
 
-The syntax for arrow functions comes in many flavors depending upon what you're trying to accomplish. All variations begin with function arguments, followed by the arrow, followed by the body of the function. Both the arguments and the body can take different forms depending on usage. For example, the following arrow function takes a single argument and simply returns it:
+The syntax for arrow functions comes in many flavors depending upon what you're trying to accomplish. All variations begin with function parameters, followed by the arrow, followed by the body of the function. Both the parameters and the body can take different forms depending on usage. For example, the following arrow function takes a single argument and simply returns it:
 
 ```js
 var reflect = value => value;
@@ -809,9 +809,9 @@ var reflect = function(value) {
 };
 ```
 
-When there is only one argument for an arrow function, that one argument can be used directly without any further syntax. The arrow comes next and the expression to the right of the arrow is evaluated and returned. Even though there is no explicit `return` statement, this arrow function will return the first argument that is passed in.
+When there is only one parameter for an arrow function, that one parameter can be used directly without any further syntax. The arrow comes next and the expression to the right of the arrow is evaluated and returned. Even though there is no explicit `return` statement, this arrow function will return the first argument that is passed in.
 
-If you are passing in more than one argument, then you must include parentheses around those arguments, like this:
+If you are passing in more than one argument, then you must include parentheses around parameters, like this:
 
 ```js
 var sum = (num1, num2) => num1 + num2;
@@ -823,7 +823,7 @@ var sum = function(num1, num2) {
 };
 ```
 
-The `sum()` function simply adds two arguments together and returns the result. The only difference between this arrow function and the `reflect()` function is that the arguments are enclosed in parentheses with a comma separating them (like traditional functions).
+The `sum()` function simply adds two arguments together and returns the result. The only difference between this arrow function and the `reflect()` function is that the parameters are enclosed in parentheses with a comma separating them (like traditional functions).
 
 If there are no arguments to the function, then you must include an empty set of parentheses in the declaration, as follows:
 
