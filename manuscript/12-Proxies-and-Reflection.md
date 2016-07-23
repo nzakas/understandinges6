@@ -648,11 +648,11 @@ The `Object.getOwnPropertyDescriptor()` method returns `undefined` because it co
 
 ## The `ownKeys` Trap
 
-The `ownKeys` proxy trap intercepts the internal method `[[OwnPropertyKeys]]` and allows you to override that behavior by returning an array of values. This array is used in three methods: the `Object.getOwnPropertyNames()` method, the `Object.getOwnPropertySymbols()` method, and the `Object.assign()` method. (The `Object.assign()` method uses the array to determine which properties to copy.)
+The `ownKeys` proxy trap intercepts the internal method `[[OwnPropertyKeys]]` and allows you to override that behavior by returning an array of values. This array is used in four methods: the `Object.getOwnPropertyNames()` method, the `Object.keys()` method, the `Object.getOwnPropertySymbols()` method, and the `Object.assign()` method. (The `Object.assign()` method uses the array to determine which properties to copy.)
 
-The default behavior for the `ownKeys` trap is implemented by the `Reflect.ownKeys()` method and returns an array of all own property keys, including both strings and symbols. The `Object.getOwnProperyNames()` method filters symbols out of the array and returns the result while `Object.getOwnPropertySymbols()` filters the strings out of the array and returns the result. The `Object.assign()` method uses the array with both strings and symbols.
+The default behavior for the `ownKeys` trap is implemented by the `Reflect.ownKeys()` method and returns an array of all own property keys, including both strings and symbols. The `Object.getOwnProperyNames()` and the `Object.keys()` methods filter symbols out of the array and returns the result while `Object.getOwnPropertySymbols()` filters the strings out of the array and returns the result. The `Object.assign()` method uses the array with both strings and symbols.
 
-The `ownKeys` trap receives a single argument, the target, and must always return an array or array-like object; otherwise, an error is thrown. You can use the `ownKeys` trap to, for example, filter out certain property keys that you don't want used when the `Object.getOwnPropertyNames()` method, the `Object.getOwnPropertySymbols()` method, or the `Object.assign()` method is used. Suppose you don't want to include any property names that begin with an underscore character, a common notation in JavaScript indicating that a field is private. You can use the `ownKeys` trap to filter out those keys as follows:
+The `ownKeys` trap receives a single argument, the target, and must always return an array or array-like object; otherwise, an error is thrown. You can use the `ownKeys` trap to, for example, filter out certain property keys that you don't want used when the `Object.getOwnPropertyNames()` method, `Object.keys()` method, the `Object.getOwnPropertySymbols()` method, or the `Object.assign()` method is used. Suppose you don't want to include any property names that begin with an underscore character, a common notation in JavaScript indicating that a field is private. You can use the `ownKeys` trap to filter out those keys as follows:
 
 ```js
 let proxy = new Proxy({}, {
@@ -670,18 +670,35 @@ proxy._name = "private";
 proxy[nameSymbol] = "symbol";
 
 let names = Object.getOwnPropertyNames(proxy),
+    keys = Object.keys(proxy),
     symbols = Object.getOwnPropertySymbols(proxy);
 
 console.log(names.length);      // 1
 console.log(names[0]);          // "proxy"
 
+console.log(keys.length);      // 1
+console.log(keys[0]);          // "proxy"
+
 console.log(symbols.length);    // 1
 console.log(symbols[0]);        // "Symbol(name)"
+
 ```
 
-This example uses an `ownKeys` trap that first calls `Reflect.ownKeys()` to get the default list of keys for the target. Then, the `filter()` method is used to filter out keys that are strings and begin with an underscore character. Then, three properties are added to the `proxy` object: `name`, `_name`, and `nameSymbol`. When `Object.getOwnPropertyNames()` is called on `proxy`, only the `name` property is returned. Similarly, only `nameSymbol` is returned when `Object.getOwnPropertySymbols()` is called on `proxy`. The `_name` property doesn't appear in either result because it is filtered out.
+This example uses an `ownKeys` trap that first calls `Reflect.ownKeys()` to get the default list of keys for the target. Then, the `filter()` method is used to filter out keys that are strings and begin with an underscore character. Then, three properties are added to the `proxy` object: `name`, `_name`, and `nameSymbol`. When `Object.getOwnPropertyNames()` or `Object.keys()` is called on `proxy`, only the `name` property is returned. Similarly, only `nameSymbol` is returned when `Object.getOwnPropertySymbols()` is called on `proxy`. The `_name` property doesn't appear in either result because it is filtered out.
 
-While the `ownKeys` proxy trap allows you to alter the keys returned from a small set of operations, it doesn't affect more commonly used operations such as the `for-of` loop and the `Object.keys()` method. Those can't be altered using proxies.
+The `ownKeys` proxy trap also affects the `for-in` loop. 
+
+```
+for (let key in proxy) {
+    console.log(key);           
+}
+```
+
+This code outputs the following:
+
+```
+"name"
+```
 
 ## Function Proxies with the `apply` and `construct` Traps
 
