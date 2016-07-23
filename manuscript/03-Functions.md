@@ -412,7 +412,7 @@ let object = {
 };
 ```
 
-This restriction exists because object literal setters are restricted to a single parameter. Rest parameters are, by definition, an infinite number of arguments, so they're not allowed in this context.
+This restriction exists because object literal setters are restricted to a single parameter. Rest parameters are, by definition, an infinite number of items, so they're not allowed in this context.
 
 #### How Rest Parameters Affect the arguments Object
 
