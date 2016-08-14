@@ -675,7 +675,7 @@ console.log(ints[0]);           // 0
 
 This code attempts to use the string value `"hi"` in an `Int16Array`. Of course, strings are invalid data types in typed arrays, so the value is inserted as `0` instead. The `length` of the array is still one, and even though the `ints[0]` slot exists, it just contains `0`.
 
-All methods that modify values in a typed array enforce the same restriction. For example, if the function passed to `map()` returns an invalid value for the type array, then `0` is used instead:
+All methods that modify values in a typed array enforce the same restriction. For example, if the function passed to `map()` returns an invalid value for the typed array, then `0` is used instead:
 
 ```js
 let ints = new Int16Array([25, 50]),
