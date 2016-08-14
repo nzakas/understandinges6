@@ -598,7 +598,7 @@ The `getOwnPropertyDescriptor` trap has a slightly different restriction that re
 let proxy = new Proxy({}, {
     getOwnPropertyDescriptor(trapTarget, key) {
         return {
-            name: "proxy";
+            name: "proxy"
         };
     }
 });
