@@ -1,4 +1,4 @@
-# Understanding ECMAScript 7 (2016)
+# Appendix B: Understanding ECMAScript 7 (2016) 
 
 The development of ECMAScript 6 took about four years, and after that, TC-39 decided that such a long development process was unsustainable. Instead, they moved to a yearly release cycle to ensure new language features would make it into development sooner.
 
