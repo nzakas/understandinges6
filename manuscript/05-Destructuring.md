@@ -341,8 +341,6 @@ You can destructure nested arrays in a manner similar to destructuring nested ob
 ```js
 let colors = [ "red", [ "green", "lightgreen" ], "blue" ];
 
-// later
-
 let [ firstColor, [ secondColor ] ] = colors;
 
 console.log(firstColor);        // "red"
