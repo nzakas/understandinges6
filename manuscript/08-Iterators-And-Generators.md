@@ -565,7 +565,7 @@ let set = new Set([1, 2, 3, 3, 3, 4, 5]),
 console.log(array);             // [1,2,3,4,5]
 ```
 
-This code uses the spread operator inside an array literal to fill in that array with the values from `set`. The spread operator works on all iterables and uses the default iterator to determine which values to include. All values are read from the iterator and inserted into the array in the order in which values where returned from the iterator. This example works because sets are iterables, but it can work equally well on any iterable. Here's another example:
+This code uses the spread operator inside an array literal to fill in that array with the values from `set`. The spread operator works on all iterables and uses the default iterator to determine which values to include. All values are read from the iterator and inserted into the array in the order in which values were returned from the iterator. This example works because sets are iterables, but it can work equally well on any iterable. Here's another example:
 
 ```js
 let map = new Map([ ["name", "Nicholas"], ["age", 25]]),
