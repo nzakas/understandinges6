@@ -245,7 +245,7 @@ Keep in mind that the executor runs immediately when `readFile()` is called. Whe
 // add this function to the job queue after 500ms have passed
 setTimeout(function() {
     console.log("Timeout");
-}, 500)
+}, 500);
 
 console.log("Hi!");
 ```
