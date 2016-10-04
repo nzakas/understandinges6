@@ -1,4 +1,4 @@
-# Appendix B: Understanding ECMAScript 7 (2016) 
+# Appendix B: Understanding ECMAScript 7 (2016)
 
 The development of ECMAScript 6 took about four years, and after that, TC-39 decided that such a long development process was unsustainable. Instead, they moved to a yearly release cycle to ensure new language features would make it into development sooner.
 
@@ -89,7 +89,7 @@ Here, calling `values.includes()` returns `true` for the value of `1` and `false
 
 ### Value Comparison
 
-The value comparison performed by the `includes()` method uses the `===` operotor with one exception: `NaN` is considered equal to `NaN` even though `NaN === NaN` evaluates to `false`. This is different than the behavior of the `indexOf()` method, which strictly uses `===` for comparison. To see the difference, consider this code:
+The value comparison performed by the `includes()` method uses the `===` operator with one exception: `NaN` is considered equal to `NaN` even though `NaN === NaN` evaluates to `false`. This is different than the behavior of the `indexOf()` method, which strictly uses `===` for comparison. To see the difference, consider this code:
 
 ```js
 let values = [1, NaN, 2];
