@@ -365,11 +365,11 @@ let match1 = message1.match(hasLengthOf10),
 console.log(match1);            // null
 console.log(match2);            // ["Hello John"]
 
-let replace1 = message1.replace(hasLengthOf10),
-    replace2 = message2.replace(hasLengthOf10);
+let replace1 = message1.replace(hasLengthOf10, "Howdy!"),
+    replace2 = message2.replace(hasLengthOf10, "Howdy!");
 
 console.log(replace1);          // "Hello world"
-console.log(replace2);          // "Hello John"
+console.log(replace2);          // "Howdy!"
 
 let search1 = message1.search(hasLengthOf10),
     search2 = message2.search(hasLengthOf10);
