@@ -674,10 +674,10 @@ let names = Object.getOwnPropertyNames(proxy),
     symbols = Object.getOwnPropertySymbols(proxy);
 
 console.log(names.length);      // 1
-console.log(names[0]);          // "proxy"
+console.log(names[0]);          // "name"
 
 console.log(keys.length);      // 1
-console.log(keys[0]);          // "proxy"
+console.log(keys[0]);          // "name"
 
 console.log(symbols.length);    // 1
 console.log(symbols[0]);        // "Symbol(name)"
