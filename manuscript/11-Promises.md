@@ -539,13 +539,13 @@ window.onunhandledrejection = function(event) {
     console.log(event.type);                    // "unhandledrejection"
     console.log(event.reason.message);          // "Explosion!"
     console.log(rejected === event.promise);    // true
-});
+};
 
 window.onrejectionhandled = function(event) {
     console.log(event.type);                    // "rejectionhandled"
     console.log(event.reason.message);          // "Explosion!"
     console.log(rejected === event.promise);    // true
-});
+};
 
 rejected = Promise.reject(new Error("Explosion!"));
 ```
