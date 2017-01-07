@@ -520,7 +520,7 @@ Object.setPrototypeOf(friend, person);
 console.log(friend.getGreeting());  // "Hello, hi!"
 ```
 
-Calling `friend.getGreeting()` returns a string, which combines the value from `person.getGreeting()` with `", hi!". The `[[HomeObject]]` of `friend.getGreeting()` is `friend`, and the prototype of `friend` is `person`, so `super.getGreeting()` is equivalent to `person.getGreeting.call(this)`.
+Calling `friend.getGreeting()` returns a string, which combines the value from `person.getGreeting()` with `", hi!"`. The `[[HomeObject]]` of `friend.getGreeting()` is `friend`, and the prototype of `friend` is `person`, so `super.getGreeting()` is equivalent to `person.getGreeting.call(this)`.
 
 ## Summary
 
