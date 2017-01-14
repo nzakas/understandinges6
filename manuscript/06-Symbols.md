@@ -74,7 +74,7 @@ console.log(person[firstName]);     // "Nicholas"
 console.log(person[lastName]);      // "Zakas"
 ```
 
-This example first uses a computed object literal property to create the `firstName` symbol property. The property is created as nonenumerable, which is different from computed properties created using nonsymbol names. The following line then sets the property to be read-only. Later, a read-only `lastName` symbol property is created using the `Object.defineProperties()` method. A computed object literal property is used once again, but this time, it's part of the second argument to the `Object.defineProperties()` call.
+This example first uses a computed object literal property to create the `firstName` symbol property. The following line then sets the property to be read-only. Later, a read-only `lastName` symbol property is created using the `Object.defineProperties()` method. A computed object literal property is used once again, but this time, it's part of the second argument to the `Object.defineProperties()` call.
 
 While symbols can be used in any place that computed property names are allowed, you'll need to have a system for sharing these symbols between different pieces of code in order to use them effectively.
 
@@ -598,7 +598,7 @@ In general, you shouldn't need to define `Symbol.unscopables` for your objects u
 
 ## Summary
 
-Symbols are a new type of primitive value in JavaScript and are used to create nonenumerable properties that can't be accessed without referencing the symbol.
+Symbols are a new type of primitive value in JavaScript and are used to create properties that can't be accessed without referencing the symbol.
 
 While not truly private, these properties are harder to accidentally change or overwrite and are therefore suitable for functionality that needs a level of protection from developers.
 
