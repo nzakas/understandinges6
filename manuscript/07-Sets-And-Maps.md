@@ -360,7 +360,7 @@ After this code executes, the reference to `key` in the weak set is no longer ac
 
 These examples show that weak sets share some characteristics with regular sets, but there are some key differences. Those are:
 
-1. In a `WeakSet` instance, the `add()` method, `has()` method, and `delete()` method all throw an error when passed a non-object.
+1. In a `WeakSet` instance, the `add()` method throws an error when passed a non-object (`has()` and `delete()` always return `false` for non-object arguments).
 1. Weak sets are not iterables and therefore cannot be used in a `for-of` loop.
 1. Weak sets do not expose any iterators (such as the `keys()` and `values()` methods), so there is no way to programmatically determine the contents of a weak set.
 1. Weak sets do not have a `forEach()` method.
