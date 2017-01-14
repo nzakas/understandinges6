@@ -211,7 +211,7 @@ I> Overwriting a method defined with a well-known symbol changes an ordinary obj
 
 ### The Symbol.hasInstance Property
 
-Every function has a `Symbol.hasInstance` method that determines whether or not a given object is an instance of that function. The method is defined on `Function.prototype` so that all functions inherit the default behavior for the `instanceof` property. The `Symbol.hasInstance` property itself is defined as nonwritable and nonconfigurable as well as nonenumerable, to ensure it doesn't get overwritten by mistake.
+Every function has a `Symbol.hasInstance` method that determines whether or not a given object is an instance of that function. The method is defined on `Function.prototype` so that all functions inherit the default behavior for the `instanceof` property and the method is nonwritable and nonconfigurable as well as nonenumerable, to ensure it doesn't get overwritten by mistake.
 
 The `Symbol.hasInstance` method accepts a single argument: the value to check. It returns true if the value passed is an instance of the function. To understand how `Symbol.hasInstance` works, consider the following code:
 
