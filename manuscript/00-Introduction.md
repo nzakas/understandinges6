@@ -79,7 +79,7 @@ function doSomething() {
 }
 ```
 
-Within a code block, comments to the right of a `console.log()` statement indicate the output you'll see in the browser or Node.js console when the code is execute, for example:
+Within a code block, comments to the right of a `console.log()` statement indicate the output you'll see in the browser or Node.js console when the code is executed, for example:
 
 ```js
 console.log("Hi");      // "Hi"
