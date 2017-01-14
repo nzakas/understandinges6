@@ -673,7 +673,7 @@ You can also check that `new.target` was called with a specific constructor. For
 
 ```js
 function Person(name) {
-    if (typeof new.target === Person) {
+    if (new.target === Person) {
         this.name = name;   // using new
     } else {
         throw new Error("You must use new with Person.")
