@@ -341,11 +341,10 @@ The ability to define these properties on an object allows you to create objects
 // effectively equivalent to /^.{10}$/
 let hasLengthOf10 = {
     [Symbol.match]: function(value) {
-        return value.length === 10 ? [value.substring(0, 10)] : null;
+        return value.length === 10 ? [value] : null;
     },
     [Symbol.replace]: function(value, replacement) {
-        return value.length === 10 ?
-            replacement + value.substring(10) : value;
+        return value.length === 10 ? replacement : value;
     },
     [Symbol.search]: function(value) {
         return value.length === 10 ? 0 : -1;
