@@ -685,8 +685,6 @@ console.log(symbols[0]);        // "Symbol(name)"
 
 This example uses an `ownKeys` trap that first calls `Reflect.ownKeys()` to get the default list of keys for the target. Then, the `filter()` method is used to filter out keys that are strings and begin with an underscore character. Then, three properties are added to the `proxy` object: `name`, `_name`, and `nameSymbol`. When `Object.getOwnPropertyNames()` and `Object.keys()` is called on `proxy`, only the `name` property is returned. Similarly, only `nameSymbol` is returned when `Object.getOwnPropertySymbols()` is called on `proxy`. The `_name` property doesn't appear in either result because it is filtered out.
 
-While the `ownKeys` proxy trap allows you to alter the keys returned from a small set of operations, it doesn't affect more commonly used operations such as the `for-of` loop and the `Object.keys()` method. Those can't be altered using proxies.
-
 I> The `ownKeys` trap also affects the `for-in` loop, which calls the trap to determine which keys to use inside of the loop.
 
 ## Function Proxies with the `apply` and `construct` Traps
