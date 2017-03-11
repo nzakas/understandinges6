@@ -2,7 +2,7 @@
 
 ECMAScript 5 and ECMAScript 6 were both developed with demystifying JavaScript functionality in mind. For example, JavaScript environments contained nonenumerable and nonwritable object properties before ECMAScript 5, but developers couldn't define their own nonenumerable or nonwritable properties. ECMAScript 5 included the `Object.defineProperty()` method to allow developers to do what JavaScript engines could do already.
 
-ECMAScript 6 gives developers further access to JavaScript engine capabilities by adding built-in objects. To allow developers to create built-in objects, the language exposes the inner workings of objects through *proxies*, which are wrappers that can intercept and alter low-level operations of the JavaScript engine. This chapter starts by describing the problem that proxies are meant to address in detail, and then discusses how you can create and use proxies effectively.
+ECMAScript 6 gives developers further access to JavaScript engine capabilities previously available only to built-in objects. The language exposes the inner workings of objects through *proxies*, which are wrappers that can intercept and alter low-level operations of the JavaScript engine. This chapter starts by describing the problem that proxies are meant to address in detail, and then discusses how you can create and use proxies effectively.
 
 ## The Array Problem
 
