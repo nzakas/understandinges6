@@ -169,9 +169,7 @@ console.log(typeof PersonClass.prototype.sayName);  // "function"
 
 As this example demonstrates, class expressions do not require identifiers after `class`. Aside from the syntax, class expressions are functionally equivalent to class declarations.
 
-In anonymous class expressions, as in the previous example, `PersonClass.name` is an empty string. When using a class declaration, `PersonClass.name` would be `"PersonClass"`.
-
-I> Whether you use class declarations or class expressions is mostly a matter of style. Unlike function declarations and function expressions, both class declarations and class expressions are not hoisted, and so the choice has little bearing on the runtime behavior of the code. The only significant difference is that anonymous class expressions have a `name` property that is an empty string while class declarations always have a `name` property equal to the class name (for instance, `PersonClass.name` is `"PersonClass"` when using a class declaration).
+Whether you use class declarations or class expressions is mostly a matter of style. Unlike function declarations and function expressions, both class declarations and class expressions are not hoisted, and so the choice has little bearing on the runtime behavior of the code.
 
 ### Named Class Expressions
 
