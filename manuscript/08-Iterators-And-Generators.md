@@ -474,7 +474,7 @@ Arrays and sets return their values by default, while maps return the same array
 
 A> ### Destructuring and for-of Loops
 A>
-A> The behavior of the default constructor for maps is also helpful when used in `for-of` loops with destructuring, as in this example:
+A> The behavior of the default iterator for maps is also helpful when used in `for-of` loops with destructuring, as in this example:
 A>
 A> ```js
 A> let data = new Map();
