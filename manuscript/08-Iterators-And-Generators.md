@@ -50,13 +50,13 @@ function createIterator(items) {
 
 var iterator = createIterator([1, 2, 3]);
 
-console.log(iterator.next());           // "{ value: 1, done: false }"
-console.log(iterator.next());           // "{ value: 2, done: false }"
-console.log(iterator.next());           // "{ value: 3, done: false }"
-console.log(iterator.next());           // "{ value: undefined, done: true }"
+console.log(iterator.next());           // "{ done: false, value: 1 }"
+console.log(iterator.next());           // "{ done: false, value: 2 }"
+console.log(iterator.next());           // "{ done: false, value: 3 }"
+console.log(iterator.next());           // "{ done: true, value: undefined }"
 
 // for all further calls
-console.log(iterator.next());           // "{ value: undefined, done: true }"
+console.log(iterator.next());           // "{ done: true, value: undefined }"
 ```
 
 The `createIterator()` function returns an object with a `next()` method. Each time the method is called, the next value in the `items` array is returned as `value`. When `i` is 3, `done` becomes `true` and the ternary conditional operator that sets `value` evaluates to `undefined`. These two results fulfill the special last case for iterators in ECMAScript 6, where `next()` is called on an iterator after the last piece of data has been used.
