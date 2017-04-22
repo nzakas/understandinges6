@@ -1101,21 +1101,21 @@ This `run()` function can run any generator that uses `yield` to achieve asynchr
 
 The only concern is ensuring that asynchronous functions like `readFile()` return a promise that correctly identifies its state. For Node.js built-in methods, that means you'll have to convert those methods to return promises instead of using callbacks.
 
-A> ### Future Asynchronous Task Running
-A>
-A> At the time of my writing, there is ongoing work around bringing a simpler syntax to asynchronous task running in JavaScript. Work is progressing on an `await` syntax that would closely mirror the promise-based example in the preceding section. The basic idea is to use a function marked with `async` instead of a generator and use `await` instead of `yield` when calling a function, such as:
-A>
-A> ```js
-A> (async function() {
-A>     let contents = await readFile("config.json");
-A>     doSomethingWith(contents);
-A>     console.log("Done");
-A> });
-A> ```
-A>
-A> The `async` keyword before `function` indicates that the function is meant to run in an asynchronous manner. The `await` keyword signals that the function call to `readFile("config.json")` should return a promise, and if it doesn't, the response should be wrapped in a promise. Just as with the implementation of `run()` in the preceding section, `await` will throw an error if the promise is rejected and otherwise return the value from the promise. The end result is that you get to write asynchronous code as if it were synchronous without the overhead of managing an iterator-based state machine.
-A>
-A> The `await` syntax is expected to be finalized in ECMAScript 2017 (ECMAScript 8).
+### Future Asynchronous Task Running
+
+At the time of my writing, there is ongoing work around bringing a simpler syntax to asynchronous task running in JavaScript. Work is progressing on an `await` syntax that would closely mirror the promise-based example in the preceding section. The basic idea is to use a function marked with `async` instead of a generator and use `await` instead of `yield` when calling a function, such as:
+
+```js
+(async function() {
+    let contents = await readFile("config.json");
+    doSomethingWith(contents);
+    console.log("Done");
+});
+```
+
+The `async` keyword before `function` indicates that the function is meant to run in an asynchronous manner. The `await` keyword signals that the function call to `readFile("config.json")` should return a promise, and if it doesn't, the response should be wrapped in a promise. Just as with the implementation of `run()` in the preceding section, `await` will throw an error if the promise is rejected and otherwise return the value from the promise. The end result is that you get to write asynchronous code as if it were synchronous without the overhead of managing an iterator-based state machine.
+
+The `await` syntax is expected to be finalized in ECMAScript 2017 (ECMAScript 8).
 
 
 ## Summary

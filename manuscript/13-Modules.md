@@ -124,26 +124,27 @@ import { magicNumber } from "./example.js";
 
 Even though there are three `import` statements in this module, `example.js` will only be executed once. If other modules in the same application were to import bindings from `example.js`, those modules would use the same module instance this code uses.
 
-A> ### Module Syntax Limitations
-A>
-A> An important limitation of both `export` and `import` is that they must be used outside other statements and functions. For instance, this code will give a syntax error:
-A>
-A> ```js
-A> if (flag) {
-A>     export flag;    // syntax error
-A> }
-A> ```
-A>The `export` statement is inside an `if` statement, which isn't allowed. Exports cannot be conditional or done dynamically in any way. One reason module syntax exists is to let the JavaScript engine staticly determine what will be exported. As such, you can only use `export` at the top-level of a module.
-A>
-A> Similarly, you can't use `import` inside of a statement; you can only use it at the top-level. That means this code also gives a syntax error:
-A>
-A> ```js
-A> function tryImport() {
-A>     import flag from "./example.js";    // syntax error
-A> }
-A> ```
-A>
-A> You can't dynamically import bindings for the same reason you can't dynamically export bindings. The `export` and `import` keywords are designed to be static so that tools like text editors can easily tell what information is available from a module.
+### Module Syntax Limitations
+
+An important limitation of both `export` and `import` is that they must be used outside other statements and functions. For instance, this code will give a syntax error:
+
+```js
+if (flag) {
+    export flag;    // syntax error
+}
+```
+
+The `export` statement is inside an `if` statement, which isn't allowed. Exports cannot be conditional or done dynamically in any way. One reason module syntax exists is to let the JavaScript engine staticly determine what will be exported. As such, you can only use `export` at the top-level of a module.
+
+Similarly, you can't use `import` inside of a statement; you can only use it at the top-level. That means this code also gives a syntax error:
+
+```js
+function tryImport() {
+    import flag from "./example.js";    // syntax error
+}
+```
+
+You can't dynamically import bindings for the same reason you can't dynamically export bindings. The `export` and `import` keywords are designed to be static so that tools like text editors can easily tell what information is available from a module.
 
 ### A Subtle Quirk of Imported Bindings
 
