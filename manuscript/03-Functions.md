@@ -304,7 +304,7 @@ function add(first = second, second) {
 }
 
 console.log(add(1, 1));         // 2
-console.log(add(undefined, 1)); // throws error
+console.log(add(undefined, 1)); // 2
 ```
 
 The calls to `add(1, 1)` and `add(undefined, 1)` in this example now map to this code behind the scenes:
@@ -906,7 +906,7 @@ In this code, the IIFE is used to create an object with a `getName()` method. Th
 You can accomplish the same thing using arrow functions, so long as you wrap the arrow function in parentheses:
 
 ```js
-let person = ((name) => {
+let person = (name => {
 
     return {
         getName: function() {
