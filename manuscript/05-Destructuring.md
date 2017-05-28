@@ -39,22 +39,22 @@ console.log(name);      // "foo"
 
 In this code, the value of `node.type` is stored in a variable called `type` and the value of `node.name` is stored in a variable called `name`. This syntax is the same as the object literal property initializer shorthand introduced in Chapter 4. The identifiers `type` and `name` are both declarations of local variables and the properties to read the value from on the `node` object.
 
-A> #### Don't Forget the Initializer
-A>
-A>When using destructuring to declare variables using `var`, `let`, or `const`, you must supply an initializer (the value after the equals sign). The following lines of code will all throw syntax errors due to a missing initializer:
-A>
-A>```js
-A>// syntax error!
-A>var { type, name };
-A>
-A>// syntax error!
-A>let { type, name };
-A>
-A>// syntax error!
-A>const { type, name };
-A>```
-A>
-A>While `const` always requires an initializer, even when using nondestructured variables, `var` and `let` only require initializers when using destructuring.
+#### Don't Forget the Initializer
+
+When using destructuring to declare variables using `var`, `let`, or `const`, you must supply an initializer (the value after the equals sign). The following lines of code will all throw syntax errors due to a missing initializer:
+
+```js
+// syntax error!
+var { type, name };
+
+// syntax error!
+let { type, name };
+
+// syntax error!
+const { type, name };
+```
+
+While `const` always requires an initializer, even when using nondestructured variables, `var` and `let` only require initializers when using destructuring.
 
 #### Destructuring Assignment
 
@@ -99,7 +99,7 @@ console.log(name);      // "foo"
 
 The `outputInfo()` function is called with a destructuring assignment expression. The expression evaluates to `node` because that is the value of the right side of the expression. The assignment to `type` and `name` both behave as normal and `node` is passed into `outputInfo()`.
 
-W> An error is thrown when the right side of the destructuring assignment expression (the expression after `=`) evaluates to `null` or `undefined`. This happens because any attempt to read a property of `null` or `undefined` results in a runtime error.
+An error is thrown when the right side of the destructuring assignment expression (the expression after `=`) evaluates to `null` or `undefined`. This happens because any attempt to read a property of `null` or `undefined` results in a runtime error.
 
 #### Default Values
 
