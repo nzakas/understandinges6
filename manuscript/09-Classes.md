@@ -420,7 +420,7 @@ class Collection {
     }
 
     *[Symbol.iterator]() {
-        yield *this.items.values();
+        yield *Object.values(this.items);
     }
 }
 
