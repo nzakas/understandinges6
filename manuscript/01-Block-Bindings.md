@@ -269,7 +269,7 @@ for (var i = 0; i < 10; i++) {
         return function() {
             console.log(value);
         }
-    }(i)));
+    })(i));
 }
 
 funcs.forEach(function(func) {
