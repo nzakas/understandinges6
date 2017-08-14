@@ -212,7 +212,7 @@ Developers have used the `indexOf()` method to identify strings inside other str
 * The `startsWith()` method returns true if the given text is found at the beginning of the string. It returns false if not.
 * The `endsWith()` method returns true if the given text is found at the end of the string. It returns false if not.
 
-Each methods accept two arguments: the text to search for and an optional index from which to start the search. When the second argument is provided, `includes()` and `startsWith()` start the match from that index while `endsWith()` starts the match from the length of the string minus the second argument; when the second argument is omitted, `includes()` and `startsWith()` search from the beginning of the string, while `endsWith()` starts from the end. In effect, the second argument minimizes the amount of the string being searched. Here are some examples showing these three methods in action:
+Each methods accept two arguments: the text to search for and an optional index from which to start the search. When the second argument is provided, `includes()` and `startsWith()` start the match from that index while `endsWith()` overwrites the considered length of the string to search in; when the second argument is omitted, `includes()` and `startsWith()` search from the beginning of the string, while `endsWith()` uses the default value which is the length of the string. In effect, the second argument minimizes the amount of the string being searched. Here are some examples showing these three methods in action:
 
 ```js
 var msg = "Hello world!";
@@ -230,7 +230,7 @@ console.log(msg.endsWith("o", 8));          // true
 console.log(msg.includes("o", 8));          // false
 ```
 
-The first six calls don't include a second parameter, so they'll search the whole string if needed. The last three calls only check part of the string. The call to `msg.startsWith("o", 4)` starts the match by looking at index 4 of the `msg` string, which is the "o" in "Hello". The call to `msg.endsWith("o", 8)` starts the match at index 4 as well, because the `8` argument is subtracted from the string length (12). The call to `msg.includes("o", 8)` starts the match from index 8, which is the "r" in "world".
+The first six calls don't include a second parameter, so they'll search the whole string if needed. The last three calls only check part of the string. The call to `msg.startsWith("o", 4)` starts the match by looking at index 4 of the `msg` string, which is the "o" in "Hello". The call to `msg.endsWith("o", 8)` ends the match at index 7, because the `8` argument is the length of the string searched instead of length (12). The call to `msg.includes("o", 8)` starts the match from index 8, which is the "r" in "world".
 
 While these three methods make identifying the existence of substrings easier, each only returns a boolean value. If you need to find the actual position of one string within another, use the `indexOf()` or `lastIndexOf()` methods.
 
