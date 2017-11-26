@@ -218,7 +218,7 @@ This `for-of` loop first calls the `Symbol.iterator` method on the `values` arra
 
 If you are simply iterating over values in an array or collection, then it's a good idea to use a `for-of` loop instead of a `for` loop. The `for-of` loop is generally less error-prone because there are fewer conditions to keep track of. Save the traditional `for` loop for more complex control conditions.
 
-W> The `for-of` statement will throw an error when used on, a non-iterable object, `null`, or `undefined`.
+W> The `for-of` statement will throw an error when used on a non-iterable object, `null`, or `undefined`.
 
 ### Accessing the Default Iterator
 
