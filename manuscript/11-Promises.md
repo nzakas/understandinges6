@@ -375,7 +375,7 @@ let thenable = {
     }
 };
 
-let p1 = Promise.reject(thenable);
+let p1 = Promise.resolve(thenable);
 p1.catch(function(value) {
     console.log(value);     // 42
 });
