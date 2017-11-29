@@ -688,11 +688,11 @@ let p1 = new Promise(function(resolve, reject) {
 });
 
 p1.catch(function(value) {
-    // first fulfillment handler
+    // rejection handler
     console.log(value);         // "42"
     return value + 1;
 }).then(function(value) {
-    // second fulfillment handler
+    // fulfillment handler
     console.log(value);         // "43"
 });
 ```
