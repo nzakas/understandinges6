@@ -74,7 +74,7 @@ console.log(person[firstName]);     // "Nicholas"
 console.log(person[lastName]);      // "Zakas"
 ```
 
-This example first uses a computed object literal property to create the `firstName` symbol property. The property is created as nonenumerable, which is different from computed properties created using nonsymbol names. The following line then sets the property to be read-only. Later, a read-only `lastName` symbol property is created using the `Object.defineProperties()` method. A computed object literal property is used once again, but this time, it's part of the second argument to the `Object.defineProperties()` call.
+This example first uses a computed object literal property to create the `firstName` symbol property. The following line then sets the property to be read-only. Later, a read-only `lastName` symbol property is created using the `Object.defineProperties()` method. A computed object literal property is used once again, but this time, it's part of the second argument to the `Object.defineProperties()` call.
 
 While symbols can be used in any place that computed property names are allowed, you'll need to have a system for sharing these symbols between different pieces of code in order to use them effectively.
 
@@ -211,7 +211,7 @@ I> Overwriting a method defined with a well-known symbol changes an ordinary obj
 
 ### The Symbol.hasInstance Property
 
-Every function has a `Symbol.hasInstance` method that determines whether or not a given object is an instance of that function. The method is defined on `Function.prototype` so that all functions inherit the default behavior for the `instanceof` property. The `Symbol.hasInstance` property itself is defined as nonwritable and nonconfigurable as well as nonenumerable, to ensure it doesn't get overwritten by mistake.
+Every function has a `Symbol.hasInstance` method that determines whether or not a given object is an instance of that function. The method is defined on `Function.prototype` so that all functions inherit the default behavior for the `instanceof` property and the method is nonwritable and nonconfigurable as well as nonenumerable, to ensure it doesn't get overwritten by mistake.
 
 The `Symbol.hasInstance` method accepts a single argument: the value to check. It returns true if the value passed is an instance of the function. To understand how `Symbol.hasInstance` works, consider the following code:
 
@@ -308,10 +308,10 @@ let collection = {
 let messages = [ "Hi" ].concat(collection);
 
 console.log(messages.length);    // 3
-console.log(messages);           // ["hi","Hello","world"]
+console.log(messages);           // ["Hi","Hello","world"]
 ```
 
-The `collection` object in this example is set up to look like an array: it has a `length` property and two numeric keys. The `Symbol.isConcatSpreadable` property is set to `true` to indicate that the property values should be added as individual items to an array. When `collection` is passed to the `concat()` method, the resulting array has `"Hello"` and `"world"` as separate items after the `"hi"` element.
+The `collection` object in this example is set up to look like an array: it has a `length` property and two numeric keys. The `Symbol.isConcatSpreadable` property is set to `true` to indicate that the property values should be added as individual items to an array. When `collection` is passed to the `concat()` method, the resulting array has `"Hello"` and `"world"` as separate items after the `"Hi"` element.
 
 I> You can also set `Symbol.isConcatSpreadable` to `false` on array subclasses to prevent items from being separated by `concat()` calls. Subclassing is discussed in Chapter 8.
 
@@ -340,17 +340,16 @@ The ability to define these properties on an object allows you to create objects
 ```js
 // effectively equivalent to /^.{10}$/
 let hasLengthOf10 = {
-    [Symbol.match] = function(value) {
-        return value.length === 10 ? [value.substring(0, 10)] : null;
+    [Symbol.match]: function(value) {
+        return value.length === 10 ? [value] : null;
     },
-    [Symbol.replace] = function(value, replacement) {
-        return value.length === 10 ?
-            replacement + value.substring(10) : value;
+    [Symbol.replace]: function(value, replacement) {
+        return value.length === 10 ? replacement : value;
     },
-    [Symbol.search] = function(value) {
+    [Symbol.search]: function(value) {
         return value.length === 10 ? 0 : -1;
     },
-    [Symbol.split] = function(value) {
+    [Symbol.split]: function(value) {
         return value.length === 10 ? ["", ""] : [value];
     }
 };
@@ -365,11 +364,11 @@ let match1 = message1.match(hasLengthOf10),
 console.log(match1);            // null
 console.log(match2);            // ["Hello John"]
 
-let replace1 = message1.replace(hasLengthOf10),
-    replace2 = message2.replace(hasLengthOf10);
+let replace1 = message1.replace(hasLengthOf10, "Howdy!"),
+    replace2 = message2.replace(hasLengthOf10, "Howdy!");
 
 console.log(replace1);          // "Hello world"
-console.log(replace2);          // "Hello John"
+console.log(replace2);          // "Howdy!"
 
 let search1 = message1.search(hasLengthOf10),
     search2 = message2.search(hasLengthOf10);
@@ -388,7 +387,7 @@ The `hasLengthOf10` object is intended to work like a regular expression that ma
 
 While this is a simple example, the ability to perform more complex matches than are currently possible with regular expressions opens up a lot of possibilities for custom pattern matchers.
 
-### The Symbol.toPrimitive Symbol
+### The Symbol.toPrimitive Method
 
 JavaScript frequently attempts to convert objects into primitive values implicitly when certain operations are applied. For instance, when you compare a string to an object using the double equals (`==`) operator, the object is converted into a primitive value before comparing. Exactly what primitive value should be used was previously an internal operation, but ECMAScript 6 exposes that value (making it changeable) through the `Symbol.toPrimitive` method.
 
@@ -438,7 +437,7 @@ console.log(freezing / 2);              // 16
 console.log(String(freezing));          // "32°"
 ```
 
-This script defines a `Temperature` constructor and overrides the default `Symbol.toPrimitive` method on the prototype. A different value is returned depending on whether the `hint` argument indicates string, number, or default mode (the `hint` argument is filled in by the JavaScript engine). In string mode, the `Temperature()` function returns the temperature with the Unicode degrees symbol. In number mode, it returns just the numeric value, and in default mode, it appends the word "degrees" after the number.
+This script defines a `Temperature` constructor and overrides the default `Symbol.toPrimitive` method on the prototype. A different value is returned depending on whether the `hint` argument indicates string, number, or default mode (the `hint` argument is filled in by the JavaScript engine). In string mode, the `Symbol.toPrimitive` method returns the temperature with the Unicode degrees symbol. In number mode, it returns just the numeric value, and in default mode, it appends the word "degrees" after the number.
 
 Each of the log statements triggers a different `hint` argument value. The `+` operator triggers default mode by setting `hint` to `"default"`, the `/` operator triggers number mode by setting `hint` to `"number"`, and the `String()` function triggers string mode by setting `hint` to `"string"`. Returning different values for all three modes is possible, it's much more common to set the default mode to be the same as string or number mode.
 
@@ -585,7 +584,7 @@ Array.prototype[Symbol.unscopables] = Object.assign(Object.create(null), {
     copyWithin: true,
     entries: true,
     fill: true,
-    find, true,
+    find: true,
     findIndex: true,
     keys: true,
     values: true
@@ -598,7 +597,7 @@ In general, you shouldn't need to define `Symbol.unscopables` for your objects u
 
 ## Summary
 
-Symbols are a new type of primitive value in JavaScript and are used to create nonenumerable properties that can't be accessed without referencing the symbol.
+Symbols are a new type of primitive value in JavaScript and are used to create properties that can't be accessed without referencing the symbol.
 
 While not truly private, these properties are harder to accidentally change or overwrite and are therefore suitable for functionality that needs a level of protection from developers.
 

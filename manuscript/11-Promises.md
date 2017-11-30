@@ -129,7 +129,7 @@ An internal `[[PromiseState]]` property is set to `"pending"`, `"fulfilled"`, or
 
 The `then()` method is present on all promises and takes two arguments. The first argument is a function to call when the promise is fulfilled. Any additional data related to the asynchronous operation is passed to this fulfillment function. The second argument is a function to call when the promise is rejected. Similar to the fulfillment function, the rejection function is passed any additional data related to the rejection.
 
-I> Any object that implements the `then()` method in this way is called a *thenable*. All promises are thenables, but all thenables are not promises.
+I> Any object that implements the `then()` method in this way is called a *thenable*. All promises are thenables, but not all thenables are promises.
 
 Both arguments to `then()` are optional, so you can listen for any combination of fulfillment and rejection. For example, consider this set of `then()` calls:
 
@@ -215,6 +215,7 @@ function readFile(filename) {
             // check for errors
             if (err) {
                 reject(err);
+                return;
             }
 
             // the read succeeded
@@ -244,7 +245,7 @@ Keep in mind that the executor runs immediately when `readFile()` is called. Whe
 // add this function to the job queue after 500ms have passed
 setTimeout(function() {
     console.log("Timeout");
-}, 500)
+}, 500);
 
 console.log("Hi!");
 ```
@@ -366,7 +367,7 @@ p1.then(function(value) {
 
 In this example, `Promise.resolve()` calls `thenable.then()` so that a promise state can be determined. The promise state for `thenable` is fulfilled because `resolve(42)` is called inside the `then()` method. A new promise called `p1` is created in the fulfilled state with the value passed from `thenable` (that is, 42), and the fulfillment handler for `p1` receives 42 as the value.
 
-The same process can be used with `Promise.reject()` to create a rejected promise from a thenable:
+The same process can be used with `Promise.resolve()` to create a rejected promise from a thenable:
 
 ```js
 let thenable = {
@@ -381,7 +382,7 @@ p1.catch(function(value) {
 });
 ```
 
-This example is similar to the last except that `Promise.reject()` is used on `thenable`. When `thenable.then()` executes, a new promise is created in the rejected state with a value of 42. That value is then passed to the rejection handler for `p1`.
+This example is similar to the last except that `thenable` is rejected. When `thenable.then()` executes, a new promise is created in the rejected state with a value of 42. That value is then passed to the rejection handler for `p1`.
 
 `Promise.resolve()` and `Promise.reject()` work like this to allow you to easily work with non-promise thenables. A lot of libraries used thenables prior to promises being introduced in ECMAScript 6, so the ability to convert thenables into formal promises is important for backwards-compatibility with previously existing libraries. When you're unsure if an object is a promise, passing the object through `Promise.resolve()` or `Promise.reject()` (depending on your anticipated result) is the best way to find out because promises just pass through unchanged.
 
@@ -538,13 +539,13 @@ window.onunhandledrejection = function(event) {
     console.log(event.type);                    // "unhandledrejection"
     console.log(event.reason.message);          // "Explosion!"
     console.log(rejected === event.promise);    // true
-});
+};
 
 window.onrejectionhandled = function(event) {
     console.log(event.type);                    // "rejectionhandled"
     console.log(event.reason.message);          // "Explosion!"
     console.log(rejected === event.promise);    // true
-});
+};
 
 rejected = Promise.reject(new Error("Explosion!"));
 ```
@@ -845,7 +846,7 @@ p4.then(function(value) {
 });
 ```
 
-Each promise here resolves with a number. The call to `Promise.all()` creates promise `p4`, which is ultimately fulfilled when promises `p1`, `p2`, and `p3` are fulfilled. The result passed to the fulfillment handler for `p4` is an array containing each resolved value: 42, 43, and 44. The values are stored in the order the promises resolved, so you can match promise results to the promises that resolved to them.
+Each promise here resolves with a number. The call to `Promise.all()` creates promise `p4`, which is ultimately fulfilled when promises `p1`, `p2`, and `p3` are fulfilled. The result passed to the fulfillment handler for `p4` is an array containing each resolved value: 42, 43, and 44. The values are stored in the order the promises were passed to `Promise.all`, so you can match promise results to the promises that resolved to them.
 
 If any promise passed to `Promise.all()` is rejected, the returned promise is immediately rejected without waiting for the other promises to complete:
 
@@ -917,6 +918,61 @@ p4.catch(function(value) {
 ```
 
 Here, `p4` is rejected because `p2` is already in the rejected state when `Promise.race()` is called. Even though `p1` and `p3` are fulfilled, those results are ignored because they occur after `p2` is rejected.
+
+## Inheriting from Promises
+
+Just like other built-in types, you can use a promise as the base for a derived class. This allows you to define your own variation of promises to extend what built-in promises can do. Suppose, for instance, you'd like to create a promise that can use methods named `success()` and `failure()` in addition to the usual `then()` and `catch()` methods. You could create that promise type as follows:
+
+```js
+class MyPromise extends Promise {
+
+    // use default constructor
+
+    success(resolve, reject) {
+        return this.then(resolve, reject);
+    }
+
+    failure(reject) {
+        return this.catch(reject);
+    }
+
+}
+
+let promise = new MyPromise(function(resolve, reject) {
+    resolve(42);
+});
+
+promise.success(function(value) {
+    console.log(value);             // 42
+}).failure(function(value) {
+    console.log(value);
+});
+```
+
+In this example, `MyPromise` is derived from `Promise` and has two additional methods. The `success()` method mimics `resolve()` and `failure()` mimics the `reject()` method.
+
+Each added method uses `this` to call the method it mimics. The derived promise functions the same as a built-in promise, except now you can call `success()` and `failure()` if you want.
+
+Since static methods are inherited, the `MyPromise.resolve()` method, the `MyPromise.reject()` method, the `MyPromise.race()` method, and the `MyPromise.all()` method are also present on derived promises. The last two methods behave the same as the built-in methods, but the first two are slightly different.
+
+Both `MyPromise.resolve()` and `MyPromise.reject()` will return an instance of `MyPromise` regardless of the value passed because those methods use the `Symbol.species` property (covered under in Chapter 9) to determine the type of promise to return. If a built-in promise is passed to either method, the promise will be resolved or rejected, and the method will return a new `MyPromise` so you can assign fulfillment and rejection handlers. For example:
+
+```js
+let p1 = new Promise(function(resolve, reject) {
+    resolve(42);
+});
+
+let p2 = MyPromise.resolve(p1);
+p2.success(function(value) {
+    console.log(value);         // 42
+});
+
+console.log(p2 instanceof MyPromise);   // true
+```
+
+Here, `p1` is a built-in promise that is passed to the `MyPromise.resolve()` method. The result, `p2`, is an instance of `MyPromise` where the resolved value from `p1` is passed into the fulfillment handler.
+
+If an instance of `MyPromise` is passed to the `MyPromise.resolve()` or `MyPromise.reject()` methods, it will just be returned directly without being resolved. In all other ways these two methods behave the same as `Promise.resolve()` and `Promise.reject()`.
 
 ### Asynchronous Task Running
 
@@ -1045,61 +1101,6 @@ This `run()` function can run any generator that uses `yield` to achieve asynchr
 
 The only concern is ensuring that asynchronous functions like `readFile()` return a promise that correctly identifies its state. For Node.js built-in methods, that means you'll have to convert those methods to return promises instead of using callbacks.
 
-## Inheriting from Promises
-
-Just like other built-in types, you can use a promise as the base for a derived class. This allows you to define your own variation of promises to extend what built-in promises can do. Suppose, for instance, you'd like to create a promise that can use methods named `success()` and `failure()` in addition to the usual `then()` and `catch()` methods. You could create that promise type as follows:
-
-```js
-class MyPromise extends Promise {
-
-    // use default constructor
-
-    success(resolve, reject) {
-        return this.then(resolve, reject);
-    }
-
-    failure(reject) {
-        return this.catch(reject);
-    }
-
-}
-
-let promise = new MyPromise(function(resolve, reject) {
-    resolve(42);
-});
-
-promise.success(function(value) {
-    console.log(value);             // 42
-}).failure(function(value) {
-    console.log(value);
-});
-```
-
-In this example, `MyPromise` is derived from `Promise` and has two additional methods. The `success()` method mimics `resolve()` and `failure()` mimics the `reject()` method.
-
-Each added method uses `this` to call the method it mimics. The derived promise functions the same as a built-in promise, except now you can call `success()` and `failure()` if you want.
-
-Since static methods are inherited, the `MyPromise.resolve()` method, the `MyPromise.reject()` method, the `MyPromise.race()` method, and the `MyPromise.all()` method are also present on derived promises. The last two methods behave the same as the built-in methods, but the first two are slightly different.
-
-Both `MyPromise.resolve()` and `MyPromise.reject()` will return an instance of `MyPromise` regardless of the value passed because those methods use the `Symbol.species` property (covered under in Chapter 9) to determine the type of promise to return. If a built-in promise is passed to either method, the promise will be resolved or rejected, and the method will return a new `MyPromise` so you can assign fulfillment and rejection handlers. For example:
-
-```js
-let p1 = new Promise(function(resolve, reject) {
-    resolve(42);
-});
-
-let p2 = MyPromise.resolve(p1);
-p2.success(function(value) {
-    console.log(value);         // 42
-});
-
-console.log(p2 instanceof MyPromise);   // true
-```
-
-Here, `p1` is a built-in promise that is passed to the `MyPromise.resolve()` method. The result, `p2`, is an instance of `MyPromise` where the resolved value from `p1` is passed into the fulfillment handler.
-
-If an instance of `MyPromise` is passed to the `MyPromise.resolve()` or `MyPromise.reject()` methods, it will just be returned directly without being resolved. In all other ways these two methods behave the same as `Promise.resolve()` and `Promise.reject()`.
-
 A> ### Future Asynchronous Task Running
 A>
 A> At the time of my writing, there is ongoing work around bringing a simpler syntax to asynchronous task running in JavaScript. Work is progressing on an `await` syntax that would closely mirror the promise-based example in the preceding section. The basic idea is to use a function marked with `async` instead of a generator and use `await` instead of `yield` when calling a function, such as:
@@ -1115,6 +1116,7 @@ A>
 A> The `async` keyword before `function` indicates that the function is meant to run in an asynchronous manner. The `await` keyword signals that the function call to `readFile("config.json")` should return a promise, and if it doesn't, the response should be wrapped in a promise. Just as with the implementation of `run()` in the preceding section, `await` will throw an error if the promise is rejected and otherwise return the value from the promise. The end result is that you get to write asynchronous code as if it were synchronous without the overhead of managing an iterator-based state machine.
 A>
 A> The `await` syntax is expected to be finalized in ECMAScript 2017 (ECMAScript 8).
+
 
 ## Summary
 
