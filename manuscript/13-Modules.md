@@ -13,7 +13,7 @@ JavaScript's "shared everything" approach to loading code is one of the most err
 1. Modules must export anything that should be available to code outside of the module.
 1. Modules may import bindings from other modules.
 
-These differences may seem small at first glance, but they represent a significant change in how JavaScript code is loaded and evaluated, which I will discuss over the course of this chapter. The real power of modules is the ability to export and importing only those bindings that are required, rather than everything in a file. A good understanding of exporting and importing is fundamental to understanding how modules differ from scripts.
+These differences may seem small at first glance, but they represent a significant change in how JavaScript code is loaded and evaluated, which I will discuss over the course of this chapter. The real power of modules is the ability to export and import only those bindings that are required, rather than everything in a file. A good understanding of exporting and importing is fundamental to understanding how modules differ from scripts.
 
 ## Basic Exporting
 
