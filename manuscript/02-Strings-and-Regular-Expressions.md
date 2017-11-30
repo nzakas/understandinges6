@@ -212,7 +212,7 @@ Developers have used the `indexOf()` method to identify strings inside other str
 * The `startsWith()` method returns true if the given text is found at the beginning of the string. It returns false if not.
 * The `endsWith()` method returns true if the given text is found at the end of the string. It returns false if not.
 
-Each methods accept two arguments: the text to search for and an optional index from which to start the search. When the second argument is provided, `includes()` and `startsWith()` start the match from that index while `endsWith()` starts the match from the length of the string minus the second argument; when the second argument is omitted, `includes()` and `startsWith()` search from the beginning of the string, while `endsWith()` starts from the end. In effect, the second argument minimizes the amount of the string being searched. Here are some examples showing these three methods in action:
+Each method accepts two arguments: the text to search for and an optional index from which to start the search. When the second argument is provided, `includes()` and `startsWith()` start the match from that index while `endsWith()` starts the match from the length of the string minus the second argument; when the second argument is omitted, `includes()` and `startsWith()` search from the beginning of the string, while `endsWith()` starts from the end. In effect, the second argument minimizes the amount of the string being searched. Here are some examples showing these three methods in action:
 
 ```js
 var msg = "Hello world!";
