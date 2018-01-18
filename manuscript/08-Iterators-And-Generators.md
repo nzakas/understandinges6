@@ -891,7 +891,7 @@ run(function*() {
 });
 ```
 
-This example just outputs three numbers to the console, which simply shows that all calls to `next()` are being made. However, just yielding a couple of times isn't very useful. The next step is to pass values into and out of the iterator.
+This example just outputs two numbers to the console, which simply shows that all calls to `next()` are being made. However, just yielding a couple of times isn't very useful. The next step is to pass values into and out of the iterator.
 
 ### Task Running With Data
 
