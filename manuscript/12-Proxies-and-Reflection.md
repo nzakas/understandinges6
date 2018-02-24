@@ -1424,9 +1424,9 @@ let secondLevelProto = Object.getPrototypeOf(shapeProto);
 console.log(secondLevelProto === proxy);            // true
 ```
 
-This version of the code stores the proxy in a variable called `proxy` so it's easy to identify later. The prototype of `shape` is `Shape.prototype`, which is not a proxy. But the prototype of `Shape.prototype` is the proxy that was inherited from `NoSuchProperty`.
+This version of the code stores the proxy in a variable called `proxy` so it's easy to identify later. The prototype of `shape` is `Square.prototype`, which is not a proxy. But the prototype of `Square.prototype` is the proxy that was inherited from `NoSuchProperty`.
 
-The inheritance adds another step in the prototype chain, and that matters because operations that might result in calling the `get` trap on `proxy` need to go through one extra step before getting there. If there's a property on `Shape.prototype`, then that will prevent the `get` proxy trap from being called, as in this example:
+The inheritance adds another step in the prototype chain, and that matters because operations that might result in calling the `get` trap on `proxy` need to go through one extra step before getting there. If there's a property on `Square.prototype`, then that will prevent the `get` proxy trap from being called, as in this example:
 
 ```js
 function NoSuchProperty() {
