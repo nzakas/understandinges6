@@ -901,13 +901,19 @@ In this code, `p1` is created as a fulfilled promise while the others schedule j
 
 ```js
 let p1 = new Promise(function(resolve, reject) {
-    resolve(42);
+    setTimeout(function() {
+        resolve(42);
+    }, 100);
 });
 
-let p2 = Promise.reject(43);
+let p2 = new Promise(function(resolve, reject) {
+    reject(43);
+});
 
 let p3 = new Promise(function(resolve, reject) {
-    resolve(44);
+    setTimeout(function() {
+        resolve(44);
+    }, 50);
 });
 
 let p4 = Promise.race([p1, p2, p3]);
@@ -917,7 +923,7 @@ p4.catch(function(value) {
 });
 ```
 
-Here, `p4` is rejected because `p2` is already in the rejected state when `Promise.race()` is called. Even though `p1` and `p3` are fulfilled, those results are ignored because they occur after `p2` is rejected.
+Here, both `p1` and `p3` use `setTimeout()` (available in both Node.js and web browsers) to delay promise fulfillment. The result is that `p4` is rejected because `p2` is rejected before either `p1` or `p3` is resolved. Even though `p1` and `p3` are eventually fulfilled, those results are ignored because they occur after `p2` is rejected.
 
 ## Inheriting from Promises
 
