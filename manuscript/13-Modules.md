@@ -314,7 +314,7 @@ If you'd like to export everything from another module, you can use the `*` patt
 export * from "./example.js";
 ```
 
-By exporting everything, you're including the default as well as any named exports, which may affect what you can export from your module. For instance, if `example.js` has a default export, you'd be unable to define a new default export when using this syntax.
+When you export everything, you are including all named exports and excluding any default export. For instance, if `example.js` has a default export, you would need to import it explicitly and then export it explicitly.
 
 ## Importing Without Bindings
 
