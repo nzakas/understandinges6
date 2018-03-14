@@ -273,7 +273,7 @@ console.log(color);         // "red"
 
 The comma separates the default local name from the non-defaults, which are also surrounded by curly braces. Keep in mind that the default must come before the non-defaults in the `import` statement.
 
-As with exporting defaults, you can import defauts with the renaming syntax, too:
+As with exporting defaults, you can import defaults with the renaming syntax, too:
 
 ```js
 // equivalent to previous example
