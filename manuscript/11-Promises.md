@@ -955,7 +955,7 @@ promise.success(function(value) {
 });
 ```
 
-In this example, `MyPromise` is derived from `Promise` and has two additional methods. The `success()` method mimics `resolve()` and `failure()` mimics the `reject()` method.
+In this example, `MyPromise` is derived from `Promise` and has two additional methods. The `success()` method mimics `then()` and `failure()` mimics the `catch()` method.
 
 Each added method uses `this` to call the method it mimics. The derived promise functions the same as a built-in promise, except now you can call `success()` and `failure()` if you want.
 
