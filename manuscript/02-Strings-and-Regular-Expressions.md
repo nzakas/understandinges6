@@ -53,7 +53,7 @@ console.log(text.codePointAt(2));   // 97
 
 The `codePointAt()` method returns the same value as the `charCodeAt()` method unless it operates on non-BMP characters. The first character in `text` is non-BMP and is therefore comprised of two code units, meaning the `length` property is 3 rather than 2. The `charCodeAt()` method returns only the first code unit for position 0, but `codePointAt()` returns the full code point even though the code point spans multiple code units. Both methods return the same value for positions 1 (the second code unit of the first character) and 2 (the `"a"` character).
 
-Calling the `codePointAt()` method on a character is the easiest way to determine if that character is represented by one or two code points. Here's a function you could write to check:
+Calling the `codePointAt()` method on a character is the easiest way to determine if that character is represented by one or two code units. Here's a function you could write to check:
 
 ```js
 function is32Bit(c) {
