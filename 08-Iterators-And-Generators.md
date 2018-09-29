@@ -495,7 +495,7 @@ A> The `for-of` loop in this code uses a destructured array to assign `key` and 
 JavaScript strings have slowly become more like arrays since ECMAScript 5 was released. For example, ECMAScript 5 formalized bracket notation for accessing characters in strings (that is, using `text[0]` to get the first character, and so on). But bracket notation works on code units rather than characters, so it cannot be used to access double-byte characters correctly, as this example demonstrates:
 
 ```js
-var message = "A 𠮷 B";
+var message = "A  B";
 
 for (let i=0; i < message.length; i++) {
     console.log(message[i]);
@@ -519,7 +519,7 @@ Fortunately, ECMAScript 6 aims to fully support Unicode (see Chapter 2), and the
 
 
 ```js
-var message = "A 𠮷 B";
+var message = "A  B";
 
 for (let c of message) {
     console.log(c);
@@ -531,7 +531,7 @@ This outputs the following:
 ```
 A
 (blank)
-𠮷
+
 (blank)
 B
 ```

@@ -15,7 +15,7 @@ The first 2^16^ code points in UTF-16 are represented as single 16-bit code unit
 In ECMAScript 5, all string operations work on 16-bit code units, meaning that you can get unexpected results from UTF-16 encoded strings containing surrogate pairs, as in this example:
 
 ```js
-var text = "𠮷";
+var text = "";
 
 console.log(text.length);           // 2
 console.log(/^.$/.test(text));      // false
@@ -25,7 +25,7 @@ console.log(text.charCodeAt(0));    // 55362
 console.log(text.charCodeAt(1));    // 57271
 ```
 
-The single Unicode character `"𠮷"` is represented using surrogate pairs, and as such, the JavaScript string operations above treat the string as having two 16-bit characters. That means:
+The single Unicode character `""` is represented using surrogate pairs, and as such, the JavaScript string operations above treat the string as having two 16-bit characters. That means:
 
 * The `length` of `text` is 2, when it should be 1.
 * A regular expression trying to match a single character fails because it thinks there are two characters.
@@ -40,7 +40,7 @@ ECMAScript 6, on the other hand, enforces UTF-16 string encoding to address prob
 One method ECMAScript 6 added to fully support UTF-16 is the `codePointAt()` method, which retrieves the Unicode code point that maps to a given position in a string. This method accepts the code unit position rather than the character position and returns an integer value, as these `console.log()` examples show:
 
 ```js
-var text = "𠮷a";
+var text = "a";
 
 console.log(text.charCodeAt(0));    // 55362
 console.log(text.charCodeAt(1));    // 57271
@@ -60,7 +60,7 @@ function is32Bit(c) {
     return c.codePointAt(0) > 0xFFFF;
 }
 
-console.log(is32Bit("𠮷"));         // true
+console.log(is32Bit(""));         // true
 console.log(is32Bit("a"));          // false
 ```
 
@@ -71,7 +71,7 @@ The upper bound of 16-bit characters is represented in hexadecimal as `FFFF`, so
 When ECMAScript provides a way to do something, it also tends to provide a way to do the reverse. You can use `codePointAt()` to retrieve the code point for a character in a string, while `String.fromCodePoint()` produces a single-character string from a given code point. For example:
 
 ```js
-console.log(String.fromCodePoint(134071));  // "𠮷"
+console.log(String.fromCodePoint(134071));  // ""
 ```
 
 Think of `String.fromCodePoint()` as a more complete version of the `String.fromCharCode()` method. Both give the same result for all characters in the BMP. There's only a difference when you pass code points for characters outside of the BMP.
@@ -154,7 +154,7 @@ You can accomplish many common string operations through regular expressions. Bu
 When a regular expression has the `u` flag set, it switches modes to work on characters, not code units. That means the regular expression should no longer get confused about surrogate pairs in strings and should behave as expected. For example, consider this code:
 
 ```js
-var text = "𠮷";
+var text = "";
 
 console.log(text.length);           // 2
 console.log(/^.$/.test(text));      // false
@@ -174,10 +174,10 @@ function codePointLength(text) {
 }
 
 console.log(codePointLength("abc"));    // 3
-console.log(codePointLength("𠮷bc"));   // 3
+console.log(codePointLength("bc"));   // 3
 ```
 
-This example calls `match()` to check `text` for both whitespace and non-whitespace characters (using `[\s\S]` to ensure the pattern matches newlines), using a regular expression that is applied globally with Unicode enabled. The `result` contains an array of matches when there's at least one match, so the array length is the number of code points in the string. In Unicode, the strings `"abc"` and `"𠮷bc"` both have three characters, so the array length is three.
+This example calls `match()` to check `text` for both whitespace and non-whitespace characters (using `[\s\S]` to ensure the pattern matches newlines), using a regular expression that is applied globally with Unicode enabled. The `result` contains an array of matches when there's at least one match, so the array length is the number of code points in the string. In Unicode, the strings `"abc"` and `"bc"` both have three characters, so the array length is three.
 
 W> Although this approach works, it's not very fast, especially when applied to long strings. You can use a string iterator (discussed in Chapter 8) as well. In general, try to minimize counting code points whenever possible.
 
