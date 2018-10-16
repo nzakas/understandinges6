@@ -1,18 +1,18 @@
-# Strings and Regular Expressions
+# 文字列と正規表現
 
-Strings are arguably one of the most important data types in programming. They're in nearly every higher-level programming language, and being able to work with them effectively is fundamental for developers to create useful programs. By extension, regular expressions are important because of the extra power they give developers to wield on strings. With these facts in mind, the creators of ECMAScript 6 improved strings and regular expressions by adding new capabilities and long-missing functionality. This chapter gives a tour of both types of changes.
+Stringはプログラミングにおいて最も重要なデータ型の1つです。ほぼすべての高級言語に含まれており、効果的にそれらを使用することは、開発者にとって有用なプログラムを生成するための基本です。正規表現は、開発者が文字列を操作するための強力なツールです。これらの事実を念頭に置いて、ECMAScript6の開発者は、機能拡張および待望されていた仕様を追加して、文字列と正規表現を改善しました。この章では、両タイプの変更について説明します。
 
-## Better Unicode Support
+## より良いUnicodeサポート
 
-Before ECMAScript 6, JavaScript strings revolved around 16-bit character encoding (UTF-16). Each 16-bit sequence is a *code unit* representing a character. All string properties and methods, like the `length` property and the `charAt()` method, were based on these 16-bit code units. Of course, 16 bits used to be enough to contain any character. That's no longer true thanks to the expanded character set introduced by Unicode.
+ECMAScript6以前では、JavaScript文字列は16ビット文字エンコーディング(UTF-16)を中心に進化しました。各16ビットの連続した値は文字を表す*符号単位*です。`length`プロパティや`charAt() `メソッドのような、すべての文字列のプロパティとメソッドは、これらの16ビットの符号単位に基づいていました。もちろん、16ビットは任意の文字を含むのに十分でした。それは、Unicodeによって導入された拡張文字セットのおかげに他なりません。
 
-### UTF-16 Code Points
+### UTF-16コードポイント
 
-Limiting character length to 16 bits wasn't possible for Unicode's stated goal of providing a globally unique identifier to every character in the world. These globally unique identifiers, called *code points*, are simply numbers starting at 0. Code points are what you may think of as character codes, where a number represents a character. A character encoding must encode code points into code units that are internally consistent. For UTF-16, code points can be made up of many code units.
+Unicodeが世界のすべての文字にグローバルにユニークな識別子を提供するという目標のために、文字の長さを16ビットに制限することはできませんでした。*コードポイント*と呼ばれるこれらのグローバルに一意な識別子は、0から始まる単純な数字です。コードポイントは、文字コードと考えることができます。数字は文字を表します。文字エンコードでは、コードポイントを内部的に一貫した符号単位にエンコードする必要があります。 UTF-16の場合、コードポイントは多くの符号単位で構成できます。
 
-The first 2^16^ code points in UTF-16 are represented as single 16-bit code units. This range is called the *Basic Multilingual Plane* (BMP). Everything beyond that is considered to be in one of the *supplementary planes*, where the code points can no longer be represented in just 16-bits. UTF-16 solves this problem by introducing *surrogate pairs* in which a single code point is represented by two 16-bit code units. That means any single character in a string can be either one code unit for BMP characters, giving a total of 16 bits, or two units for supplementary plane characters, giving a total of 32 bits.
+UTF-16の最初の2 ^ 16 ^コードポイントは、単一の16ビット符号単位として表されます。この範囲は*基本多言語面*(BMP)と呼ばれます。それを超えるものはすべて、コードポイントをもはや16ビットで表現することができない*追加面*の1つとみなされます。 UTF-16は、1つのコードポイントが2つの16ビット符号単位で表される*サロゲートペアー*を導入することで、この問題を解決します。つまり、文字列内の任意の1文字は、合計16ビットを与えるBMP文字用の1つの符号単位、または追加面文字用の2単位の合計32ビットを与えることができます。
 
-In ECMAScript 5, all string operations work on 16-bit code units, meaning that you can get unexpected results from UTF-16 encoded strings containing surrogate pairs, as in this example:
+ECMAScript5では、すべての文字列演算が16ビット符号単位で動作します。つまり、この例のように、サロゲートペアーを含むUTF-16でエンコードされた文字列から予期しない結果を得ることができます。
 
 ```js
 var text = "";
@@ -25,19 +25,19 @@ console.log(text.charCodeAt(0));    // 55362
 console.log(text.charCodeAt(1));    // 57271
 ```
 
-The single Unicode character `""` is represented using surrogate pairs, and as such, the JavaScript string operations above treat the string as having two 16-bit characters. That means:
+単一のUnicode文字 `""` はサロゲートペアを使用して表されているため、上記のJavaScript文字列操作では、文字列を2つの16ビット文字として扱います。つまり、
 
-* The `length` of `text` is 2, when it should be 1.
-* A regular expression trying to match a single character fails because it thinks there are two characters.
-* The `charAt()` method is unable to return a valid character string, because neither set of 16 bits corresponds to a printable character.
+* `text`の`length`は1でなければならないときは2です。
+* 1文字と一致する正規表現は2文字と考えるので失敗します。
+* `charAt()`メソッドは有効な文字列を返すことができません。なぜなら、16ビットのいずれのセットも印刷可能な文字に対応しないからです。
 
-The `charCodeAt()` method also just can't identify the character properly. It returns the appropriate 16-bit number for each code unit, but that is the closest you could get to the real value of `text` in ECMAScript 5.
+`charCodeAt()`メソッドは、文字を正しく識別することもできません。各符号単位に適切な16ビットの数値を返しますが、これはECMAScript5の`text`の実際の値に最も近い数値です。
 
-ECMAScript 6, on the other hand, enforces UTF-16 string encoding to address problems like these. Standardizing string operations based on this character encoding means that JavaScript can support functionality designed to work specifically with surrogate pairs. The rest of this section discusses a few key examples of that functionality.
+一方、ECMAScript6では、このような問題に対処するためにUTF-16文字列エンコーディングが強制されます。この文字列エンコーディングに基づいて文字列の操作を標準化することにより、JavaScriptがサロゲートペアによって特別に機能するように設計された機能をサポートできるようになります。このセクションの残りの部分では、その機能の重要な例をいくつか説明します。
 
-### The codePointAt() Method
+### codePointAt()メソッド
 
-One method ECMAScript 6 added to fully support UTF-16 is the `codePointAt()` method, which retrieves the Unicode code point that maps to a given position in a string. This method accepts the code unit position rather than the character position and returns an integer value, as these `console.log()` examples show:
+UTF-16を完全にサポートするために追加されたECMAScript6の1つのメソッドは`codePointAt()`メソッドです。このメソッドは、文字列内の指定された位置にマッピングされるUnicodeコードポイントを取得します。このメソッドは文字位置ではなく符号単位の位置を受け取り、下記のサンプルの`console.log()`が示すように、整数値を返します：
 
 ```js
 var text = "a";
@@ -51,9 +51,9 @@ console.log(text.codePointAt(1));   // 57271
 console.log(text.codePointAt(2));   // 97
 ```
 
-The `codePointAt()` method returns the same value as the `charCodeAt()` method unless it operates on non-BMP characters. The first character in `text` is non-BMP and is therefore comprised of two code units, meaning the `length` property is 3 rather than 2. The `charCodeAt()` method returns only the first code unit for position 0, but `codePointAt()` returns the full code point even though the code point spans multiple code units. Both methods return the same value for positions 1 (the second code unit of the first character) and 2 (the `"a"` character).
+`codePointAt()`メソッドは、非BMP文字で動作しない限り、`charCodeAt()`メソッドと同じ値を返します。`text`の最初の文字はBMPではないので、`length`プロパティが2ではなく3であることを意味する2つの符号単位で構成されます。`charCodeAt()`メソッドは、位置0の最初の符号単位のみを返します。`codePointAt()`は、コードポイントが複数の符号単位にまたがっていても、完全なコードポイントを返します。どちらのメソッドも、位置1(最初の文字の2番目の符号単位)と2(`"a"`)に同じ値を返します。
 
-Calling the `codePointAt()` method on a character is the easiest way to determine if that character is represented by one or two code points. Here's a function you could write to check:
+文字に対して`codePointAt()`メソッドを呼び出すことは、その文字が1つまたは2つのコードポイントで表されるかどうかを判定する最も簡単な方法です。下記のような関数で確認することができます。
 
 ```js
 function is32Bit(c) {
@@ -64,32 +64,32 @@ console.log(is32Bit(""));         // true
 console.log(is32Bit("a"));          // false
 ```
 
-The upper bound of 16-bit characters is represented in hexadecimal as `FFFF`, so any code point above that number must be represented by two code units, for a total of 32 bits.
+16ビット文字の上限は16進数で`FFFF`と表されているため、その数を超えるコードポイントは2つの符号単位で表されなければならず、合計32ビットです。
 
-### The String.fromCodePoint() Method
+### String.fromCodePoint()メソッド
 
-When ECMAScript provides a way to do something, it also tends to provide a way to do the reverse. You can use `codePointAt()` to retrieve the code point for a character in a string, while `String.fromCodePoint()` produces a single-character string from a given code point. For example:
+ECMAScriptが何かを行う方法を提供する場合、ECMAScriptはその逆を行う方法も提供する傾向があります。`codePointAt()`を使うと、文字列中の文字のコードポイントを取得することができ、`String.fromCodePoint()`は与えられたコードポイントから単一文字の文字列を生成することができます。例えば、
 
 ```js
 console.log(String.fromCodePoint(134071));  // ""
 ```
 
-Think of `String.fromCodePoint()` as a more complete version of the `String.fromCharCode()` method. Both give the same result for all characters in the BMP. There's only a difference when you pass code points for characters outside of the BMP.
+`String.fromCharCode()`メソッドのより完全なバージョンとして`String.fromCodePoint()`を考えてみましょう。両方とも、BMPのすべての文字に対して同じ結果が得られます。BMP以外の文字のコードポイントを渡すときにのみ違いがあります。
 
-### The normalize() Method
+### normalize()メソッド
 
-Another interesting aspect of Unicode is that different characters may be considered equivalent for the purpose of sorting or other comparison-based operations. There are two ways to define these relationships. First, *canonical equivalence* means that two sequences of code points are considered interchangeable in all respects. For example, a combination of two characters can be canonically equivalent to one character. The second relationship is *compatibility*. Two compatible sequences of code points look different but can be used interchangeably in certain situations.
+Unicodeのもう1つの面白い点は、ソートやその他の比較演算の目的で、異なる文字列が同等と見なされることです。これらの関係を定義するには2つの方法があります。まず、*正準等価*は、コードポイントの2つの連続した値がすべての点で交換可能であると考えられることを意味します。例えば、2つの文字の組み合わせは、標準的に1つの文字に等しくすることができます。2番目の関係は*互換等価*です。コードポイントの2つの互換性のある連続した値は異なるように見えますが、特定の状況では互換的に使用できます。
 
-Due to these relationships, two strings representing fundamentally the same text can contain different code point sequences. For example, the character "æ" and the two-character string "ae" may be used interchangeably but are strictly not equivalent unless normalized in some way.
+これらの関係のため、基本的に同じテキストを表す2つの文字列は、異なるコードポイント連続した値を含むことができます。たとえば、文字"æ"と2文字の文字列"ae"は互換的に使用できますが、何らかの方法で正規化しない限り、厳密には同等ではありません。
 
-ECMAScript 6 supports Unicode normalization forms by giving strings a `normalize()` method. This method optionally accepts a single string parameter indicating one of the  following Unicode normalization forms to apply:
+ECMAScript6は文字列に`normalize()`メソッドを与えることでUnicode正規化形式をサポートしています。このメソッドは、次のUnicode正規化形式のいずれかを示す単一の文字列パラメータをオプションとして受け入れます。
 
-* Normalization Form Canonical Composition (`"NFC"`), which is the default
-* Normalization Form Canonical Decomposition (`"NFD"`)
-* Normalization Form Compatibility Composition (`"NFKC"`)
-* Normalization Form Compatibility Decomposition (`"NFKD"`)
+* 正規化形式C(NFC, デフォルト)
+* 正規化形式D(NFD
+* 正規化形式KC(NFKC)
+* 正規化形式KD(NFKD)
 
-It's beyond the scope of this book to explain the differences between these four forms. Just keep in mind that when comparing strings, both strings must be normalized to the same form. For example:
+これらの4つのフォームの違いを説明することは、この本の範囲を超えています。文字列を比較するときは、両方の文字列を同じ形式に正規化する必要があります。例えば、
 
 ```js
 var normalized = values.map(function(text) {
@@ -107,7 +107,7 @@ normalized.sort(function(first, second) {
 });
 ```
 
-This code converts the strings in the `values` array into a normalized form so that the array can be sorted appropriately. You can also sort the original array by calling `normalize()` as part of the comparator, as follows:
+このコードは `values`配列の文字列を正規化された形式に変換して、配列を適切にソートすることができます。次のように、コンパレータの一部として`normalize()`を呼び出すことによって元の配列をソートすることもできます：
 
 ```js
 values.sort(function(first, second) {
@@ -124,7 +124,7 @@ values.sort(function(first, second) {
 });
 ```
 
-Once again, the most important thing to note about this code is that both `first` and `second` are normalized in the same way. These examples have used the default, NFC, but you can just as easily specify one of the others, like this:
+繰り返しますが、このコードに最も重要なことは、`first`と`second`の両方が同じように正規化されるということです。これらの例ではデフォルトのNFCを使用していますが、次のように簡単に指定することもできます。
 
 ```js
 values.sort(function(first, second) {
@@ -141,17 +141,17 @@ values.sort(function(first, second) {
 });
 ```
 
-If you've never worried about Unicode normalization before, then you probably won't have much use for this method now. But if you ever work on an internationalized application, you'll definitely find the `normalize()` method helpful.
+前にUnicodeの正規化について心配していなかったなら、おそらくこのメソッドにあまり使われていないでしょう。しかし、国際化されたアプリケーションで作業する場合、`normalize()`メソッドが役立つことは間違いありません。
 
-Methods aren't the only improvements that ECMAScript 6 provides for working with Unicode strings, though. The standard also adds two useful syntax elements.
+ただし、これらのメソッドだけが、ECMAScript6がUnicode文字列を扱うために提供する改善点というわけではありません。標準仕様には、2つの有用なシンタックスも追加されています。
 
-### The Regular Expression u Flag
+### 正規表現uフラグ
 
-You can accomplish many common string operations through regular expressions. But remember, regular expressions assume 16-bit code units, where each represents a single character. To address this problem, ECMAScript 6 defines a `u` flag for regular expressions, which stands for Unicode.
+正規表現を使用して、多くの一般的な文字列操作を実行できます。しかし、覚えておいてください。正規表現は16ビットの符号単位を想定しています。それぞれの符号単位は1文字です。この問題に対処するために、ECMAScript6はUnicodeを表す正規表現のための`u`フラグを定義します。
 
-#### The u Flag in Action
+#### uフラグ
 
-When a regular expression has the `u` flag set, it switches modes to work on characters, not code units. That means the regular expression should no longer get confused about surrogate pairs in strings and should behave as expected. For example, consider this code:
+正規表現に`u`フラグがセットされていると、符号単位ではなく文字を扱うモードに切り替わります。これは、正規表現がもはや文字列のサロゲートペアについて混乱しなくなり、期待どおりに動作することを意味します。たとえば、次のコードを考えてみましょう。
 
 ```js
 var text = "";
@@ -161,11 +161,11 @@ console.log(/^.$/.test(text));      // false
 console.log(/^.$/u.test(text));     // true
 ```
 
-The regular expression `/^.$/` matches any input string with a single character. When used without the `u` flag, this regular expression matches on code units, and so the Japanese character (which is represented by two code units) doesn't match the regular expression. When used with the `u` flag, the regular expression compares characters instead of code units and so the Japanese character matches.
+正規表現 `/^.$/`は、すべての入力文字列を1文字でマッチします。`u`フラグなしで使用すると、この正規表現は符号単位でマッチするため、日本語の文字(2つの符号単位で表されます)は正規表現とマッチしません。`u`フラグとともに使用すると、正規表現は符号単位の代わりに文字を比較するので、日本語文字はマッチします。
 
-#### Counting Code Points
+#### コードポイントを数える
 
-Unfortunately, ECMAScript 6 doesn't add a method to determine how many code points a string has, but with the `u` flag, you can use regular expressions to figure it out as follows:
+残念ながら、ECMAScript6では、文字列に含まれるコードポイントの数を判定するメソッドは追加されませんが、`u`フラグを使用すると、正規表現を使用して次のように調べることができます。
 
 ```js
 function codePointLength(text) {
@@ -177,13 +177,13 @@ console.log(codePointLength("abc"));    // 3
 console.log(codePointLength("bc"));   // 3
 ```
 
-This example calls `match()` to check `text` for both whitespace and non-whitespace characters (using `[\s\S]` to ensure the pattern matches newlines), using a regular expression that is applied globally with Unicode enabled. The `result` contains an array of matches when there's at least one match, so the array length is the number of code points in the string. In Unicode, the strings `"abc"` and `"bc"` both have three characters, so the array length is three.
+この例では、Unicodeを有効にしてグローバルに適用される正規表現を使用して、`[\s\S]`を使ってパターンが改行に一致することを確認する`match()`を呼び出して、少なくとも1つでもマッチしたとき、`result`はマッチした配列を含んでいます。そのため配列の長さは文字列のコードポイントの数です。Unicodeでは、文字列`"abc"`と`"bc"`の両方に3つの文字列があるので、配列の長さは3です。
 
-W> Although this approach works, it's not very fast, especially when applied to long strings. You can use a string iterator (discussed in Chapter 8) as well. In general, try to minimize counting code points whenever possible.
+W> この方法は有効ですが、特に長い文字列に適用すると、それほど高速ではありません。文字列イテレータ(第8章で説明)も使用できます。可能であれば、コードポイントのカウントを最小限に抑えるようにしてください。
 
-#### Determining Support for the u Flag
+#### uフラグのサポートを策定
 
-Since the `u` flag is a syntax change, attempting to use it in JavaScript engines that aren't compatible with ECMAScript 6 throws a syntax error. The safest way to determine if the `u` flag is supported is with a function, like this one:
+`u`フラグはシンタックスの変更であるため、ECMAScript6と互換性のないJavaScriptエンジンでそれを使用しようとするとシンタックスエラーが発生します。下記のような関数で、`u`フラグがサポートされているかどうかを安全に判定することができます。
 
 ```js
 function hasRegExpU() {
@@ -196,23 +196,23 @@ function hasRegExpU() {
 }
 ```
 
-This function uses the `RegExp` constructor to pass in the `u` flag as an argument. This syntax is valid even in older JavaScript engines, but the constructor will throw an error if `u` isn't supported.
+この関数は、`RegExp`コンストラクタを使用して`u`フラグを引数として渡します。このシンタックスは古いJavaScriptエンジンでも有効ですが、`u`がサポートされていない場合、コンストラクタはエラーを投げます。
 
-I> If your code still needs to work in older JavaScript engines, always use the `RegExp` constructor when using the `u` flag. This will prevent syntax errors and allow you to optionally detect and use the `u` flag without aborting execution.
+I> あなたのコードが古いJavaScriptエンジンで動作する必要がある場合は、`u`フラグを使用するときは常に`RegExp`コンストラクタを使用してください。これにより、シンタックスエラーを防ぎ、実行を中断することなく`u`フラグを検出して使用することができます。
 
-## Other String Changes
+## その他の文字列の変更
 
-JavaScript strings have always lagged behind similar features of other languages. It was only in ECMAScript 5 that strings finally gained a `trim()` method, for example, and ECMAScript 6 continues extending JavaScript's capacity to parse strings with new functionality.
+JavaScriptの文字列は、他の言語の同様の機能と比較して遅れています。たとえば、ECMAScript5では文字列が最終的に`trim()`メソッドを取得し、ECMAScript6はJavaScriptの機能を拡張して新しい機能で文字列をパースし続けました。
 
-### Methods for Identifying Substrings
+### 部分文字列を識別するメソッド
 
-Developers have used the `indexOf()` method to identify strings inside other strings since JavaScript was first introduced. ECMAScript 6 includes the following three methods, which are designed to do just that:
+開発者は、JavaScriptが最初に導入されて以来、`indexOf()`メソッドを使用して他の文字列内の文字列を識別してきました。 ECMAScript6には、次の3つの方法があります。
 
-* The `includes()` method returns true if the given text is found anywhere within the string. It returns false if not.
-* The `startsWith()` method returns true if the given text is found at the beginning of the string. It returns false if not.
-* The `endsWith()` method returns true if the given text is found at the end of the string. It returns false if not.
+* `includes()`メソッドは、指定されたテキストが文字列内のどこにあっても真を返します。そうでない場合はfalseを返します。
+* `startsWith()`メソッドは、指定されたテキストが文字列の先頭にある場合にtrueを返します。そうでない場合はfalseを返します。
+* `endsWith()`メソッドは、指定されたテキストが文字列の最後にある場合にtrueを返します。そうでない場合はfalseを返します。
 
-Each methods accept two arguments: the text to search for and an optional index. When the second argument is provided, `includes()` and `startsWith()` start the match from that index while `endsWith()` starts the match from the second argument; when the second argument is omitted, `includes()` and `startsWith()` search from the beginning of the string, while `endsWith()` starts from the end. In effect, the second argument minimizes the amount of the string being searched. Here are some examples showing these three methods in action:
+各メソッドは、検索するテキストとオプションのインデックスの2つの引数を受け取ります。2番目の引数が与えられたとき、`includes()`と`startsWith()`はそのインデックスからのマッチを開始します。endsWith()は2番目の引数からマッチを開始します。2番目の引数が省略された場合、`includes()`と`startsWith()`は文字列の先頭から検索され、`endsWith()`は最後から検索されます。実際には、2番目の引数は検索される文字列の量を最小限に抑えます。これらの3つの方法を実際に使用している例をいくつか示します。
 
 ```js
 var msg = "Hello world!";
@@ -230,15 +230,15 @@ console.log(msg.endsWith("o", 8));          // true
 console.log(msg.includes("o", 8));          // false
 ```
 
-The first six calls don't include a second parameter, so they'll search the whole string if needed. The last three calls only check part of the string. The call to `msg.startsWith("o", 4)` starts the match by looking at index 4 of the `msg` string, which is the "o" in "Hello". The call to `msg.endsWith("o", 8)` starts the search from index 0 and searches up to index 7, which is the "o" in "world". The call to `msg.includes("o", 8)` starts the match from index 8, which is the "r" in "world".
+最初の6つの呼び出しには2番目のパラメータが含まれていないため、必要に応じて文字列全体を検索します。最後の3回の呼び出しは、文字列の一部のみをチェックします。`msg.startsWith("o", 4)`を呼び出すと、`msg`文字列のindex=4の("Hello"の"o")を見ることで一致を開始します。`msg.endsWith("o", 8)`の呼び出しは、index=0からの検索を開始し、index=7まで検索します。これは "world"の"o"です。`msg.includes("o", 8)`の呼び出しは、"world"の"r"であるindex=8からのマッチを開始します。
 
-While these three methods make identifying the existence of substrings easier, each only returns a boolean value. If you need to find the actual position of one string within another, use the `indexOf()` or `lastIndexOf()` methods.
+これらの3つのメソッドでは、部分文字列の存在をより簡単に識別できますが、それぞれが真偽値を返すだけです。ある文字列の実際の位置を別の文字列内で見つける必要がある場合は、`indexOf()`または`lastIndexOf()`メソッドを使用してください。
 
-W> The `startsWith()`, `endsWith()`, and `includes()` methods will throw an error if you pass a regular expression instead of a string. This stands in contrast to `indexOf()` and `lastIndexOf()`, which both convert a regular expression argument into a string and then search for that string.
+W> `startsWith()`, `endsWith()`, `includes()`メソッドは文字列の代わりに正規表現を渡すとエラーを投げます。これは`indexOf()`や`lastIndexOf()`とは対照的です。正規表現の引数を文字列に変換し、その文字列を検索します。
 
-### The repeat() Method
+### repeat()メソッド
 
-ECMAScript 6 also adds a `repeat()` method to strings, which accepts the number of times to repeat the string as an argument. It returns a new string containing the original string repeated the specified number of times. For example:
+また、ECMAScript6は文字列に`repeat()`メソッドを追加します。このメソッドは、文字列を引数として繰り返す回数を受け付けます。指定された回数繰り返した元の文字列を含む新しい文字列を返します。例えば：
 
 ```js
 console.log("x".repeat(3));         // "xxx"
@@ -246,7 +246,7 @@ console.log("hello".repeat(2));     // "hellohello"
 console.log("abc".repeat(4));       // "abcabcabcabc"
 ```
 
-This method is a convenience function above all else, and it can be especially useful when manipulating text. It's particularly useful in code formatting utilities that need to create indentation levels, like this:
+このメソッドは、とりわけ有用な機能であり、とりわけテキストを操作するときに役立ちます。インデントの階層を生成する必要のあるフォーマットでは、特に役立ちます。
 
 ```js
 // indent using a specified number of spaces
@@ -257,17 +257,17 @@ var indent = " ".repeat(4),
 var newIndent = indent.repeat(++indentLevel);
 ```
 
-The first `repeat()` call creates a string of four spaces, and the `indentLevel` variable keeps track of the indent level. Then, you can just call `repeat()` with an incremented `indentLevel` to change the number of spaces.
+最初の`repeat()`呼び出しは4つのスペースの文字列を生成し、`indentLevel`変数はインデントの階層を追跡します。次に、インクリメントされた`indentLevel`を使って`repeat()`を呼び出して、スペースの数を変更することができます。
 
-ECMAScript 6 also makes some useful changes to regular expression functionality that don't fit into a particular category. The next section highlights a few.
+ECMAScript6は、特定のカテゴリに適合しない正規表現機能にいくつかの有用な変更を加えます。次のセクションでは、いくつかを強調しています。
 
-## Other Regular Expression Changes
+## その他の正規表現の変更
 
-Regular expressions are an important part of working with strings in JavaScript, and like many parts of the language, they haven't changed much in recent versions. ECMAScript 6, however, makes several improvements to regular expressions to go along with the updates to strings.
+正規表現は、JavaScriptで文字列を扱う際に重要な機能であり、言語の多くの部分と同様、最近のバージョンではあまり変更されていません。しかし、ECMAScript6では、文字列の更新に合わせて正規表現をいくつか改善しています。
 
-### The Regular Expression y Flag
+### 正規表現yフラグ
 
-ECMAScript 6 standardized the `y` flag after it was implemented in Firefox as a proprietary extension to regular expressions. The `y` flag affects a regular expression search's `sticky` property, and it tells the search to start matching characters in a string at the position specified by the regular expression's `lastIndex` property. If there is no match at that location, then the regular expression stops matching. To see how this works, consider the following code:
+ECMAScript6は、正規表現の独自の拡張機能としてFirefoxで実装された後、`y`フラグを標準化しました。`y`フラグは、正規表現検索の`sticky`プロパティに影響を与え、正規表現のlastIndexプロパティで指定された位置にある文字列内で一致する文字を検索するように指示します。その場所に一致するものがなければ、正規表現は一致を停止します。これがどのように動作するかは下記のコードで確認できます。
 
 ```js
 var text = "hello1 hello2 hello3",
@@ -295,11 +295,11 @@ console.log(globalResult[0]);   // "hello2 "
 console.log(stickyResult[0]);   // Error! stickyResult is null
 ```
 
-This example has three regular expressions. The expression in `pattern` has no flags, the one in `globalPattern` uses the `g` flag, and the one in `stickyPattern` uses the `y` flag. In the first trio of `console.log()` calls, all three regular expressions should return `"hello1 "` with a space at the end.
+この例には3つの正規表現があります。`pattern`の式はフラグを持たず、`globalPattern`の式は`g`フラグを使い、`stickyPattern`の式は`y`フラグを使います。`console.log()`呼び出しの最初の3つは、3つの正規表現はすべて、`"hello1 "`を最後にスペースを入れて返すべきです。
 
-After that, the `lastIndex` property is changed to 1 on all three patterns, meaning that the regular expression should start matching from the second character on all of them. The regular expression with no flags completely ignores the change to `lastIndex` and still matches `"hello1 "` without incident. The regular expression with the `g` flag goes on to match `"hello2 "` because it is searching forward from the second character of the string (`"e"`). The sticky regular expression doesn't match anything beginning at the second character so `stickyResult` is `null`.
+その後、3つのパターンすべてでlastIndexプロパティが1に変更されます。つまり、正規表現はすべての文字の2番目の文字からのマッチングを開始する必要があります。フラグを持たない正規表現は`lastIndex`への変更を完全に無視し、`"hello1 "`と事実上一致します。`g`フラグが付いた正規表現は、文字列(`"e"`)の2番目の文字から前方を検索しているので、`"hello2 "`にマッチします。sticky正規表現は2番目の文字から始まるものと一致しないので、`stickyResult`は`null`です。
 
-The sticky flag saves the index of the next character after the last match in `lastIndex` whenever an operation is performed. If an operation results in no match, then `lastIndex` is set back to 0. The global flag behaves the same way, as demonstrated here:
+stickeyフラグは、操作が実行されるたびにlastIndexで最後に一致した次の文字のインデックスを保存します。演算の結果が一致しない場合、lastIndexは0に設定されます。グローバルフラグは、次のように同様に動作します。
 
 ```js
 var text = "hello1 hello2 hello3",
@@ -331,14 +331,14 @@ console.log(globalPattern.lastIndex);   // 14
 console.log(stickyPattern.lastIndex);   // 14
 ```
 
-The value of `lastIndex` changes to 7 after the first call to `exec()` and to 14 after the second call, for both the `stickyPattern` and `globalPattern` variables.
+`lastIndex`の値は、`stickyPattern`変数と`globalPattern`変数の両方に対して、`exec()`の最初の呼び出しの後で7に、2番目の呼び出しの後で14に変わります。
 
-There are two more subtle details about the sticky flag to keep in mind:
+覚えておきたいのは、stickeyフラグについてさらに2つのわかりにくい仕様があります。
 
-1. The `lastIndex` property is only honored when calling methods that exist on the regular expression object, like the `exec()` and `test()` methods. Passing the regular expression to a string method, such as `match()`, will not result in the sticky behavior.
-1. When using the `^` character to match the start of a string, sticky regular expressions only match from the start of the string (or the start of the line in multiline mode). While `lastIndex` is 0, the `^` makes a sticky regular expression no different from a non-sticky one. If `lastIndex` doesn't correspond to the beginning of the string in single-line mode or the beginning of a line in multiline mode, the sticky regular expression will never match.
+1. `lastIndex`プロパティは、`exec()`や`test()`メソッドのように、正規表現オブジェクトに存在するメソッドを呼び出すときにのみ有効です。正規表現を`match()`のような文字列メソッドに渡しても、スティッキーな動作は起こりません。
+1. 文字列の先頭に一致する`^`文字を使用する場合、スティッキー正規表現は文字列の先頭(または複数行モードの行の先頭)からのみ一致します。`lastIndex`は0ですが、`^`はスティッキーな正規表現を、スティッキーでないものと変わらないものにします。`lastIndex`がシングルラインモードの文字列の先頭や複数行モードの行頭に対応しない場合、スティッキー正規表現は決して一致しません。
 
-As with other regular expression flags, you can detect the presence of `y` by using a property. In this case, you'd check the `sticky` property, as follows:
+他の正規表現フラグと同様に、プロパティを使って`y`の存在を検出することができます。この場合、次のように`sticky`プロパティをチェックします：
 
 ```js
 var pattern = /hello\d/y;
@@ -346,9 +346,9 @@ var pattern = /hello\d/y;
 console.log(pattern.sticky);    // true
 ```
 
-The `sticky` property is set to true if the sticky flag is present, and the property is false if not. The `sticky` property is read-only based on the presence of the flag and cannot be changed in code.
+`sticky`プロパティは、stickeyフラグが存在する場合はtrueに設定され、stickeyフラグが存在しない場合はfalseに設定されます。`sticky`プロパティは、フラグの存在に基づいて読み取り専用であり、コード内で変更することはできません。
 
-Similar to the `u` flag, the `y` flag is a syntax change, so it will cause a syntax error in older JavaScript engines. You can use the following approach to detect support:
+`u`フラグと同様に、`y`フラグはシンタックスの変更であるため、古いJavaScriptエンジンではシンタックスエラーが発生します。サポートしているかどうかは下記のように確認できます。
 
 ```js
 function hasRegExpY() {
@@ -361,18 +361,18 @@ function hasRegExpY() {
 }
 ```
 
-Just like the `u` check, this returns false if it's unable to create a regular expression with the `y` flag. In one final similarity to `u`, if you need to use `y` in code that runs in older JavaScript engines, be sure to use the `RegExp` constructor when defining those regular expressions to avoid a syntax error.
+`u`チェックと同様に、`y`フラグを持つ正規表現を生成できない場合はfalseを返します。`u`との最後の類似点として、古いJavaScriptエンジンで実行されるコードに`y`を使う必要がある場合、正規表現を定義する際に`RegExp`コンストラクタを使ってシンタックスエラーを避けるようにしてください。
 
-### Duplicating Regular Expressions
+### 正規表現を複製する
 
-In ECMAScript 5, you can duplicate regular expressions by passing them into the `RegExp` constructor like this:
+ECMAScriptでは、正規表現を`RegExp`コンストラクタに次のように渡してコピーすることができます：
 
 ```js
 var re1 = /ab/i,
     re2 = new RegExp(re1);
 ```
 
-The `re2` variable is just a copy of the `re1` variable. But if you provide the second argument to the `RegExp` constructor, which specifies the flags for the regular expression, your code won't work, as in this example:
+`re2`変数は単に`re1`変数のコピーです。しかし、正規表現のフラグを指定する`RegExp`コンストラクタに2番目の引数を指定した場合、この例のようにコードは機能しません：
 
 ```js
 var re1 = /ab/i,
@@ -381,7 +381,7 @@ var re1 = /ab/i,
     re2 = new RegExp(re1, "g");
 ```
 
-If you execute this code in an ECMAScript 5 environment, you'll get an error stating that the second argument cannot be used when the first argument is a regular expression. ECMAScript 6 changed this behavior such that the second argument is allowed and overrides any flags present on the first argument. For example:
+ECMAScript5環境でこのコードを実行すると、最初の引数が正規表現の場合に2番目の引数を使用できないというエラーが発生します。 ECMAScript6では、この動作が変更され、2番目の引数が許可され、最初の引数にあるフラグがすべて上書きされます。例えば、
 
 ```js
 var re1 = /ab/i,
@@ -401,11 +401,11 @@ console.log(re2.test("AB"));            // false
 
 ```
 
-In this code, `re1` has the case-insensitive `i` flag while `re2` has only the global `g` flag. The `RegExp` constructor duplicated the pattern from `re1` and substituted the `g` flag for the `i` flag. Without the second argument, `re2` would have the same flags as `re1`.
+このコードでは、`re1`は大文字小文字を区別しない`i`フラグを持ち、`re2`は大域的`g`フラグのみを持っています。`RegExp`コンストラクタはパターンを`re1`から複製し、`i`フラグのために`g`フラグを置き換えました。第2引数がなければ、`re2`は`re1`と同じフラグを持ちます。
 
-### The `flags` Property
+### `flags`プロパティ
 
-Along with adding a new flag and changing how you can work with flags, ECMAScript 6 added a property associated with them. In ECMAScript 5, you could get the text of a regular expression by using the `source` property, but to get the flag string, you'd have to parse the output of  the `toString()` method as shown below:
+新しいフラグの追加とフラグの操作方法の変更に加えて、ECMAScript6はそれらに関連付けられたプロパティを追加しました。ECMAScript5では、`source`プロパティを使って正規表現のテキストを得ることができますが、フラグ文字列を取得するには、以下のように`toString()`メソッドの出力をパースする必要があります：
 
 ```js
 function getFlags(re) {
@@ -419,11 +419,11 @@ var re = /ab/g;
 console.log(getFlags(re));          // "g"
 ```
 
-This converts a regular expression into a string and then returns the characters found after the last `/`. Those characters are the flags.
+正規表現を文字列に変換し、最後の`/`の後にある文字を返します。これらの文字はフラグです。
 
-ECMAScript 6 makes fetching flags easier by adding a `flags` property to go along with the `source` property. Both properties are prototype accessor properties with only a getter assigned, making them read-only. The `flags` property makes inspecting regular expressions easier for both debugging and inheritance purposes.
+ECMAScript6は、`source`プロパティに対して`flags`プロパティを追加することで、フラグの取得を容易にします。両方のプロパティは、ゲッターのみが割り当てられたプロトタイプアクセサプロパティで、ReadOnlyになっています。`flags`プロパティはデバッグと継承の目的のために正規表現を簡単に検査します。
 
-A late addition to ECMAScript 6, the `flags` property returns the string representation of any flags applied to a regular expression. For example:
+ECMAScript6に後で追加された`flags`プロパティは、正規表現に適用されたフラグの文字列表現を返します。例えば、
 
 ```js
 var re = /ab/g;
@@ -432,27 +432,27 @@ console.log(re.source);     // "ab"
 console.log(re.flags);      // "g"
 ```
 
-This fetches all flags on `re` and prints them to the console with far fewer lines of code than the `toString()` technique can. Using `source` and `flags` together allows you to extract the pieces of the regular expression that you need without parsing the regular expression string directly.
+これは、`re`のすべてのフラグを取り出し、`toString() `よりもはるかに少ないコード行でコンソールに出力します。`source`と`flags`を一緒に使うことで、正規表現文字列を直接パースすることなく必要な正規表現を抽出することができます。
 
-The changes to strings and regular expressions that this chapter has covered so far are definitely powerful, but ECMAScript 6 improves your power over strings in a much bigger way. It brings a type of literal to the table that makes strings more flexible.
+この章で扱ってきた文字列や正規表現の変更は確かに強力ですが、ECMAScript6は文字列よりもはるかに強大な力を手にしました。それは、文字列をより柔軟にするリテラルです。
 
-## Template Literals
+## テンプレートリテラル
 
-JavaScript's strings have always had limited functionality compared to strings in other languages. For instance, until ECMAScript 6, strings lacked the methods covered so far in this chapter, and string concatenation is as simple as possible. To allow developers to solve more complex problems, ECMAScript 6's *template literals* provide syntax for creating domain-specific languages (DSLs) for working with content in a safer way than the solutions available in ECMAScript 5 and earlier. (A DSL is a programming language designed for a specific, narrow purpose, as opposed to general-purpose languages like JavaScript.) The ECMAScript wiki offers the following description on the [template literal strawman](http://wiki.ecmascript.org/doku.php?id=harmony:quasis):
+JavaScriptの文字列は、他の言語の文字列と比較して機能が制限されていました。たとえば、ECMAScript6までは、この章で説明しているメソッドが文字列に存在しないため、文字列の連結は可能な限り簡単です。開発者がより複雑な問題を解決できるように、ECMAScript6の*テンプレートリテラル*は、ECMAScript5以前のソリューションより安全な方法で文字列を扱うためのドメイン固有言語(DSL)のシンタックスを提供します。 (DSLは、JavaScriptなどの汎用言語とは対照的に、特定の狭い目的のために設計されたプログラミング言語です)。ECMAScript wikiでは、下記のように記載されています。 [template literal strawman](http://wiki.ecmascript.org/doku.php?id=harmony:quasis)
 
-> This scheme extends ECMAScript syntax with syntactic sugar to allow libraries to provide DSLs that easily produce, query, and manipulate content from other languages that are immune or resistant to injection attacks such as XSS, SQL Injection, etc.
+> このスキームは、XSSやSQL Injectionなどの攻撃に対して耐性を持つ他の言語のコンテンツを容易に生成、参照、操作するDSLをライブラリに提供できるように、シンタックスシュガーでECMAScriptシンタックスを拡張します。
 
-In reality, though, template literals are ECMAScript 6's answer to the following features that JavaScript lacked all the way through ECMAScript 5:
+実際には、テンプレートリテラルは、JavaScriptがECMAScript5では対応していないと言われてきた次の機能に対するECMAScript6の答えです。
 
-* **Multiline strings** A formal concept of multiline strings.
-* **Basic string formatting** The ability to substitute parts of the string for values contained in variables.
-* **HTML escaping** The ability to transform a string such that it is safe to insert into HTML.
+* **複数行の文字列**複数行の文字列の正式な概念です。
+* **基本的な文字列フォーマット**文字列の一部を変数に含まれる値に置き換えることができます。
+* **HTMLエスケープ** HTMLに挿入するのが安全なように文字列を変換する機能。
 
-Rather than trying to add more functionality to JavaScript's already-existing strings, template literals represent an entirely new approach to solving these problems.
+テンプレートリテラルは、JavaScriptの既存の文字列にさらに多くの機能を追加しようとするのではなく、これらの問題を解決する全く新しいアプローチです。
 
-### Basic Syntax
+### 基本シンタックス
 
-At their simplest, template literals act like regular strings delimited by backticks (`` ` ``) instead of double or single quotes. For example, consider the following:
+最も単純なテンプレートリテラルは、ダブルクォートやシングルクォートの代わりにバッククォート(`` ` ``)で区切られた通常の文字列のように動作します。たとえば、次の点を考慮してください。
 
 ```js
 let message = `Hello world!`;
@@ -462,9 +462,9 @@ console.log(typeof message);        // "string"
 console.log(message.length);        // 12
 ```
 
-This code demonstrates that the variable `message` contains a normal JavaScript string. The template literal syntax is used to create the string value, which is then assigned to the `message` variable.
+このコードは、変数`message`に通常のJavaScript文字列が含まれていることを示しています。テンプレートリテラルシンタックスは文字列値を生成するために使用され、`message`変数に割り当てられます。
 
-If you want to use a backtick in your string, then just escape it with a backslash (`\`), as in this version of the `message` variable:
+文字列中でバッククォートを使いたいのであれば、下記の`message`変数のようにバックスラッシュ(`\`)でエスケープしてください。
 
 ```js
 let message = `\`Hello\` world!`;
@@ -474,15 +474,15 @@ console.log(typeof message);        // "string"
 console.log(message.length);        // 14
 ```
 
-There's no need to escape either double or single quotes inside of template literals.
+テンプレートリテラル内で二重引用符または一重引用符のいずれかをエスケープする必要はありません。
 
-### Multiline Strings
+### 複数行の文字列
 
-JavaScript developers have wanted a way to create multiline strings since the first version of the language. But when using double or single quotes, strings must be completely contained on a single line.
+JavaScriptの開発者は、言語の最初のバージョン以降、複数行の文字列を生成する方法を求めていました。しかし、二重引用符または一重引用符を使用する場合、文字列は完全に単一の行に含まれなければなりません。
 
-#### Pre-ECMAScript 6 Workarounds
+#### Pre-ECMAScript6の回避策
 
-Thanks to a long-standing syntax bug, JavaScript does have a workaround. You can create multiline strings if there's a backslash (`\`) before a newline. Here's an example:
+長年にわたるシンタックスのバグのおかげで、JavaScriptには回避策があります。改行の前にバックスラッシュ(`\`)がある場合は、複数行の文字列を生成できます。下記がサンプルです。
 
 ```js
 var message = "Multiline \
@@ -491,7 +491,7 @@ string";
 console.log(message);       // "Multiline string"
 ```
 
-The `message` string has no newlines present when printed to the console because the backslash is treated as a continuation rather than a newline. In order to show a newline in output, you'd need to manually include it:
+バックスラッシュは改行ではなく文字列の継続として扱われるため、`message`文字列にはコンソールに出力する際に改行がありません。出力に改行を表示するには、手動で含める必要があります。
 
 ```js
 var message = "Multiline \n\
@@ -501,9 +501,9 @@ console.log(message);       // "Multiline
                             //  string"
 ```
 
-This should print `Multiline String` on two separate lines in all major JavaScript engines, but the behavior is defined as a bug and many developers recommend avoiding it.
+主要なJavaScriptエンジンでは。2つの別々の行に`Multiline String`を表示しなければなりませんが、その振る舞いはバグとして定義され、避けるべきだと言われてきました。
 
-Other pre-ECMAScript 6 attempts to create multiline strings usually relied on arrays or string concatenation, such as:
+他のpre-ECMAScript6では、以下のような配列や文字列の連結に依存していました。
 
 ```js
 var message = [
@@ -515,11 +515,11 @@ let message = "Multiline \n" +
     "string";
 ```
 
-All of the ways developers worked around JavaScript's lack of multiline strings left something to be desired.
+JavaScriptの複数行文字列の不便さを回避するために開発者がとった方法は、重要な示唆を残しました。
 
-#### Multiline Strings the Easy Way
+#### 簡単な方法で複数の文字列
 
-ECMAScript 6's template literals make multiline strings easy because there's no special syntax. Just include a newline where you want, and it shows up in the result. For example:
+ECMAScript6のテンプレートリテラルは、特別なシンタックスがないため、複数行の文字列を簡単にします。あなたが望む場所に改行を入れるだけで結果に現れます。例えば：
 
 ```js
 let message = `Multiline
@@ -530,7 +530,7 @@ console.log(message);           // "Multiline
 console.log(message.length);    // 16
 ```
 
-All whitespace inside the backticks is part of the string, so be careful with indentation. For example:
+バッククォート内のすべての空白は文字列の一部です。インデントには注意してください。例えば、
 
 ```js
 let message = `Multiline
@@ -541,7 +541,7 @@ console.log(message);           // "Multiline
 console.log(message.length);    // 31
 ```
 
-In this code, all whitespace before the second line of the template literal is considered part of the string itself. If making the text line up with proper indentation is important to you, then consider leaving nothing on the first line of a multiline template literal and then indenting after that, as follows:
+このコードでは、テンプレートリテラルの2行目の前のすべての空白は、文字列自体の一部とみなされます。適切なインデントでテキスト行を生成することが重要な場合は、次のように、複数行のテンプレートリテラルの最初の行に何も残さず、その後にインデントを追加してください。
 
 ```js
 let html = `
@@ -550,9 +550,9 @@ let html = `
 </div>`.trim();
 ```
 
-This code begins the template literal on the first line but doesn't have any text until the second. The HTML tags are indented to look correct and then the `trim()` method is called to remove the initial empty line.
+このコードは、最初の行でテンプレートリテラルを開始しますが、2番目の行まではテキストがありません。 HTMLタグは正しく見えるようインデントされ、`trim()`メソッドが呼び出されて最初の空行が削除されます。
 
-A> If you prefer, you can also use `\n` in a template literal to indicate where a newline should be inserted:
+A> 必要に応じて、テンプレートリテラルで`\n`を使って、改行を挿入する場所を指定することもできます：
 A> {:lang="js"}
 A> ~~~~~~~~
 A>
@@ -563,11 +563,11 @@ A>                                 //  string"
 A> console.log(message.length);    // 16
 A> ~~~~~~~~
 
-### Making Substitutions
+### 置換を行う
 
-At this point, template literals may look like fancier versions of normal JavaScript strings. The real difference between the two lies in template literal *substitutions*. Substitutions allow you to embed any valid JavaScript expression inside a template literal and output the result as part of the string.
+この時点で、テンプレートリテラルは通常のJavaScript文字列のように見やすいものに見えるかもしれません。 2つの間の実際の違いは、テンプレートのリテラル*置換*にあります。置換により、テンプレートリテラル内に有効なJavaScript式を埋め込み、その結果を文字列の一部として出力することができます。
 
-Substitutions are delimited by an opening `${` and a closing `}` that can have any JavaScript expression inside. The simplest substitutions let you embed local variables directly into a resulting string, like this:
+JavaScriptの式を内部に含めるには、`${`と`}`で囲みます。最も単純な置換は、ローカル変数を次のように結果の文字列に直接埋め込むことです。
 
 ```js
 let name = "Nicholas",
@@ -576,11 +576,11 @@ let name = "Nicholas",
 console.log(message);       // "Hello, Nicholas."
 ```
 
-The substitution `${name}` accesses the local variable `name` to insert `name` into the `message` string. The `message` variable then holds the result of the substitution immediately.
+置換`${name}`はローカル変数`name`にアクセスして`name`を`message`文字列に挿入します。`message`変数は置換の結果を直ちに保持します。
 
-I> A template literal can access any variable accessible in the scope in which it is defined. Attempting to use an undeclared variable in a template literal throws an error in both strict and non-strict modes.
+I> テンプレートリテラルは、定義されているスコープ内でアクセス可能な変数にアクセスできます。テンプレートリテラルで宣言されていない変数を使用しようとすると、strictモードとnon-strictモードの両方でエラーがスローされます。
 
-Since all substitutions are JavaScript expressions, you can substitute more than just simple variable names. You can easily embed calculations, function calls, and more. For example:
+すべての置換がJavaScript式なので、単純な変数名だけではなく、代用することもできます。計算、関数呼び出しなどを簡単に埋め込むことができます。例えば：
 
 ```js
 let count = 10,
@@ -590,9 +590,9 @@ let count = 10,
 console.log(message);       // "10 items cost $2.50."
 ```
 
-This code performs a calculation as part of the template literal. The variables `count` and `price` are multiplied together to get a result, and then formatted to two decimal places using `.toFixed()`. The dollar sign before the second substitution is output as-is because it's not followed by an opening curly brace.
+このコードは、テンプレートリテラルの一部として計算を実行します。変数`count`と`price`は、結果を得るために一緒に乗算され、`.toFixed()`を使って小数点以下2桁にフォーマットされます。2番目の置換の前のドル記号は、開始中括弧が続かないため、そのまま出力されます。
 
-Template literals are also JavaScript expressions, which means you can place a template literal inside of another template literal, as in this example:
+テンプレートリテラルはJavaScript式でもあります。つまり、次の例のように、テンプレートリテラルを別のテンプレートリテラルの内側に配置できます。
 
 ```js
 let name = "Nicholas",
@@ -603,23 +603,23 @@ let name = "Nicholas",
 console.log(message);        // "Hello, my name is Nicholas."
 ```
 
-This example nests a second template literal inside the first. After the first `${`, another template literal begins. The second `${` indicates the beginning of an embedded expression inside the inner template literal. That expression is the variable `name`, which is inserted into the result.
+この例では、最初のテンプレートリテラルを最初のテンプレートリテラルの中にネストします。最初の`${`の後に別のテンプレートリテラルが始まります。 2番目の`${`は内部のテンプレートリテラルの中に埋め込まれた式の始まりを示します。その式は変数`name`であり、結果に挿入されます。
 
-### Tagged Templates
+### タグ付きテンプレート
 
-Now you've seen how template literals can create multiline strings and insert values into strings without concatenation. But the real power of template literals comes from tagged templates. A *template tag* performs a transformation on the template literal and returns the final string value. This tag is specified at the start of the template, just before the first `` ` `` character, as shown here:
+テンプレートリテラルが複数行の文字列を生成し、連結せずに文字列に値を挿入する方法を見てきました。しかし、テンプレートリテラルの本当の力は、タグ付きテンプレートに由来します。*tagテンプレート*はテンプレートリテラルに対して変換を実行し、最終的な文字列値を返します。このtagは、テンプレートの最初、最初の`` ` ``文字の直前に指定します。
 
 ```js
 let message = tag`Hello world`;
 ```
 
-In this example, `tag` is the template tag to apply to the `` `Hello world` `` template literal.
+この例では、`tag`は`` `Hello world` ``テンプレートリテラルに適用するテンプレートタグです。
 
-#### Defining Tags
+#### タグの定義
 
-A *tag* is simply a function that is called with the processed template literal data. The tag receives data about the template literal as individual pieces and must combine the pieces to create the result. The first argument is an array containing the literal strings as interpreted by JavaScript. Each subsequent argument is the interpreted value of each substitution.
+*tag*は、単に処理されたテンプレートリテラルデータで呼び出される関数です。このタグは、テンプレートリテラルに関するデータを個別に受け取り、結合して結果を生成する必要があります。最初の引数は、JavaScriptによって解釈されるリテラル文字列を含む配列です。各後続の引数は、各置換の解釈された値です。
 
-Tag functions are typically defined using rest arguments as follows, to make dealing with the data easier:
+タグ関数は、通常、以下のようにrest引数を使用して定義され、データを扱いやすくします。
 
 ```js
 function tag(literals, ...substitutions) {
@@ -627,7 +627,7 @@ function tag(literals, ...substitutions) {
 }
 ```
 
-To better understand what gets passed to tags, consider the following:
+何がtagに渡されるのかを理解するには、次の点を考慮してください。
 
 ```js
 let count = 10,
@@ -635,17 +635,17 @@ let count = 10,
     message = passthru`${count} items cost $${(count * price).toFixed(2)}.`;
 ```
 
-If you had a function called `passthru()`, that function would receive three arguments. First, it would get a `literals` array, containing the following elements:
+`passthru()`という関数があった場合、その関数は3つの引数を受け取ります。まず、以下の要素を含む`literal`配列を取得します。
 
-* The empty string before the first substitution (`""`)
-* The string after the first substitution and before the second (`" items cost $"`)
-* The string after the second substitution (`"."`)
+* 最初の置換(`""`)の前の空の文字列
+* 最初の置換後の文字列と2番目の文字列(`" items costs $"`)の前の文字列
+* 2回目の置換後の文字列(`"."`)
 
-The next argument would be `10`, which is the interpreted value for the `count` variable. This becomes the first element in a `substitutions` array. The final argument would be `"2.50"`, which is the interpreted value for `(count * price).toFixed(2)` and the second element in the `substitutions` array.
+次の引数は`10`で、これは`count`変数の解釈された値です。これは`substitutions`配列の最初の要素になります。最後の引数は`"2.50"`で、`(count * price).toFixed(2)`のための解釈された値であり、`substitutions`配列の2番目の要素です。
 
-Note that the first item in `literals` is an empty string. This ensures that `literals[0]` is always the start of the string, just like `literals[literals.length - 1]` is always the end of the string. There is always one fewer substitution than literal, which means the expression `substitutions.length === literals.length - 1` is always true.
+`literal`の最初の項目は空文字列です。これは、`literal[literal.length - 1]`が常に文字列の終わりであるように、`literal[0]`が常に文字列の先頭であることを保証します。literalより常に置換が1つ少なくなります。つまり、`substitutions.length === literals.length - 1`という表現は常に真です。
 
-Using this pattern, the `literals` and `substitutions` arrays can be interwoven to create a resulting string. The first item in `literals` comes first, the first item in `substitutions` is next, and so on, until the string is complete. As an example, you can mimic the default behavior of a template literal by alternating values from these two arrays:
+このパターンを使うと、`literal`と`substitute`配列を合成して結果の文字列を作ることができます。`リテラル`の最初の項目が最初に来て、`置換`の最初の項目が次に、そして文字列が完成するまで続きます。たとえば、次の2つの配列の値を交互に入れて、テンプレートリテラルのデフォルトの動作を模倣することができます。
 
 ```js
 function passthru(literals, ...substitutions) {
@@ -670,13 +670,13 @@ let count = 10,
 console.log(message);       // "10 items cost $2.50."
 ```
 
-This example defines a `passthru` tag that performs the same transformation as the default template literal behavior. The only trick is to use `substitutions.length` for the loop rather than `literals.length` to avoid accidentally going past the end of the `substitutions` array. This works because the relationship between `literals` and `substitutions` is well-defined in ECMAScript 6.
+この例では、デフォルトのテンプレートリテラル動作と同じ変換を実行する`passthru`タグを定義しています。唯一のやり方は`literalals.length`ではなく`substitutions.length`を使って、`substitutions`配列の終わりを過ぎてしまうことを避けることです。これは、ECMAScript6では`リテラル`と`置換`の関係が明確に定義されているためです。
 
-I> The values contained in `substitutions` are not necessarily strings. If an expression evaluates to a number, as in the previous example, then the numeric value is passed in. Determining how such values should output in the result is part of the tag's job.
+I> `substitutions`に含まれる値は必ずしも文字列ではありません。前の例のように式が数値に評価される場合、数値が渡されます。結果にそのような値を出力する方法を決定することは、tagの役割の一つです。
 
-#### Using Raw Values in Template Literals
+#### テンプレートリテラルの生値を使う
 
-Template tags also have access to raw string information, which primarily means access to character escapes before they are transformed into their character equivalents. The simplest way to work with raw string values is to use the built-in `String.raw()` tag. For example:
+テンプレートタグは生の文字列情報にもアクセスできます。文字情報は、主に文字エスケープにアクセスして文字に変換する前にアクセスすることを意味します。生の文字列値を扱う最も簡単な方法は、組み込みの`String.raw()`タグを使うことです。例えば。
 
 ```js
 let message1 = `Multiline\nstring`,
@@ -687,9 +687,9 @@ console.log(message1);          // "Multiline
 console.log(message2);          // "Multiline\\nstring"
 ```
 
-In this code, the `\n` in `message1` is interpreted as a newline while the `\n` in `message2` is returned in its raw form of `"\\n"` (the slash and `n` characters). Retrieving the raw string information like this allows for more complex processing when necessary.
+このコードでは、`message1`の`\n`は改行として解釈され、`message2`の`\n`は未加工の形式の`"\\n"`(スラッシュと`n`)。このような生の文字列情報を取得することで、必要に応じてより複雑な処理が可能になります。
 
-The raw string information is also passed into template tags. The first argument in a tag function is an array with an extra property called `raw`. The `raw` property is an array containing the raw equivalent of each literal value. For example, the value in `literals[0]` always has an equivalent `literals.raw[0]` that contains the raw string information. Knowing that, you can mimic `String.raw()` using the following code:
+生の文字列情報もテンプレートタグに渡されます。タグ関数の最初の引数は、`raw`という余分なプロパティを持つ配列です。`raw`プロパティは、各リテラル値の生の等価物を含む配列です。たとえば、`literal[0]`の値は、生の文字列情報を含む`literal.raw[0]`と等価です。それを知って、あなたは次のコードを使って`String.raw()`を模倣することができます：
 
 ```js
 function raw(literals, ...substitutions) {
@@ -713,16 +713,16 @@ console.log(message);           // "Multiline\\nstring"
 console.log(message.length);    // 17
 ```
 
-This uses `literals.raw` instead of `literals` to output the string result. That means any character escapes, including Unicode code point escapes, should be returned in their raw form. Raw strings are helpful when you want to output a string containing code in which you'll need to include the character escaping (for instance, if you want to generate documentation about some code, you may want to output the actual code as it appears).
+これは`literal`の代わりに`literalals.raw`を使って文字列resultを出力します。つまり、Unicodeコードポイントエスケープを含むすべての文字エスケープは、そのままの形で返される必要があります。生の文字列は、エスケープ文字を含める必要があるコードを含む文字列を出力する場合に役立ちます(たとえば、コードについてのドキュメントを生成する場合は、実際のコードをそのまま出力することができます) 。
 
-## Summary
+## まとめ
 
-Full Unicode support allows JavaScript to deal with UTF-16 characters in logical ways. The ability to transfer between code point and character via `codePointAt()` and `String.fromCodePoint()` is an important step for string manipulation. The addition of the regular expression `u` flag makes it possible to operate on code points instead of 16-bit characters, and the `normalize()` method allows for more appropriate string comparisons.
+完全なUnicodeサポートにより、JavaScriptは論理的な方法でUTF-16文字を扱うことができます。`codePointAt()`と`String.fromCodePoint()`を使ってコードポイントと文字をやりとりする能力は、文字列操作にとって重要なステップです。正規表現`u`フラグを追加することで、16ビット文字ではなくコードポイントでの操作が可能になり`normalize()`メソッドではより適切な文字列比較が可能になります。
 
-ECMAScript 6 also added new methods for working with strings, allowing you to more easily identify a substring regardless of its position in the parent string. More functionality was added to regular expressions, too.
+ECMAScript6では、文字列を操作するための新しいメソッドも追加され、親ストリング内の位置に関係なく、部分文字列をより簡単に識別することができます。さらに多くの機能が正規表現に追加されました。
 
-Template literals are an important addition to ECMAScript 6 that allows you to create domain-specific languages (DSLs) to make creating strings easier. The ability to embed variables directly into template literals means that developers have a safer tool than string concatenation for composing long strings with variables.
+テンプレートリテラルはECMAScript6に重要な追加機能であり、文字列の生成を容易にするドメイン固有言語(DSL)を生成できます。変数をテンプレートリテラルに直接埋め込むことは、開発者が長い文字列を変数で構成するための文字列連結よりも安全なツールであることを意味します。
 
-Built-in support for multiline strings also makes template literals a useful upgrade over normal JavaScript strings, which have never had this ability. Despite allowing newlines directly inside the template literal, you can still use `\n` and other character escape sequences.
+複数行文字列の組み込みサポートにより、テンプレートリテラルは、この能力を持っていない通常のJavaScript文字列よりも便利なアップグレードになります。テンプレートリテラルの中に改行を直接入れることもできますし、`\n`やその他のエスケープシーケンスを使用することもできます。
 
-Template tags are the most important part of this feature for creating DSLs. Tags are functions that receive the pieces of the template literal as arguments. You can then use that data to return an appropriate string value. The data provided includes literals, their raw equivalents, and any substitution values. These pieces of information can then be used to determine the correct output for the tag.
+テンプレートタグは、DSLを生成するためのこの機能の最も重要な部分です。タグは、引数としてテンプレートリテラルを受け取る関数です。そのデータを使用して、適切な文字列値を返すことができます。提供されるデータには、リテラル、未処理の等価物、および任意の置換値が含まれます。これらの情報を使用して、タグの正しい出力を判定することができます。
