@@ -1,16 +1,16 @@
-# Functions
+# 関数
 
-Functions are an important part of any programming language, and prior to ECMAScript 6, JavaScript functions hadn't changed much since the language was created. This left a backlog of problems and nuanced behavior that made making mistakes easy and often required more code just to achieve very basic behaviors.
+関数はプログラミング言語の重要な部分であり、ECMAScript6より前では、言語が生成されて以来、JavaScript関数はほとんど変更されていませんでした。これは、間違いを簡単にし、非常に基本的な振る舞いを達成するために多くのコードを必要とする問題や微妙な動作のバックログを残しました。
 
-ECMAScript 6 functions make a big leap forward, taking into account years of complaints and requests from JavaScript developers. The result is a number of incremental improvements on top of ECMAScript 5 functions that make programming in JavaScript less error-prone and more powerful.
+ECMAScript6の機能は、JavaScript開発者から何年もの苦情や要望を考慮に入れて、大きな飛躍を遂げています。その結果、ECMAScript5の機能の上で、JavaScriptのプログラミングをエラーを起こしにくく、より強力にしています。
 
-## Functions with Default Parameter Values
+## デフォルトのパラメータ値を持つ関数
 
-Functions in JavaScript are unique in that they allow any number of parameters to be passed, regardless of the number of parameters declared in the function definition. This allows you to define functions that can handle different numbers of parameters, often by just filling in default values when parameters aren't provided. This section covers how default parameters work both in and prior to ECMAScript 6, along with some important information on the `arguments` object, using expressions as parameters, and another TDZ.
+JavaScriptの関数は、関数定義で宣言されたパラメータの数に関係なく、任意の数のパラメータを渡すことができる点で独特です。これにより、異なる数のパラメータを扱うことができる関数を定義することができます。パラメータが指定されていない場合には、デフォルト値を入力するだけです。このセクションでは、デフォルトパラメータがECMAScript6とその前の両方でどのように機能するか、`arguments`オブジェクトに関する重要な情報、式をパラメータとして使用する方法、および別のTDZについて説明します。
 
-### Simulating Default Parameter Values in ECMAScript 5
+### ECMAScript5のデフォルトパラメータ値のシミュレーション
 
-In ECMAScript 5 and earlier, you would likely use the following pattern to create a function with default parameters values:
+ECMAScript5以前では、次のパターンを使用して、デフォルトのパラメータ値を持つ関数を生成していました。
 
 ```js
 function makeRequest(url, timeout, callback) {
@@ -23,9 +23,9 @@ function makeRequest(url, timeout, callback) {
 }
 ```
 
-In this example, both `timeout` and `callback` are actually optional because they are given a default value if a parameter isn't provided. The logical OR operator (`||`) always returns the second operand when the first is falsy. Since named function parameters that are not explicitly provided are set to `undefined`, the logical OR operator is frequently used to provide default values for missing parameters. There is a flaw with this approach, however, in that a valid value for `timeout` might actually be `0`, but this would replace it with `2000` because `0` is falsy.
+この例では、`timeout`と`callback`の両方が実際にはオプションです。なぜなら、パラメータが与えられていなければデフォルト値が与えられているからです。 論理OR演算子(`||`)は、最初のオペランドが偽であるとき、常に第2オペランドを返します。 明示的に提供されていない名前付き関数パラメータは`undefined`に設定されているので、論理OR演算子は欠けているパラメータのデフォルト値を提供するために頻繁に使用されます。 しかし、このアプローチには、 'timeout'の有効な値が実際には '0'であるという点で欠陥がありますが、これは '0'が偽であるため '2000'に置き換えられます。
 
-In that case, a safer alternative is to check the type of the argument using `typeof`, as in this example:
+その場合、より安全な選択肢は、この例のように`typeof`を使って引数の型をチェックすることです：
 
 ```js
 function makeRequest(url, timeout, callback) {
@@ -38,11 +38,11 @@ function makeRequest(url, timeout, callback) {
 }
 ```
 
-While this approach is safer, it still requires a lot of extra code for a very basic operation. Popular JavaScript libraries are filled with similar patterns, as this represents a common pattern.
+このアプローチはより安全ですが、非常に基本的な操作にはさらに多くの余分なコードが必要です。 一般的なJavaScriptライブラリは、共通のパターンを表すため、類似のパターンで埋められています。
 
-### Default Parameter Values in ECMAScript 6
+### ECMAScript6のデフォルトのパラメータ値
 
-ECMAScript 6 makes it easier to provide default values for parameters by providing initializations that are used when the parameter isn't formally passed. For example:
+ECMAScript6では、パラメータが正式に渡されないときに使用される初期化を提供することにより、パラメータのデフォルト値を提供することが容易になります。 例えば：
 
 ```js
 function makeRequest(url, timeout = 2000, callback = function() {}) {
@@ -52,9 +52,9 @@ function makeRequest(url, timeout = 2000, callback = function() {}) {
 }
 ```
 
-This function only expects the first parameter to always be passed. The other two parameters have default values, which makes the body of the function much smaller because you don't need to add any code to check for a missing value.
+この関数は、最初のパラメータが常に渡されることを期待しています。 他の2つのパラメータにはデフォルト値があり、欠損値をチェックするためのコードを追加する必要がないため、関数の本体が大幅に小さくなります。
 
-When `makeRequest()` is called with all three parameters, the defaults are not used. For example:
+`makeRequest()`が3つのパラメータすべてで呼び出されると、デフォルトは使用されません。 例えば：
 
 ```js
 // uses default timeout and callback
@@ -69,9 +69,9 @@ makeRequest("/foo", 500, function(body) {
 });
 ```
 
-ECMAScript 6 considers `url` to be required, which is why `"/foo"` is passed in all three calls to `makeRequest()`. The two parameters with a default value are considered optional.
+ECMAScript6は`url`が必要であるとみなします。なぜなら、``/foo"`がmakeRequest()への3回の呼び出しのすべてに渡されるからです。 デフォルト値を持つ2つのパラメータはオプションと見なされます。
 
-It's possible to specify default values for any arguments, including those that appear before arguments without default values in the function declaration. For example, this is fine:
+関数宣言でデフォルト値を持たない引数の前に出現するものを含め、任意の引数のデフォルト値を指定することは可能です。 たとえば、これは問題ありません。
 
 ```js
 function makeRequest(url, timeout = 2000, callback) {
@@ -81,7 +81,7 @@ function makeRequest(url, timeout = 2000, callback) {
 }
 ```
 
-In this case, the default value for `timeout` will only be used if there is no second argument passed in or if the second argument is explicitly passed in as `undefined`, as in this example:
+この場合、`timeout`のデフォルト値は、2番目の引数が渡されていない場合、または2番目の引数が`undefined`として明示的に渡されている場合にのみ使用されます。
 
 ```js
 // uses default timeout
@@ -98,11 +98,11 @@ makeRequest("/foo", null, function(body) {
 });
 ```
 
-In the case of default parameter values, a value of `null` is considered to be valid, meaning that in the third call to `makeRequest()`, the default value for `timeout` will not be used.
+デフォルトのパラメータ値の場合、`null`の値が有効であるとみなされます。つまり、`makeRequest()`の3回目の呼び出しでは、`timeout`のデフォルト値は使用されません。
 
-### How Default Parameter Values Affect the arguments Object
+### デフォルトのパラメータ値がargumentsオブジェクトに与える影響
 
-Just keep in mind that the behavior of the `arguments` object is different when default parameter values are present. In ECMAScript 5 nonstrict mode, the `arguments` object reflects changes in the named parameters of a function. Here's some code that illustrates how this works:
+デフォルトのパラメータ値が存在する場合、`arguments`オブジェクトの動作は異なります。ECMAScript5非厳密モードでは、`arguments`オブジェクトは、関数の名前付きパラメータの変更を反映します。これはどのように動作するかを示すコードです：
 
 ```js
 function mixArgs(first, second) {
@@ -117,7 +117,7 @@ function mixArgs(first, second) {
 mixArgs("a", "b");
 ```
 
-This outputs:
+出力値は下記のようになります。
 
 ```
 true
@@ -126,9 +126,9 @@ true
 true
 ```
 
-The `arguments` object is always updated in nonstrict mode to reflect changes in the named parameters. Thus, when `first` and `second` are assigned new values, `arguments[0]` and `arguments[1]` are updated accordingly, making all of the `===` comparisons resolve to `true`.
+`arguments`オブジェクトは、指定されたパラメータの変更を反映するために、非厳密モードで常に更新されます。 したがって、`first`と`second`に新しい値が代入されると`arguments 'と`arguments[1]`はそれに応じて更新され、`===`のすべての比較が`true`に解決されます。
 
-ECMAScript 5's strict mode, however, eliminates this confusing aspect of the `arguments` object. In strict mode, the `arguments` object does not reflect changes to the named parameters. Here's the `mixArgs()` function again, but in strict mode:
+しかし、ECMAScript5の厳密なモードは、`arguments`オブジェクトのこの混乱する側面を排除します。 strictモードでは、`arguments`オブジェクトは指定されたパラメータへの変更を反映しません。 以下は`mixArgs()`関数ですが、strictモードです：
 
 ```js
 function mixArgs(first, second) {
@@ -145,7 +145,7 @@ function mixArgs(first, second) {
 mixArgs("a", "b");
 ```
 
-The call to `mixArgs()` outputs:
+`mixArgs()`関数の出力値は下記のようになります。
 
 ```
 true
@@ -154,9 +154,9 @@ false
 false
 ```
 
-This time, changing `first` and `second` doesn't affect `arguments`, so the output behaves as you'd normally expect it to.
+今回は、`first`と`second`を変更しても`arguments`には影響しないので、通常は期待通りに出力が動作します。
 
-The `arguments` object in a function using ECMAScript 6 default parameter values, however, will always behave in the same manner as ECMAScript 5 strict mode, regardless of whether the function is explicitly running in strict mode. The presence of default parameter values triggers the `arguments` object to remain detached from the named parameters. This is a subtle but important detail because of how the `arguments` object may be used. Consider the following:
+ただし、ECMAScript6のデフォルトのパラメータ値を使用する関数の`arguments`オブジェクトは、関数が厳密なモードで明示的に実行されているかどうかにかかわらず、常にECMAScript5 strictモードと同じように動作します。 デフォルトのパラメータ値が存在すると、`arguments`オブジェクトは、指定されたパラメータから切り離されたままになります。 これは、`arguments`オブジェクトがどのように使われるかという理由で、微妙だが重要な詳細です。 次の点を考慮してください。
 
 ```js
 // not in strict mode
@@ -173,7 +173,7 @@ function mixArgs(first, second = "b") {
 mixArgs("a");
 ```
 
-This outputs:
+出力値は下記のようになります。
 
 ```
 1
@@ -183,11 +183,11 @@ false
 false
 ```
 
-In this example, `arguments.length` is 1 because only one argument was passed to `mixArgs()`. That also means `arguments[1]` is `undefined`, which is the expected behavior when only one argument is passed to a function. That means `first` is equal to `arguments[0]` as well. Changing `first` and `second` has no effect on `arguments`. This behavior occurs in both nonstrict and strict mode, so you can rely on `arguments` to always reflect the initial call state.
+この例では、`arguments.length`は1で、`mixArgs()`に1つの引数しか渡されていないためです。 これは、`arguments [1]`が`undefined`であることを意味します。これは、関数に1つの引数しか渡されないときに期待される動作です。 つまり、`first`は`arguments [0]`と同じです。`first`と`second`を変更しても`arguments`には何の効果もありません。 この動作は、厳密でないモードと厳密なモードの両方で発生するため、常に`arguments`を利用して初期呼び出し状態を反映させることができます。
 
-### Default Parameter Expressions
+###デフォルトのパラメータ式
 
-Perhaps the most interesting feature of default parameter values is that the default value need not be a primitive value. You can, for example, execute a function to retrieve the default parameter value, like this:
+おそらく、デフォルトのパラメータ値の最も興味深い機能は、デフォルト値がプリミティブ値である必要はないということです。 たとえば、次のようにデフォルトのパラメータ値を取得する関数を実行できます。
 
 ```js
 function getValue() {
@@ -202,7 +202,7 @@ console.log(add(1, 1));     // 2
 console.log(add(1));        // 6
 ```
 
-Here, if the last argument isn't provided, the function `getValue()` is called to retrieve the correct default value. Keep in mind that `getValue()` is only called when `add()` is called without a second parameter, not when the function declaration is first parsed. That means if `getValue()` were written differently, it could potentially return a different value. For instance:
+ここで、最後の引数が与えられていない場合は、関数`getValue()`が呼び出されて正しいデフォルト値が取得されます。`getValue()`は、関数宣言が最初にパースされたときではなく、`add()`が第2引数なしで呼び出されたときにのみ呼び出されることに注意してください。 つまり、`getValue()`が異なって記述された場合、潜在的に異なる値を返す可能性があります。 例えば：
 
 ```js
 let value = 5;
@@ -220,11 +220,11 @@ console.log(add(1));        // 6
 console.log(add(1));        // 7
 ```
 
-In this example, `value` begins as five and increments each time `getValue()` is called. The first call to `add(1)` returns 6, while the second call to `add(1)` returns 7 because `value` was incremented. Because the default value for `second` is only evaluated when the function is called, changes to that value can be made at any time.
+この例では、`value`は5で始まり、`getValue()`が呼び出されるたびにインクリメントします。`add(1)`への最初の呼び出しは6を返し、`add(1)`への2回目の呼び出しは`value`がインクリメントされて7を返します。`second`のデフォルト値は、関数の呼び出し時にのみ評価されるため、その値への変更はいつでも行うことができます。
 
-W> Be careful when using function calls as default parameter values. If you forget the parentheses, such as `second = getValue` in the last example, you are passing a reference to the function rather than the result of the function call.
+W>関数呼び出しをデフォルトのパラメータ値として使用する場合は注意してください。 最後の例で`second = getValue`のようなかっこを忘れた場合は、関数呼び出しの結果ではなく関数への参照を渡しています。
 
-This behavior introduces another interesting capability. You can use a previous parameter as the default for a later parameter. Here's an example:
+この動作により、もう1つ興味深い機能が導入されます。 前のパラメータは、後のパラメータのデフォルトとして使用できます。 ここに例があります：
 
 ```js
 function add(first, second = first) {
@@ -235,7 +235,7 @@ console.log(add(1, 1));     // 2
 console.log(add(1));        // 2
 ```
 
-In this code, the parameter `second` is given a default value of `first`, meaning that passing in just one argument leaves both arguments with the same value. So `add(1, 1)` returns 2 just as `add(1)` returns 2. Taking this a step further, you can pass `first` into a function to get the value for `second` as follows:
+このコードでは、パラメータ`second`にはデフォルト値`first`が与えられています。つまり、1つの引数だけを渡すと、両方の引数が同じ値になります。 したがって、`add(1)`は`add(1)`が2を返すのと同じように2を返します。これをさらに進めると、`first`を関数に渡して`second`の値を次のように得ることができます：
 
 ```js
 function getValue(value) {
@@ -250,9 +250,9 @@ console.log(add(1, 1));     // 2
 console.log(add(1));        // 7
 ```
 
-This example sets `second` equal to the value returned by `getValue(first)`, so while `add(1, 1)` still returns 2, `add(1)` returns 7 (1 + 6).
+この例では`second`を`getValue(first)`によって返された値と等しく設定していますので、`add(1,1)`はまだ2を返しますが、`add(1)`は7(1 + 6)を返します。
 
-The ability to reference parameters from default parameter assignments works only for previous arguments, so earlier arguments do not have access to later arguments. For example:
+既定のパラメータ割り当てからパラメータを参照する機能は、以前の引数に対してのみ機能するため、以前の引数は後の引数にアクセスできません。 例えば：
 
 ```js
 function add(first = second, second) {
@@ -263,13 +263,13 @@ console.log(add(1, 1));         // 2
 console.log(add(undefined, 1)); // throws error
 ```
 
-The call to `add(undefined, 1)` throws an error because `second` is defined after `first` and is therefore unavailable as a default value. To understand why that happens, it's important to revisit temporal dead zones.
+`second 'は`first`の後に定義されているので、`add(undefined, 1)`の呼び出しはエラーを投げるので、デフォルト値として利用できません。 そのようなことが起こる理由を理解するには、一時的な不感地帯を再訪することが重要です。
 
-### Default Parameter Value Temporal Dead Zone
+###デフォルトのパラメータ値Temporal Dead Zone
 
-Chapter 1 introduced the temporal dead zone (TDZ) as it relates to `let` and `const`, and default parameter values also have a TDZ where parameters cannot be accessed. Similar to a `let` declaration, each parameter creates a new identifier binding that can't be referenced before initialization without throwing an error. Parameter initialization happens when the function is called, either by passing a value for the parameter or by using the default parameter value.
+第1章では、letとconstに関連する一時的な不感帯(TDZ)について紹介しました。デフォルトのパラメータ値には、パラメータにアクセスできないTDZもあります。`let`宣言と同様に、各パラメータは、エラーを投げずに初期化の前に参照することができない新しい識別子バインディングを生成します。 パラメータの初期化は、関数の呼び出し時にパラメータの値を渡すか、デフォルトのパラメータ値を使用して行われます。
 
-To explore the default parameter value TDZ, consider this example from "Default Parameter Expressions" again:
+デフォルトのパラメータ値TDZを調べるには、この例を「デフォルトのパラメータ式」から再度検討してください。
 
 ```js
 function getValue(value) {
@@ -284,7 +284,7 @@ console.log(add(1, 1));     // 2
 console.log(add(1));        // 7
 ```
 
-The calls to `add(1, 1)` and `add(1)` effectively execute the following code to create the `first` and `second` parameter values:
+`add(1,1)`と`add(1)`の呼び出しは`first`と`second`パラメータ値を作るのに以下のコードを効果的に実行します：
 
 ```js
 // JavaScript representation of call to add(1, 1)
@@ -296,7 +296,7 @@ let first = 1;
 let second = getValue(first);
 ```
 
-When the function `add()` is first executed, the bindings `first` and `second` are added to a parameter-specific TDZ (similar to how `let` behaves). So while `second` can be initialized with the value of `first` because `first` is always initialized at that time, the reverse is not true. Now, consider this rewritten `add()` function:
+関数`add()`が最初に実行されると、バインディング`first`と`second`がパラメータ固有のTDZに追加されます(`let`の動作と同様)。 したがって、`second`は`first`の値で初期化することができますが、`first`は常にその時に初期化されるため、その逆は真ではありません。 今、この書き直された`add()`関数を考えてみましょう：
 
 ```js
 function add(first = second, second) {
@@ -307,7 +307,7 @@ console.log(add(1, 1));         // 2
 console.log(add(undefined, 1)); // throws error
 ```
 
-The calls to `add(1, 1)` and `add(undefined, 1)` in this example now map to this code behind the scenes:
+この例の`add(1,1)`と`add(undefined、1)`への呼び出しは、このコードの裏にマップされるようになりました：
 
 ```js
 // JavaScript representation of call to add(1, 1)
@@ -319,17 +319,17 @@ let first = second;
 let second = 1;
 ```
 
-In this example, the call to `add(undefined, 1)` throws an error because `second` hasn't yet been initialized when `first` is initialized. At that point, `second` is in the TDZ and therefore any references to `second` throw an error. This mirrors the behavior of `let` bindings discussed in Chapter 1.
+この例では、`first`が初期化されたときに`second`がまだ初期化されていないので、`add(undefined、1)`の呼び出しはエラーを投げます。この時点では、「second」はTDZ内にあり、したがって、「second」への参照はエラーを投げます。これは、第1章で説明した`let`バインディングの動作を反映しています。
 
-I> Function parameters have their own scope and their own TDZ that is separate from the function body scope. That means the default value of a parameter cannot access any variables declared inside the function body.
+I>関数のパラメータには、独自のスコープと、関数本体のスコープとは別の独自のTDZがあります。つまり、パラメータのデフォルト値は、関数本体の中で宣言された変数にはアクセスできません。
 
-## Working with Unnamed Parameters
+## 無名パラメータの操作
 
-So far, the examples in this chapter have only covered parameters that have been named in the function definition. However, JavaScript functions don't limit the number of parameters that can be passed to the number of named parameters defined. You can always pass fewer or more parameters than formally specified. Default parameter values make it clear when a function can accept fewer parameters, and ECMAScript 6 sought to make the problem of passing more parameters than defined better as well.
+これまでのところ、この章の例では、関数定義で指定されたパラメータのみを扱っていました。しかし、JavaScript関数は、定義された名前付きパラメーターの数に渡すことができるパラメーターの数を制限しません。正式に指定された数よりも少なくても多くのパラメーターを渡すことができます。デフォルトのパラメータ値は、関数がより少ないパラメータを受け入れることができるときを明確にし、ECMAScript6は、よりよく定義されたよりも多くのパラメータを渡す問題を解決しようとしました。
 
-### Unnamed Parameters in ECMAScript 5
+### ECMAScript5の無名パラメータ
 
-Early on, JavaScript provided the `arguments` object as a way to inspect all function parameters that are passed without necessarily defining each parameter individually. While inspecting `arguments` works fine in most cases, this object can be a little cumbersome to work with. For example, examine this code, which inspects the `arguments` object:
+初期段階では、JavaScriptは`arguments`オブジェクトを、必ずしも各パラメータを個別に定義することなく渡されるすべての関数パラメータを検査する方法として提供しました。ほとんどの場合、`引数`を検査することはうまく動作しますが、このオブジェクトはやや面倒です。例えば、`arguments`オブジェクトを調べるこのコードを調べます：
 
 ```js
 function pick(object) {
@@ -344,7 +344,7 @@ function pick(object) {
 }
 
 let book = {
-    title: "Understanding ECMAScript 6",
+    title: "Understanding ECMAScript6",
     author: "Nicholas C. Zakas",
     year: 2015
 };
@@ -355,15 +355,15 @@ console.log(bookData.author);   // "Nicholas C. Zakas"
 console.log(bookData.year);     // 2015
 ```
 
-This function mimics the `pick()` method from the *Underscore.js* library, which returns a copy of a given object with some specified subset of the original object's properties. This example defines only one argument and expects the first argument to be the object from which to copy properties. Every other argument passed is the name of a property that should be copied on the result.
+この関数は、*Underscore.js*ライブラリの`pick()`メソッドを模倣しています。これは、指定されたオブジェクトのコピーを元のオブジェクトのプロパティの指定されたサブセットで返します。この例では、1つの引数のみを定義し、最初の引数はプロパティをコピーするオブジェクトであると想定しています。渡される他のすべての引数は、結果にコピーする必要があるプロパティの名前です。
 
-There are a couple of things to notice about this `pick()` function. First, it's not at all obvious that the function can handle more than one parameter. You could define several more parameters, but you would always fall short of indicating that this function can take any number of parameters. Second, because the first parameter is named and used directly, when you look for the properties to copy, you have to start in the `arguments` object at index 1 instead of index 0. Remembering to use the appropriate indices with `arguments` isn't necessarily difficult, but it's one more thing to keep track of.
+この`pick()`関数には注意すべきことがいくつかあります。まず、関数が複数のパラメータを処理できることはまったく明らかではありません。さらにいくつかのパラメータを定義することができますが、この関数が任意の数のパラメータを取ることができることを示すには不十分です。第2に、最初のパラメータの名前が直接使用されるので、コピーするプロパティを探すときは、インデックス0ではなくインデックス1の`arguments`オブジェクトから開始する必要があります。`arguments`で適切なインデックスを使用することを覚えていませんisn必然的に難しいですが、それを追いかけるのはもう一つのことです。
 
-ECMAScript 6 introduces rest parameters to help with these issues.
+ECMAScript6では、これらの問題を解決するための残りのパラメータが導入されています。
 
-### Rest Parameters
+### 残りのパラメータ
 
-A *rest parameter* is indicated by three dots (`...`) preceding a named parameter. That named parameter becomes an `Array` containing the rest of the parameters passed to the function, which is where the name "rest" parameters originates. For example, `pick()` can be rewritten using rest parameters, like this:
+A *restパラメータ*は、指定されたパラメータの前に3つのドット(`...`)で示されます。その名前付きパラメータは、関数に渡される残りのパラメータを含む「配列」になります。これは、名前「残り」パラメータの起源です。例えば、`pick()`は次のようにrestパラメータを使って書き換えることができます：
 
 ```js
 function pick(object, ...keys) {
@@ -377,13 +377,13 @@ function pick(object, ...keys) {
 }
 ```
 
-In this version of the function, `keys` is a rest parameter that contains all parameters passed after `object` (unlike `arguments`, which contains all parameters including the first one). That means you can iterate over `keys` from beginning to end without worry. As a bonus, you can tell by looking at the function that it is capable of handling any number of parameters.
+このバージョンの関数では、`keys`は`object`の後に渡されるすべてのパラメータを含むrestパラメータです(`arguments`とは異なり、最初のパラメータを含むすべてのパラメータを含みます)。 つまり、キーを最初から最後まで、心配することなく繰り返すことができます。 ボーナスとして、任意の数のパラメータを処理できることを知ることができます。
 
-I> Rest parameters do not affect a function's `length` property, which indicates the number of named parameters for the function. The value of `length` for `pick()` in this example is 1 because only `object` counts towards this value.
+I> Restパラメータは、関数の名前付きパラメータの数を示す関数の長さプロパティには影響しません。 この例の`pick()`の`length`の値は`object`だけがこの値に向かっているので1です。
 
-#### Rest Parameter Restrictions
+#### Restパラメータの制限事項
 
-There are two restrictions on rest parameters. The first restriction is that there can be only one rest parameter, and the rest parameter must be last. For example, this code won't work:
+残りのパラメータには2つの制限があります。 最初の制約は、残りのパラメータが1つだけで、残りのパラメータは最後でなければならないということです。 たとえば、次のコードは機能しません。
 
 ```js
 // Syntax error: Can't have a named parameter after rest parameters
@@ -398,9 +398,9 @@ function pick(object, ...keys, last) {
 }
 ```
 
-Here, the parameter `last` follows the rest parameter `keys`, which would cause a syntax error.
+ここで、パラメータlastは残りのパラメータkeysに続き、シンタックスエラーが発生します。
 
-The second restriction is that rest parameters cannot be used in an object literal setter. That means this code would also cause a syntax error:
+2番目の制約は、オブジェクトのリテラルセッターでは、残りのパラメーターを使用できないということです。つまり、このコードでもシンタックスエラーが発生します。
 
 ```js
 let object = {
@@ -412,13 +412,13 @@ let object = {
 };
 ```
 
-This restriction exists because object literal setters are restricted to a single argument. Rest parameters are, by definition, an infinite number of arguments, so they're not allowed in this context.
+この制限は、オブジェクトリテラルセッターが単一の引数に制限されているために存在します。残りのパラメータは定義上、無限の数の引数なので、この文脈では許されません。
 
-#### How Rest Parameters Affect the arguments Object
+#### Restパラメータがargumentsオブジェクトに与える影響
 
-Rest parameters were designed to replace `arguments` in ECMAScript. Originally, ECMAScript 4 did away with `arguments` and added rest parameters to allow an unlimited number of arguments to be passed to functions. ECMAScript 4 never came into being, but this idea was kept around and reintroduced in ECMAScript 6, despite `arguments` not being removed from the language.
+残りのパラメータは、ECMAScriptの`arguments`を置き換えるように設計されています。もともと、ECMAScript 4は`arguments`を削除し、残りの引数を追加して無制限の引数を関数に渡すことができました。 ECMAScript 4は決して登場しませんでしたが、この考え方はECMAScript6に残されていました。
 
-The `arguments` object works together with rest parameters by reflecting the arguments that were passed to the function when called, as illustrated in this program:
+`arguments`オブジェクトは、このプログラムに示されているように、呼び出されたときに関数に渡された引数を反映することによって、restパラメータと一緒に働きます：
 
 ```js
 function checkArgs(...args) {
@@ -431,7 +431,7 @@ function checkArgs(...args) {
 checkArgs("a", "b");
 ```
 
-The call to `checkArgs()` outputs:
+`checkArgs()`の呼び出しは以下を出力します：
 
 ```
 2
@@ -440,14 +440,13 @@ a a
 b b
 ```
 
-The `arguments` object always correctly reflects the parameters that were passed into a function regardless of rest parameter usage.
+`arguments`オブジェクトは、restパラメータの使用法にかかわらず関数に渡されたパラメータを常に正確に反映します。
 
-That's all you really need to know about rest parameters to get started using them.
+それは、あなたが本当にそれらを使用して開始するために残りのパラメータについて知っておく必要があります。
 
+## 関数コンストラクターの機能強化
 
-## Increased Capabilities of the Function Constructor
-
-The `Function` constructor is an infrequently used part of JavaScript that allows you to dynamically create a new function. The arguments to the constructor are the parameters for the function and the function body, all as strings. Here's an example:
+`Function`コンストラクタは、あなたが動的に新しい関数を生成することを可能にするJavaScriptのまれな部分です。コンストラクタへの引数は、関数と関数本体のパラメータであり、すべてが文字列です。ここに例があります：
 
 ```js
 var add = new Function("first", "second", "return first + second");
@@ -455,7 +454,7 @@ var add = new Function("first", "second", "return first + second");
 console.log(add(1, 1));     // 2
 ```
 
-ECMAScript 6 augments the capabilities of the `Function` constructor to allow default parameters and rest parameters. You need only add an equals sign and a value to the parameter names, as follows:
+ECMAScript6は、デフォルトのパラメータと残りのパラメータを許可するために、`Function`コンストラクタの機能を補強します。次のように、パラメータ名に等号と値を追加するだけで済みます。
 
 ```js
 var add = new Function("first", "second = first",
@@ -465,9 +464,9 @@ console.log(add(1, 1));     // 2
 console.log(add(1));        // 2
 ```
 
-In this example, the parameter `second` is assigned the value of `first` when only one parameter is passed. The syntax is the same as for function declarations that don't use `Function`.
+この例では、1つのパラメータだけが渡された場合、パラメータ「second」には「first」の値が割り当てられます。シンタックスは`Function`を使用しない関数宣言と同じです。
 
-For rest parameters, just add the `...` before the last parameter, like this:
+残りのパラメータの場合は、最後のパラメータの前に`...`を追加するだけです。
 
 ```js
 var pickFirst = new Function("...args", "return args[0]");
@@ -475,13 +474,13 @@ var pickFirst = new Function("...args", "return args[0]");
 console.log(pickFirst(1, 2));   // 1
 ```
 
-This code creates a function that uses only a single rest parameter and returns the first argument that was passed in.
+このコードは、単一のrestパラメータのみを使用し、渡された最初の引数を返す関数を生成します。
 
-The addition of default and rest parameters ensures that `Function` has all of the same capabilities as the declarative form of creating functions.
+defaultとrestパラメータを追加すると、`Function`は宣言型の関数を生成するのと同じ機能をすべて持つことができます。
 
-## The Spread Operator
+## スプレッド演算子
 
-Closely related to rest parameters is the spread operator. While rest parameters allow you to specify that multiple independent arguments should be combined into an array, the spread operator allows you to specify an array that should be split and have its items passed in as separate arguments to a function. Consider the `Math.max()` method, which accepts any number of arguments and returns the one with the highest value. Here's a simple use case for this method:
+残りのパラメータと密接に関連するのは、スプレッド演算子です。 restパラメータでは、複数の独立した引数を配列に結合するように指定できますが、spread演算子を使用すると、分割する配列を指定し、その項目を関数の別の引数として渡すことができます。`Math.max()`メソッドを考えてみましょう。これは任意の数の引数を受け取り、最も高い値を持つものを返します。このメソッドの簡単な使用例を次に示します。
 
 ```js
 let value1 = 25,
@@ -490,7 +489,7 @@ let value1 = 25,
 console.log(Math.max(value1, value2));      // 50
 ```
 
-When you're dealing with just two values, as in this example, `Math.max()` is very easy to use. The two values are passed in, and the higher value is returned. But what if you've been tracking values in an array, and now you want to find the highest value? The `Math.max()` method doesn't allow you to pass in an array, so in ECMAScript 5 and earlier, you'd be stuck either searching the array yourself or using `apply()` as follows:
+この例のように2つの値だけを扱う場合、`Math.max()`は非常に使いやすいです。 2つの値が渡され、高い値が返されます。しかし、配列内の値をトラッキングしていて、今最も高い値を探したい場合はどうすればよいでしょうか？`Math.max()`メソッドは配列を渡すことを許可していません。したがって、ECMAScript5以前では、配列を自分で検索するか、次のように`apply()`を使用します。
 
 ```js
 let values = [25, 50, 75, 100]
@@ -498,9 +497,9 @@ let values = [25, 50, 75, 100]
 console.log(Math.max.apply(Math, values));  // 100
 ```
 
-This solution works, but using `apply()` in this manner is a bit confusing. It actually seems to obfuscate the true meaning of the code with additional syntax.
+この解決策は動作しますが、このように`apply()`を使うのはちょっと混乱します。実際には、追加のシンタックスでコードの真の意味をわかりにくくするようです。
 
-The ECMAScript 6 spread operator makes this case very simple. Instead of calling `apply()`, you can pass the array to `Math.max()` directly and prefix it with the same `...` pattern used with rest parameters. The JavaScript engine then splits the array into individual arguments and passes them in, like this:
+ECMAScript6スプレッド演算子は、このケースを非常に簡単にします。`apply()`を呼び出す代わりに、配列を`Math.max()`に直接渡して、残りのパラメータで使われる同じ`...`パターンで接頭辞を付けることができます。 JavaScriptエンジンは配列を個々の引数に分割し、次のように渡します。
 
 ```js
 let values = [25, 50, 75, 100]
@@ -510,9 +509,9 @@ let values = [25, 50, 75, 100]
 console.log(Math.max(...values));           // 100
 ```
 
-Now the call to `Math.max()` looks a bit more conventional and avoids the complexity of specifying a `this`-binding (the first argument to `Math.max.apply()` in the previous example) for a simple mathematical operation.
+`Math.max()`の呼び出しはもう少し従来のものになります。前の例で`Math.max.apply()`の最初の引数)を指定する複雑さを回避します数学的操作。
 
-You can mix and match the spread operator with other arguments as well. Suppose you want the smallest number returned from `Math.max()` to be 0 (just in case negative numbers sneak into the array). You can pass that argument separately and still use the spread operator for the other arguments, as follows:
+スプレッド演算子を他の引数と組み合わせて組み合わせることもできます。`Math.max()`から返される最小の数値が0になるようにしたいとしましょう(負の数が配列に入った場合)。その引数を別々に渡しても、次のように他の引数にspread演算子を使用することができます。
 
 ```js
 let values = [-25, -50, -75, -100]
@@ -520,19 +519,19 @@ let values = [-25, -50, -75, -100]
 console.log(Math.max(...values, 0));        // 0
 ```
 
-In this example, the last argument passed to `Math.max()` is `0`, which comes after the other arguments are passed in using the spread operator.
+この例では、`Math.max()`に渡された最後の引数は`0`です。これは、他の引数がスプレッド演算子を使って渡された後です。
 
-The spread operator for argument passing makes using arrays for function arguments much easier. You'll likely find it to be a suitable replacement for the `apply()` method in most circumstances.
+引数を渡すための普遍的な演算子は、関数引数のための配列の使用をはるかに簡単にします。たいていの場合、`apply()`メソッドの適切な置き換えである可能性が高いでしょう。
 
-In addition to the uses you've seen for default and rest parameters so far, in ECMAScript 6, you can also apply both parameter types to JavaScript's `Function` constructor.
+ECMAScript6では、これまでのデフォルトおよび残りのパラメータでの使用に加えて、両方のパラメータ型をJavaScriptの`Function`コンストラクタに適用することもできます。
 
-## ECMAScript 6's name Property
+## ECMAScript6の名前プロパティ
 
-Identifying functions can be challenging in JavaScript given the various ways a function can be defined. Additionally, the prevalence of anonymous function expressions makes debugging a bit more difficult, often resulting in stack traces that are hard to read and decipher. For these reasons, ECMAScript 6 adds the `name` property to all functions.
+関数を特定するには、さまざまな方法でJavaScriptを使用する必要があります。さらに、匿名関数式の普及により、デバッグが少し難しくなり、読み取りや解読が困難なスタックトレースが発生することがよくあります。これらの理由から、ECMAScript6はすべての関数に`name`プロパティを追加します。
 
-### Choosing Appropriate Names
+### 適切な名前の選択
 
-All functions in an ECMAScript 6 program will have an appropriate value for their `name` property. To see this in action, look at the following example, which shows a function and function expression, and prints the `name` properties for both:
+ECMAScript6プログラムのすべての関数は、`name`プロパティに適切な値を持ちます。この動作を確認するには、関数と関数式を示す次の例を見て、両方の`name`プロパティを出力します：
 
 ```js
 function doSomething() {
@@ -547,11 +546,11 @@ console.log(doSomething.name);          // "doSomething"
 console.log(doAnotherThing.name);       // "doAnotherThing"
 ```
 
-In this code, `doSomething()` has a `name` property equal to `"doSomething"` because it's a function declaration. The anonymous function expression `doAnotherThing()` has a `name` of `"doAnotherThing"` because that's the name of the variable to which it is assigned.
+このコードでは、`doSomething()`は`"doSomething"`と同じ`name`プロパティを持っています。これは関数宣言であるからです。無名関数式`doAnotherThing()`は、`"doAnotherThing"`の`name`を持っています。なぜなら、それが割り当てられている変数の名前だからです。
 
-### Special Cases of the name Property
+### nameプロパティの特別なケース
 
-While appropriate names for function declarations and function expressions are easy to find, ECMAScript 6 goes further to ensure that *all* functions have appropriate names. To illustrate this, consider the following program:
+関数宣言と関数式の適切な名前は簡単に見つかりますが、ECMAScript6では*すべての*関数に適切な名前が付いていることが確認されています。これを説明するには、次のプログラムを検討してください。
 
 ```js
 var doSomething = function doSomethingElse() {
@@ -574,9 +573,9 @@ var descriptor = Object.getOwnPropertyDescriptor(person, "firstName");
 console.log(descriptor.get.name); // "get firstName"
 ```
 
-In this example, `doSomething.name` is `"doSomethingElse"` because the function expression itself has a name, and that name takes priority over the variable to which the function was assigned. The `name` property of `person.sayName()` is `"sayName"`, as the value was interpreted from the object literal. Similarly, `person.firstName` is actually a getter function, so its name is `"get firstName"` to indicate this difference. Setter functions are prefixed with `"set"` as well. (Both getter and setter functions must be retrieved using `Object.getOwnPropertyDescriptor()`.)
+この例では、`doSomething.name`は`"doSomethingElse"`です。なぜなら、関数式自体に名前があり、その名前が関数が割り当てられた変数よりも優先されるからです。 値がオブジェクトリテラルから解釈されたので、`person.sayName()`の`name`プロパティは`"sayName"`です。 同様に、`person.firstName`は実際にゲッター関数なので、その名前は`"get firstName"`です。setter関数の先頭には`"set"`も付いています。 (getterとsetterの両方の関数は、`Object.getOwnPropertyDescriptor()`を使って検索しなければなりません)。
 
-There are a couple of other special cases for function names, too. Functions created using `bind()` will have their names prefixed with `"bound"` and functions created using the `Function` constructor have a name of `"anonymous"`, as in this example:
+関数名には他にも特別なケースが2つあります。`bind()`で生成された関数の名前は`"bound"`で始まり、`"Function"`のコンストラクタで生成された関数の名前は`"anonymous"`です。
 
 ```js
 var doSomething = function() {
@@ -588,13 +587,13 @@ console.log(doSomething.bind().name);   // "bound doSomething"
 console.log((new Function()).name);     // "anonymous"
 ```
 
-The `name` of a bound function will always be the `name` of the function being bound prefixed with the string `"bound "`, so the bound version of `doSomething()` is `"bound doSomething"`.
+バインドされた関数の`name`は、バインドされている関数の`name`に常に文字列`'bound'`が付いているので、`doSomething()`のバインドされたバージョンは`"bound doSomething"`です。
 
-Keep in mind that the value of `name` for any function does not necessarily refer to a variable of the same name. The `name` property is meant to be informative, to help with debugging, so there's no way to use the value of `name` to get a reference to the function.
+関数の`name`の値は必ずしも同じ名前の変数を参照するとは限りません。`name`プロパティはデバッグを助けるために有益なものであるため、`name`の値を使って関数への参照を得る方法はありません。
 
-## Clarifying the Dual Purpose of Functions
+## 関数の2つの目的を明確にする
 
-In ECMAScript 5 and earlier, functions serve the dual purpose of being callable with or without `new`. When used with `new`, the `this` value inside a function is a new object and that new object is returned, as illustrated in this example:
+ECMAScript5以前では、関数は`new`の有無にかかわらず呼び出し可能であるという二重の目的を果たします。`new`と共に使用すると、関数内の`this`値は新しいオブジェクトであり、この例に示すように新しいオブジェクトが返されます：
 
 ```js
 function Person(name) {
@@ -608,15 +607,15 @@ console.log(person);        // "[Object object]"
 console.log(notAPerson);    // "undefined"
 ```
 
-When creating `notAPerson`, calling `Person()` without `new` results in `undefined` (and sets a `name` property on the global object in nonstrict mode). The capitalization of `Person` is the only real indicator that the function is meant to be called using `new`, as is common in JavaScript programs. This confusion over the dual roles of functions led to some changes in ECMAScript 6.
+`notAPerson`を生成するときに、`new`なしで`Person()`を呼び出すと`undefined`となります(非厳密モードではグローバルオブジェクトに`name`プロパティを設定します)。`Person`の大文字は、JavaScriptプログラムでよく見られるように、関数が`new`を使って呼び出されることを意味する唯一の本当の指標です。関数の二重の役割に対するこの混乱は、ECMAScript6のいくつかの変更をもたらしました。
 
-JavaScript has two different internal-only methods for functions: `[[Call]]` and `[[Construct]]`. When a function is called without `new`, the `[[Call]]` method is executed, which executes the body of the function as it appears in the code. When a function is called with `new`, that's when the `[[Construct]]` method is called. The `[[Construct]]` method is responsible for creating a new object, called the *new target*, and then executing the function body with `this` set to the new target. Functions that have a `[[Construct]]` method are called *constructors*.
+JavaScriptには関数用の2つの異なる内部専用メソッドがあります：`[[Call]]`と`[[Construct]]`。関数が`new`なしで呼び出されると、`[[Call]]`メソッドが実行され、コード内に現れる関数の本体が実行されます。関数が`new`で呼び出されると、`[[Construct]]`メソッドが呼び出されます。`[[Construct]]`メソッドは* new target *と呼ばれる新しいオブジェクトを生成し、`this`を新しいターゲットに設定して関数本体を実行します。`[[Construct]]`メソッドを持つ関数は、* constructors *と呼ばれます。
 
-I> Keep in mind that not all functions have `[[Construct]]`, and therefore not all functions can be called with `new`. Arrow functions, discussed in the "Arrow Functions" section, do not have a `[[Construct]]` method.
+I>すべての関数が`[[Construct]]`を持っているわけではないので、すべての関数を`new`で呼び出すことはできません。 Arrow関数は、[[Construct]]`メソッドを持っていません。
 
-### Determining How a Function was Called in ECMAScript 5
+### ECMAScript5で関数がどのように呼び出されたかを調べる
 
-The most popular way to determine if a function was called with `new` (and hence, with constructor) in ECMAScript 5 is to use `instanceof`, for example:
+ECMAScript5で関数が`new`(したがって、コンストラクタとともに)で呼び出されたかどうかを判定する最も一般的な方法は、`instanceof`を使用することです。
 
 ```js
 function Person(name) {
@@ -631,7 +630,7 @@ var person = new Person("Nicholas");
 var notAPerson = Person("Nicholas");  // throws error
 ```
 
-Here, the `this` value is checked to see if it's an instance of the constructor, and if so, execution continues as normal. If `this` isn't an instance of `Person`, then an error is thrown. This works because the `[[Construct]]` method creates a new instance of `Person` and assigns it to `this`. Unfortunately, this approach is not completely reliable because `this` can be an instance of `Person` without using `new`, as in this example:
+ここでは、`this`値がコンストラクタのインスタンスであるかどうかを調べ、そうであれば、通常通り実行を続けます。`this`が`Person`のインスタンスでなければ、エラーがスローされます。 これは、`[[Construct]]`メソッドが`Person`の新しいインスタンスを生成し、それを` this`に割り当てるために機能します。 残念ながら、このアプローチは完全に信頼できるものではありません。この例では、`this`は`new`を使用せずに`Person`のインスタンスになる可能性があるからです。
 
 ```js
 function Person(name) {
@@ -646,13 +645,13 @@ var person = new Person("Nicholas");
 var notAPerson = Person.call(person, "Michael");    // works!
 ```
 
-The call to `Person.call()` passes the `person` variable as the first argument, which means `this` is set to `person` inside of the `Person` function. To the function, there's no way to distinguish this from being called with `new`.
+Person.call()の呼び出しは`person`変数を第1引数として渡します。これは`this`が`Person`関数の中の`person`に設定されていることを意味します。 この関数には、これを`new`で呼び出すことと区別する方法はありません。
 
-### The new.target MetaProperty
+### new.target MetaProperty
 
-To solve this problem, ECMAScript 6 introduces the `new.target` *metaproperty*. A metaproperty is a property of a non-object that provides additional information related to its target (such as `new`). When a function's `[[Construct]]` method is called, `new.target` is filled with the target of the `new` operator. That target is typically the constructor of the newly created object instance that will become `this` inside the function body. If `[[Call]]` is executed, then `new.target` is `undefined`.
+この問題を解決するために、ECMAScript6は`new.target` *メタプロパティ*を導入しました。 メタ属性は、非オブジェクトのプロパティで、ターゲットに関連する追加情報(`new`など)を提供します。 関数の[[Construct]]メソッドが呼び出されると、`new.target`は`new`演算子のターゲットで埋められます。 そのターゲットは、通常、新しく生成されたオブジェクトインスタンスのコンストラクタであり、これは関数本体の中で`this`になります。`[[Call]]`が実行された場合、`new.target`は`undefined`です。
 
-This new metaproperty allows you to safely detect if a function is called with `new` by checking whether `new.target` is defined as follows:
+この新しいメタ属性を使うと、`new.target`が次のように定義されているかどうかをチェックすることで、関数が`new`で呼び出されたかどうかを安全に検出できます：
 
 ```js
 function Person(name) {
@@ -667,9 +666,9 @@ var person = new Person("Nicholas");
 var notAPerson = Person.call(person, "Michael");    // error!
 ```
 
-By using `new.target` instead of `this instanceof Person`, the `Person` constructor is now correctly throwing an error when used without `new`.
+`this instanceof Person`の代わりに`new.target`を使うことによって、`Person`コンストラクタは`new`なしで使われると正しくエラーを投げます。
 
-You can also check that `new.target` was called with a specific constructor. For instance, look at this example:
+`new.target`が特定のコンストラクタで呼び出されたことを確認することもできます。 たとえば、次の例を見てください。
 
 ```js
 function Person(name) {
@@ -688,17 +687,17 @@ var person = new Person("Nicholas");
 var anotherPerson = new AnotherPerson("Nicholas");  // error!
 ```
 
-In this code, `new.target` must be `Person` in order to work correctly. When `new AnotherPerson("Nicholas")` is called, the subsequent call to `Person.call(this, name)` will throw an error because `new.target` is `undefined` inside of the `Person` constructor (it was called without `new`).
+このコードでは、正しく動作するためには`new.target`が`Person`でなければなりません。`new AnotherPerson("Nicholas")`が呼び出されると、`Person.call(this、name)`の後続の呼び出しは`new`ターゲットが`Person`コンストラクタの中で`undefined` 「新」なしで呼ばれた)。
 
-W> Warning: Using `new.target` outside of a function is a syntax error.
+W>警告：関数の外で`new.target`を使うのはシンタックスエラーです。
 
-By adding `new.target`, ECMAScript 6 helped to clarify some ambiguity around functions calls. Following on this theme, ECMAScript 6 also addresses another previously ambiguous part of the language: declaring functions inside of blocks.
+`new.target`を追加することで、ECMAScript6は関数呼び出しのあいまいさを明確にするのに役立ちました。このテーマに続いて、ECMAScript6は、ブロック内で関数を宣言するという、以前のあいまいであった言語の別の部分も解決します。
 
-## Block-Level Functions
+## ブロックレベル関数
 
-In ECMAScript 3 and earlier, a function declaration occurring inside of a block (a *block-level function*) was technically a syntax error, but all browsers still supported it. Unfortunately, each browser that allowed the syntax behaved in a slightly different way, so it is considered a best practice to avoid function declarations inside of blocks (the best alternative is to use a function expression).
+ECMAScript 3以前では、ブロック内で発生する関数宣言(*ブロックレベル関数*)は技術的にはシンタックスエラーでしたが、すべてのブラウザでサポートされていました。残念ながら、シンタックスを許可した各ブラウザは若干異なる方法で動作します。したがって、ブロック内での関数宣言を避けることがベストプラクティスです(関数式を使用することをお勧めします)。
 
-In an attempt to rein in this incompatible behavior, ECMAScript 5 strict mode introduced an error whenever a function declaration was used inside of a block in this way:
+この互換性のない動作を抑止しようとすると、ECMAScript5 strictモードでは、このようにしてブロック内で関数宣言が使用されるたびにエラーが発生しました。
 
 ```js
 "use strict";
@@ -712,7 +711,7 @@ if (true) {
 }
 ```
 
-In ECMAScript 5, this code throws a syntax error. In ECMAScript 6, the `doSomething()` function is considered a block-level declaration and can be accessed and called within the same block in which it was defined. For example:
+ECMAScript5では、このコードはシンタックスエラーを投げます。 ECMAScript6では、`doSomething()`関数はブロックレベルの宣言とみなされ、定義された同じブロック内でアクセスして呼び出すことができます。 例えば：
 
 ```js
 "use strict";
@@ -731,11 +730,11 @@ if (true) {
 console.log(typeof doSomething);            // "undefined"
 ```
 
-Block level functions are hoisted to the top of the block in which they are defined, so `typeof doSomething` returns `"function"` even though it appears before the function declaration in the code. Once the `if` block is finished executing, `doSomething()` no longer exists.
+ブロックレベルの関数は定義されているブロックの先頭に持ち込まれるので、`typeof doSomething`はコードの関数宣言の前に現れますが、関数"を返します。`if`ブロックの実行が終了すると、`doSomething()`はもう存在しません。
 
-### Deciding When to Use Block-Level Functions
+### ブロックレベル関数をいつ使うべきかを決める
 
-Block level functions are similar to `let` function expressions in that the function definition is removed once execution flows out of the block in which it's defined. The key difference is that block level functions are hoisted to the top of the containing block. Function expressions that use `let` are not hoisted, as this example illustrates:
+ブロックレベル関数は、定義されたブロックから実行が流れ出ると関数定義が削除されるという点で、関数式のlet関数に似ています。 重要な違いは、ブロックレベルの関数が包含ブロックの上部に吊り上げられていることです。 この例のように、`let`を使用する関数式は吊り上げられません：
 
 ```js
 "use strict";
@@ -754,14 +753,14 @@ if (true) {
 console.log(typeof doSomething);
 ```
 
-Here, code execution stops when `typeof doSomething` is executed, because the `let` statement hasn't been executed yet, leaving `doSomething()` in the TDZ. Knowing this difference, you can choose whether to use block level functions or `let` expressions based on whether or not you want the hoisting behavior.
+`let`文がまだ実行されておらず、`doSomething()`がTDZに残っているため、`typeof doSomething`が実行されるとコード実行が停止します。 この違いを知っていると、ブロックレベル関数を使用するか、巻上げ動作を行うかどうかに基づいて`let`式を使用するかどうかを選択できます。
 
-### Block-Level Functions in Nonstrict Mode
+### 非厳密モードのブロックレベル関数
 
-ECMAScript 6 also allows block-level functions in nonstrict mode, but the behavior is slightly different. Instead of hoisting these declarations to the top of the block, they are hoisted all the way to the containing function or global environment. For example:
+ECMAScript6では、ブロックレベルの機能を非厳密モードで使用することもできますが、動作は少し異なります。 これらの宣言をブロックの上部に持ち上げるのではなく、それらを含む機能または地球環境に吊り上げます。 例えば：
 
 ```js
-// ECMAScript 6 behavior
+// ECMAScript6 behavior
 if (true) {
 
     console.log(typeof doSomething);        // "function"
@@ -776,30 +775,30 @@ if (true) {
 console.log(typeof doSomething);            // "function"
 ```
 
-In this example, `doSomething()` is hoisted into the global scope so that it still exists outside of the `if` block. ECMAScript 6 standardized this behavior to remove the incompatible browser behaviors that previously existed, so all ECMAScript 6 runtimes should behave in the same way.
+この例では、`doSomething()`はグローバルスコープに持ち込まれ、`if`ブロックの外に存在します。 ECMAScript6はこの動作を標準化して、以前存在していた互換性のないブラウザの動作を削除しました。そのため、すべてのECMAScript6ランタイムは同じように動作するはずです。
 
-Allowing block-level functions improves your ability to declare functions in JavaScript, but ECMAScript 6 also introduced a completely new way to declare functions.
+ブロックレベルの関数を許可すると、JavaScriptで関数を宣言する能力が向上しますが、ECMAScript6では、関数を宣言する全く新しい方法も導入されました。
 
-## Arrow Functions
+## 矢印関数
 
-One of the most interesting new parts of ECMAScript 6 is the *arrow function*. Arrow functions are, as the name suggests, functions defined with a new syntax that uses an "arrow" (`=>`). But arrow functions behave differently than traditional JavaScript functions in a number of important ways:
+ECMAScript6の最も興味深い新しい部分の1つは、*arrow関数*です。矢印関数は、名前が示すように、「矢印」(`=>`)を使用する新しいシンタックスで定義された関数です。しかし、矢印関数は従来のJavaScript関数とはいくつかの重要な点で異なって動作します。
 
-* **No `this`, `super`, `arguments`, and `new.target` bindings** - The value of `this`, `super`, `arguments`, and `new.target` inside of the function is by the closest containing nonarrow function. (`super` is covered in Chapter 4.)
-* **Cannot be called with `new`** - Arrow functions do not have a `[[Construct]]` method and therefore cannot be used as constructors. Arrow functions throw an error when used with `new`.
-* **No prototype** - since you can't use `new` on an arrow function, there's no need for a prototype. The `prototype` property of an arrow function doesn't exist.
-* **Can't change `this`** - The value of `this` inside of the function can't be changed. It remains the same throughout the entire lifecycle of the function.
-* **No `arguments` object** - Since arrow functions have no `arguments` binding, you must rely on named and rest parameters to access function arguments.
-* **No duplicate named parameters** - arrow functions cannot have duplicate named parameters in strict or nonstrict mode, as opposed to nonarrow functions that cannot have duplicate named parameters only in strict mode.
+* **`this`, ` super`, `arguments`, `new.target`バインディング** -`this`, `super`, `arguments`, `new.target`の値は、関数は、最も近い非小関数を含むものである。 (「スーパー」は第4章でカバーしています)
+* **`new`では呼び出すことができません** - 矢印関数は`[[Construct]]`メソッドを持たず、したがってコンストラクタとして使うことはできません。矢印関数は`new`と一緒に使うとエラーになります。
+* **プロトタイプはありません** - 矢印関数に`new`を使うことはできないので、プロトタイプは必要ありません。矢印関数の`prototype`プロパティは存在しません。
+* **`this`を変更することはできません** - 関数内の`this`の値は変更できません。関数のライフサイクル全体にわたって同じままです。
+* **いいえ`arguments`オブジェクト** - 矢印関数には`arguments`バインディングがないので、関数引数にアクセスするには、名前付き引数と残りの引数に依存する必要があります。
+* **重複した名前のパラメータはありません。** - 矢印関数は、strictモードでのみ名前付きパラメータを重複させることができない非小規模な関数ではなく、strictまたはnonstrictモードで名前付きパラメータを重複させることはできません。
 
-There are a few reasons for these differences. First and foremost, `this` binding is a common source of error in JavaScript. It's very easy to lose track of the `this` value inside a function, which can result in unintended program behavior, and arrow functions eliminate this confusion. Second, by limiting arrow functions to simply executing code with a single `this` value, JavaScript engines can more easily optimize these operations, unlike regular functions, which might be used as a constructor or otherwise modified.
+これらの違いにはいくつかの理由があります。まず第一に、このバインディングはJavaScriptの一般的なエラーの原因です。関数内の`this`値の追跡を失うのは非常に簡単です。意図しないプログラムの振る舞いにつながり、矢印関数がこの混乱を排除します。第2に、矢印関数を単に「this」値でコードを実行するように制限することで、JavaScriptエンジンは、コンストラクタとして使用されるか、または変更される通常の関数とは異なり、これらの操作をより簡単に最適化できます。
 
-The rest of the differences are also focused on reducing errors and ambiguities inside of arrow functions. By doing so, JavaScript engines are better able to optimize arrow function execution.
+相違の残りの部分は、矢印関数内のエラーとあいまいさを減らすことにも焦点を当てています。これにより、JavaScriptエンジンは矢印関数の実行を最適化することができます。
 
-I> Note: Arrow functions also have a `name` property that follows the same rule as other functions.
+I> 注意：矢印関数には、他の関数と同じ規則に従う`name`プロパティもあります。
 
-### Arrow Function Syntax
+### 矢印関数のシンタックス
 
-The syntax for arrow functions comes in many flavors depending upon what you're trying to accomplish. All variations begin with function arguments, followed by the arrow, followed by the body of the function. Both the arguments and the body can take different forms depending on usage. For example, the following arrow function takes a single argument and simply returns it:
+arrow関数のシンタックスは、あなたが達成しようとしているものに応じて多くの種類があります。すべてのバリエーションは、関数の引数で始まり、その後に矢印が続き、関数の本体が続きます。引数と本文は、用途に応じて異なる形式をとることができます。たとえば、次の矢印関数は単一の引数をとり、単純にそれを返します。
 
 ```js
 var reflect = value => value;
@@ -811,9 +810,9 @@ var reflect = function(value) {
 };
 ```
 
-When there is only one argument for an arrow function, that one argument can be used directly without any further syntax. The arrow comes next and the expression to the right of the arrow is evaluated and returned. Even though there is no explicit `return` statement, this arrow function will return the first argument that is passed in.
+矢印関数の引数が1つしかない場合、その1つの引数はそれ以上のシンタックスなしで直接使用できます。 矢印が次に来て、矢印の右側の式が評価され、返されます。 明示的な`return`文がなくても、この矢印関数は渡された最初の引数を返します。
 
-If you are passing in more than one argument, then you must include parentheses around those arguments, like this:
+複数の引数を渡す場合は、次のようにそれらの引数のまわりにカッコを入れる必要があります。
 
 ```js
 var sum = (num1, num2) => num1 + num2;
@@ -825,9 +824,9 @@ var sum = function(num1, num2) {
 };
 ```
 
-The `sum()` function simply adds two arguments together and returns the result. The only difference between this arrow function and the `reflect()` function is that the arguments are enclosed in parentheses with a comma separating them (like traditional functions).
+`sum()`関数は2つの引数を単に加算して結果を返します。 この矢印関数と`reflect()`関数の唯一の違いは、引数がカッコで区切られていることです(伝統的な関数のように)。
 
-If there are no arguments to the function, then you must include an empty set of parentheses in the declaration, as follows:
+関数への引数がない場合は、次のように、宣言に空の括弧セットを含める必要があります。
 
 ```js
 var getName = () => "Nicholas";
@@ -839,7 +838,7 @@ var getName = function() {
 };
 ```
 
-When you want to provide a more traditional function body, perhaps consisting of more than one expression, then you need to wrap the function body in braces and explicitly define a return value, as in this version of `sum()`:
+おそらく複数の式からなる、より伝統的な関数本体を提供したいときは、このバージョンの`sum()`のように関数本体を中括弧で囲み、明示的に戻り値を定義する必要があります：
 
 ```js
 var sum = (num1, num2) => {
@@ -853,9 +852,9 @@ var sum = function(num1, num2) {
 };
 ```
 
-You can more or less treat the inside of the curly braces the same as you would in a traditional function, with the exception that `arguments` is not available.
+中括弧の内側は、従来の関数と同じように扱うことができますが、`arguments`は利用できません。
 
-If you want to create a function that does nothing, then you need to include curly braces, like this:
+何もしない関数を生成する場合は、次のように中括弧を組み込む必要があります。
 
 ```js
 var doNothing = () => {};
@@ -865,7 +864,7 @@ var doNothing = () => {};
 var doNothing = function() {};
 ```
 
-Curly braces are used to denote the function's body, which works just fine in the cases you've seen so far. But an arrow function that wants to return an object literal outside of a function body must wrap the literal in parentheses. For example:
+中括弧は関数の本体を示すために使用されています。 しかし、関数本体の外側にオブジェクトリテラルを返すようにする矢印関数は、リテラルをカッコで囲む必要があります。 例えば：
 
 ```js
 var getTempItem = id => ({ id: id, name: "Temp" });
@@ -881,11 +880,11 @@ var getTempItem = function(id) {
 };
 ```
 
-Wrapping the object literal in parentheses signals that the braces are an object literal instead of the function body.
+括弧内のオブジェクトリテラルをラップすると、中括弧は関数本体ではなくオブジェクトリテラルです。
 
-### Creating Immediately-Invoked Function Expressions
+### 直ちに呼び出される関数式を生成する
 
-One popular use of functions in JavaScript is creating immediately-invoked function expressions (IIFEs). IIFEs allow you to define an anonymous function and call it immediately without saving a reference. This pattern comes in handy when you want to create a scope that is shielded from the rest of a program. For example:
+JavaScriptでよく使われる関数の1つは、直ちに呼び出される関数式(IIFE)の生成です。 IIFEを使用すると、無名関数を定義し、参照を保存せずにすぐに呼び出すことができます。 このパターンは、プログラムの残りの部分から遮蔽されたスコープを生成したいときに便利です。 例えば：
 
 ```js
 let person = function(name) {
@@ -901,9 +900,9 @@ let person = function(name) {
 console.log(person.getName());      // "Nicholas"
 ```
 
-In this code, the IIFE is used to create an object with a `getName()` method. The method uses the `name` argument as the return value, effectively making `name` a private member of the returned object.
+このコードでは、IIFEを使用して`getName()`メソッドを持つオブジェクトを生成します。 このメソッドは`name`引数を戻り値として使用し、`name`を実際に返されるオブジェクトのprivateメンバーにします。
 
-You can accomplish the same thing using arrow functions, so long as you wrap the arrow function in parentheses:
+矢印関数を括弧で囲んでいる限り、同じことを矢印関数を使って行うことができます：
 
 ```js
 let person = ((name) => {
@@ -919,11 +918,11 @@ let person = ((name) => {
 console.log(person.getName());      // "Nicholas"
 ```
 
-Note that the parentheses are only around the arrow function definition, and not around `("Nicholas")`. This is different from a formal function, where the parentheses can be placed outside of the passed-in parameters as well as just around the function definition.
+括弧は`("Nicholas")`の周りではなく、矢の関数定義の周りにのみあることに注意してください。 これは正式な関数とは異なり、渡されたパラメータの外に、関数定義のまわりにかっこを置くことができます。
 
-### No this Binding
+### このバインディングはありません
 
-One of the most common areas of error in JavaScript is the binding of `this` inside of functions. Since the value of `this` can change inside a single function depending on the context in which the function is called, it's possible to mistakenly affect one object when you meant to affect another. Consider the following example:
+JavaScriptの最も一般的なエラー領域の1つは、関数の中に`this`をバインドすることです。`this`の値は、関数が呼び出されるコンテキストに応じて単一の関数の内部で変更できるので、別のオブジェクトに影響を与えることを意図したときにあるオブジェクトに誤って影響する可能性があります。 次の例を考えてみましょう。
 
 ```js
 var PageHandler = {
@@ -942,11 +941,11 @@ var PageHandler = {
 };
 ```
 
-In this code, the object `PageHandler` is designed to handle interactions on the page. The `init()` method is called to set up the interactions, and that method in turn assigns an event handler to call `this.doSomething()`. However, this code doesn't work exactly as intended.
+このコードでは、オブジェクト「PageHandler」は、ページ上の対話を処理するように設計されています。`init()`メソッドは相互作用を設定するために呼び出され、そのメソッドは`this.doSomething()`を呼び出すイベントハンドラを割り当てます。 しかし、このコードは意図したとおりに正確に動作しません。
 
-The call to `this.doSomething()` is broken because `this` is a reference to the object that was the target of the event (in this case `document`), instead of being bound to `PageHandler`. If you tried to run this code, you'd get an error when the event handler fires because `this.doSomething()` doesn't exist on the target `document` object.
+`this.doSomething()`の呼び出しは、`this`が` PageHandler`にバインドされるのではなく、イベントのターゲットであったオブジェクト(この場合は`document`)への参照であるため、壊れています。 このコードを実行しようとすると、`this.doSomething()`がターゲット`document`オブジェクトに存在しないため、イベントハンドラが起動するとエラーが発生します。
 
-You could fix this by binding the value of `this` to `PageHandler` explicitly using the `bind()` method on the function instead, like this:
+関数の`bind()`メソッドを明示的に`PageHandler`にバインドすることで、これを修正することができます。
 
 ```js
 var PageHandler = {
@@ -965,9 +964,9 @@ var PageHandler = {
 };
 ```
 
-Now the code works as expected, but it may look a little bit strange. By calling `bind(this)`, you're actually creating a new function whose `this` is bound to the current `this`, which is `PageHandler`. To avoid creating an extra function, a better way to fix this code is to use an arrow function.
+コードは期待通りに機能しますが、少し奇妙に見えるかもしれません。`bind(this)`を呼び出すことによって、`this`が現在の`this`にバインドされた新しい関数を実際に生成しています。これは`PageHandler`です。余分な関数を生成しないようにするには、このコードを修正するより良い方法は、矢印関数を使用することです。
 
-Arrow functions have no `this` binding, which means the value of `this` inside an arrow function can only be determined by looking up the scope chain. If the arrow function is contained within a nonarrow function, `this` will be the same as the containing function; otherwise, `this` is equivalent to the value of `this` in the global scope. Here's one way you could write this code using an arrow function:
+矢印関数には`this`バインディングがありません。つまり、矢印関数内の`this`の値は、スコープチェーンを調べることによってのみ決定できます。矢印関数が非小関数内に含まれている場合、`this`は包含関数と同じになります。それ以外の場合、`this`はグローバルスコープの`this`の値と等価です。矢印関数を使用してこのコードを書く方法の1つは次のとおりです。
 
 ```js
 var PageHandler = {
@@ -985,22 +984,22 @@ var PageHandler = {
 };
 ```
 
-The event handler in this example is an arrow function that calls `this.doSomething()`. The value of `this` is the same as it is within `init()`, so this version of the code works similarly to the one using `bind(this)`. Even though the `doSomething()` method doesn't return a value, it's still the only statement executed in the function body, and so there is no need to include braces.
+この例のイベントハンドラは`this.doSomething()`を呼び出す矢印関数です。`this`の値は`init()`の中と同じですので、このバージョンのコードは`bind(this)`を使った場合と同様に動作します。`doSomething()`メソッドは値を返しませんが、関数本体で実行される唯一のステートメントなので、中カッコを入れる必要はありません。
 
-Arrow functions are designed to be "throwaway" functions, and so cannot be used to define new types; this is evident from the missing `prototype` property, which regular functions have. If you try to use the `new` operator with an arrow function, you'll get an error, as in this example:
+矢印関数は「使い捨て」関数として設計されているため、新しい型を定義するために使用することはできません。これは通常の関数には存在しない`prototype`プロパティがないことから明らかです。 arrow関数で`new`演算子を使用しようとすると、この例のようにエラーが発生します：
 
 ```js
 var MyType = () => {},
     object = new MyType();  // error - you can't use arrow functions with 'new'
 ```
 
-In this code, the call to `new MyType()` fails because `MyType` is an arrow function and therefore has no `[[Construct]]` behavior. Knowing that arrow functions cannot be used with `new` allows JavaScript engines to further optimize their behavior.
+このコードでは、`MyType`は矢印関数であるため、`[[Construct]]`の動作を持たないため、`new MyType()`の呼び出しは失敗します。 矢印関数を`new`と一緒に使うことができないことが分かっていれば、JavaScriptエンジンはその動作をさらに最適化できます。
 
-Also, since the `this` value is determined by the containing function in which the arrow function is defined, you cannot change the value of `this` using `call()`, `apply()`, or `bind()`.
+また、`this`の値はarrow関数が定義されている包含関数によって決まるため、`call()`, `apply()`, `bind()`を使って`this`の値を変更することはできません。
 
-### Arrow Functions and Arrays
+### 矢印の関数と配列
 
-The concise syntax for arrow functions makes them ideal for use with array processing, too. For example, if you want to sort an array using a custom comparator, you'd typically write something like this:
+矢印関数の簡潔なシンタックスは、配列処理での使用にも理想的です。 たとえば、カスタムコンパレータを使用して配列をソートする場合、通常は次のように記述します。
 
 ```js
 var result = values.sort(function(a, b) {
@@ -1008,17 +1007,17 @@ var result = values.sort(function(a, b) {
 });
 ```
 
-That's a lot of syntax for a very simple procedure. Compare that to the more terse arrow function version:
+それは非常に簡単な手順のための多くのシンタックスです。 それをより簡潔な矢印関数のバージョンと比較してください：
 
 ```js
 var result = values.sort((a, b) => a - b);
 ```
 
-The array methods that accept callback functions such as `sort()`, `map()`, and `reduce()` can all benefit from simpler arrow function syntax, which changes seemingly complex processes into simpler code.
+`sort()`, `map()`, `reduce()`のようなコールバック関数を受け入れる配列メソッドは、一見複雑なプロセスをよりシンプルなコードに変更するより簡単な矢印関数のシンタックスの恩恵を受けることができます。
 
-### No arguments Binding
+### 引数なし
 
-Even though arrow functions don't have their own `arguments` object, it's possible for them to access the `arguments` object from a containing function. That `arguments` object is then available no matter where the arrow function is executed later on. For example:
+矢印関数は独自の`arguments`オブジェクトを持っていませんが、それを含む関数から`arguments`オブジェクトにアクセスすることは可能です。 後で矢印関数がどこで実行されても、その`arguments`オブジェクトは利用可能です。 例えば：
 
 ```js
 function createArrowFunctionReturningFirstArg() {
@@ -1030,11 +1029,11 @@ var arrowFunction = createArrowFunctionReturningFirstArg(5);
 console.log(arrowFunction());       // 5
 ```
 
-Inside `createArrowFunctionReturningFirstArg()`, the `arguments[0]` element is referenced by the created arrow function. That reference contains the first argument passed to the `createArrowFunctionReturningFirstArg()` function. When the arrow function is later executed, it returns `5`, which was the first argument passed to `createArrowFunctionReturningFirstArg()`. Even though the arrow function is no longer in the scope of the function that created it, `arguments` remains accessible due to scope chain resolution of the `arguments` identifier.
+`createArrowFunctionReturningFirstArg()`の内部では、生成された矢印関数によって`arguments[0]`要素が参照されます。 この参照には、`createArrowFunctionReturningFirstArg()`関数に渡される最初の引数が含まれています。 矢印関数が後で実行されると、`createArrowFunctionReturningFirstArg()`に渡された最初の引数だった`5`を返します。 矢印関数はもはやそれを生成した関数のスコープには入っていませんが、`arguments`は`arguments`識別子のスコープチェーン解決のためにアクセス可能なままです。
 
-### Identifying Arrow Functions
+### 矢印関数を識別する
 
-Despite the different syntax, arrow functions are still functions, and are identified as such. Consider the following code:
+異なるシンタックスにもかかわらず、矢印関数は依然として関数であり、そのように識別されます。 次のコードを考えてみましょう：
 
 ```js
 var comparator = (a, b) => a - b;
@@ -1043,9 +1042,9 @@ console.log(typeof comparator);                 // "function"
 console.log(comparator instanceof Function);    // true
 ```
 
-The `console.log()` output reveals that both `typeof` and `instanceof` behave the same with arrow functions as they do with other functions.
+`console.log()`出力は、`typeof`と`instanceof`の両方が、他の関数と同じように矢印関数と同じように動作することを示しています。
 
-Also like other functions, you can still use `call()`, `apply()`, and `bind()` on arrow functions, although the `this`-binding of the function will not be affected. Here are some examples:
+他の関数と同様に、関数の`this`バインディングには影響しませんが、矢印関数に`call()`, `apply()`, `bind()`を使用することはできます。 ここではいくつかの例を示します。
 
 ```js
 var sum = (num1, num2) => num1 + num2;
@@ -1058,13 +1057,13 @@ var boundSum = sum.bind(null, 1, 2);
 console.log(boundSum());                // 3
 ```
 
-The `sum()` function is called using `call()` and `apply()` to pass arguments, as you'd do with any function. The `bind()` method is used to create `boundSum()`, which has its two arguments bound to `1` and `2` so that they don't need to be passed directly.
+`sum()`関数は、関数と同様に`call()`と`apply()`を使って引数を渡します。`bind()`メソッドは`boundsum()`を生成するために使われ、2つの引数が`1`と` 2`に束縛されているので、直接渡す必要はありません。
 
-Arrow functions are appropriate to use anywhere you're currently using an anonymous function expression, such as with callbacks. The next section covers another major ECMAScript 6 development, but this one is all internal, and has no new syntax.
+Arrow関数は、コールバックなど、現在無名関数式を使用している場所であればどこでも使用できます。 次のセクションではECMAScript6の主要な開発について説明しますが、これはすべて内部的なものであり、新しいシンタックスはありません。
 
-## Tail Call Optimization
+## テールコールの最適化
 
-Perhaps the most interesting change to functions in ECMAScript 6 is an engine optimization, which changes the tail call system. A *tail call* is when a function is called as the last statement in another function, like this:
+おそらく、ECMAScript6の機能の最も興味深い変更は、テールコールシステムを変更するエンジンの最適化です。 A * tail呼び出し*は、ある関数が別の関数の最後の文として呼び出されたときです。
 
 ```js
 function doSomething() {
@@ -1072,17 +1071,17 @@ function doSomething() {
 }
 ```
 
-Tail calls as implemented in ECMAScript 5 engines are handled just like any other function call: a new stack frame is created and pushed onto the call stack to represent the function call. That means every previous stack frame is kept in memory, which is problematic when the call stack gets too large.
+ECMAScript5エンジンで実装されているテールコールは、ほかの関数呼び出しと同様に処理されます。新しいスタックフレームが生成され、関数呼び出しを表すために呼び出しスタックにプッシュされます。これは、以前のすべてのスタックフレームがメモリに保持されていることを意味します。これは、コールスタックが大きくなりすぎると問題になります。
 
-### What's Different?
+### 何が違うの？
 
-ECMAScript 6 seeks to reduce the size of the call stack for certain tail calls in strict mode (nonstrict mode tail calls are left untouched). With this optimization, instead of creating a new stack frame for a tail call, the current stack frame is cleared and reused so long as the following conditions are met:
+ECMAScript6では、厳密なモードで特定のテールコールのコールスタックのサイズを縮小しようとしています(非厳密モードのテールコールはそのままです)。この最適化では、テールコール用の新しいスタックフレームを生成する代わりに、次の条件が満たされている限り、現在のスタックフレームがクリアされ再利用されます。
 
-1. The tail call does not require access to variables in the current stack frame (meaning the function is not a closure)
-1. The function making the tail call has no further work to do after the tail call returns
-1. The result of the tail call is returned as the function value
+1.テールコールは現在のスタックフレーム内の変数へのアクセスを必要としません(つまり、関数はクロージャではありません)
+テールコールを行う関数は、テールコールが返った後にそれ以上の作業を行う必要はありません。
+1.テールコールの結果が関数値として返されます
 
-As an example, this code can easily be optimized because it fits all three criteria:
+たとえば、このコードは3つの条件すべてに適合するため、簡単に最適化できます。
 
 ```js
 "use strict";
@@ -1093,7 +1092,7 @@ function doSomething() {
 }
 ```
 
-This function makes a tail call to `doSomethingElse()`, returns the result immediately, and doesn't access any variables in the local scope. One small change, not returning the result, results in an unoptimized function:
+この関数は`doSomethingElse()`への末尾呼び出しを行い、すぐに結果を返し、ローカルスコープ内の変数にはアクセスしません。 結果を返さない小さな変化の1つは、最適化されていない関数になります。
 
 ```js
 "use strict";
@@ -1104,8 +1103,7 @@ function doSomething() {
 }
 ```
 
-Similarly, if you have a function that performs an operation after returning from the tail call, then the function can't be optimized:
-
+同様に、テールコールから戻った後に操作を実行する関数がある場合、その関数を最適化することはできません：
 
 ```js
 "use strict";
@@ -1116,9 +1114,9 @@ function doSomething() {
 }
 ```
 
-This example adds the result of `doSomethingElse()` with 1 before returning the value, and that's enough to turn off optimization.
+この例では、値を返す前に`doSomethingElse()`の結果を1で加算して、最適化を無効にします。
 
-Another common way to inadvertently turn off optimization is to store the result of a function call in a variable and then return the result, such as:
+誤って最適化をオフにする別の一般的な方法は、関数呼び出しの結果を変数に格納し、次にそのような結果を返すことです。
 
 ```js
 "use strict";
@@ -1130,9 +1128,9 @@ function doSomething() {
 }
 ```
 
-This example cannot be optimized because the value of `doSomethingElse()` isn't immediately returned.
+`doSomethingElse()`の値がすぐに返されないので、この例は最適化できません。
 
-Perhaps the hardest situation to avoid is in using closures. Because a closure has access to variables in the containing scope, tail call optimization may be turned off. For example:
+おそらく、避けるのが最も難しい状況はクロージャを使用することです。 クロージャは、包含スコープ内の変数にアクセスできるため、テールコールの最適化がオフになっている可能性があります。 例えば：
 
 ```js
 "use strict";
@@ -1146,11 +1144,11 @@ function doSomething() {
 }
 ```
 
-The closure `func()` has access to the local variable `num` in this example. Even though the call to `func()` immediately returns the result, optimization can't occur due to referencing the variable `num`.
+クロージャ`func()`はこの例ではローカル変数`num`にアクセスできます。`func() 'を呼び出すとすぐに結果が返されますが、変数numを参照することで最適化はできません。
 
-### How to Harness Tail Call Optimization
+### テールコール最適化を活用する方法
 
-In practice, tail call optimization happens behind-the-scenes, so you don't need to think about it unless you're trying to optimize a function. The primary use case for tail call optimization is in recursive functions, as that is where the optimization has the greatest effect. Consider this function, which computes factorials:
+実際には、テールコールの最適化はバックグラウンドで行われるため、関数を最適化しない限り、テールコールの最適化について考える必要はありません。 テールコール最適化の主な使用例は、最適化が最も効果的であるような再帰関数です。 階乗を計算するこの関数を考えてみましょう：
 
 ```js
 function factorial(n) {
@@ -1165,9 +1163,9 @@ function factorial(n) {
 }
 ```
 
-This version of the function cannot be optimized, because multiplication must happen after the recursive call to `factorial()`. If `n` is a very large number, the call stack size will grow and could potentially cause a stack overflow.
+関数のこのバージョンは、`factorial()`への再帰呼び出しの後に乗算が行われる必要があるため、最適化することはできません。`n`が非常に大きい場合、呼び出しスタックのサイズが大きくなり、スタックオーバーフローを引き起こす可能性があります。
 
-In order to optimize the function, you need to ensure that the multiplication doesn't happen after the last function call. To do this, you can use a default parameter to move the multiplication operation outside of the `return` statement. The resulting function carries along the temporary result into the next iteration, creating a function that behaves the same but *can* be optimized by an ECMAScript 6 engine. Here's the new code:
+関数を最適化するには、最後の関数呼び出しの後に乗算が行われないようにする必要があります。 これを行うには、デフォルトパラメータを使用して、`return`ステートメントの外で乗算演算を動かすことができます。 結果の関数は、一時的な結果に沿って次の繰り返しに移り、ECMAScript6エンジンで同じように動作し、最適化できる関数を生成します。 新しいコードは次のとおりです：
 
 ```js
 function factorial(n, p = 1) {
@@ -1183,24 +1181,24 @@ function factorial(n, p = 1) {
 }
 ```
 
-In this rewritten version of `factorial()`, a second argument `p` is added as a parameter with a default value of 1. The `p` parameter holds the previous multiplication result so that the next result can be computed without another function call. When `n` is greater than 1, the multiplication is done first and then passed in as the second argument to `factorial()`. This allows the ECMAScript 6 engine to optimize the recursive call.
+この再書式化された`factorial()`では、第2引数`p`がデフォルト値1のパラメータとして追加されます。`p`パラメータは前の乗算結果を保持し、次の結果が別の関数コール。`n`が1より大きい場合、乗算は最初に行われ、次にfactorial()への第2引数として渡されます。これにより、ECMAScript6エンジンは再帰呼び出しを最適化できます。
 
-Tail call optimization is something you should think about whenever you're writing a recursive function, as it can provide a significant performance improvement, especially when applied in a computationally-expensive function.
+テールコールの最適化は、特に計算量の多い関数に適用した場合に、大幅なパフォーマンスの向上をもたらすことができるため、再帰関数を記述するたびに考えるべきことです。
 
-## Summary
+## まとめ
 
-Functions haven't undergone a huge change in ECMAScript 6, but rather, a series of incremental changes that make them easier to work with.
+関数はECMAScript6では巨大な変更を受けていませんでしたが、作業を容易にする一連の段階的な変更がありました。
 
-Default function parameters allow you to easily specify what value to use when a particular argument isn't passed. Prior to ECMAScript 6, this would require some extra code inside the function, to both check for the presence of arguments and assign a different value.
+デフォルトの関数パラメータを使用すると、特定の引数が渡されないときに使用する値を簡単に指定できます。 ECMAScript6より前のバージョンでは、引数の有無を確認して別の値を割り当てるために、関数内に余分なコードが必要でした。
 
-Rest parameters allow you to specify an array into which all remaining parameters should be placed. Using a real array and letting you indicate which parameters to include makes rest parameters a much more flexible solution than `arguments`.
+残りのパラメータを使用すると、残りのすべてのパラメータを配置する配列を指定できます。実際の配列を使用して、どのパラメータをインクルードするかを指定させると、restパラメータは`arguments`よりはるかに柔軟な解決策になります。
 
-The spread operator is a companion to rest parameters, allowing you to deconstruct an array into separate parameters when calling a function. Prior to ECMAScript 6, there were only two ways to pass individual parameters contained in an array: by manually specifying each parameter or using `apply()`. With the spread operator, you can easily pass an array to any function without worrying about the `this` binding of the function.
+スプレッド演算子は、関数を呼び出すときに、配列を別々のパラメータに分解することを可能にする、残りのパラメータの仲間です。 ECMAScript6以前では、配列に含まれる個々のパラメータを渡す方法は2つしかありませんでした。手動で各パラメータを指定するか、`apply()`を使用します。スプレッド演算子を使うと、関数の`this`束縛を心配することなく、配列を任意の関数に簡単に渡すことができます。
 
-The addition of the `name` property should help you more easily identify functions for debugging and evaluation purposes. Additionally, ECMAScript 6 formally defines the behavior of block-level functions so they are no longer a syntax error in strict mode.
+`name`プロパティを追加すると、デバッグや評価のための関数をより簡単に識別するのに役立ちます。さらに、ECMAScript6ではブロックレベルの関数の動作が正式に定義されているため、厳密なモードではシンタックスエラーにはなりません。
 
-In ECMAScript 6, the behavior of a function is defined by `[[Call]]`, normal function execution, and `[[Construct]]`, when a function is called with `new`. The `new.target` metaproperty also allows you to determine if a function was called using `new` or not.
+ECMAScript6では、関数が`new[]`で呼び出されたとき、`[[Call]]`、通常の関数実行、`[[Construct]]`で定義されます。`new.target`メタ属性は`new`を使って関数が呼び出されたかどうかを判定することもできます。
 
-The biggest change to functions in ECMAScript 6 was the addition of arrow functions. Arrow functions are designed to be used in place of anonymous function expressions. Arrow functions have a more concise syntax, lexical `this` binding, and no `arguments` object. Additionally, arrow functions can't change their `this` binding, and so can't be used as constructors.
+ECMAScript6の機能の最大の変更は、矢印機能の追加でした。矢印関数は、無名関数式の代わりに使用するように設計されています。 Arrow関数はより簡潔なシンタックス、字句`this`バインディング、`arguments`オブジェクトはありません。さらに、矢印関数は`this`バインディングを変更することができないので、コンストラクタとして使用することはできません。
 
-Tail call optimization allows some function calls to be optimized in order to keep a smaller call stack, use less memory, and prevent stack overflow errors. This optimization is applied by the engine automatically when it is safe to do so, however, you may decide to rewrite recursive functions in order to take advantage of this optimization.
+テールコールの最適化により、小さなコールスタックを保持し、メモリを少なくし、スタックオーバーフローエラーを防ぐために、いくつかの関数呼び出しを最適化することができます。この最適化はエンジンが自動的に適用されますが、安全な場合には自動的に適用されますが、この最適化を利用するには再帰関数を書き換えることがあります。
