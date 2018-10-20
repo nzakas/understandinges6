@@ -1,27 +1,27 @@
-# Expanded Object Functionality
+＃拡張されたオブジェクト機能
 
-ECMAScript 6 focuses heavily on improving the utility of objects, which makes sense because nearly every value in JavaScript is some type of object. Additionally, the number of objects used in an average JavaScript program continues to increase as the complexity of JavaScript applications increases, meaning that programs are creating more objects all the time. With more objects comes the necessity to use them more effectively.
+ECMAScript6はオブジェクトの有用性を向上させることに重点を置いています.JavaScriptのほとんどの値はある種のオブジェクトなので理にかなっています。さらに、JavaScriptアプリケーションの複雑さが増すにつれて、平均的なJavaScriptプログラムで使用されるオブジェクトの数が増え続けています。つまり、プログラムによって常に多くのオブジェクトが生成されています。より多くのオブジェクトを使用すると、それらをより効果的に使用する必要が生じます。
 
-ECMAScript 6 improves objects in a number of ways, from simple syntax extensions to options for manipulating and interacting with them.
+ECMAScript6は、単純なシンタックスの拡張から、操作や操作のためのオプションまで、さまざまな方法でオブジェクトを改善します。
 
-## Object Categories
+## オブジェクトカテゴリ
 
-JavaScript uses a mix of terminology to describe objects found in the standard as opposed to those added by execution environments such as the browser or Node.js, and the ECMAScript 6 specification has clear definitions for each category of object. It's important to understand this terminology to have a good understanding of the language as a whole. The object categories are:
+JavaScriptではブラウザやNode.jsなどの実行環境で追加されたものとは対照的に、標準で見つかったオブジェクトを記述するために用語が混在しており、ECMAScript6仕様ではオブジェクトのカテゴリごとに明確な定義があります。言語全体をよく理解するには、この用語を理解することが重要です。オブジェクトのカテゴリは次のとおりです。
 
-* *Ordinary objects* Have all the default internal behaviors for objects in JavaScript.
-* *Exotic objects* Have internal behavior that differs from the default in some way.
-* *Standard objects* Are those defined by ECMAScript 6, such as `Array`, `Date`, and so on. Standard objects may be ordinary or exotic.
-* *Built-in objects* Are present in a JavaScript execution environment when a script begins to execute. All standard objects are built-in objects.
+* *通常のオブジェクト* JavaScriptのオブジェクトのすべてのデフォルトの内部動作を持ちます。
+* *エキゾチックなオブジェクト*何らかの形でデフォルトとは異なる内部的な振る舞いを持つ。
+* *標準オブジェクト* ECMAScript6で定義されたもので、ArrayやDateなどです。標準的なオブジェクトは、通常のものでもエキゾチックなものでもよい
+* *ビルトインオブジェクト*スクリプトの実行開始時にJavaScript実行環境に存在します。すべての標準オブジェクトはビルトインオブジェクトです。
 
-I will use these terms throughout the book to explain the various objects defined by ECMAScript 6.
+ECMAScript6で定義されているさまざまなオブジェクトを説明するために、これらの用語を本で使用します。
 
-## Object Literal Syntax Extensions
+## オブジェクトリテラルシンタックスの拡張
 
-The object literal is one of the most popular patterns in JavaScript. JSON is built upon its syntax, and it's in nearly every JavaScript file on the Internet. The object literal is so popular because it's a succinct syntax for creating objects that otherwise would take several lines of code. Luckily for developers, ECMAScript 6 makes object literals more powerful and even more succinct by extending the syntax in several ways.
+オブジェクトリテラルは、JavaScriptで最も一般的なパターンの1つです。 JSONはそのシンタックスに基づいて構築されており、インターネット上のほぼすべてのJavaScriptファイルにあります。オブジェクトリテラルは、それがそうでなければ数行のコードを取るオブジェクトを生成するための簡潔なシンタックスなので、人気があります。幸いなことに開発者にとって、ECMAScript6は、シンタックスをいくつかの方法で拡張することで、オブジェクトリテラルをより強力かつより簡潔にします。
 
-### Property Initializer Shorthand
+### プロパティ初期化子略奪
 
-In ECMAScript 5 and earlier, object literals were simply collections of name-value pairs. That meant there could be some duplication when property values are initialized. For example:
+ECMAScript 5以前では、オブジェクトリテラルは単に名前と値のペアの集合でした。つまり、プロパティ値が初期化されるときに重複が生じる可能性があります。例えば：
 
 ```js
 function createPerson(name, age) {
@@ -32,9 +32,9 @@ function createPerson(name, age) {
 }
 ```
 
-The `createPerson()` function creates an object whose property names are the same as the function parameter names. The result appears to be duplication of `name` and `age` even though one is the name of an object property while the other provides the value for that property. The key `name` in the returned object is assigned the value contained in the variable `name`, and the key `age` in the returned object is assigned the value contained in the variable `age`.
+`createPerson()`関数は、プロパティ名が関数のパラメータ名と同じであるオブジェクトを生成します。その結果は、一方がオブジェクトプロパティの名前で他方がそのプロパティの値を提供しても、`name`と`age`の重複であるように見えます。返されるオブジェクトのキー`name`には変数`name`に含まれる値が割り当てられ、返されたオブジェクトのキー`age`には変数`age`に含まれる値が割り当てられます。
 
-In ECMAScript 6, you can eliminate the duplication that exists around property names and local variables by using the *property initializer* shorthand. When an object property name is the same as the local variable name, you can simply include the name without a colon and value. For example, `createPerson()` can be rewritten for ECMAScript 6 as follows:
+ECMAScript6では、*プロパティ初期化子*の短縮形を使用して、プロパティ名とローカル変数の周りに存在する重複を排除できます。オブジェクトのプロパティ名がローカル変数名と同じ場合は、コロンと値のない名前を単純に含めることができます。たとえば、次のように、`createPerson()`をECMAScript6に書き換えることができます：
 
 ```js
 function createPerson(name, age) {
@@ -45,13 +45,13 @@ function createPerson(name, age) {
 }
 ```
 
-When a property in an object literal only has a name, the JavaScript engine looks into the surrounding scope for a variable of the same name. If it finds one, that variable's value is assigned to the same name on the object literal. In this example, the object literal property `name` is assigned the value of the local variable `name`.
+オブジェクトリテラルのプロパティーに名前のみがある場合、JavaScriptエンジンは周囲のスコープ内で同じ名前の変数を探します。見つかった場合は、その変数の値がオブジェクトリテラルの同じ名前に割り当てられます。この例では、オブジェクトのリテラル・プロパティー`name`にローカル変数`name`の値が割り当てられています。
 
-This extension makes object literal initialization even more succinct and helps to eliminate naming errors. Assigning a property with the same name as a local variable is a very common pattern in JavaScript, making this extension a welcome addition.
+この拡張により、オブジェクトのリテラルの初期化がより簡潔になり、命名エラーを排除するのに役立ちます。ローカル変数と同じ名前のプロパティを割り当てることは、JavaScriptの非常に一般的なパターンであり、この拡張を歓迎します。
 
-### Concise Methods
+### 簡潔なメソッド
 
-ECMAScript 6 also improves the syntax for assigning methods to object literals. In ECMAScript 5 and earlier, you must specify a name and then the full function definition to add a method to an object, as follows:
+ECMAScript6では、オブジェクトリテラルにメソッドを割り当てるためのシンタックスも改善されています。 ECMAScript 5以前では、オブジェクトにメソッドを追加するには、名前を指定してから完全な関数定義を指定する必要があります。
 
 ```js
 var person = {
@@ -62,7 +62,7 @@ var person = {
 };
 ```
 
-In ECMAScript 6, the syntax is made more concise by eliminating the colon and the `function` keyword. That means you can rewrite the previous example like this:
+ECMAScript6では、コロンと`function`キーワードを削除することで、シンタックスがより簡潔になります。つまり、前の例を次のように書き直すことができます。
 
 ```js
 var person = {
@@ -73,13 +73,13 @@ var person = {
 };
 ```
 
-This shorthand syntax, also called *concise method* syntax, creates a method on the `person` object just as the previous example did. The `sayName()` property is assigned an anonymous function and has all the same characteristics as the ECMAScript 5 `sayName()` function. The one difference is that concise methods may use `super` (discussed later in the "Easy Prototype Access with Super References" section), while the nonconcise methods may not.
+*簡潔なメソッド*シンタックスとも呼ばれるこの簡略シンタックスは、前の例のように`person`オブジェクトにメソッドを生成します。`sayName()`プロパティは無名関数に割り当てられ、ECMAScript 5の`sayName()`関数と同じ特性を持っています。 1つの違いは、簡潔なメソッドでは "super"を使うことができるということです(非標準メソッドでは簡単なPrototype Access with Super Referencesで説明します)。
 
-I> The `name` property of a method created using concise method shorthand is the name used before the parentheses. In the last example, the `name` property for `person.sayName()` is `"sayName"`.
+I>簡略メソッドを使って生成されたメソッドの`name`プロパティは、かっこの前に使用される名前です。最後の例では、`person.sayName()`の`name`プロパティは``sayName"`です。
 
-### Computed Property Names
+### 計算されたプロパティ名
 
-ECMAScript 5 and earlier could compute property names on object instances when those properties were set with square brackets instead of dot notation. The square brackets allow you to specify property names using variables and string literals that may contain characters that would cause a syntax error if used in an identifier. Here's an example:
+ECMAScript 5以前では、プロパティがドット表記ではなく角かっこで設定されている場合、オブジェクトインスタンスのプロパティ名を計算できました。角括弧では、識別子で使用されるとシンタックスエラーの原因となる文字を含む変数や文字列リテラルを使用してプロパティ名を指定できます。ここに例があります：
 
 ```js
 var person = {},
@@ -92,9 +92,9 @@ console.log(person["first name"]);      // "Nicholas"
 console.log(person[lastName]);          // "Zakas"
 ```
 
-Since `lastName` is assigned a value of `"last name"`, both property names in this example use a space, making it impossible to reference them using dot notation. However, bracket notation allows any string value to be used as a property name, so assigning `"first name"` to `"Nicholas"` and "`last name"` to `"Zakas"` works.
+`lastName`に``lastname``の値が割り当てられているので、この例の両方のプロパティー名はスペースを使い、ドット表記法を使ってそれらを参照することはできません。しかし、括弧表記法は任意の文字列値をプロパティ名として使用できるので、``Nicholas '`と``last name"`を``Zakas'``に割り当てることができます。
 
-Additionally, you can use string literals directly as property names in object literals, like this:
+さらに、文字列リテラルをオブジェクトリテラルのプロパティ名として直接使用することもできます。
 
 ```js
 var person = {
@@ -104,9 +104,9 @@ var person = {
 console.log(person["first name"]);      // "Nicholas"
 ```
 
-This pattern works for property names that are known ahead of time and can be represented with a string literal. If, however, the property name `"first name"` were contained in a variable (as in the previous example) or had to be calculated, then there would be no way to define that property using an object literal in ECMAScript 5.
+このパターンは、事前にわかっており、文字列リテラルで表現できるプロパティ名に対して機能します。しかし、プロパティ名`"ファーストネーム "が変数に含まれているか(前の例のように)計算されなければならない場合、ECMAScript 5のオブジェクトリテラルを使ってそのプロパティを定義する方法はありません。
 
-In ECMAScript 6, computed property names are part of the object literal syntax, and they use the same square bracket notation that has been used to reference computed property names in object instances. For example:
+ECMAScript6では、計算されたプロパティ名はオブジェクトリテラルシンタックスの一部であり、オブジェクトインスタンスの計算されたプロパティ名を参照するために使用されているのと同じ角括弧表記を使用します。例えば：
 
 ```js
 var lastName = "last name";
@@ -120,7 +120,7 @@ console.log(person["first name"]);      // "Nicholas"
 console.log(person[lastName]);          // "Zakas"
 ```
 
-The square brackets inside the object literal indicate that the property name is computed, so its contents are evaluated as a string. That means you can also include expressions such as:
+オブジェクトリテラル内の角かっこは、プロパティ名が計算されていることを示しているため、その内容は文字列として評価されます。つまり、次のような式を含めることもできます。
 
 ```js
 var suffix = " name";
@@ -134,17 +134,17 @@ console.log(person["first name"]);      // "Nicholas"
 console.log(person["last name"]);       // "Zakas"
 ```
 
-These properties evaluate to `"first name"` and `"last name"`, and those strings can be used to reference the properties later. Anything you would put inside square brackets while using bracket notation on object instances will also work for computed property names inside object literals.
+これらのプロパティは``first name '`と``last name'`と評価され、これらの文字列は後でプロパティを参照するために使用できます。オブジェクトインスタンスでブラケット記法を使用している間に角括弧の中に入れるものは、オブジェクトリテラル内の計算されたプロパティ名に対しても機能します。
 
-## New Methods
+## newメソッド
 
-One of the design goals of ECMAScript beginning with ECMAScript 5 was to avoid creating new global functions or methods on `Object.prototype`, and instead try to find objects on which new methods should be available. As a result, the `Object` global has received an increasing number of methods when no other objects are more appropriate. ECMAScript 6 introduces a couple new methods on the `Object` global that are designed to make certain tasks easier.
+ECMAScriptの設計目標の1つは、ECMAScript 5で始まり、`Object.prototype`で新しいグローバル関数やメソッドを生成するのを避け、代わりに新しいメソッドを利用できるようなオブジェクトを見つけようとしました。結果として、`Object`グローバルは、他のオブジェクトがより適切でないときに、メソッドの数が増加しています。 ECMAScript6では、いくつかのタスクを容易にするために設計された`Object`グローバルにいくつかの新しいメソッドが導入されています。
 
-### The Object.is() Method
+### Object.is()メソッド
 
-When you want to compare two values in JavaScript, you're probably used to using either the equals operator (`==`) or the identically equals operator (`===`). Many developers prefer the latter, to avoid type coercion during comparison. But even the identically equals operator isn't entirely accurate. For example, the values +0 and -0 are considered equal by `===` even though they are represented differently in the JavaScript engine. Also `NaN === NaN` returns `false`, which necessitates using `isNaN()` to detect `NaN` properly.
+JavaScriptで2つの値を比較したい場合は、equals演算子(`==`)または同等に等しい演算子(`===`)のどちらかを使用することに多分慣れています。比較の際に型強制を避けるために、多くの開発者が後者を好んでいます。しかし、同等の演算子であっても、完全に正確ではありません。例えば、+0と-0の値は、JavaScriptエンジンで異なって表現されていても、`=== 'と等しいとみなされます。また、`NaN === NaN`は`false`を返します。これは`NaN`を正しく検出するために`isNaN()`を使う必要があります。
 
-ECMAScript 6 introduces the `Object.is()` method to make up for the remaining quirks of the identically equals operator. This method accepts two arguments and returns `true` if the values are equivalent. Two values are considered equivalent when they are of the same type and have the same value. Here are some examples:
+ECMAScript6では、Object.is()メソッドが導入され、同等に等しい演算子の残りのクォークを補完します。このメソッドは2つの引数を受け取り、値が等しい場合は`true`を返します。 2つの値は、同じ型で同じ値を持つ場合、等価と見なされます。ここではいくつかの例を示します。
 
 ```js
 console.log(+0 == -0);              // true
@@ -163,11 +163,11 @@ console.log(Object.is(5, 5));       // true
 console.log(Object.is(5, "5"));     // false
 ```
 
-In many cases, `Object.is()` works the same as the `===` operator. The only differences are that +0 and -0 are considered not equivalent and `NaN` is considered equivalent to `NaN`. But there's no need to stop using equality operators altogether. Choose whether to use `Object.is()` instead of `==` or `===` based on how those special cases affect your code.
+多くの場合、`Object.is()`は`===`演算子と同じ働きをします。 唯一の違いは+0と-0が等価でないとみなされ、`NaN`が`NaN`と等価であるとみなされることです。 しかし、等価演算子の使用を完全に停止する必要はありません。 それらの特殊なケースがあなたのコードに与える影響に基づいて、`==`や`===`の代わりに`Object.is()`を使うかどうかを選択します。
 
-### The Object.assign() Method
+### Object.assign()メソッド
 
-*Mixins* are among the most popular patterns for object composition in JavaScript. In a mixin, one object receives properties and methods from another object. Many JavaScript libraries have a mixin method similar to this:
+*ミックスイン*は、JavaScriptのオブジェクト合成で最も一般的なパターンです。 ミックスインでは、あるオブジェクトは別のオブジェクトからプロパティとメソッドを受け取ります。 多くのJavaScriptライブラリには、次のようなmixinメソッドがあります。
 
 ```js
 function mixin(receiver, supplier) {
@@ -179,7 +179,7 @@ function mixin(receiver, supplier) {
 }
 ```
 
-The `mixin()` function iterates over the own properties of `supplier` and copies them onto `receiver` (a shallow copy, where object references are shared when property values are objects). This allows the `receiver` to gain new properties without inheritance, as in this code:
+`mixin()`関数は`supplier`の独自のプロパティを繰り返し処理し、`receiver`(浅いコピー、プロパティ値がオブジェクトのときにオブジェクト参照が共有される)にコピーします。 これは、このコードのように、`receiver`が継承なしで新しいプロパティを得ることを可能にします：
 
 ```js
 function EventTarget() { /*...*/ }
@@ -195,13 +195,13 @@ mixin(myObject, EventTarget.prototype);
 myObject.emit("somethingChanged");
 ```
 
-Here, `myObject` receives behavior from the `EventTarget.prototype` object. This gives `myObject` the ability to publish events and subscribe to them using the `emit()` and `on()` methods, respectively.
+ここで、`myObject`は`EventTarget.prototype`オブジェクトから動作を受け取ります。これにより`myObject`はイベントを公開し、それぞれ`emit()`と`on()`メソッドを使ってイベントを購読することができます。
 
-This pattern became popular enough that ECMAScript 6 added the `Object.assign()` method, which behaves the same way, accepting a receiver and any number of suppliers, and then returning the receiver. The name change from `mixin()` to `assign()` reflects the actual operation that occurs. Since the `mixin()` function uses the assignment operator (`=`), it cannot copy accessor properties to the receiver as accessor properties. The name `Object.assign()` was chosen to reflect this distinction.
+このパターンは、ECMAScript6が同じように動作する`Object.assign()`メソッドを追加し、受信者と任意の数のサプライヤを受け入れ、その後受信者を返すほど広く普及しました。`mixin()`から`assign()`への名前の変更は、実際の操作が反映されます。`mixin()`関数は代入演算子(`=`)を使うので、アクセサプロパティをアクセサープロパティとしてレシーバにコピーすることはできません。この区別を反映するために、`Object.assign()`という名前が選択されました。
 
-I> Similar methods in various libraries may have other names for the same basic functionality; popular alternates include the `extend()` and `mix()` methods. There was also, briefly, an `Object.mixin()` method in ECMAScript 6 in addition to the `Object.assign()` method. The primary difference was that `Object.mixin()` also copied over accessor properties, but the method was removed due to concerns over the use of `super` (discussed in the "Easy Prototype Access with Super References" section of this chapter).
+I>さまざまなライブラリの類似のメソッドは、同じ基本機能の別の名前を持つことがあります。一般的な代替方法には`extend()`と`mix()`メソッドがあります。また、簡単に言うと、`Object.assign()`メソッドに加えて、ECMAScript6に`Object.mixin()`メソッドがありました。主な相違点は、`Object.mixin()`もアクセサプロパティ上にコピーされましたが、`super`の使用に対する懸念からメソッドが削除されたことです(この章の「簡単なプロトタイプアクセス」参照) 。
 
-You can use `Object.assign()` anywhere the `mixin()` function would have been used. Here's an example:
+`mixin()`関数が使われていたなら、どこでも`Object.assign()`を使うことができます。ここに例があります：
 
 ```js
 function EventTarget() { /*...*/ }
@@ -217,7 +217,7 @@ Object.assign(myObject, EventTarget.prototype);
 myObject.emit("somethingChanged");
 ```
 
-The `Object.assign()` method accepts any number of suppliers, and the receiver receives the properties in the order in which the suppliers are specified. That means the second supplier might overwrite a value from the first supplier on the receiver, which is what happens in this snippet:
+`Object.assign()`メソッドは任意の数のサプライヤを受け付け、サプライヤが指定された順序でプロパティを受け取ります。つまり、2番目のサプライヤが受信者の最初のサプライヤからの値を上書きする可能性があります。これはこのスニペットで行われます。
 
 ```js
 var receiver = {};
@@ -236,15 +236,15 @@ console.log(receiver.type);     // "css"
 console.log(receiver.name);     // "file.js"
 ```
 
-The value of `receiver.type` is `"css"` because the second supplier overwrote the value of the first.
+The value of`receiver.type`is`"css"`because the second supplier overwrote the value of the first.
 
-The `Object.assign()` method isn't a big addition to ECMAScript 6, but it does formalize a common function found in many JavaScript libraries.
+The`Object.assign()`method isn't a big addition to ECMAScript6, but it does formalize a common function found in many JavaScript libraries.
 
 A> ### Working with Accessor Properties
 A>
-A> Keep in mind that `Object.assign()` doesn't create accessor properties on the receiver when a supplier has accessor properties. Since `Object.assign()` uses the assignment operator, an accessor property on a supplier will become a data property on the receiver. For example:
+A> Keep in mind that`Object.assign()`doesn't create accessor properties on the receiver when a supplier has accessor properties. Since`Object.assign()`uses the assignment operator, an accessor property on a supplier will become a data property on the receiver. For example:
 A>
-A> ```js
+A>```js
 A> var receiver = {},
 A>     supplier = {
 A>         get name() {
@@ -258,13 +258,13 @@ A> var descriptor = Object.getOwnPropertyDescriptor(receiver, "name");
 A>
 A> console.log(descriptor.value);      // "file.js"
 A> console.log(descriptor.get);        // undefined
-A> ```
+A>```
 A>
-A> In this code, the `supplier` has an accessor property called `name`. After using the `Object.assign()` method, `receiver.name` exists as a data property with a value of `"file.js"` because `supplier.name` returned `"file.js"` when `Object.assign()` was called.
+A>このコードでは、`supplier`は`name`というアクセサプロパティを持っています。`Object.assign()`メソッドを使用した後、`receiver.name`は`file.js "の値を持つデータプロパティとして存在します。`supplier.name`は`File.js" .assign()`が呼び出されました。
 
-## Duplicate Object Literal Properties
+## 重複するオブジェクトリテラルのプロパティ
 
-ECMAScript 5 strict mode introduced a check for duplicate object literal properties that would throw an error if a duplicate was found. For example, this code was problematic:
+ECMAScript 5 strictモードでは、重複したオブジェクトリテラルプロパティのチェックが導入されました。重複が見つかった場合はエラーを投げます。 たとえば、このコードは問題がありました。
 
 ```js
 "use strict";
@@ -275,7 +275,7 @@ var person = {
 };
 ```
 
-When running in ECMAScript 5 strict mode, the second `name` property causes a syntax error. But in ECMAScript 6, the duplicate property check was removed. Both strict and nonstrict mode code no longer check for duplicate properties. Instead, the last property of the given name becomes the property's actual value, as shown here:
+ECMAScript 5 strictモードで実行すると、2番目の`name`プロパティはシンタックスエラーを引き起こします。しかし、ECMAScript6では、重複したプロパティチェックが削除されました。厳密モードと非厳密モードの両方のコードで重複したプロパティがチェックされなくなりました。代わりに、ここに示すように、指定された名前の最後のプロパティがプロパティの実際の値になります。
 
 ```js
 "use strict";
@@ -288,19 +288,19 @@ var person = {
 console.log(person.name);       // "Greg"
 ```
 
-In this example, the value of `person.name` is `"Greg"` because that's the last value assigned to the property.
+この例では、`person.name`の値は`Greg "です。なぜなら、それがプロパティに割り当てられた最後の値だからです。
 
-## Own Property Enumeration Order
+## プロパティの列挙順序
 
-ECMAScript 5 didn't define the enumeration order of object properties, as it left this up to the JavaScript engine vendors. However, ECMAScript 6 strictly defines the order in which own properties must be returned when they are enumerated. This affects how properties are returned using `Object.getOwnPropertyNames()` and `Reflect.ownKeys` (covered in Chapter 12). It also affects the order in which properties are processed by `Object.assign()`.
+ECMAScript 5はオブジェクトプロパティの列挙順序を定義していませんでした.JavaScriptエンジンのベンダーに任せていました。ただし、ECMAScript6では、列挙されたときに独自のプロパティを返す順序を厳密に定義しています。これは、`Object.getOwnPropertyNames()`と`Reflect.ownKeys`(第12章で扱う)を使ってプロパティを返す方法に影響します。`Object.assign()`によってプロパティが処理される順序にも影響します。
 
-The basic order for own property enumeration is:
+独自のプロパティ列挙の基本的な順序は次のとおりです。
 
-1. All numeric keys in ascending order
-2. All string keys in the order in which they were added to the object
-3. All symbol keys (covered in Chapter 6) in the order in which they were added to the object
+1.昇順のすべての数字キー
+2.オブジェクトに追加された順序でのすべての文字列キー
+3.オブジェクトに追加された順にすべてのシンボルキー(第6章で説明)
 
-Here's an example:
+ここに例があります：
 
 ```js
 var obj = {
@@ -317,21 +317,21 @@ obj.d = 1;
 console.log(Object.getOwnPropertyNames(obj).join(""));     // "012acbd"
 ```
 
-The `Object.getOwnPropertyNames()` method returns the properties in `obj` in the order `0`, `1`, `2`, `a`, `c`, `b`, `d`. Note that the numeric keys are grouped together and sorted, even though they appear out of order in the object literal. The string keys come after the numeric keys and appear in the order that they were added to `obj`. The keys in the object literal itself come first, followed by any dynamic keys that were added later (in this case, `d`).
+`Object.getOwnPropertyNames()`メソッドは`obj`のプロパティを`0`、`1`、`2`、`a`、`c`、`b`、d`の順に返します。テンキーは、オブジェクトリテラルで順不同で表示されていても、グループ化されソートされていることに注意してください。文字列キーは数字キーの後に来て、`obj`に追加された順に表示されます。オブジェクトリテラルのキー自体が最初に来て、その後に追加された動的キー(この場合は`d`)が続きます。
 
-W> The `for-in` loop still has an unspecified enumeration order because not all JavaScript engines implement it the same way. The `Object.keys()` method and `JSON.stringify()` are both specified to use the same (unspecified) enumeration order as `for-in`.
+W>`for-in`ループは、すべてのJavaScriptエンジンが同じように実装しているわけではないので、未定義の列挙命令を持っています。`Object.keys()`メソッドと`JSON.stringify()`はどちらも`for-in`と同じ(指定されていない)列挙型を使うように指定されています。
 
-While enumeration order is a subtle change to how JavaScript works, it's not uncommon to find programs that rely on a specific enumeration order to work correctly. ECMAScript 6, by defining the enumeration order, ensures that JavaScript code relying on enumeration will work correctly regardless of where it is executed.
+列挙の順序はJavaScriptの仕組みに微妙な変更がありますが、特定の列挙命令に依存するプログラムが正しく動作することは珍しくありません。列挙命令を定義することにより、ECMAScript6は列挙に頼っているJavaScriptコードがどこで実行されているかにかかわらず正しく動作するようにします。
 
-## More Powerful Prototypes
+## より強力なプロトタイプ
 
-Prototypes are the foundation of inheritance in JavaScript, and ECMAScript 6 continues to make prototypes more powerful. Early versions of JavaScript severely limited what could be done with prototypes. However, as the language matured and developers became more familiar with how prototypes work, it became clear that developers wanted more control over prototypes and easier ways to work with them. As a result, ECMAScript 6 introduced some improvements to prototypes.
+プロトタイプはJavaScriptの継承の基礎であり、ECMAScript6はプロトタイプをより強力にし続けています。 JavaScriptの初期のバージョンでは、プロトタイプでできることを厳しく制限していました。しかし、言語が成熟し、開発者がプロ​​トタイプの仕組みに慣れてきたので、開発者はプロトタイプをよりコントロールし、より簡単な方法で作業できるようになりました。その結果、ECMAScript6ではプロトタイプにいくつかの改良が加えられました。
 
-### Changing an Object's Prototype
+### オブジェクトのプロトタイプを変更する
 
-Normally, the prototype of an object is specified when the object is created, via either a constructor or the `Object.create()` method. The idea that an object's prototype remains unchanged after instantiation was one of the biggest assumptions in JavaScript programming through ECMAScript 5. ECMAScript 5 did add the `Object.getPrototypeOf()` method for retrieving the prototype of any given object, but it still lacked a standard way to change an object's prototype after instantiation.
+通常、オブジェクトのプロトタイプは、オブジェクトの生成時にコンストラクタまたは`Object.create()`メソッドを介して指定されます。インスタンス化後にオブジェクトのプロトタイプが変更されないという考えは、ECMAScript 5を使ったJavaScriptプログラミングの最大の想定の1つでした。ECMAScript 5では、オブジェクトのプロトタイプを取得するために`Object.getPrototypeOf()`メソッドを追加しました。インスタンス化後にオブジェクトのプロトタイプを変更するための標準的な方法です。
 
-ECMAScript 6 changes that assumption by adding the `Object.setPrototypeOf()` method, which allows you to change the prototype of any given object. The `Object.setPrototypeOf()` method accepts two arguments: the object whose prototype should change and the object that should become the first argument's prototype. For example:
+ECMAScript6は、`Object.setPrototypeOf()`メソッドを追加することでその前提を変更します。これにより、任意のオブジェクトのプロトタイプを変更することができます。`Object.setPrototypeOf()`メソッドは、プロトタイプが変更されるべきオブジェクトと最初の引数のプロトタイプになるオブジェクトの2つの引数を受け取ります。例えば：
 
 ```js
 let person = {
@@ -357,13 +357,13 @@ console.log(friend.getGreeting());                      // "Woof"
 console.log(Object.getPrototypeOf(friend) === dog);     // true
 ```
 
-This code defines two base objects: `person` and `dog`. Both objects have a `getGreeting()` method that returns a string. The object `friend` first inherits from the `person` object, meaning that `getGreeting()` outputs `"Hello"`. When the prototype becomes the `dog` object, `person.getGreeting()` outputs `"Woof"` because the original relationship to `person` is broken.
+このコードは`person`と`dog`の2つの基本オブジェクトを定義しています。両方のオブジェクトには文字列を返す`getGreeting()`メソッドがあります。オブジェクト`friend`は`person`オブジェクトから継承します。つまり`getGreeting()`は``Hello "`を出力します。プロトタイプが`dog`オブジェクトになると、`person.getGreeting()`は`person`への元の関係が壊れているので``Woof``を出力します。
 
-The actual value of an object's prototype is stored in an internal-only property called `[[Prototype]]`. The `Object.getPrototypeOf()` method returns the value stored in `[[Prototype]]` and `Object.setPrototypeOf()` changes the value stored in `[[Prototype]]`. However, these aren't the only ways to work with the value of `[[Prototype]]`.
+オブジェクトのプロトタイプの実際の値は`[[Prototype]]`と呼ばれる内部専用プロパティに格納されます。`Object.getPrototypeOf()`メソッドは`[[Prototype]]`に格納された値を返し、`Object.setPrototypeOf()`は`[[Prototype]]`に格納された値を変更します。しかし、これらは`[[Prototype]]`の値を扱う唯一の方法ではありません。
 
-### Easy Prototype Access with Super References
+### スーパーリファレンスによる簡単なプロトタイプアクセス
 
-As previously mentioned, prototypes are very important for JavaScript and a lot of work went into making them easier to use in ECMAScript 6. Another improvement is the introduction of `super` references, which make accessing functionality on an object's prototype easier. For example, to override a method on an object instance such that it also calls the prototype method of the same name, you'd do the following:
+前述のように、プロトタイプはJavaScriptにとって非常に重要であり、ECMAScript6での使用を容易にするための多くの作業が行われました。もう1つの改善点は、オブジェクトのプロトタイプの機能へのアクセスを容易にする「スーパー」参照の導入です。たとえば、同じ名前のプロトタイプメソッドも呼び出すように、オブジェクトインスタンスのメソッドをオーバーライドするには、次のようにします。
 
 ```js
 let person = {
@@ -396,9 +396,9 @@ console.log(friend.getGreeting());                      // "Woof, hi!"
 console.log(Object.getPrototypeOf(friend) === dog);     // true
 ```
 
-In this example, `getGreeting()` on `friend` calls the prototype method of the same name. The `Object.getPrototypeOf()` method ensures the correct prototype is called, and then an additional string is appended to the output. The additional `.call(this)` ensures that the `this` value inside the prototype method is set correctly.
+この例では、`friend`の`getGreeting()`は同じ名前のプロトタイプメソッドを呼び出します。`Object.getPrototypeOf()`メソッドは正しいプロトタイプが呼び出されたことを保証し、その後に追加の文字列が出力に追加されます。追加の`.call(this)`は、プロトタイプメソッド内の`this`値が正しく設定されていることを保証します。
 
-Remembering to use `Object.getPrototypeOf()` and `.call(this)` to call a method on the prototype is a bit involved, so ECMAScript 6 introduced `super`. At its simplest, `super` is a pointer to the current object's prototype, effectively the `Object.getPrototypeOf(this)` value. Knowing that, you can simplify the `getGreeting()` method as follows:
+プロトタイプのメソッドを呼び出すために`Object.getPrototypeOf()`と`.call(this) 'を使うことは少し関わっているので、ECMAScript6は`super`を導入しました。最も単純な場合、`super`は現在のオブジェクトのプロトタイプへのポインタであり、実質的に`Object.getPrototypeOf(this)`の値です。それを知っているなら、`getGreeting()`メソッドを次のように単純化することができます：
 
 ```js
 let friend = {
@@ -410,7 +410,7 @@ let friend = {
 };
 ```
 
-The call to `super.getGreeting()` is the same as `Object.getPrototypeOf(this).getGreeting.call(this)` in this context. Similarly, you can call any method on an object's prototype by using a `super` reference, so long as it's inside a concise method. Attempting to use `super` outside of concise methods results in a syntax error, as in this example:
+`super.getGreeting()`への呼び出しは、この文脈では`Object.getPrototypeOf(this).getGreeting.call(this)`と同じです。同様に、簡潔なメソッドの中にある限り、オブジェクトのプロトタイプのどのメソッドも`super`参照を使って呼び出すことができます。簡潔なメソッドの外で`super`を使用しようとすると、この例のようにシンタックスエラーが発生します。
 
 ```js
 let friend = {
@@ -421,9 +421,9 @@ let friend = {
 };
 ```
 
-This example uses a named property with a function, and the call to `super.getGreeting()` results in a syntax error because `super` is invalid in this context.
+この例では、関数で名前付きプロパティを使用しています。このコンテキストで`super`が無効であるため、`super.getGreeting()`を呼び出すとシンタックスエラーが発生します。
 
-The `super` reference is really powerful when you have multiple levels of inheritance, because in that case, `Object.getPrototypeOf()` no longer works in all circumstances. For example:
+`super`リファレンスは、あなたが複数のレベルの継承を持つときに本当に強力です。その場合、`Object.getPrototypeOf()`はもはやすべての状況で機能しないからです。例えば：
 
 ```js
 let person = {
@@ -449,9 +449,9 @@ console.log(friend.getGreeting());                  // "Hello, hi!"
 console.log(relative.getGreeting());                // error!
 ```
 
-The call to `Object.getPrototypeOf()` results in an error when `relative.getGreeting()` is called. That's because `this` is `relative`, and the prototype of `relative` is the `friend` object. When `friend.getGreeting().call()` is called with `relative` as `this`, the process starts over again and continues to call recursively until a stack overflow error occurs.
+`relative.getGreeting()`が呼ばれると、`Object.getPrototypeOf()`の呼び出しはエラーになります。これは`this`が`relative`で、`relative`のプロトタイプが`friend`オブジェクトですからです。`friend.getGreeting()。call()`が`relative`を`this`として呼び出されると、プロセスはやり直され、スタックオーバーフローエラーが発生するまで再帰的に呼び出しを続けます。
 
-That problem is difficult to solve in ECMAScript 5, but with ECMAScript 6 and `super`, it's easy:
+この問題はECMAScript 5では解決するのが難しいですが、ECMAScript6と`super`では簡単です：
 
 ```js
 let person = {
@@ -477,11 +477,11 @@ console.log(friend.getGreeting());                  // "Hello, hi!"
 console.log(relative.getGreeting());                // "Hello, hi!"
 ```
 
-Because `super` references are not dynamic, they always refer to the correct object. In this case, `super.getGreeting()` always refers to `person.getGreeting()`, regardless of how many other objects inherit the method.
+`super`参照は動的ではないので、常に正しいオブジェクトを参照します。この場合、`super.getGreeting()`は、メソッドを継承する他のオブジェクトの数にかかわらず、常に`person.getGreeting()`を参照します。
 
-## A Formal Method Definition
+## 形式的なメソッド定義
 
-Prior to ECMAScript 6, the concept of a "method" wasn't formally defined. Methods were just object properties that contained functions instead of data. ECMAScript 6 formally defines a method as a function that has an internal `[[HomeObject]]` property containing the object to which the method belongs. Consider the following:
+ECMAScript6以前は、「メソッド」の概念は形式的に定義されていませんでした。メソッドは、データの代わりに関数を含むオブジェクトプロパティでした。 ECMAScript6はメソッドを正式に、メソッドが属するオブジェクトを含む内部の[[HomeObject]]プロパティを持つ関数として定義します。次の点を考慮してください。
 
 ```js
 let person = {
@@ -498,9 +498,9 @@ function shareGreeting() {
 }
 ```
 
-This example defines `person` with a single method called `getGreeting()`. The `[[HomeObject]]` for `getGreeting()` is `person` by virtue of assigning the function directly to an object. The `shareGreeting()` function, on the other hand, has no `[[HomeObject]]` specified because it wasn't assigned to an object when it was created. In most cases, this difference isn't important, but it becomes very important when using `super` references.
+この例は`getGreeting()`と呼ばれる単一のメソッドで`person`を定義しています。`getGreeting()`の`[[HomeObject]]`は、関数をオブジェクトに直接割り当てることによって`person`です。一方、`shareGreeting()`関数はオブジェクトの生成時にオブジェクトに割り当てられていないため、[[HomeObject]]は指定されていません。ほとんどの場合、この違いは重要ではありませんが、`super`参照を使用する場合は非常に重要になります。
 
-Any reference to `super` uses the `[[HomeObject]]` to determine what to do. The first step is to call `Object.getPrototypeOf()` on the `[[HomeObject]]` to retrieve a reference to the prototype. Then, the prototype is searched for a function with the same name. Last, the `this` binding is set and the method is called. Here's an example:
+`super`への参照は`[[HomeObject]]`を使って何をすべきかを決定します。最初のステップは`[[HomeObject]]`で`Object.getPrototypeOf()`を呼び出してプロトタイプへの参照を取得することです。次に、プロトタイプで同じ名前の関数が検索されます。最後に、`this`バインディングが設定され、メソッドが呼び出されます。ここに例があります：
 
 ```js
 let person = {
@@ -520,18 +520,18 @@ Object.setPrototypeOf(friend, person);
 console.log(friend.getGreeting());  // "Hello, hi!"
 ```
 
-Calling `friend.getGreeting()` returns a string, which combines the value from `person.getGreeting()` with `", hi!"`. The `[[HomeObject]]` of `friend.getGreeting()` is `friend`, and the prototype of `friend` is `person`, so `super.getGreeting()` is equivalent to `person.getGreeting.call(this)`.
+`friend.getGreeting()`を呼び出すと、`person.getGreeting()`の値と``、hi！ "`の値を組み合わせた文字列が返されます。`friend.getGreeting()`の`[[HomeObject]]`は`friend`であり、`friend`のプロトタイプは`person`なので、`super.getGreeting()`は`person.getGreeting.call (これ)`。
 
-## Summary
+## まとめ
 
-Objects are the center of programming in JavaScript, and ECMAScript 6 made some helpful changes to objects that both make them easier to deal with and more powerful.
+オブジェクトはJavaScriptのプログラミングの中心であり、ECMAScript6では、オブジェクトを扱いやすく、より強力なものにする便利な変更が加えられました。
 
-ECMAScript 6 makes several changes to object literals. Shorthand property definitions make assigning properties with the same names as in-scope variables easier. Computed property names allow you to specify non-literal values as property names, which you've already been able to do in other areas of the language. Shorthand methods let you type a lot fewer characters in order to define methods on object literals, by completely omitting the colon and `function` keyword. ECMAScript 6 loosens the strict mode check for duplicate object literal property names as well, meaning you can have two properties with the same name in a single object literal without throwing an error.
+ECMAScript6はオブジェクトリテラルをいくつか変更します。省略名のプロパティ定義では、スコープ内変数と同じ名前のプロパティを簡単に割り当てることができます。計算されたプロパティ名を使用すると、リテラル以外の値をプロパティ名として指定できます。これは、すでに言語の他の領域で実行できました。簡略法では、コロンや`function`キーワードを完全に省略することで、オブジェクトリテラルのメソッドを定義するために、より少ない文字数を入力できます。 ECMAScript6は厳密なモードチェックを緩め、オブジェクトリテラルの重複したプロパティ名もチェックします。つまり、単一のオブジェクトリテラルに同じ名前の2つのプロパティを持つことができます。
 
-The `Object.assign()` method makes it easier to change multiple properties on a single object at once. This can be very useful if you use the mixin pattern. The `Object.is()` method performs strict equality on any value, effectively becoming a safer version of `===` when dealing with special JavaScript values.
+`Object.assign()`メソッドは、一度に一つのオブジェクトに対して複数のプロパティを変更することを容易にします。 mixinパターンを使用すると非常に便利です。`Object.is()`メソッドは、任意の値に対して厳密な等価性を実行し、特殊なJavaScript値を扱うときには安全に`===`のバージョンになります。
 
-Enumeration order for own properties is now clearly defined in ECMAScript 6. When enumerating properties, numeric keys always come first in ascending order followed by string keys in insertion order and symbol keys in insertion order.
+ECMAScript6では、独自のプロパティの列挙順序が明確になりました。プロパティを列挙するときは、数字キーが常に最初に昇順になり、その後に文字列キーが挿入順、記号キーが挿入順に続きます。
 
-It's now possible to modify an object's prototype after it's already created, thanks to ECMAScript 6's `Object.setPrototypeOf()` method.
+ECMAScript6の`Object.setPrototypeOf()`メソッドのおかげで、オブジェクトのプロトタイプがすでに生成された後に修正することが可能になりました。
 
-Finally, you can use the `super` keyword to call methods on an object's prototype. The `this` binding inside a method invoked using `super` is set up to automatically work with the current value of `this`.
+最後に、`super`キーワードを使ってオブジェクトのプロトタイプのメソッドを呼び出すことができます。`super`を使って呼び出されたメソッド内の`this`バインディングは、`this`の現在の値で自動的に動作するように設定されています。
