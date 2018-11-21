@@ -1,10 +1,10 @@
-# Block Bindings
+＃ブロックバインディング
 
-Traditionally, the way variable declarations work has been one tricky part of programming in JavaScript. In most C-based languages, variables (or *bindings*) are created at the spot where the declaration occurs. In JavaScript, however, this is not the case. Where your variables are actually created depends on how you declare them, and ECMAScript 6 offers options to make controlling scope easier. This chapter demonstrates why classic `var` declarations can be confusing, introduces block-level bindings in ECMAScript 6, and then offers some best practices for using them.
+伝統的に、変数の宣言の動作方法は、JavaScriptのプログラミングの難題の1つです。 ほとんどのC言語では、宣言が発生する場所に変数(または* bindings *)が生成されます。 しかし、JavaScriptでは、そうではありません。 変数が実際に生成される場所は、宣言方法によって異なります。また、ECMAScript6では、制御範囲を簡単にするオプションも用意されています。 この章では、古典的な`var`宣言が紛らわしいことを示し、ECMAScript6でブロックレベルのバインディングを導入し、それらを使用するためのベストプラクティスを提供します。
 
-## Var Declarations and Hoisting
+## Var宣言とホイスト
 
-Variable declarations using `var` are treated as if they are at the top of the function (or global scope, if declared outside of a function) regardless of where the actual declaration occurs; this is called *hoisting*. For a demonstration of what hoisting does, consider the following function definition:
+`var`を使った変数宣言は、実際の宣言がどこにあるかにかかわらず、関数の先頭にあるかのように扱われます(関数の外で宣言された場合はグローバルスコープ)。 これは*ホイストと呼ばれます。 ホイストが何をするかを実証するには、次の関数の定義を考慮してください。
 
 ```js
 function getValue(condition) {
@@ -26,7 +26,7 @@ function getValue(condition) {
 }
 ```
 
-If you are unfamiliar with JavaScript, then you might expect the variable `value` to only be created if `condition` evaluates to true. In fact, the variable `value` is created regardless. Behind the scenes, the JavaScript engine changes the `getValue` function to look like this:
+JavaScriptに精通していない場合は、`condition`がtrueと評価された場合にのみ、変数`value`が生成されることを期待するかもしれません。 実際、変数`value`は無関係に生成されます。 背後では、JavaScriptエンジンは`getValue`関数を次のように変更します：
 
 ```js
 function getValue(condition) {
@@ -46,22 +46,22 @@ function getValue(condition) {
 }
 ```
 
-The declaration of `value` is hoisted to the top, while the initialization remains in the same spot. That means the variable `value` is actually still accessible from within the `else` clause. If accessed from there, the variable would just have a value of `undefined` because it hasn't been initialized.
+初期化は同じ場所にとどまる一方で、`value`の宣言は上に上げられます。つまり、変数`value`は実際には`else`節からまだアクセス可能です。そこからアクセスされた場合、変数は初期化されていないため、単に`undefined`の値を持ちます。
 
-It often takes new JavaScript developers some time to get used to declaration hoisting, and misunderstanding this unique behavior can end up causing bugs. For this reason, ECMAScript 6 introduces block level scoping options to make the controlling a variable's lifecycle a little more powerful.
+新しいJavaScript開発者はしばしばホイストを宣言するのに慣れるために時間がかかることがあり、このユニークな振る舞いを誤解するとバグが発生する可能性があります。このため、ECMAScript6ではブロックレベルのスコープオプションが導入され、変数のライフサイクルをより強力に制御します。
 
-## Block-Level Declarations
+## ブロックレベルの宣言
 
-Block-level declarations are those that declare variables that are inaccessible outside of a given block scope. Block scopes, also called lexical scopes, are created:
+ブロックレベルの宣言は、指定されたブロックスコープ外でアクセスできない変数を宣言するものです。レキシカルスコープとも呼ばれるブロックスコープが生成されます。
 
-1. Inside of a function
-1. Inside of a block (indicated by the `{` and `}` characters)
+1.関数の内部
+1.ブロックの内側(`{`と`}`文字で示される)
 
-Block scoping is how many C-based languages work, and the introduction of block-level declarations in ECMAScript 6 is intended to bring that same flexibility (and uniformity) to JavaScript.
+ブロックスコープとは、いくつのC言語が動作するかを表し、ECMAScript6でブロックレベルの宣言を導入することは、JavaScriptに同じ柔軟性(均一性)をもたらすことを意図しています。
 
-### Let Declarations
+### 宣言をしよう
 
-The `let` declaration syntax is the same as the syntax for `var`. You can basically replace `var` with `let` to declare a variable, but limit the variable's scope to only the current code block (there are a few other subtle differences discussed a bit later, as well). Since `let` declarations are not hoisted to the top of the enclosing block, you may want to always place `let` declarations first in the block, so that they are available to the entire block. Here's an example:
+`let`宣言シンタックスは`var`のシンタックスと同じです。基本的に`var`を`let`と置き換えて変数を宣言できますが、変数のスコープを現在のコードブロックだけに制限することができます。`let`宣言は囲みブロックの上端に掛けられないので、ブロック内で`let`宣言を最初に置いてブロック全体で使用できるようにしたいかもしれません。ここに例があります：
 
 ```js
 function getValue(condition) {
@@ -83,11 +83,11 @@ function getValue(condition) {
 }
 ```
 
-This version of the `getValue` function behaves much closer to how you'd expect it to in other C-based languages. Since the variable `value` is declared using `let` instead of `var`, the declaration isn't hoisted to the top of the function definition, and the variable `value` is no longer accessible once execution flows out of the `if` block. If `condition` evaluates to false, then `value` is never declared or initialized.
+このバージョンの`getValue`関数は、他のC言語での期待通りに動作します。 変数`value`は`var`の代わりに`let`を使って宣言されているので、宣言は関数定義の先頭に持ち込まれず、変数`value`は`if`ブロック。`condition`がfalseと評価された場合、`value`は決して宣言されたり初期化されません。
 
-### No Redeclaration
+### 再宣言なし
 
-If an identifier has already been defined in a scope, then using the identifier in a `let` declaration inside that scope causes an error to be thrown. For example:
+識別子が既にスコープ内に定義されている場合、そのスコープ内の`let`宣言で識別子を使用すると、エラーがスローされます。 例えば：
 
 ```js
 var count = 30;
@@ -96,7 +96,7 @@ var count = 30;
 let count = 40;
 ```
 
-In this example, `count` is declared twice: once with `var` and once with `let`. Because `let` will not redefine an identifier that already exists in the same scope, the `let` declaration will throw an error. On the other hand, no error is thrown if a `let` declaration creates a new variable with the same name as a variable in its containing scope, as demonstrated in the following code:
+この例では、`count`は`var`で1回、`let`で2回宣言されます。`let`はすでに同じスコープ内に存在する識別子を再定義しないので、`let`宣言はエラーを投げます。 一方、`let`宣言が、次のコードに示すように、変数を含むスコープ内の変数と同じ名前の新しい変数を生成すると、エラーはスローされません。
 
 ```js
 var count = 30;
@@ -110,11 +110,11 @@ if (condition) {
 }
 ```
 
-This `let` declaration doesn't throw an error because it creates a new variable called `count` within the `if` statement, instead of creating `count` in the surrounding block. Inside the `if` block, this new variable shadows the global `count`, preventing access to it until execution leaves the block.
+この`let`宣言は、周辺ブロックに`count`を生成するのではなく、`if`ステートメント内に`count`という新しい変数を生成するので、エラーを投げません。`if`ブロックの中で、この新しい変数はグローバル`count`をシャドーし、実行がブロックを離れるまでそれにアクセスするのを防ぎます。
 
-### Constant Declarations
+### 定数宣言
 
-You can also define variables in ECMAScript 6 with the `const` declaration syntax. Variables declared using `const` are considered *constants*, meaning their values cannot be changed once set. For this reason, every `const` variable must be initialized on declaration, as shown in this example:
+また、ECMAScript6の変数を`const`宣言シンタックスで定義することもできます。`const`を使って宣言された変数は*定数とみなされます。つまり、一度設定した値を変更することはできません。 このため、次の例のように、すべての`const`変数は宣言時に初期化されなければなりません：
 
 ```js
 // Valid constant
@@ -124,12 +124,12 @@ const maxItems = 30;
 const name;
 ```
 
-The `maxItems` variable is initialized, so its `const` declaration should work without a problem. The `name` variable, however, would cause a syntax error if you tried to run the program containing this code, because `name` is not initialized.
+`maxItems`変数は初期化されているので、`const`宣言は問題なく動作するはずです。 しかし、`name`変数は、`name`が初期化されていないので、このコードを含むプログラムを実行しようとするとシンタックスエラーを引き起こします。
 
 
-#### Constants vs Let Declarations
+#### 定数とvs宣言
 
-Constants, like `let` declarations, are block-level declarations. That means constants are no longer accessible once execution flows out of the block in which they were declared, and declarations are not hoisted, as demonstrated in this example:
+`let`宣言のような定数は、ブロックレベルの宣言です。 つまり、この例で示すように、宣言されたブロックから実行が流れ出ても、定数にアクセスできなくなり、宣言は引き上げられません。
 
 ```js
 if (condition) {
@@ -141,9 +141,9 @@ if (condition) {
 // maxItems isn't accessible here
 ```
 
-In this code, the constant `maxItems` is declared within an `if` statement. Once the statement finishes executing, `maxItems` is not accessible outside of that block.
+このコードでは、定数`maxItems`は`if`文の中で宣言されています。 ステートメントの実行が終了すると、`maxItems`はそのブロックの外部からアクセスできません。
 
-In another similarity to `let`, a `const` declaration throws an error when made with an identifier for an already-defined variable in the same scope. It doesn't matter if that variable was declared using `var` (for global or function scope) or `let` (for block scope). For example, consider this code:
+`let`との別の類似点では、`const`宣言は、同じスコープ内の既に定義された変数の識別子で作られたときにエラーを投げます。 変数が`var`(グローバルスコープまたは関数スコープ)または`let`(ブロックスコープ)を使って宣言されているかどうかは関係ありません。 たとえば、次のコードを考えてみましょう。
 
 ```js
 var message = "Hello!";
@@ -154,9 +154,9 @@ const message = "Goodbye!";
 const age = 30;
 ```
 
-The two `const` declarations would be valid alone, but given the previous `var` and `let` declarations in this case, neither will work as intended.
+2つの`const`宣言は単独で有効ですが、前の`var`宣言と`let`宣言が与えられていれば、意図したとおりに動作しません。
 
-Despite those similarities, there is one big difference between `let` and `const` to remember. Attempting to assign a `const` to a previously defined constant will throw an error, in both strict and non-strict modes:
+これらの類似点にもかかわらず、letとconstの間には大きな違いが1つあります。 前に定義された定数に`const`を代入しようとすると、strictモードとnon-strictモードの両方でエラーがスローされます：
 
 ```js
 const maxItems = 5;
@@ -164,11 +164,11 @@ const maxItems = 5;
 maxItems = 6;      // throws error
 ```
 
-Much like constants in other languages, the `maxItems` variable can't be assigned a new value later on. However, unlike constants in other languages, the value a constant holds may be modified if it is an object.
+他の言語の定数と同様に、`maxItems`変数には後で新しい値を代入することはできません。 ただし、他の言語の定数とは異なり、定数が保持する値はオブジェクトであれば変更できます。
 
-#### Declaring Objects with Const
+#### Constでオブジェクトを宣言する
 
-A `const` declaration prevents modification of the binding and not of the value itself. That means `const` declarations for objects do not prevent modification of those objects. For example:
+`const`宣言は、値そのものではなくバインディングの変更を防ぎます。 つまり、オブジェクトの`const`宣言はそれらのオブジェクトの変更を妨げません。 例えば：
 
 ```js
 const person = {
@@ -184,11 +184,11 @@ person = {
 };
 ```
 
-Here, the binding `person` is created with an initial value of an object with one property. It's possible to change `person.name` without causing an error because this changes what `person` contains and doesn't change the value that `person` is bound to. When this code attempts to assign a value to `person` (thus attempting to change the binding), an error will be thrown. This subtlety in how `const` works with objects is easy to misunderstand. Just remember: `const` prevents modification of the binding, not modification of the bound value.
+他の言語の定数と同様に、`maxItems`変数には後で新しい値を代入することはできません。他の言語の定数とは異なる、定数を保持する値はオブジェクトでありば変更できます 。
 
-### The Temporal Dead Zone
+#### Constでオブジェクトを宣言する
 
-A variable declared with either `let` or `const` cannot be accessed until after the declaration. Attempting to do so results in a reference error, even when using normally safe operations such as the `typeof` operation in this example:
+`const`宣言は、値そのものではないバイインディングの変更を防ぎます。つまり、オブジェクトの`const`宣言はそれのオブジェクトの変更を妨げません。例えば：
 
 ```js
 if (condition) {
@@ -197,11 +197,11 @@ if (condition) {
 }
 ```
 
-Here, the variable `value` is defined and initialized using `let`, but that statement is never executed because the previous line throws an error. The issue is that `value` exists in what the JavaScript community has dubbed the *temporal dead zone* (TDZ). The TDZ is never named explicitly in the ECMAScript specification, but the term is often used to describe why `let` and `const` declarations are not accessible before their declaration. This section covers some subtleties of declaration placement that the TDZ causes, and although the examples shown all use `let`, note that the same information applies to `const`.
+ここで、変数`value`は`let`を使って定義され初期化されますが、その行は前の行がエラーを投げるため実行されません。問題は、JavaScriptコミュニティが* Temporary Dead Zone *(TDZ)と呼ばれるものに「価値」が存在することです。 TDZはECMAScript仕様では明示的に指定されていませんが、letとconstの宣言が宣言の前にアクセスできない理由を記述するためによく使われます。このセクションでは、TDZの原因となる宣言配置の微妙な部分について説明します。すべての例では`let`を使用していますが、同じ情報が`const`にも適用されます。
 
-When a JavaScript engine looks through an upcoming block and finds a variable declaration, it either hoists the declaration to the top of the function or global scope (for `var`) or places the declaration in the TDZ (for `let` and `const`). Any attempt to access a variable in the TDZ results in a runtime error. That variable is only removed from the TDZ, and therefore safe to use, once execution flows to the variable declaration.
+JavaScriptエンジンが次のブロックを調べて変数宣言を見つけると、その宣言を関数またはグローバルスコープの先頭(`var`の場合)に持ち上げるか、宣言をTDZに置きます(`let`と`const '`)。 TDZ内の変数にアクセスしようとすると、実行時エラーが発生します。この変数はTDZからのみ削除されるため、実行が変数宣言に移行すると安全に使用できます。
 
-This is true anytime you attempt to use a variable declared with `let` or `const`  before it's been defined. As the previous example demonstrated, this even applies to the normally safe `typeof` operator. You can, however, use `typeof` on a variable outside of the block where that variable is declared, though it may not give the results you're after. Consider this code:
+これは、定義される前に`let`または`const`で宣言された変数を使用しようとするたびに当てはまります。上の例が示したように、これは通常安全な`typeof`演算子にも当てはまります。しかし、その変数が宣言されているブロックの外にある変数に`typeof`を使用することはできますが、後で結果を返すことはできません。このコードを考えてみましょう：
 
 ```js
 console.log(typeof value);     // "undefined"
@@ -211,13 +211,13 @@ if (condition) {
 }
 ```
 
-The variable `value` isn't in the TDZ when the `typeof` operation executes because it occurs outside of the block in which `value` is declared. That means there is no `value` binding, and `typeof` simply returns `"undefined"`.
+変数`value`は、`value`が宣言されているブロックの外で発生するため、`typeof`演算が実行されるときTDZにありません。 これは`value`バインディングがないことを意味し、`typeof`は単に``undefined``を返します。
 
-The TDZ is just one unique aspect of block bindings. Another unique aspect has to do with their use inside of loops.
+TDZはブロックバインディングのユニークな側面の1つに過ぎません。 別のユニークな側面は、ループの内部での使用と関係しています。
 
-## Block Binding in Loops
+## ループ内のブロックバインディング
 
-Perhaps one area where developers most want block level scoping of variables is within `for` loops, where the throwaway counter variable is meant to be used only inside the loop. For instance, it's not uncommon to see code like this in JavaScript:
+おそらく、開発者がブロックレベルの変数スコープを最も必要とする領域の1つは、forawayループの中にあります。ここで、throwawayカウンタ変数はループ内でのみ使用されることを意図しています。 たとえば、次のようなコードをJavaScriptで見ることは珍しいことではありません。
 
 ```js
 for (var i = 0; i < 10; i++) {
@@ -228,7 +228,7 @@ for (var i = 0; i < 10; i++) {
 console.log(i);                     // 10
 ```
 
-In other languages, where block level scoping is the default, this example should work as intended, and only the `for` loop should have access to the `i` variable. In JavaScript, however, the variable `i` is still accessible after the loop is completed because the `var` declaration gets hoisted. Using `let` instead, as in the following code, should give the intended behavior:
+ブロックレベルスコープがデフォルトである他の言語では、この例は意図したとおりに動作し、`for`ループのみが`i`変数にアクセスする必要があります。 しかし、JavaScriptでは、変数`i`は、`var`宣言が呼び出されるので、ループが完了した後も引き続きアクセス可能です。 次のコードのように`let`を使用すると、意図した動作が得られるはずです：
 
 ```js
 for (let i = 0; i < 10; i++) {
@@ -239,11 +239,11 @@ for (let i = 0; i < 10; i++) {
 console.log(i);
 ```
 
-In this example, the variable `i` only exists within the `for` loop. Once the loop is complete, the variable is no longer accessible elsewhere.
+この例では、変数`i`は`for`ループ内にのみ存在します。 ループが完了すると、変数は他の場所からアクセスできなくなります。
 
-### Functions in Loops
+### ループ内の関数
 
-The characteristics of `var` have long made creating functions inside of loops problematic, because the loop variables are accessible from outside the scope of the loop. Consider the following code:
+`var`の特性は、ループ変数がループの範囲外からアクセス可能であるため、長い間、ループ内部で関数を生成することに問題がありました。 次のコードを考えてみましょう：
 
 ```js
 var funcs = [];
@@ -257,9 +257,9 @@ funcs.forEach(function(func) {
 });
 ```
 
-You might ordinarily expect this code to print the numbers 0 to 9, but it outputs the number 10 ten times in a row. That's because `i` is shared across each iteration of the loop, meaning the functions created inside the loop all hold a reference to the same variable. The variable `i` has a value of `10` once the loop completes, and so when `console.log(i)` is called, that value prints each time.
+通常、このコードでは0から9までの数字を印刷することが期待されますが、数字10を10回続けて出力します。 これは、`i`がループの各繰り返しで共有されるためです。つまり、ループ内で生成された関数はすべて同じ変数への参照を保持します。 ループが完了すると、変数`i`は`10`の値を持ち、`console.log(i)`が呼び出されるとその値が毎回出力されます。
 
-To fix this problem, developers use immediately-invoked function expressions (IIFEs) inside of loops to force a new copy of the variable they want to iterate over to be created, as in this example:
+この問題を解決するために、開発者は直ちに呼び出される関数式(IIFE)をループ内で使用し、この例のように反復処理する変数の新しいコピーを強制的に生成します。
 
 ```js
 var funcs = [];
@@ -277,11 +277,11 @@ funcs.forEach(function(func) {
 });
 ```
 
-This version uses an IIFE inside of the loop. The `i` variable is passed to the IIFE, which creates its own copy and stores it as `value`. This is the value used by the function for that iteration, so calling each function returns the expected value as the loop counts up from 0 to 9. Fortunately, block-level binding with `let` and `const` in ECMAScript 6 can simplify this loop for you.
+このバージョンでは、ループの内部にIIFEが使用されます。`i`変数はIIFEに渡され、独自のコピーが生成され、`value`として格納されます。 これは、その反復の関数が使用する値です。ループが0から9までカウントアップするので、各関数を呼び出すと期待される値が返されます。幸いにも、ECMAScript6の`let`と`const`を使ったブロックレベルのバインディングは、 あなたのためのループ。
 
-### Let Declarations in Loops
+### ループ内の宣言を許可する
 
-A `let` declaration simplifies loops by effectively mimicking what the IIFE does in the previous example. On each iteration, the loop creates a new variable and initializes it to the value of the variable with the same name from the previous iteration. That means you can omit the IIFE altogether and get the results you expect, like this:
+`let`宣言は、前の例でIIFEが行うことを効果的に模倣することによってループを単純化します。 ループが繰り返されるたびに、新しい変数が生成され、以前の繰り返しと同じ名前の変数の値に初期化されます。 つまり、IIFEを完全に省略し、期待どおりの結果を得ることができます。
 
 ```js
 var funcs = [];
@@ -297,7 +297,7 @@ funcs.forEach(function(func) {
 })
 ```
 
-This loop works exactly like the loop that used `var` and an IIFE but is, arguably, cleaner. The `let` declaration creates a new variable `i` each time through the loop, so each function created inside the loop gets its own copy of `i`. Each copy of `i` has the value it was assigned at the beginning of the loop iteration in which it was created. The same is true for `for-in` and `for-of` loops, as shown here:
+このループは`var`とIIFEを使ったループとまったく同じように動作しますが、間違いなくクリーンです。`let`宣言は、ループのたびに新しい変数`i`を生成するので、ループ内で生成された各関数は`i`のコピーを取得します。`i`の各コピーは、それが生成されたループ反復の始めに割り当てられた値を持ちます。 以下に示すように、for-inとfor-ofのループについても同じことが言えます：
 
 ```js
 var funcs = [],
@@ -318,13 +318,13 @@ funcs.forEach(function(func) {
 });
 ```
 
-In this example, the `for-in` loop shows the same behavior as the `for` loop. Each time through the loop, a new `key` binding is created, and so each function has its own copy of the `key` variable. The result is that each function outputs a different value. If `var` were used to declare `key`, all functions would output `"c"`.
+この例では、`for-in`ループは`for`ループと同じ動作を示します。ループを通るたびに、結合新しい`key`が生成され、その各機能は`key`変数の独自のコピーを持っています。その結果、各関数は異なる値を出力します。`var`を使って`key`を宣言すると、すべての関数は``c``を出力します。
 
-I> It's important to understand that the behavior of `let` declarations in loops is a specially-defined behavior in the specification and is not necessarily related to the non-hoisting characteristics of `let`. In fact, early implementations of `let` did not have this behavior, as it was added later on in the process.
+I>ループ内の`let`宣言の振る舞いは、仕様では特別に定義された振る舞いであり、必ずしも`let`の非巻上げ特性には関係しないことを理解することが重要です。実際、`let`の初期の実装は、後でプロセスに追加されたので、この動作をしませんでした。
 
-### Constant Declarations in Loops
+### ループ内の定数宣言
 
-The ECMAScript 6 specification doesn't explicitly disallow `const` declarations in loops; however, there are different behaviors based on the type of loop you're using. For a normal `for` loop, you can use `const` in the initializer, but the loop will throw a warning if you attempt to change the value. For example:
+ECMAScript6仕様では、ループ内の`const`宣言を明示的に禁止していません。しかし、使用しているループのタイプに基づいて異なる動作があります。通常の`for`ループでは、イニシャライザで`const`を使うことができますが、値を変更しようとするとループは警告を出します。例えば：
 
 ```js
 var funcs = [];
@@ -337,9 +337,9 @@ for (const i = 0; i < 10; i++) {
 }
 ```
 
-In this code, the `i` variable is declared as a constant. The first iteration of the loop, where `i` is 0, executes successfully. An error is thrown when `i++` executes because it's attempting to modify a constant. As such, you can only use `const` to declare a variable in the loop initializer if you are not modifying that variable.
+このコードでは、`i`変数は定数として宣言されています。 ループの最初の反復(`i`が0)は正常に実行されます。`i ++`が定数を変更しようとしているときに実行すると、エラーがスローされます。 したがって、変数を変更していない場合は、ループ初期化子で変数を宣言するためにのみ`const`を使用することができます。
 
-When used in a `for-in` or `for-of` loop, on the other hand, a `const` variable behaves the same as a `let` variable. So the following should not cause an error:
+一方、for-forやfor-ofループで使用された場合、const変数はlet変数と同じように動作します。 したがって、次のようなエラーは発生しません。
 
 ```js
 var funcs = [],
@@ -361,11 +361,11 @@ funcs.forEach(function(func) {
 });
 ```
 
-This code functions almost exactly the same as the second example in the "Let Declarations in Loops" section. The only difference is that the value of `key` cannot be changed inside the loop. The `for-in` and `for-of` loops work with `const` because the loop initializer creates a new binding on each iteration through the loop rather than attempting to modify the value of an existing binding (as was the case with the previous example using `for` instead of `for-in`).
+このコードは、「ループ内の宣言をする」セクションの2番目の例とほぼ同じように機能します。 唯一の違いは、`key`の値はループ内で変更できないということです。`for-in`と`for-of`ループは`const`と連動します。なぜなら、ループ初期化子は既存のバインディングの値を変更しようとするのではなく、ループを通して各反復に新しいバインディングを生成するからです。 前の例では`for-in`の代わりに`for`を使用しています)。
 
-## Global Block Bindings
+## グローバルブロックバインディング
 
-Another way in which `let` and `const` are different from `var` is in their global scope behavior. When `var` is used in the global scope, it creates a new global variable, which is a property on the global object (`window` in browsers). That means you can accidentally overwrite an existing global using `var`, such as:
+`let`と`const`が`var`と違うもう一つの方法はグローバルスコープの振る舞いです。 グローバルスコープで`var`が使われると、グローバルオブジェクト(ブラウザーの`window`)のプロパティーである新しいグローバル変数が生成されます。 つまり、誤って既存のグローバルを`var`を使って上書きすることができます：
 
 ```js
 // in a browser
@@ -376,9 +376,9 @@ var ncz = "Hi!";
 console.log(window.ncz);        // "Hi!"
 ```
 
-Even though the `RegExp` global is defined on `window`, it is not safe from being overwritten by a `var` declaration. This example declares a new global variable `RegExp` that overwrites the original. Similarly, `ncz` is defined as a global variable and immediately defined as a property on `window`. This is the way JavaScript has always worked.
+`RegExp`グローバルは`window`で定義されていますが、`var`宣言によって上書きされることから安全ではありません。 この例では、オリジナルを上書きする新しいグローバル変数`RegExp`が宣言されています。 同様に、`ncz`はグローバル変数として定義され、すぐに`window`のプロパティとして定義されます。 これは、JavaScriptが常に機能する方法です。
 
-If you instead use `let` or `const` in the global scope, a new binding is created in the global scope but no property is added to the global object. That also means you cannot overwrite a global variable using `let` or `const`, you can only shadow it. Here's an example:
+代わりにグローバルスコープで`let`または`const`を使うと、グローバルスコープに新しいバインディングが生成されますが、グローバルオブジェクトにはプロパティは追加されません。 これは、`let`や`const`を使ってグローバル変数を上書きすることもできないことを意味します。 ここに例があります：
 
 ```js
 // in a browser
@@ -391,22 +391,22 @@ console.log(ncz);                       // "Hi!"
 console.log("ncz" in window);           // false
 ```
 
-Here, a new `let` declaration for `RegExp` creates a binding that shadows the global `RegExp`. That means `window.RegExp` and `RegExp` are not the same, so there is no disruption to the global scope. Also, the `const` declaration for `ncz` creates a binding but does not create a property on the global object. This capability makes `let` and `const` a lot safer to use in the global scope when you don't want to create properties on the global object.
+ここで、`RegExp`の新しい`let`宣言は、グローバル`RegExp`をシャドーするバインディングを生成します。つまり、`window.RegExp`と`RegExp`は同じではないので、グローバルスコープに混乱はありません。また、`ncz`の`const`宣言はバインディングを生成しますが、グローバルオブジェクトにはプロパティを生成しません。この機能により、グローバルオブジェクトにプロパティを生成したくない場合に、グローバルスコープ内で使用するために、`let`と`const`をより安全にすることができます。
 
-I> You may still want to use `var` in the global scope if you have a code that should be available from the global object. This is most common in a browser when you want to access code across frames or windows.
+I>グローバルオブジェクトから利用できるコードがあれば、グローバルスコープで`var`を使いたいかもしれません。これは、フレームやウィンドウ間でコードにアクセスする場合に、ブラウザで最も一般的です。
 
-## Emerging Best Practices for Block Bindings
+## ブロックバインディングの新しいベストプラクティス
 
-While ECMAScript 6 was in development, there was widespread belief you should use `let` by default instead of `var` for variable declarations. For many JavaScript developers, `let` behaves exactly the way they thought `var` should have behaved, and so the direct replacement makes logical sense. In this case, you would use `const` for variables that needed modification protection.
+ECMAScript6は開発中でしたが、変数宣言に`var`の代わりに`let`を使うべきではないかという考えが広まっていました。多くのJavaScript開発者にとって、`let`は`var`が振る舞っていたはずのやり方とまったく同じように振る舞います。したがって、直接置換は論理的に意味があります。この場合、変更保護が必要な変数には`const`を使います。
 
-However, as more developers migrated to ECMAScript 6, an alternate approach gained popularity: use `const` by default and only use `let` when you know a variable's value needs to change. The rationale is that most variables should not change their value after initialization because unexpected value changes are a source of bugs. This idea has a significant amount of traction and is worth exploring in your code as you adopt ECMAScript 6.
+しかし、より多くの開発者がECMAScript6に移行するにつれ、別のアプローチが普及しました。デフォルトでは`const`を使用し、変数の値を変更する必要があることを知っているときは`let`を使用します。その根拠は、予期しない値の変更がバグの原因であるため、ほとんどの変数が初期化後に値を変更してはならないということです。このアイディアには大きな牽引力があり、ECMAScript6を採用する際には、コード内で検討する価値があります。
 
-## Summary
+## まとめ
 
-The `let` and `const` block bindings introduce lexical scoping to JavaScript. These declarations are not hoisted and only exist within the block in which they are declared. This offers behavior that is more like other languages and less likely to cause unintentional errors, as variables can now be declared exactly where they are needed. As a side effect, you cannot access variables before they are declared, even with safe operators such as `typeof`. Attempting to access a block binding before its declaration results in an error due to the binding's presence in the temporal dead zone (TDZ).
+`let`ブロックと`const`ブロックバインディングは、JavaScriptに字句的なスコープを導入します。これらの宣言はホイストされず、宣言されたブロック内にのみ存在します。これは、他の言語に似ていて、誤って意図しないエラーが発生する可能性が低い動作を提供するため、変数が必要な場所で正確に宣言できるようになりました。副作用として、`typeof`のような安全な演算子であっても、宣言される前に変数にアクセスすることはできません。宣言の前にブロックバインディングにアクセスしようとすると、バインディングが一時的な不感帯(TDZ)に存在するためにエラーが発生します。
 
-In many cases, `let` and `const` behave in a manner similar to `var`; however, this is not true for loops. For both `let` and `const`, `for-in` and `for-of` loops create a new binding with each iteration through the loop. That means functions created inside the loop body can access the loop bindings values as they are during the current iteration, rather than as they were after the loop's final iteration (the behavior with `var`). The same is true for `let` declarations in `for` loops, while attempting to use `const` declarations in a `for` loop may result in an error.
+多くの場合、`let`と`const`は`var`と同じように動作します。しかし、これはループには当てはまりません。`let`と`const`の両方に対して、for-inとfor-ofのループは、ループを通る各反復で新しいバインディングを生成します。つまり、ループ本体の内部で生成された関数は、ループの最終反復(`var`を使った動作)の後であったのではなく、現在の反復中にループバインディング値にアクセスできます。`for`ループの`let`宣言でも同じことが言えますが、`for`ループで`const`宣言を使用しようとするとエラーが発生する可能性があります。
 
-The current best practice for block bindings is to use `const` by default and only use `let` when you know a variable's value needs to change. This ensures a basic level of immutability in code that can help prevent certain types of errors.
+ブロックバインディングの現在のベストプラクティスは、デフォルトで`const`を使用し、変数の値を変更する必要があることを知っているときだけ`let`を使用することです。これにより、特定の種類のエラーを防ぐのに役立つコードの不変性の基本レベルが保証されます。
 
 
