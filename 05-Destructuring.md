@@ -1,10 +1,10 @@
-# Destructuring for Easier Data Access
+＃より簡単なデータアクセスのための破壊
 
-Object and array literals are two of the most frequently used notations in JavaScript, and thanks to the popular JSON data format, they've become a particularly important part of the language. It's quite common to define objects and arrays, and then systematically pull out relevant pieces of information from those structures. ECMAScript 6 simplifies this task by adding *destructuring*, which is the process of breaking a data structure down into smaller parts. This chapter shows you how to harness destructuring for both objects and arrays.
+オブジェクトリテラルと配列リテラルは、JavaScriptで最も頻繁に使用される表記法の2つで、一般的なJSONデータフォーマットのおかげで、言語の特に重要な部分となっています。 オブジェクトや配列を定義し、それらの構造から関連する情報を体系的に引き出すことは、非常に一般的です。 ECMAScriptは、* destructuring *を追加することでこの作業を簡素化します。これは、データ構造をより小さな部分に分割するプロセスです。 この章では、オブジェクトと配列の両方の非構造化を利用する方法を示します。
 
-## Why is Destructuring Useful?
+## なぜ破壊は有用ですか？
 
-In ECMAScript 5 and earlier, the need to fetch information from objects and arrays could lead to a lot of code that looks the same, just to get certain data into local variables. For example:
+ECMAScript5以前では、オブジェクトや配列から情報を取得する必要があるため、特定のデータをローカル変数に取得するだけで、同じように見えるコードが大量に発生する可能性がありました。 例えば：
 
 ```js
 let options = {
@@ -17,13 +17,13 @@ let repeat = options.repeat,
     save = options.save;
 ```
 
-This code extracts the values of `repeat` and `save` from the `options` object and stores that data in local variables with the same names. While this code looks simple, imagine if you had a large number of variables to assign; you would have to assign them all one by one. And if there was a nested data structure to traverse to find the information instead, you might have to dig through the entire structure just to find one piece of data.
+このコードは、`options`オブジェクトから`repeat`と`save`の値を抽出し、そのデータを同じ名前のローカル変数に格納します。このコードは単純に見えますが、割り当てる変数が多数ある場合は想像してください。それらをすべて1つずつ割り当てる必要があります。そして、代わりに情報を見つけるために横断するネストされたデータ構造があった場合は、ただ一つのデータを見つけるために構造全体を調べなければならないかもしれません。
 
-That's why ECMAScript 6 adds destructuring for both objects and arrays. When you break a data structure into smaller parts, getting the information you need out of it becomes much easier. Many languages implement destructuring with a minimal amount of syntax to make the process simpler to use. The ECMAScript 6 implementation actually makes use of syntax you're already familiar with: the syntax for object and array literals.
+ECMAScriptでは、オブジェクトと配列の両方に破壊が加えられています。データ構造を小さな部分に分割すると、必要な情報をより簡単に得ることができます。多くの言語は、プロセスをより簡単に使用できるように最小限の構文で非構造化を実装しています。 ECMAScriptの実装では、あなたがすでによく知っている構文を使用します：オブジェクトリテラルと配列リテラルの構文です。
 
-## Object Destructuring
+## オブジェクトの破壊
 
-Object destructuring syntax uses an object literal on the left side of an assignment operation. For example:
+オブジェクトの構造化構文では、代入操作の左側にオブジェクトリテラルが使用されます。例えば：
 
 ```js
 let node = {
@@ -37,11 +37,11 @@ console.log(type);      // "Identifier"
 console.log(name);      // "foo"
 ```
 
-In this code, the value of `node.type` is stored in a variable called `type` and the value of `node.name` is stored in a variable called `name`. This syntax is the same as the object literal property initializer shorthand introduced in Chapter 4. The identifiers `type` and `name` are both declarations of local variables and the properties to read the value from on the `node` object.
+このコードでは、`node.type`の値は`type`という変数に格納され、`node.name`の値は`name`という変数に格納されます。 この構文は第4章で紹介したオブジェクトリテラルプロパティの初期化子の略語と同じです。識別子`type`と`name`はローカル変数の宣言と`node`オブジェクトの値を読み込むプロパティです。
 
-A> #### Don't Forget the Initializer
+A> ####イニシャライザを忘れないでください
 A>
-A>When using destructuring to declare variables using `var`, `let`, or `const`, you must supply an initializer (the value after the equals sign). The following lines of code will all throw syntax errors due to a missing initializer:
+A>`var`、`let`、または`const`を使って変数を宣言するために非構造化を使うときは、イニシャライザ(等号の後の値)を与えなければなりません。 次のコード行は、初期化子がないために構文エラーが発生します。
 A>
 A>```js
 A>// syntax error!
@@ -54,11 +54,11 @@ A>// syntax error!
 A>const { type, name };
 A>```
 A>
-A>While `const` always requires an initializer, even when using nondestructured variables, `var` and `let` only require initializers when using destructuring.
+A> constは常に初期化子を必要としますが、構造化されていない変数を使用していても、`var`と`let`は構造化を使うときに初期化子しか必要としません。
 
-#### Destructuring Assignment
+#### 割り当てを破棄する
 
-The object destructuring examples so far have used variable declarations. However, it's also possible to use destructuring in assignments. For instance, you may decide to change the values of variables after they are defined, as follows:
+これまでのオブジェクトの構造化の例では、変数の宣言が使用されています。 ただし、代入での構造解除を使用することもできます。 たとえば、変数が定義された後、次のように変数の値を変更することができます。
 
 ```js
 let node = {
@@ -75,9 +75,9 @@ console.log(type);      // "Identifier"
 console.log(name);      // "foo"
 ```
 
-In this example, `type` and `name` are initialized with values when declared, and then two variables with the same names are initialized with different values. The next line uses destructuring assignment to change those values by reading from the `node` object. Note that you must put parentheses around a destructuring assignment statement. That's because an opening curly brace is expected to a be a block statement, and a block statement cannot appear on the left side of an assignment. The parentheses signal that the next curly brace is not a block statement and should be interpreted as an expression, allowing the assignment to complete.
+この例では、`type`と`name`は宣言時に値で初期化され、同じ名前の2つの変数は異なる値で初期化されます。 次の行は、`node`オブジェクトから読み取ることによってそれらの値を変更するために、構造解除割り当てを使用します。 消滅代入文の前後にかっこを入れる必要があることに注意してください。 これは、開始中括弧がブロックステートメントであると予想され、ブロックステートメントが割り当ての左側に表示されないためです。 括弧は、次の中括弧がブロックステートメントではないことを示し、割り当てを完了できるように式として解釈する必要があります。
 
-A destructuring assignment expression evaluates to the right side of the expression (after the `=`). That means you can use a destructuring assignment expression anywhere a value is expected. For instance, passing a value to a function:
+destructuring代入式は、式の右側(`=`の後)で評価されます。 つまり、値が期待される場所であればどこでも、構造化代入式を使用できます。 たとえば、ある関数に値を渡す：
 
 ```js
 let node = {
@@ -97,13 +97,13 @@ console.log(type);      // "Identifier"
 console.log(name);      // "foo"
 ```
 
-The `outputInfo()` function is called with a destructuring assignment expression. The expression evaluates to `node` because that is the value of the right side of the expression. The assignment to `type` and `name` both behave as normal and `node` is passed into `outputInfo()`.
+`outputInfo()`関数はdestructuring代入式で呼び出されます。 式は、式の右辺の値であるため、`node`と評価されます。`type`と`name`への代入はどちらも正常に動作し、`node`は`outputInfo()`に渡されます。
 
-W> An error is thrown when the right side of the destructuring assignment expression (the expression after `=`) evaluates to `null` or `undefined`. This happens because any attempt to read a property of `null` or `undefined` results in a runtime error.
+W>構造化代入式の右側(`=`の後の式)が`null`または`undefined`に評価されると、エラーがスローされます。 これは、`null`または`undefined`のプロパティーを読み取ろうとするとランタイムエラーが発生するためです。
 
-#### Default Values
+#### デフォルト値
 
-When you use a destructuring assignment statement, if you specify a local variable with a property name that doesn't exist on the object, then that local variable is assigned a value of `undefined`. For example:
+構造化代入文を使用するとき、オブジェクトに存在しないプロパティ名を持つローカル変数を指定すると、そのローカル変数には`undefined`の値が割り当てられます。 例えば：
 
 ```js
 let node = {
@@ -118,9 +118,9 @@ console.log(name);      // "foo"
 console.log(value);     // undefined
 ```
 
-This code defines an additional local variable called `value` and attempts to assign it a value. However, there is no corresponding `value` property on the `node` object, so the variable is assigned the value of `undefined` as expected.
+このコードは`value`という追加のローカル変数を定義し、それに値を割り当てようとします。 しかし、`node`オブジェクトには対応する`value`プロパティがないので、変数は`undefined`の値を期待通りに割り当てられます。
 
-You can optionally define a default value to use when a specified property doesn't exist. To do so, insert an equals sign (`=`) after the property name and specify the default value, like this:
+指定したプロパティが存在しない場合に使用するデフォルト値をオプションで定義できます。 これを行うには、プロパティ名の後に等号(`=`)を挿入し、次のようにデフォルト値を指定します。
 
 ```js
 let node = {
@@ -135,11 +135,11 @@ console.log(name);      // "foo"
 console.log(value);     // true
 ```
 
-In this example, the variable `value` is given `true` as a default value. The default value is only used if the property is missing on `node` or has a value of `undefined`. Since there is no `node.value` property, the variable `value` uses the default value. This works similarly to the default parameter values for functions, as discussed in Chapter 3.
+この例では、変数`value`はデフォルト値として`true`が与えられています。 デフォルト値は、プロパティが`node`にない場合、または`undefined`の値を持つ場合にのみ使用されます。`node.value`プロパティはないので、変数`value`はデフォルト値を使います。 これは、第3章で説明したように、関数のデフォルトのパラメータ値と同様に機能します。
 
-#### Assigning to Different Local Variable Names
+#### 異なるローカル変数名への割り当て
 
-Up to this point, each example destructuring assignment has used the object property name as the local variable name; for example, the value of `node.type` was stored in a `type` variable. That works well when you want to use the same name, but what if you don't? ECMAScript 6 has an extended syntax that allows you to assign to a local variable with a different name, and that syntax looks like the object literal nonshorthand property initializer syntax. Here's an example:
+ここまでは、オブジェクトの名前をローカル変数名として使用していました。 たとえば、`node.type`の値は`type`変数に格納されていました。 それはあなたが同じ名前を使用したいときはうまくいくが、そうでない場合はどうなるだろうか？ ECMAScriptには拡張された構文があり、ローカル変数に別の名前を付けることができ、その構文はオブジェクトのリテラルの非公式プロパティイニシャライザ構文のように見えます。 ここに例があります：
 
 ```js
 let node = {
@@ -153,9 +153,9 @@ console.log(localType);     // "Identifier"
 console.log(localName);     // "foo"
 ```
 
-This code uses destructuring assignment to declare the `localType` and `localName` variables, which contain the values from the `node.type` and `node.name` properties, respectively. The syntax `type: localType` says to read the property named `type` and store its value in the `localType` variable. This syntax is effectively the opposite of traditional object literal syntax, where the name is on the left of the colon and the value is on the right. In this case, the name is on the right of the colon and the location of the value to read is on the left.
+このコードでは、`nodeType`と`node.name`プロパティからの値をそれぞれ含む`localType`と`localName`変数を宣言するために、非構造化割り当てを使います。`type：localType`という構文は、`type`という名前のプロパティを読み込み、その値を`localType`変数に格納することを示します。 この構文は、名前がコロンの左側にあり、値が右側にある従来のオブジェクトリテラル構文とは事実上反対です。 この場合、名前はコロンの右側にあり、読み込む値の位置は左側にあります。
 
-You can add default values when using a different variable name, as well. The equals sign and default value are  still placed after the local variable name. For example:
+異なる変数名を使用する場合は、デフォルト値を追加することもできます。 等号とデフォルト値は、引き続きローカル変数名の後に置かれます。 例えば：
 
 ```js
 let node = {
@@ -168,13 +168,13 @@ console.log(localType);     // "Identifier"
 console.log(localName);     // "bar"
 ```
 
-Here, the `localName` variable has a default value of `"bar"`. The variable is assigned its default value because there's no `node.name` property.
+ここで、`localName`変数のデフォルト値は``bar '`です。`node.name`プロパティがないので、変数にはデフォルト値が割り当てられます。
 
-So far, you've seen how to deal with destructuring of an object whose properties are primitive values. Object destructuring can also be used to retrieve values in nested object structures.
+これまでは、プロパティがプリミティブな値であるオブジェクトの非構造化に対処する方法を見てきました。 オブジェクトの構造化を使用して、ネストされたオブジェクト構造の値を取得することもできます。
 
-#### Nested Object Destructuring
+#### ネストされたオブジェクトの破棄
 
-By using a syntax similar to object literals, you can navigate into a nested object structure to retrieve just the information you want. Here's an example:
+オブジェクトリテラルに似た構文を使用すると、ネストされたオブジェクト構造にナビゲートして、必要な情報だけを取得できます。 ここに例があります：
 
 ```js
 let node = {
@@ -198,9 +198,9 @@ console.log(start.line);        // 1
 console.log(start.column);      // 1
 ```
 
-The destructuring pattern in this example uses curly braces to indicate that the pattern should descend into the property named `loc` on `node` and look for the `start` property. Remember from the last section that whenever there's a colon in a destructuring pattern, it means the identifier before the colon is giving a location to inspect, and the right side assigns a value. When there's a curly brace after the colon, that indicates that the destination is nested another level into the object.
+この例の構造解除パターンは、中括弧を使用して、パターンが`node`の`loc`という名前のプロパティに降りて、`start`プロパティを探していることを示しています。 最後のセクションから、コロンが破壊パターンにあるときはいつでも、コロンが検査する位置を与える前の識別子を意味し、右側は値を割り当てます。 コロンの後に中括弧がある場合、それは目的地がオブジェクトの別のレベルにネストされていることを示します。
 
-You can go one step further and use a different name for the local variable as well:
+一歩進んで、ローカル変数にも別の名前を使うことができます：
 
 ```js
 let node = {
@@ -225,24 +225,24 @@ console.log(localStart.line);   // 1
 console.log(localStart.column); // 1
 ```
 
-In this version of the code, `node.loc.start` is stored in a new local variable called `localStart`. Destructuring patterns can be nested to an arbitrary level of depth, with all capabilities available at each level.
+このバージョンのコードでは、`node.loc.start`は`localStart`と呼ばれる新しいローカル変数に格納されます。 破壊パターンは任意のレベルの深度にネストすることができ、各レベルですべての機能を使用できます。
 
-Object destructuring is very powerful and has a lot of options, but array destructuring offers some unique capabilities that allow you to extract information from arrays.
+オブジェクトの構造化は非常に強力で多くの選択肢がありますが、配列の構造化は、配列から情報を抽出できる独自の機能を提供します。
 
-A> #### Syntax Gotcha
+A> ####構文Gotcha
 A>
-A>Be careful when using nested destructuring because you can inadvertently create a statement that has no effect. Empty curly braces are legal in object destructuring, however, they don't do anything. For example:
+A>効果がない文を誤って作成する可能性があるため、ネストされた非構造化を使用する場合は注意してください。 空の中括弧はオブジェクトの構造化には合法ですが、何もしません。 例えば：
 A>
 A>```js
 A>// no variables declared!
 A>let { loc: {} } = node;
 A>```
 A>
-A>There are no bindings declared in this statement. Due to the curly braces on the right, `loc` is used as a location to inspect rather than a binding to create. In such a case, it's likely that the intent was to use `=` to define a default value rather than `:` to define a location. It's possible that this syntax will be made illegal in the future, but for now, this is a gotcha to look out for.
+A>このステートメントに宣言されているバインディングはありません。 右側の中括弧のため、`loc`は作成するバインディングではなく検査する場所として使用されます。 そのような場合は、`：`を使わずにデフォルト値を定義して位置を定義するという意図があったようです。 この構文が将来不法になる可能性はありますが、今のところ、これは目を引くためのものです。
 
 ## Array Destructuring
 
-Array destructuring syntax is very similar to object destructuring; it just uses array literal syntax instead of object literal syntax. The destructuring operates on positions within an array, rather than the named properties that are available in objects. For example:
+配列の非構造化構文は、オブジェクトの構造化と非常によく似ています。 オブジェクトリテラル構文の代わりに配列リテラル構文を使用するだけです。 構造解除は、オブジェクト内で使用可能な名前付きプロパティではなく、配列内の位置で機能します。 例えば：
 
 ```js
 let colors = [ "red", "green", "blue" ];
@@ -253,9 +253,9 @@ console.log(firstColor);        // "red"
 console.log(secondColor);       // "green"
 ```
 
-Here, array destructuring pulls out the values `"red"` and `"green"` from the `colors` array and stores them in  the `firstColor` and `secondColor` variables. Those values are chosen because of their position in the array; the actual variable names could be anything. Any items not explicitly mentioned in the destructuring pattern are ignored. Keep in mind that the array itself isn't changed in any way.
+ここでは、配列の破壊は、``red``と``green``を`colors`配列から引き出し、`firstColor`と`secondColor`変数に格納します。 これらの値は配列内の位置のために選択されます。 実際の変数名は何でもかまいません。 構造解除パターンに明示的に記載されていない項目はすべて無視されます。 配列自体は決して変更されないことに注意してください。
 
-You can also omit items in the destructuring pattern and only provide variable names for the items you're interested in. If, for example, you just want the third value of an array, you don't need to supply variable names for the first and second items. Here's how that works:
+また、消滅パターン内の項目を省略して、関心のある項目の変数名のみを提供することもできます。たとえば、配列の3番目の値を必要とする場合は、最初の変数名を指定する必要はありません 2番目の項目。 それはどのように動作するのです：
 
 ```js
 let colors = [ "red", "green", "blue" ];
@@ -265,13 +265,13 @@ let [ , , thirdColor ] = colors;
 console.log(thirdColor);        // "blue"
 ```
 
-This code uses a destructuring assignment to retrieve the third item in `colors`. The commas preceding `thirdColor` in the pattern are placeholders for the array items that come before it. By using this approach, you can easily pick out values from any number of slots in the middle of an array without needing to provide variable names for them.
+このコードは、`colors`で3番目の項目を取り出すために、非構造化割り当てを使います。 パターン内の`thirdColor`の前のコンマは、その前に来る配列項目のプレースホルダです。 この方法を使用すると、配列の途中にある任意の数のスロットから変数名を指定する必要なく、値を簡単に選択できます。
 
-W> Similar to object destructuring, you must always provide an initializer when using array destructuring with `var`, `let`, or `const`.
+W>オブジェクトの破壊と同様に、`var`、`let`、`const`を使って配列を破壊するときは、常に初期化子を指定する必要があります。
 
-#### Destructuring Assignment
+#### 割り当てを破棄する
 
-You can use array destructuring in the context of an assignment, but unlike object destructuring, there is no need to wrap the expression in parentheses. For example:
+代入のコンテキストで配列の非構造化を使用することはできますが、オブジェクトの構造化とは異なり、式をかっこで囲む必要はありません。 例えば：
 
 ```js
 let colors = [ "red", "green", "blue" ],
@@ -284,12 +284,12 @@ console.log(firstColor);        // "red"
 console.log(secondColor);       // "green"
 ```
 
-The destructured assignment in this code works in a similar manner to the last array destructuring example. The only difference is that `firstColor` and `secondColor` have already been defined. Most of the time, that's probably all you'll need to know about array destructuring assignment, but there's a little bit more to it that you will probably find useful.
+このコードの構造化されていない代入は、最後の配列の非構造化の例と同じように機能します。 唯一の違いは、`firstColor`と`secondColor`がすでに定義されていることです。 ほとんどの場合、おそらくアレイの構造化の割り当てについて知っておく必要があるでしょうが、おそらく有用であると思われるものがもう少しあります。
 
-Array destructuring assignment has a very unique use case that makes it easier to swap the values of two variables. Value swapping is a common operation in sorting algorithms, and the ECMAScript 5 way of swapping variables involves a third, temporary variable, as in this example:
+配列の構造化の割り当てには、2つの変数の値を簡単に交換できる非常にユニークな使用例があります。 バリュー・スワッピングはソート・アルゴリズムの一般的な操作であり、ECMAScript5の変数のスワップ方法では、この例のように3番目の一時変数が使用されます。
 
 ```js
-// Swapping variables in ECMAScript 5
+// Swapping variables in ECMAScript5
 let a = 1,
     b = 2,
     tmp;
@@ -302,10 +302,10 @@ console.log(a);     // 2
 console.log(b);     // 1
 ```
 
-The intermediate variable `tmp` is necessary in order to swap the values of `a` and `b`. Using array destructuring assignment, however, there's no need for that extra variable. Here's how you can swap variables in ECMAScript 6:
+一時変数`tmp 'は`a`と`b`の値を入れ替えるために必要です。 ただし、配列の構造化代入を使用すると、余分な変数は必要ありません。 ECMAScriptで変数をスワップする方法は次のとおりです。
 
 ```js
-// Swapping variables in ECMAScript 6
+// Swapping variables in ECMAScript
 let a = 1,
     b = 2;
 
@@ -315,13 +315,13 @@ console.log(a);     // 2
 console.log(b);     // 1
 ```
 
-The array destructuring assignment in this example looks like a mirror image. The left side of the assignment (before the equals sign) is a destructuring pattern just like those in the other array destructuring examples. The right side is an array literal that is temporarily created for the swap. The destructuring happens on the temporary array, which has the values of `b` and `a` copied into its first and second positions. The effect is that the variables have swapped values.
+この例の配列の構造解除代入は、鏡像のように見えます。 代入の左辺(等号の前)は、他の配列の非構造化の例と同様の非構造化パターンです。 右側は、スワップ用に一時的に作成される配列リテラルです。 破壊は一時的な配列上で起こります。一時的な配列は、`b`と`a`の値が1番目と2番目の位置にコピーされています。 その効果は、変数が値を入れ替えたことです。
 
-W> Like object destructuring assignment, an error is thrown when the right side of an array destructured assignment expression evaluates to `null` or `undefined`.
+W>オブジェクトの非構造化の割り当てと同様に、配列の非構造化代入式が`null`または`undefined`と評価されると、エラーがスローされます。
 
-#### Default Values
+#### デフォルト値
 
-Array destructuring assignment allows you to specify a default value for any position in the array, too. The default value is used when the property at the given position either doesn't exist or has the value `undefined`. For example:
+配列の構造解除の割り当てでは、配列内の任意の位置のデフォルト値を指定することもできます。 デフォルト値は、指定された位置のプロパティが存在しないか値が未定義の場合に使用されます。 例えば：
 
 ```js
 let colors = [ "red" ];
@@ -332,11 +332,11 @@ console.log(firstColor);        // "red"
 console.log(secondColor);       // "green"
 ```
 
-In this code, the `colors` array has only one item, so there is nothing for `secondColor` to match. Since there is a default value, `secondColor` is set to `"green"` instead of `undefined`.
+このコードでは`colors`配列にはアイテムが1つしかないので、`secondColor`が一致するものはありません。 デフォルト値があるので、`secondColor`は`undefined`ではなく``green``に設定されます。
 
-#### Nested Destructuring
+#### 入れ子構造の破壊
 
-You can destructure nested arrays in a manner similar to destructuring nested objects. By inserting another array pattern into the overall pattern, the destructuring will descend into a nested array, like this:
+ネストされたオブジェクトを破壊するのと同様の方法で、ネストされた配列を解体することができます。 別の配列パターンを全体のパターンに挿入することによって、破壊は次のようにネストされた配列に降下します：
 
 ```js
 let colors = [ "red", [ "green", "lightgreen" ], "blue" ];
@@ -349,11 +349,11 @@ console.log(firstColor);        // "red"
 console.log(secondColor);       // "green"
 ```
 
-Here, the `secondColor` variable refers to the `"green"` value inside the `colors` array. That item is contained within a second array, so the extra square brackets around `secondColor` in the destructuring pattern are necessary. As with objects, you can nest arrays arbitrarily deep.
+ここで、`secondColor`変数は、``colors``配列の``green"`の値を参照します。 その項目は2番目の配列に含まれているので、構造化パターンの`secondColor`の周りに余分な角括弧が必要です。 オブジェクトと同様に、配列を任意に深く入れ子にすることができます。
 
-#### Rest Items
+#### レストアイテム
 
-Chapter 3 introduced rest parameters for functions, and array destructuring has a similar concept called *rest items*. Rest items use the `...` syntax to assign the remaining items in an array to a particular variable. Here's an example:
+第3章では関数の残りのパラメータを紹介し、配列の破壊は* rest items *と同じ概念を持っています。 残りの項目は`... '構文を使用して配列の残りの項目を特定の変数に割り当てます。 ここに例があります：
 
 ```js
 let colors = [ "red", "green", "blue" ];
@@ -366,35 +366,35 @@ console.log(restColors[0]);     // "green"
 console.log(restColors[1]);     // "blue"
 ```
 
-The first item in `colors` is assigned to `firstColor`, and the rest are assigned into a new `restColors` array. The `restColors` array, therefore, has two items: `"green"` and `"blue"`. Rest items are useful for extracting certain items from an array and keeping the rest available, but there's another helpful use.
+`colors`の最初の項目は`firstColor`に割り当てられ、残りは新しい`restColors`配列に割り当てられます。 したがって、`restColors`配列には``green``と``blue"`という2つの項目があります。 残りの項目は配列から特定の項目を抽出し、残りの部分を利用可能にするのに便利ですが、便利な使い方があります。
 
-A glaring omission from JavaScript arrays is the ability to easily create a clone. In ECMAScript 5, developers frequently used the `concat()` method as an easy way to clone an array. For example:
+JavaScript配列からの目立たない欠点は、簡単にクローンを作成できることです。 ECMAScript5では、開発者は配列を簡単に複製するために`concat()`メソッドをよく使用していました。 例えば：
 
 ```js
-// cloning an array in ECMAScript 5
+// cloning an array in ECMAScript5
 var colors = [ "red", "green", "blue" ];
 var clonedColors = colors.concat();
 
 console.log(clonedColors);      //"[red,green,blue]"
 ```
 
-While the `concat()` method is intended to concatenate two arrays together, calling it without an argument returns a clone of the array. In ECMAScript 6, you can use rest items to achieve the same thing through syntax intended to function that way. It works like this:
+`concat()`メソッドは2つの配列を連結するためのものですが、引数を指定しないで呼び出すと配列のクローンが返されます。 ECMAScriptでは、restアイテムを使用して、そのように機能するように意図された構文で同じことを達成できます。 それはこのように動作します：
 
 ```js
-// cloning an array in ECMAScript 6
+// cloning an array in ECMAScript
 let colors = [ "red", "green", "blue" ];
 let [ ...clonedColors ] = colors;
 
 console.log(clonedColors);      //"[red,green,blue]"
 ```
 
-In this example, rest items are used to copy values from the `colors` array into the `clonedColors` array. While it's a matter of perception as to whether this technique makes the developer's intent clearer than using the `concat()` method, this is a useful ability to be aware of.
+この例では、`colors`配列の値を`clonedColors`配列にコピーするためにrest項目が使用されています。 この手法が`concat()`メソッドを使用するよりも開発者の意図をより明確にするかどうかについての認識の問題ですが、これは知っておくと便利な機能です。
 
-W> Rest items must be the last entry in the destructured array and cannot be followed by a comma. Including a comma after rest items is a syntax error.
+W>レストアイテムは、非構造化配列内の最後のエントリでなければならず、コンマが続くことはできません。 残りの項目の後にカンマを含めると構文エラーです。
 
-## Mixed Destructuring
+## 混合破壊
 
-Object and array destructuring can be used together to create more complex expressions. In doing so, you are able to extract just the pieces of information you want from any mixture of objects and arrays. For example:
+より複雑な式を作成するために、オブジェクトと配列の非構造化を一緒に使用できます。 そうすることで、オブジェクトと配列の混在から必要な情報のみを抽出することができます。 例えば：
 
 ```js
 let node = {
@@ -423,11 +423,11 @@ console.log(start.column);      // 1
 console.log(startIndex);        // 0
 ```
 
-This code extracts `node.loc.start` and `node.range[0]` into `start` and `startIndex`, respectively. Keep in mind that `loc:` and `range:` in the destructured pattern are just locations that correspond to properties in the `node` object. There is no part of `node` that cannot be extracted using destructuring when you use a mix of object and array destructuring. This approach is particularly useful for pulling values out of JSON configuration structures without navigating the entire structure.
+このコードは`node.loc.start`と`node.range [0]`を`start`と`startIndex`にそれぞれ抽出します。 destructuredパターンの`loc：`と`range：`は`node`オブジェクトのプロパティに対応する場所に過ぎないことに注意してください。 オブジェクトと配列の非構造化を混在させて使用するときに、非構造化を使って抽出できない`node`の部分はありません。 このアプローチは、構造全体をナビゲートせずにJSON構成構造から値を引き出す場合に特に便利です。
 
-## Destructured Parameters
+## 破壊されたパラメータ
 
-Destructuring has one more particularly helpful use case, and that is when passing function arguments. When a JavaScript function takes a large number of optional parameters, one common pattern is to create an `options` object whose properties specify the additional parameters, like this:
+Destructuringには、特に有用なユースケースが1つあります。これは、関数の引数を渡すときです。 JavaScript関数が多数のオプションパラメータを取る場合、一般的なパターンの1つは`options`オブジェクトを作成し、そのプロパティは次のように追加のパラメータを指定します：
 
 ```js
 // properties on options represent additional parameters
@@ -449,9 +449,9 @@ setCookie("type", "js", {
     expires: 60000
 });
 ```
-Many JavaScript libraries contain `setCookie()` functions that look similar to this one. In this function, the `name` and `value` arguments are required, but `secure`, `path`, `domain`, and `expires` are not. And since there is no priority order for the other data, it's efficient to just have an `options` object with named properties, rather than list extra named parameters. This approach works, but now you can't tell what input the function expects just by looking at the function definition; you need to read the function body.
+多くのJavaScriptライブラリには、このような`setCookie()`関数が含まれています。 この関数では、`name`と`value`引数は必須ですが、`secure`、`path`、`domain`、`expires`はありません。 また、他のデータの優先順位はないので、追加の名前付きパラメータをリストするのではなく、名前付きプロパティを持つ`options`オブジェクトを持つだけで効率的です。 このアプローチは機能しますが、関数定義を見るだけでどのような入力が期待しているのかを知ることはできません。 関数本体を読む必要があります。
 
-Destructured parameters offer an alternative that makes it clearer what arguments a function expects. A destructured parameter uses an object or array destructuring pattern in place of a named parameter. To see this in action, look at this rewritten version of the `setCookie()` function from the last example:
+破壊されたパラメータは、関数がどのような引数を期待しているかを明確にする代替手段を提供します。 非構造化パラメータは、名前付きパラメータの代わりにオブジェクトまたは配列の非構造化パターンを使用します。 これを実際に見るには、最後の例の`setCookie()`関数のこの書き直し版を見てください：
 
 ```js
 function setCookie(name, value, { secure, path, domain, expires }) {
@@ -465,20 +465,20 @@ setCookie("type", "js", {
 });
 ```
 
-This function behaves similarly to the previous example, but now, the third argument uses destructuring to pull out the necessary data. The parameters outside the destructured parameter are clearly expected, and at the same time, it's clear to someone using `setCookie()` what options are available in terms of extra arguments. And of course, if the third argument is required, the values it should contain are crystal clear. The destructured parameters also act like regular parameters in that they are set to `undefined` if they are not passed.
+この関数は前の例と同様に動作しますが、3番目の引数は構造化を使用して必要なデータを引き出します。破壊されたパラメータの外側のパラメータは明らかに期待されていますが、同時に`setCookie()`を使っている人にとっては余分な引数でどのようなオプションが利用できるのかは明らかです。もちろん、第3引数が必要な場合は、その値に明瞭な値を入れる必要があります。破壊されたパラメータは、渡されないと`undefined`に設定されるという点で、通常のパラメータのようにも動作します。
 
-A>Destructured parameters have all of the capabilities of destructuring that you've learned so far in this chapter. You can use default values, mix object and array patterns, and use variable names that differ from the properties you're reading from.
+A>破壊されたパラメータには、これまでのところこの章で学んだ破壊のすべての機能があります。デフォルト値を使用したり、オブジェクトと配列のパターンを混在させたり、読み込み中のプロパティとは異なる変数名を使用することができます。
 
-### Destructured Parameters are Required
+### 破棄されたパラメータは必須です
 
-One quirk of using destructured parameters is that, by default, an error is thrown when they are not provided in a function call. For instance, this call to the `setCookie()` function in the last example throws an error:
+構造化されていないパラメータを使用することの1つは、デフォルトでは、関数呼び出しで提供されていないときにエラーがスローされるということです。たとえば、前の例の`setCookie()`関数を呼び出すと、エラーがスローされます。
 
 ```js
 // Error!
 setCookie("type", "js");
 ```
 
-The third argument is missing, and so it evaluates to `undefined` as expected. This causes an error because destructured parameters are really just a shorthand for destructured declaration. When the `setCookie()` function is called, the JavaScript engine actually does this:
+3番目の引数が欠けているので、期待どおりに`undefined`と評価されます。 これは、構造化されていないパラメータは実際には構造化宣言の省略形であるため、エラーが発生します。`setCookie()`関数が呼ばれると、JavaScriptエンジンは実際にこれを行います：
 
 ```js
 function setCookie(name, value, options) {
@@ -489,9 +489,9 @@ function setCookie(name, value, options) {
 }
 ```
 
-Since destructuring throws an error when the right side expression evaluates to `null` or `undefined`, the same is true when the third argument isn't passed to the `setCookie()` function.
+右辺の式が`null`または`undefined`と評価されたときに、破壊がエラーをスローするので、第3引数が`setCookie()`関数に渡されないときも同じことが言えます。
 
-If you want the destructured parameter to be required, then this behavior isn't all that troubling. But if you want the destructured parameter to be optional, you can work around this behavior by providing a default value for the destructured parameter, like this:
+destructuredパラメータを必要とする場合は、この動作がすべて問題になるわけではありません。 しかし、destructuredパラメータをオプションにしたい場合は、destructuredパラメータのデフォルト値を次のように指定することで回避できます。
 
 ```js
 function setCookie(name, value, { secure, path, domain, expires } = {}) {
@@ -500,11 +500,11 @@ function setCookie(name, value, { secure, path, domain, expires } = {}) {
 }
 ```
 
-This example provides a new object as the default value for the third parameter. Providing a default value for the destructured parameter means that the `secure`, `path`, `domain`, and `expires` will all be `undefined` if the third argument to `setCookie()` isn't provided, and no error will be thrown.
+この例では、新しいオブジェクトを3番目のパラメータのデフォルト値として提供しています。 destructuredパラメータのデフォルト値を指定すると、`secure`、`path`、`domain`、`expires`は`setCookie()`の3番目の引数が与えられていなければ`undefined`になります。 エラーがスローされます。
 
-### Default Values for Destructured Parameters
+### 破棄されたパラメータのデフォルト値
 
-You can specify destructured default values for destructured parameters just as you would in destructured assignment. Just add the equals sign after the parameter and specify the default value. For example:
+破壊された代入の場合と同じように、非構造化パラメータの非構造化デフォルト値を指定することができます。 パラメータの後に等号を追加し、デフォルト値を指定するだけです。 例えば：
 
 ```js
 function setCookie(name, value,
@@ -520,14 +520,14 @@ function setCookie(name, value,
 }
 ```
 
-Each property in the destructured parameter has a default value in this code, so you can avoid checking to see if a given property has been included in order to use the correct value. Also, the entire destructured parameter has a default value of an empty object, making the parameter optional. This does make the function declaration look a bit more complicated than usual, but that's a small price to pay for ensuring each argument has a usable value.
+destructuredパラメータの各プロパティはこのコードでデフォルト値を持つため、正しい値を使用するために特定のプロパティが含まれているかどうかを確認する必要はありません。また、destructuredパラメータ全体が空のオブジェクトのデフォルト値を持ち、パラメータをオプションにします。これにより、関数宣言は通常より少し複雑に見えますが、それは各引数が使用可能な値を持つことを確保するために支払う小さな代償です。
 
-## Summary
+## まとめ
 
-Destructuring makes working with objects and arrays in JavaScript easier. Using the familiar object literal and array literal syntax, you can pick data structures apart to get at just the information you're interested in. Object patterns allow you to extract data from objects while array patterns let you extract data from arrays.
+破壊は、JavaScriptのオブジェクトや配列を簡単に処理します。おなじみのオブジェクトリテラルと配列リテラル構文を使用すると、興味のある情報だけを取得するためにデータ構造を選ぶことができます。オブジェクトパターンではオブジェクトからデータを抽出でき、配列パターンでは配列からデータを抽出できます。
 
-Both object and array destructuring can specify default values for any property or item that is `undefined` and both throw errors when the right side of an assignment evaluates to `null` or `undefined`. You can also navigate deeply nested data structures with object and array destructuring, descending to any arbitrary depth.
+オブジェクトと配列の両方のdestructuringは、`undefined`であるプロパティや項目のデフォルト値を指定することができ、割り当ての右側が`null`または`undefined`と評価されたときにエラーをスローします。また、オブジェクトおよび配列の破壊を任意の深度まで降りて深く入れ子になったデータ構造をナビゲートすることもできます。
 
-Destructuring declarations use `var`, `let`, or `const` to create variables and must always have an initializer. Destructuring assignments are used in place of other assignments and allow you to destructure into object properties and already-existing variables.
+破壊宣言は、変数を作成するために`var`、`let`、または`const`を使います。常に初期化子を持たなければなりません。分割割当は、他の割当の代わりに使用され、オブジェクトプロパティおよび既存の変数に分解することができます。
 
-Destructured parameters use the destructuring syntax to make "options" objects more transparent when used as function parameters. The actual data you're interested in can be listed out along with other named parameters. Destructured parameters can be array patterns, object patterns, or a mixture, and you can use all of the features of destructuring.
+破壊されたパラメータは、関数パラメタとして使用されたときに「オプション」オブジェクトをより透明にするために、構造解除構文を使用します。あなたが興味を持っている実際のデータは、他の名前付きパラメータと一緒にリストアップすることができます。破壊されたパラメータは、配列パターン、オブジェクトパターン、または混合物にすることができ、破壊のすべての機能を使用することができます。
