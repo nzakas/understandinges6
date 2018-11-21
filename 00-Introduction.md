@@ -1,77 +1,77 @@
-# Introduction
+# イントロダクション
 
-The JavaScript core language features are defined in a standard called ECMA-262. The language defined in this standard is called ECMAScript. What you know as JavaScript in browsers and Node.js is actually a superset of ECMAScript. Browsers and Node.js add more functionality through additional objects and methods, but the core of the language remains as defined in ECMAScript. The ongoing development of ECMA-262 is vital to the success of JavaScript as a whole, and this book covers the changes brought about by the most recent major update to the language: ECMAScript 6.
+JavaScriptの中心的な言語的特徴は、ECMA-262によって標準化されています。この仕様によって定められる言語はECMAScript（以下、ES）と呼ばれます。実際、ブラウザやNode.jsのJavaScriptはESのスーパーセットです。ブラウザやNode.jsは追加のオブジェクトやメソッドによって更なる機能を追加していますが、言語の中心的な部分はESの定義に基づいています。ECMA-262の継続的な開発はJavaScriptの発展に不可欠であり、本著は最新のアップデートによって更新された「ECMAScript6」での変更に対応しています。
 
-## The Road to ECMAScript 6
+## ECMAScript6への道
 
-In 2007, JavaScript was at a crossroads. The popularity of Ajax was ushering in a new age of dynamic web applications, while JavaScript hadn't changed since the third edition of ECMA-262 was published in 1999. TC-39, the committee responsible for driving the ECMAScript development process, put together a large draft specification for ECMAScript 4. ECMAScript 4 was massive in scope, introducing changes both small and large to the language. Updated features included new syntax, modules, classes, classical inheritance, private object members, optional type annotations, and more.
+2007年、JavaScriptはある岐路に立っていました。Ajaxの人気が動的Webアプリケーションの新時代の到来を告げた一方、JavaScriptは1999年にECMA-262が第3版に改訂されて以降、大きな変更はありませんでした。TC-39（Technical Committee、ESを策定する専門委員会）はES4仕様の草案をまとめました。ES4は範囲が膨大で、さまざまな変化を取り入れました。アップデートされた内容には、新しい構文、モジュール、クラス、クラスの継承、privateメンバ、オプショナル型アノテーションなどを含みました。
 
-The scope of the ECMAScript 4 changes caused a rift to form in TC-39, with some members feeling that the fourth edition was trying to accomplish too much. A group of leaders from Yahoo, Google, and Microsoft created an alternate proposal for the next version of ECMAScript that they initially called ECMAScript 3.1. The "3.1" was intended to show that this was an incremental change to the existing standard.
+ES4の範囲の変更はTC-39の不和を起こし、なかでもメンバー数人はESがあまりにも多くのことをトライしているように感じていました。そこでYahoo、Google、Microsoftのリーダー達によるグループは、ES3.1という新たな代替案を作成しました。この「3.1」は、既存のスタンダードへの段階的な変化であることを示すためのものでした。
 
-ECMAScript 3.1 introduced very few syntax changes, instead focusing on property attributes, native JSON support, and adding methods to already-existing objects. Although there was an early attempt to reconcile ECMAScript 3.1 and ECMAScript 4, this ultimately failed as the two camps had difficulty with the very different perspectives on how the language should grow.
+ES3.1はわずかな構文の変更のみを行い、プロパティの属性、ネイティブJSONのサポート、既存のオブジェクトへのメソッドの追加に焦点を当てました。初期段階でES3.1と4の調整しようとする試みはありましたが、どのように言語を発展させていくべきかという点において2つのグループはまったく異なる視点を持っていたため、この調整は最終的に失敗に終わりました。
 
-In 2008, Brendan Eich, the creator of JavaScript, announced that TC-39 would focus its efforts on standardizing ECMAScript 3.1. They would table the major syntax and feature changes of ECMAScript 4 until after the next version of ECMAScript was standardized, and all members of the committee would work to bring the best pieces of ECMAScript 3.1 and 4 together after that point into an effort initially nicknamed ECMAScript Harmony.
+2008年、ブレンダン・アイク（JavaScriptの開発者）は、TC-39がES3.1の標準化を試みることを発表しました。彼らは、ESの新バージョンが標準化するまでES4の構文と特徴の変更を一旦延期し、専門委員会のメンバーはES3.1と4の良い部分を合わせたES「Harmony」に尽力することになりました。
 
-ECMAScript 3.1 was eventually standardized as the fifth edition of ECMA-262, also described as ECMAScript 5. The committee never released an ECMAScript 4 standard to avoid confusion with the now-defunct effort of the same name. Work then began on ECMAScript Harmony, with ECMAScript 6 being the first standard released in this new "harmonious" spirit.
+ES3.1は最終的にECMA-262の第5版として標準化され、ES5として発表されました。専門委員会は、かつての同名の構想との混乱を避けるため、ES「4」というバージョンをリリースすることはありませんでした。ES Harmonyがスタートしたのち、ES6は新しいハーモニーを奏でながら（in this new “harmonious” sprit）最初のスタンダードとしてリリースされました。
 
-ECMAScript 6 reached feature complete status in 2015 and was formally dubbed "ECMAScript 2015." (But this text still refers to it as ECMAScript 6, the name most familiar to developers.) The features vary widely from completely new objects and patterns to syntax changes to new methods on existing objects. The exciting thing about ECMAScript 6 is that all of its changes are geared toward solving problems that developers actually face.
+ES6は、2015年に実装を完了し、正式に「ECMAScript2015」と名づけられました（ただしWebデベロッパーにはES6という呼称で呼ばれるため、本文ではこちらを採用します）。特徴は、完全に新しいオブジェクトや構文の変更パターンから既存のオブジェクトに対する新しいメソッドにまでわたります。このES6に関するエキサイティングな変更は、Webデベロッパーが実際に直面していた問題の解決に向けられています。
 
-## About This Book
+## この本について
 
-A good understanding of ECMAScript 6 features is key for all JavaScript developers going forward. The language features introduced in ECMAScript 6 represent the foundation upon which JavaScript applications will be built for the foreseeable future. That's where this book comes in. My hope is that you'll read this book to learn about ECMAScript 6 features so that you'll be ready to start using them as soon as you need to.
+ES6の機能をしっかりと理解することは、すべてのJavaScriptデベロッパーが前に進むために重要な鍵となります。ES6で取り入れられた機能は、JavaScriptのアプリケーションが築くであろう近い将来の基盤となるでしょう。そこでこの本の出番です。著者である私の願いは、読者のみなさんがES6を理解するためにこの本を読むことで、必要なときにこの言語をすぐに使い始めることができるように準備できることです。
 
-### Browser and Node.js Compatibility
+### ブラウザとNode.jsの適合性
 
-Many JavaScript environments, such as web browsers and Node.js, are actively working on implementing ECMAScript 6. This book doesn't attempt to address the inconsistencies between implementations and instead focuses on what the specification defines as the correct behavior. As such, it's possible that your JavaScript environment may not conform to the behavior described in this book.
+ブラウザやNode.jsのよなJavaScriptの実行環境の多くは、ES6の実装に積極的に取り組んでいます。本著は仕様の矛盾に対処しようとするのではなく、正常な動作として何が仕様となっているのかに焦点を当てています。そのため、本著で書かれた動作がJavaScriptの実行環境に準拠していない場合があります。
 
-### Who This Book is For
+### 誰のために書かれた本か
 
-This book is intended as a guide for those who are already familiar with JavaScript and ECMAScript 5. While a deep understanding of the language isn't necessary to use this book, it will help you understand the differences between ECMAScript 5 and 6. In particular, this book is aimed at intermediate-to-advanced JavaScript developers programming for a browser or Node.js environment who want to learn about the latest developments in the language.
+本著はJavaScriptとES5をすでに理解している方を読者として想定しています。本著を読むためにこれらの言語を完璧に理解する必要はありませんが、ES5と6の違いを理解する助けにはなるでしょう。とりわけ本著は、最新の言語の動向を理解したい、ブラウザやNode.js環境でプログラミングを行う中級〜上級のJavaScriptデベロッパーを対象としています。
+よって本著は、JavaScriptを書いたことがない初心者を対象とはしていません。読者のみなさんは本著を活用するためにこの言語の基礎をしっかりと理解する必要があるでしょう。
 
-This book is not for beginners who have never written JavaScript. You will need to have a good basic understanding of the language to make use of this book.
+### 概観
 
-### Overview
+本著の全13章では、ES6のあらゆる側面を網羅しています。多くの章で、ES6での変更点を説明するために、これらの変更点が解決した問題について書いています。またすべての章では、読者が構文と概念を理解するためにコードの例を記しました。
 
-Each of this book's thirteen chapters covers a different aspect of ECMAScript 6. Many chapters start by discussing problems that ECMAScript 6 changes were made to solve, to give you a broader context for those changes, and all chapters include code examples to help you learn new syntax and concepts.
+**第1章：ブロックバインディングのしくみ** `let` と `const`について, `var`のブロックレベルの置き換えについて。
 
-**Chapter 1: How Block Bindings Work** talks about `let` and `const`, the block-level replacement for `var`.
+**第2章：文字列と正規表現**は、文字列の操作と検査、およびテンプレート文字列の導入のための追加機能を扱います。
 
-**Chapter 2: Strings and Regular Expressions** covers additional functionality for string manipulation and inspection as well as the introduction of template strings.
+**第3章：ECMAScript 6の関数**では、関数のさまざまな変更について説明しています。これには、矢印の関数形式、デフォルトのパラメータ、残りのパラメータなどが含まれます。
 
-**Chapter 3: Functions in ECMAScript 6** discusses the various changes to functions. This includes the arrow function form, default parameters, rest parameters, and more.
+**第4章：オブジェクトの拡張機能**では、オブジェクトの作成、変更、および使用方法の変更について説明しています。トピックには、オブジェクトのリテラル構文の変更、および新しいリフレクション方法が含まれます。
 
-**Chapter 4: Expanded Object Functionality** explains the changes to how objects are created, modified, and used. Topics include changes to object literal syntax, and new reflection methods.
+**第5章：より簡単なデータアクセスのためのデストラクション**では、オブジェクトと配列の分解を紹介しています。これにより、オブジェクトと配列を簡潔な構文で分解できます。
 
-**Chapter 5: Destructuring for Easier Data Access** introduces object and array destructuring, which allow you to decompose objects and arrays using a concise syntax.
+**第6章：シンボルとシンボルのプロパティ**ではシンボルの概念を紹介し、プロパティを定義する新しい方法を紹介します。シンボルは、オブジェクトのプロパティとメソッドを覆い隠すために使用できる新しいプリミティブ型です（隠すわけではありません）。
 
-**Chapter 6: Symbols and Symbol Properties** introduces the concept of symbols, a new way to define properties. Symbols are a new primitive type that can be used to obscure (but not hide) object properties and methods.
+**第7章：セットとマップ** `Set`, `WeakSet`, `Map`, と `WeakMap`の新しいコレクションタイプが詳しく説明されています。これらの型は、JavaScriptのために特別に設計されたセマンティクス、デデュープ、メモリ管理を追加することで、配列の有用性を広げます。
 
-**Chapter 7: Sets and Maps** details the new collection types of `Set`, `WeakSet`, `Map`, and `WeakMap`. These types expand on the usefulness of arrays by adding semantics, de-duping, and memory management designed specifically for JavaScript.
+**第8章：イテレータとジェネレータ**では、イテレータとジェネレータを言語に追加する方法について説明します。これらの機能を使用すると、以前のバージョンのJavaScriptでは不可能だった強力な方法でデータのコレクションを扱うことができます。
 
-**Chapter 8: Iterators and Generators** discusses the addition of iterators and generators to the language. These features allow you to work with collections of data in powerful ways that were not possible in previous versions of JavaScript.
+**第9章：JavaScriptクラスの紹介**では、JavaScriptのクラスの最初の正式な概念を紹介しています。多くの場合、他の言語から来ている人にとっては混乱の点があります.JavaScriptでクラス構文を追加すると、他の言語にもっと親しみやすくなり、愛好家にとってはより簡潔になります。
 
-**Chapter 9: Introducing JavaScript Classes** introduces the first formal concept of classes in JavaScript. Often a point of confusion for those coming from other languages, the addition of class syntax in JavaScript makes the language more approachable to others and more concise for enthusiasts.
+**第10章：改良された配列機能**では、ネイティブ配列に対する変更とJavaScriptで使用できる新しい方法を詳しく説明しています。
 
-**Chapter 10: Improved Array Capabilities** details the changes to native arrays and the interesting new ways they can be used in JavaScript.
+**第11章：約束と非同期プログラミング**は、言語の新しい部分としての約束を紹介しています。約束は、草の根的な努力であり、広範な図書館のサポートのために、最終的に人気を博しました。 ECMAScript 6は、約束を正式化し、デフォルトで利用可能にします。
 
-**Chapter 11: Promises and Asynchronous Programming** introduces promises as a new part of the language. Promises were a grassroots effort that eventually took off and gained in popularity due to extensive library support. ECMAScript 6 formalizes promises and makes them available by default.
+**第12章：プロキシとリフレクションAPI **には、JavaScript用の正式なリフレクションAPIと、オブジェクトに対して実行されたすべての操作をインターセプトできる新しいプロキシオブジェクトが導入されています。プロキシは、開発者にオブジェクトに対する前例のない制御を提供し、したがって、新しいインタラクションパターンを定義する無限の可能性を提供します。
 
-**Chapter 12: Proxies and the Reflection API** introduces the formalized reflection API for JavaScript and the new proxy object that allows you to intercept every operation performed on an object. Proxies give developers unprecedented control over objects and, as such, unlimited possibilities for defining new interaction patterns.
+**第13章：モジュールによるコードのカプセル化**では、JavaScriptの公式なモジュール形式について詳しく説明しています。これらのモジュールは、長年にわたって登場してきた多数のアドホックモジュール定義フォーマットに取って代わることができます。
 
-**Chapter 13: Encapsulating Code with Modules** details the official module format for JavaScript. The intent is that these modules can replace the numerous ad-hoc module definition formats that have appeared over the years.
+**付録A：より小さいECMAScript 6の変更点**では、ECMAScript 6で実装されているその他の変更については、あまり頻繁には使用しませんが、各章で扱う主要なトピックにはあまり適合しません。
 
-**Appendix A: Smaller ECMAScript 6 Changes** covers other changes implemented in ECMAScript 6 that you'll use less frequently or that didn't quite fit into the broader major topics covered in each chapter.
+**付録B：ECMAScript 7（2016）の理解**では、ECMAScript 7用に実装された標準への2つの追加について説明します。これは、ECMAScript 6ほどJavaScriptに影響を与えませんでした。
 
-**Appendix B: Understanding ECMAScript 7 (2016)** describes the two additions to the standard that were implemented for ECMAScript 7, which didn't impact JavaScript nearly as much as ECMAScript 6.
 
-### Conventions Used
+### 表記について
 
-The following typographical conventions are used in this book:
+本著では以下の表記を用いています。
 
-* *Italics* introduces new terms
-* `Constant width` indicates a piece of code or filename
+* *Italics* は新しい用語を示しています
+* `Constant width` はコードもしくはファイル名を示しています
 
-Additionally, longer code examples are contained in constant width code blocks such as:
+また、長いコードの例はこのように表します。
 
 ```js
 function doSomething() {
@@ -79,33 +79,34 @@ function doSomething() {
 }
 ```
 
-Within a code block, comments to the right of a `console.log()` statement indicate the output you'll see in the browser or Node.js console when the code is executed, for example:
+ `console.log()` の右側のコメントは、コード実行時にブラウザまたはNode.jsコンソールに表示される出力を示します。たとえば、次のようになります。
 
 ```js
 console.log("Hi");      // "Hi"
 ```
 
-If a line of code in a code block throws an error, this is also indicated to the right of the code:
+エラーはこのように示します。
 
 ```js
 doSomething();          // error!
 ```
 
-### Help and Support
+### お問い合わせ
 
-You can file issues, suggest changes, and open pull requests against this book by visiting: [https://github.com/nzakas/understandinges6](https://github.com/nzakas/understandinges6)
+以下でイシューを立て、変更を提案し、本著に対するプルリクエストをすることができます: [https://github.com/nzakas/understandinges6](https://github.com/nzakas/understandinges6)
 
 <!-- I would suggest leaving the note above out of the print version, since readers
 won't be able to file issues on it. /JG -->
 
-If you have questions as you read this book, please send a message to my mailing list: [http://groups.google.com/group/zakasbooks](http://groups.google.com/group/zakasbooks).
+本著に関する質問があれば、私のメーリングリストにメッセージを送ってください: [http://groups.google.com/group/zakasbooks](http://groups.google.com/group/zakasbooks).
 
-## Acknowledgments
 
-Thanks to Jennifer Griffith-Delgado, Alison Law, and everyone at No Starch Press for their support and help with this book. Their understanding and patience as my productivity slowed to a crawl during my extended illness is something I will never forget.
+## 謝辞
 
-I'm grateful for the watchful eye of Juriy Zaytsev as tech editor and to Dr. Axel Rauschmayer for his feedback and several conversations that helped to clarify some of the concepts discussed in this book.
+Jennifer Griffith-Delgado, Alison Law, そして No Starch Pressの皆さまのこの本に関する支援に感謝申し上げます。 長期間にわたる病気の中での私の生産性の低下に関する彼らのご理解とご辛抱を私は忘れることができません。
 
-Thanks to everyone who submitted fixes to the version of this book that is hosted on GitHub: ShMcK, Ronen Elster, Rick Waldron, blacktail, Paul Salaets, Lonniebiz, Igor Skuhar, jakub-g, David Chang, Kevin Sweeney, Kyle Simpson, Peter Bakondy, Philip Borisov, Shaun Hickson, Steven Foote, kavun, Dan Kielp, Darren Huskie, Jakub Narębski, Jamund Ferguson, Josh Lubaway, Marián Rusnák, Nikolas Poniros, Robin Pokorný, Roman Lo, Yang Su, alexyans, robertd, 404, Aaron Dandy, AbdulFattah Popoola, Adam Richeimer, Ahmad Ali, Aleksandar Djindjic, Arjunkumar, Ben Regenspan, Carlo Costantini, Dmitri Suvorov, Kyle Pollock, Mallory, Erik Sundahl, Ethan Brown, Eugene Zubarev, Francesco Pongiluppi, Jake Champion, Jeremy Caney, Joe Eames, Juriy Zaytsev, Kale Worsley, Kevin Lozandier, Lewis Ellis, Mohsen Azimi, Navaneeth Kesavan, Nick Bottomley, Niels Dequeker, Pahlevi Fikri Auliya, Prayag Verma, Raj Anand, Ross Gerbasi, Roy Ling, Sarbbottam Bandyopadhyay, and Shidhin.
+また、テクニカルエディターのJuriy Zaytsevと、この本で扱った概念の一部を明確にしてくれたAxel Rauschmayer博士のフィードバックと議論に感謝申し上げます。
 
-Also, thanks to everyone who supported this book on Patreon: Casey Visco.
+GitHub上にホスティングされた本著のフィックスにご協力いただいた以下の皆さま、ありがとうございました。 ShMcK, Ronen Elster, Rick Waldron, blacktail, Paul Salaets, Lonniebiz, Igor Skuhar, jakub-g, David Chang, Kevin Sweeney, Kyle Simpson, Peter Bakondy, Philip Borisov, Shaun Hickson, Steven Foote, kavun, Dan Kielp, Darren Huskie, Jakub Narębski, Jamund Ferguson, Josh Lubaway, Marián Rusnák, Nikolas Poniros, Robin Pokorný, Roman Lo, Yang Su, alexyans, robertd, 404, Aaron Dandy, AbdulFattah Popoola, Adam Richeimer, Ahmad Ali, Aleksandar Djindjic, Arjunkumar, Ben Regenspan, Carlo Costantini, Dmitri Suvorov, Kyle Pollock, Mallory, Erik Sundahl, Ethan Brown, Eugene Zubarev, Francesco Pongiluppi, Jake Champion, Jeremy Caney, Joe Eames, Juriy Zaytsev, Kale Worsley, Kevin Lozandier, Lewis Ellis, Mohsen Azimi, Navaneeth Kesavan, Nick Bottomley, Niels Dequeker, Pahlevi Fikri Auliya, Prayag Verma, Raj Anand, Ross Gerbasi, Roy Ling, Sarbbottam Bandyopadhyay, and Shidhin.
+
+そしてこの本を支援してくれたCasey Viscoに感謝を。
