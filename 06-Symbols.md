@@ -1,12 +1,12 @@
-# Symbols and Symbol Properties
+＃シンボルとシンボルのプロパティ
 
-Symbols are a primitive type introduced in ECMAScript 6, joining the existing primitive types: strings, numbers, booleans, `null`, and `undefined`. Symbols began as a way to create private object members, a feature JavaScript developers wanted for a long time. Before symbols, any property with a string name was easy to access regardless of the obscurity of the name, and the "private names" feature was meant to let developers create non-string property names. That way, normal techniques for detecting these private names wouldn't work.
+シンボルはECMAScript6で導入されたプリミティブ型であり、文字列、数値、ブール値、ヌル、および未定義のプリミティブ型を結合します。シンボルは、プライベートオブジェクトメンバを作成する方法として始まりました.JavaScript開発者が長い間望んでいた機能です。記号の前には、文字列名を持つプロパティは名前の不明瞭さにかかわらず簡単にアクセスでき、`private name`機能は開発者が文字列以外のプロパティ名を作成できるようにするためのものでした。そうすれば、これらのプライベートな名前を検出するための通常の技術はうまくいかないでしょう。
 
-The private names proposal eventually evolved into ECMAScript 6 symbols, and this chapter will teach you how to use symbols effectively. While the implementation details remained the same (that is, they added non-string values for property names), the goal of privacy was dropped. Instead, symbol properties are categorized separately from other object properties.
+プライベートネームの提案は、最終的にECMAScript6のシンボルに進化しました。この章では、シンボルを効果的に使用する方法について説明します。実装の詳細は同じままですが(つまり、プロパティ名に文字列以外の値を追加した)、プライバシーの目標は落とされました。代わりに、シンボルプロパティは他のオブジェクトプロパティとは別に分類されます。
 
-## Creating Symbols
+## シンボルを作成する
 
-Symbols are unique among JavaScript primitives in that they don't have a literal form, like `true` for booleans or `42` for numbers. You can create a symbol by using the global `Symbol` function, as in this example:
+シンボルは、ブール値の場合は`true`、数字の場合は`42`など、リテラル形式を持たないという点で、JavaScriptプリミティブ間でユニークです。次の例のように、グローバルな`Symbol`関数を使ってシンボルを作成することができます：
 
 ```js
 let firstName = Symbol();
@@ -16,11 +16,11 @@ person[firstName] = "Nicholas";
 console.log(person[firstName]);     // "Nicholas"
 ```
 
-Here, the symbol `firstName` is created and used to assign a new property on the `person` object. That symbol must be used each time you want to access that same property. Naming the symbol variable appropriately is a good idea, so you can easily tell what the symbol represents.
+ここで、シンボル`firstName`が作成され、`person`オブジェクトに新しいプロパティを割り当てるために使用されます。 そのシンボルにアクセスするたびに、そのシンボルを使用する必要があります。 シンボル変数を適切に命名することは良い考えです。したがって、シンボルが何を表しているかを簡単に知ることができます。
 
-W> Because symbols are primitive values, calling `new Symbol()` throws an error when called. You can create an instance of `Symbol` via `new Object(yourSymbol)` as well, but it's unclear when this capability would be useful.
+W>シンボルはプリミティブな値なので、`new Symbol()`を呼び出すと、呼び出されたときにエラーがスローされます。`Symbol`のインスタンスを`new Object(yourSymbol) 'で作成することもできますが、この機能が役立つのは不明です。
 
-The `Symbol` function also accepts an optional argument that is the description of the symbol. The description itself cannot be used to access the property, but is used for debugging purposes. For example:
+`Symbol`関数は、シンボルの説明であるオプションの引数も受け入れます。 記述自体はプロパティにアクセスするために使用することはできませんが、デバッグの目的で使用されます。 例えば：
 
 ```js
 let firstName = Symbol("first name");
@@ -33,22 +33,22 @@ console.log(person[firstName]);             // "Nicholas"
 console.log(firstName);                     // "Symbol(first name)"
 ```
 
-A symbol's description is stored internally in the `[[Description]]` property. This property is read whenever the symbol's `toString()` method is called either explicitly or implicitly. The `firstName` symbol's `toString()` method is called implictly by `console.log()` in this example, so the description gets printed to the log. It is not otherwise possible to access `[[Description]]` directly from code. I recommended always providing a description to make both reading and debugging symbols easier.
+シンボルの説明は`[[Description]]`プロパティに内部的に格納されます。 このプロパティは、シンボルの`toString()`メソッドが明示的にまたは暗黙的に呼び出されるたびに読み込まれます。 この例では、`firstName`シンボルの`toString()`メソッドは`console.log()`によって暗黙に呼び出され、その説明がログに出力されます。 そうでなければコードから直接[[Description]]`にアクセスすることはできません。 私はいつも読書とデバッグの両方の記号をより簡単にするための記述を提供することを勧めました。
 
-A> ### Identifying Symbols
+A> ###記号を識別する
 A>
-A>Since symbols are primitive values, you can use the `typeof` operator to determine if a variable contains a symbol. ECMAScript 6 extends `typeof` to return `"symbol"` when used on a symbol. For example:
+A>シンボルはプリミティブな値なので、`typeof`演算子を使って変数にシンボルが含まれているかどうかを判断できます。 ECMAScript6は`typeof`を拡張してシンボルに使用するとき``symbol"`を返します。 例えば：
 A>
 A>```js
 A>let symbol = Symbol("test symbol");
 A>console.log(typeof symbol);         // "symbol"
 A>```
 A>
-A>While there are other indirect ways of determining whether a variable is a symbol, the `typeof` operator is the most accurate and preferred technique.
+A>変数がシンボルかどうかを判断する他の間接的な方法がありますが、`typeof`演算子は最も正確で好ましい方法です。
 
-## Using Symbols
+## シンボルの使用
 
-You can use symbols anywhere you'd use a computed property name. You've already seen bracket notation used with symbols in this chapter, but you can use symbols in computed object literal property names as well as with `Object.defineProperty()` and `Object.defineProperties()` calls, such as:
+計算されたプロパティ名を使用する場所であればどこでもシンボルを使用できます。 この章のシンボルで使用されている括弧表記は既に見てきましたが、計算されたオブジェクトリテラルのプロパティ名や、Object.defineProperty()およびObject.defineProperties()
 
 ```js
 let firstName = Symbol("first name");
@@ -74,15 +74,15 @@ console.log(person[firstName]);     // "Nicholas"
 console.log(person[lastName]);      // "Zakas"
 ```
 
-This example first uses a computed object literal property to create the `firstName` symbol property. The following line then sets the property to be read-only. Later, a read-only `lastName` symbol property is created using the `Object.defineProperties()` method. A computed object literal property is used once again, but this time, it's part of the second argument to the `Object.defineProperties()` call.
+この例では、最初に計算されたオブジェクトリテラルプロパティを使用して`firstName`シンボルプロパティを作成します。次の行は、プロパティを読み取り専用に設定します。その後、`Object.defineProperties()`メソッドを使用して、読み取り専用`lastName`シンボルプロパティが作成されます。計算されたオブジェクト・リテラル・プロパティーがもう一度使用されますが、今回は`Object.defineProperties()`コールの2番目の引数の一部です。
 
-While symbols can be used in any place that computed property names are allowed, you'll need to have a system for sharing these symbols between different pieces of code in order to use them effectively.
+計算されたプロパティ名が許可されている場所でシンボルを使用することができますが、効果的に使用するには、これらのシンボルを異なるコード間で共有するシステムが必要です。
 
-## Sharing Symbols
+## シンボルを共有する
 
-You may find that you want different parts of your code to use the same symbols. For example, suppose you have two different object types in your application that should use the same symbol property to represent a unique identifier. Keeping track of symbols across files or large codebases can be difficult and error-prone. That's why ECMAScript 6 provides a global symbol registry that you can access at any point in time.
+同じシンボルを使用するコードの異なる部分が必要な場合があります。たとえば、同じシンボルプロパティを使用して一意の識別子を表す2つの異なるオブジェクト型がアプリケーション内にあるとします。ファイルや大きなコードベースでシンボルを追跡するのは難しく、エラーを起こしやすくなります。そのため、ECMAScript6は、いつでもアクセスできるグローバルなシンボルレジストリを提供します。
 
-When you want to create a symbol to be shared, use the `Symbol.for()` method instead of calling the `Symbol()` method. The `Symbol.for()` method accepts a single parameter, which is a string identifier for the symbol you want to create. That parameter is also used as the symbol's description. For example:
+共有するシンボルを作成する場合は、`Symbol()`メソッドを呼び出す代わりに`Symbol.for()`メソッドを使用してください。`Symbol.for()`メソッドは、作成したいシンボルの文字列識別子である単一のパラメータを受け入れます。このパラメータは、シンボルの説明としても使用されます。例えば：
 
 ```js
 let uid = Symbol.for("uid");
@@ -94,7 +94,7 @@ console.log(object[uid]);       // "12345"
 console.log(uid);               // "Symbol(uid)"
 ```
 
-The `Symbol.for()` method first searches the global symbol registry to see if a symbol with the key `"uid"` exists. If so, the method returns the existing symbol. If no such symbol exists, then a new symbol is created and registered to the global symbol registry using the specified key. The new symbol is then returned. That means subsequent calls to `Symbol.for()` using the same key will return the same symbol, as follows:
+`Symbol.for()`メソッドは、まずグローバルシンボルレジストリを検索して、キー "uid"を持つシンボルが存在するかどうかを調べます。 そうである場合、メソッドは既存のシンボルを返します。 そのようなシンボルが存在しない場合、新しいシンボルが作成され、指定されたキーを使用してグローバルシンボルレジストリに登録されます。 新しいシンボルが返されます。 つまり、同じキーを使って`Symbol.for()`を呼び出すと、次のように同じシンボルが返されます：
 
 ```js
 let uid = Symbol.for("uid");
@@ -112,9 +112,9 @@ console.log(object[uid2]);      // "12345"
 console.log(uid2);              // "Symbol(uid)"
 ```
 
-In this example, `uid` and `uid2` contain the same symbol and so they can be used interchangeably. The first call to `Symbol.for()` creates the symbol, and the second call retrieves the symbol from the global symbol registry.
+この例では、`uid`と`uid2`には同じシンボルが含まれているので、それらは同じ意味で使用できます。 Symbol.for()への最初の呼び出しはシンボルを作成し、2番目の呼び出しはグローバルシンボルレジストリからシンボルを取得します。
 
-Another unique aspect of shared symbols is that you can retrieve the key associated with a symbol in the global symbol registry by calling the `Symbol.keyFor()` method. For example:
+共有シンボルのもう一つの特徴は、`Symbol.keyFor()`メソッドを呼び出すことによって、グローバルシンボルレジストリ内のシンボルに関連するキーを取得できることです。 例えば：
 
 ```js
 let uid = Symbol.for("uid");
@@ -127,15 +127,15 @@ let uid3 = Symbol("uid");
 console.log(Symbol.keyFor(uid3));   // undefined
 ```
 
-Notice that both `uid` and `uid2` return the `"uid"` key. The symbol `uid3` doesn't exist in the global symbol registry, so it has no key associated with it and `Symbol.keyFor()` returns `undefined`.
+`uid`と`uid2`の両方が``uid "`キーを返します。`uid3`シンボルはグローバルシンボルレジストリには存在しないため、関連するキーはなく、`Symbol.keyFor()`は`undefined`を返します。
 
-W> The global symbol registry is a shared environment, just like the global scope. That means you can't make assumptions about what is or is not already present in that environment. Use namespacing of symbol keys to reduce the likelihood of naming collisions when using third-party components. For example, jQuery code might use `"jquery."` to prefix all keys, for keys like `"jquery.element"` or similar.
+W>グローバルシンボルレジストリは、グローバルスコープと同様、共有環境です。つまり、その環境に何が存在しているのか、存在していないのかを前提にすることはできません。シンボルキーの名前空間を使用すると、サードパーティのコンポーネントを使用するときに名前の衝突の可能性を減らすことができます。たとえば、jQueryコードでは、すべてのキーの前に``jquery。 ''などを使用したり、``jquery.element ''などのキーを使用したりすることがあります。
 
-## Symbol Coercion
+## シンボル強制
 
-Type coercion is a significant part of JavaScript, and there's a lot of flexibility in the language's ability to coerce one data type into another. Symbols, however, are quite inflexible when it comes to coercion because other types lack a logical equivalent to a symbol. Specifically, symbols cannot be coerced into strings or numbers so that they cannot accidentally be used as properties that would otherwise be expected to behave as symbols.
+型強制はJavaScriptの重要な部分であり、あるデータ型を別の型に強制する能力には柔軟性があります。しかし、シンボルは、他のタイプがシンボルと論理的に等価でないため、強制的には柔軟性がありません。具体的には、シンボルを文字列または数字に強制変換することはできません。そうしないと、誤ってシンボルとして動作することが予想されるプロパティとして誤って使用されることはありません。
 
-The examples in this chapter have used `console.log()` to indicate the output for symbols, and that works because `console.log()` calls `String()` on symbols to create useful output. You can use `String()` directly to get the same result. For instance:
+この章の例では`console.log()`を使ってシンボルの出力を示しています。これは`console.log()`が有用な出力を生成するためにシンボル上で`String()`を呼び出すためです。`String()`を直接使用して同じ結果を得ることができます。例えば：
 
 ```js
 let uid = Symbol.for("uid"),
@@ -144,29 +144,29 @@ let uid = Symbol.for("uid"),
 console.log(desc);              // "Symbol(uid)"
 ```
 
-The `String()` function calls `uid.toString()` and the symbol's string description is returned. If you try to concatenate the symbol directly with a string, however, an error will be thrown:
+`String()`関数は`uid.toString()`を呼び出し、シンボルの文字列の説明が返されます。 ただし、シンボルを文字列と直接連結しようとすると、エラーがスローされます。
 
 ```js
 let uid = Symbol.for("uid"),
     desc = uid + "";            // error!
 ```
 
-Concatenating `uid` with an empty string requires that `uid` first be coerced into a string. An error is thrown when the coercion is detected, preventing its use in this manner.
+`uid`を空文字列に連結するには、`uid`を最初に強制的に文字列に変換する必要があります。 強制が検出されるとエラーがスローされ、このように使用されなくなります。
 
-Similarly, you cannot coerce a symbol to a number. All mathematical operators cause an error when applied to a symbol. For example:
+同様に、記号を数字に強制することもできません。 すべての数学演算子は、記号に適用するとエラーを引き起こします。 例えば：
 
 ```js
 let uid = Symbol.for("uid"),
     sum = uid / 1;            // error!
 ```
 
-This example attempts to divide the symbol by 1, which causes an error. Errors are thrown regardless of the mathematical operator used (logical operators do not throw an error because all symbols are considered equivalent to `true`, just like any other non-empty value in JavaScript).
+この例では、シンボルを1で除算しようとします。これはエラーの原因となります。 使用される数学演算子に関係なく、エラーがスローされます(論理演算子は、JavaScriptの空でない他の値と同様に、すべてのシンボルが`true`と同等と見なされるため、エラーをスローしません)。
 
-## Retrieving Symbol Properties
+## シンボルプロパティの取得
 
-The `Object.keys()` and `Object.getOwnPropertyNames()` methods can retrieve all property names in an object. The former method returns all enumerable property names, and the latter returns all properties regardless of enumerability. Neither method returns symbol properties, however, to preserve their ECMAScript 5 functionality. Instead, the `Object.getOwnPropertySymbols()` method was added in ECMAScript 6 to allow you to retrieve property symbols from an object.
+`Object.keys()`と`Object.getOwnPropertyNames()`メソッドは、オブジェクト内のすべてのプロパティ名を取り出すことができます。 前者のメソッドはすべての列挙可能なプロパティ名を返し、後者は列挙可能性に関係なくすべてのプロパティを返します。 ただし、どちらのメソッドもECMAScript5の機能を保持するためにシンボルプロパティを返しません。 代わりに、オブジェクトからプロパティシンボルを取得できるように、`Object.getOwnPropertySymbols()`メソッドがECMAScript6に追加されました。
 
-The return value of `Object.getOwnPropertySymbols()` is an array of own property symbols. For example:
+`Object.getOwnPropertySymbols()`の戻り値は、独自のプロパティシンボルの配列です。 例えば：
 
 ```js
 let uid = Symbol.for("uid");
@@ -181,53 +181,53 @@ console.log(symbols[0]);            // "Symbol(uid)"
 console.log(object[symbols[0]]);    // "12345"
 ```
 
-In this code, `object` has a single symbol property called `uid`. The array returned from `Object.getOwnPropertySymbols()` is an array containing just that symbol.
+このコードでは、`object`は`uid`という単一シンボルプロパティを持っています。`Object.getOwnPropertySymbols()`から返される配列は、そのシンボルだけを含む配列です。
 
-All objects start with zero own symbol properties, but objects can inherit symbol properties from their prototypes. ECMAScript 6 predefines several such properties, implemented using what are called well-known symbols.
+すべてのオブジェクトはゼロの独自のシンボルプロパティで始まりますが、オブジェクトはプロトタイプからシンボルプロパティを継承できます。 ECMAScript6は、よく知られているシンボルを使って実装されたいくつかのそのようなプロパティを事前定義しています。
 
-## Exposing Internal Operations with Well-Known Symbols
+## よく知られているシンボルを使った内部操作の公開
 
-A central theme for ECMAScript 5 was exposing and defining some of the "magic" parts of JavaScript, the parts that developers couldn't emulate at the time. ECMAScript 6 carries on that tradition by exposing even more of the previously internal logic of the language, primarily by using symbol prototype properties to define the basic behavior of certain objects.
+ECMAScript5の主なテーマは、JavaScriptの「魔法」部分の一部を公開し、開発者がその時点でエミュレートすることができなかった部分を定義していたことでした。 ECMAScript6は、従来、特定のオブジェクトの基本的な動作を定義するためにシンボルプロトタイプのプロパティを使用することによって、従来の内部ロジックをさらに露出させることでその伝統を継承しています。
 
-ECMAScript 6 has predefined symbols called *well-known symbols* that represent common behaviors in JavaScript that were previously considered internal-only operations. Each well-known symbol is represented by a property on the `Symbol` object, such as `Symbol.create`.
+ECMAScript6には、以前は内部のみの操作とみなされていたJavaScriptの一般的な動作を表す*よく知られているシンボル*と呼ばれる事前定義されたシンボルがあります。それぞれのよく知られているシンボルは`Symbol`オブジェクトのプロパティで表されます。たとえば、`Symbol.create`です。
 
-The well-known symbols are:
+よく知られているシンボルは次のとおりです。
 
-* `Symbol.hasInstance` - A method used by `instanceof` to determine an object's inheritance.
-* `Symbol.isConcatSpreadable` - A Boolean value indicating that `Array.prototype.concat()` should flatten the collection's elements if the collection is passed as a parameter to `Array.prototype.concat()`.
-* `Symbol.iterator` - A method that returns an iterator. (Iterators are covered in Chapter 7.)
-* `Symbol.match` - A method used by `String.prototype.match()` to compare strings.
-* `Symbol.replace` - A method used by `String.prototype.replace()` to replace substrings.
-* `Symbol.search` - A method used by `String.prototype.search()` to locate substrings.
-* `Symbol.species` - The constructor for making derived objects. (Derived objects are covered in Chapter 8.)
-* `Symbol.split` - A method used by `String.prototype.split()` to split up strings.
-* `Symbol.toPrimitive` - A method that returns a primitive value representation of an object.
-* `Symbol.toStringTag` - A string used by `Object.prototype.toString()` to create an object description.
-* `Symbol.unscopables` - An object whose properties are the names of object properties that should not be included in a `with` statement.
+*`Symbol.hasInstance`- オブジェクトの継承を判断するために`instanceof`によって使用されるメソッドです。
+*`Symbol.isConcatSpreadable`- コレクションが`Array.prototype.concat()`にパラメータとして渡された場合、`Array.prototype.concat()`がコレクションの要素を平坦化することを示すブール値です。
+*`Symbol.iterator`- イテレータを返すメソッドです。 (イテレータは第7章で説明しています)
+*`Symbol.match`-`String.prototype.match()`が文字列を比較するために使うメソッド。
+*`Symbol.replace`-`String.prototype.replace()`が部分文字列を置き換えるために使用するメソッドです。
+*`Symbol.search`-`String.prototype.search()`が部分文字列を見つけるために使うメソッドです。
+*`Symbol.species`- 派生オブジェクトを作成するためのコンストラクタです。 (派生オブジェクトについては第8章で説明しています)
+*`Symbol.split`-`String.prototype.split()`が文字列を分割するために使うメソッド。
+*`Symbol.toPrimitive`- オブジェクトのプリミティブな値表現を返すメソッドです。
+*`Symbol.toStringTag`- オブジェクト記述を作成するために`Object.prototype.toString()`によって使用される文字列。
+*`Symbol.unscopables`- プロパティが`with`ステートメントに含まれてはならないオブジェクトプロパティの名前であるオブジェクトです。
 
-Some commonly used well-known symbols are discussed in the following sections, while others are discussed throughout the rest of the book to keep them in the correct context.
+一般的に使用されているいくつかのよく知られているシンボルについては、以降のセクションで説明しますが、他のセクションでは正しいコンテキストでそれらを保つために説明します。
 
-I> Overwriting a method defined with a well-known symbol changes an ordinary object to an exotic object because this changes some internal default behavior. There is no practical impact to your code as a result, it just changes the way the specification describes the object.
+I>よく知られているシンボルで定義されたメソッドを上書きすると、通常のオブジェクトがエキゾチックなオブジェクトに変更されます。これは内部のデフォルト動作を変更するためです。その結果、コードに実際的な影響はなく、仕様がオブジェクトを記述する方法が変わります。
 
-### The Symbol.hasInstance Property
+### Symbol.hasInstanceプロパティ
 
-Every function has a `Symbol.hasInstance` method that determines whether or not a given object is an instance of that function. The method is defined on `Function.prototype` so that all functions inherit the default behavior for the `instanceof` property and the method is nonwritable and nonconfigurable as well as nonenumerable, to ensure it doesn't get overwritten by mistake.
+すべての関数には、指定されたオブジェクトがその関数のインスタンスであるかどうかを判断する`Symbol.hasInstance`メソッドがあります。メソッドは`Function.prototype`で定義され、すべての関数が`instanceof`プロパティのデフォルトの振る舞いを継承し、メソッドは書き換え不可能で、設定不可能で非数え込みで誤って上書きされないようにします。
 
-The `Symbol.hasInstance` method accepts a single argument: the value to check. It returns true if the value passed is an instance of the function. To understand how `Symbol.hasInstance` works, consider the following code:
+`Symbol.hasInstance`メソッドは1つの引数、すなわちチェックする値を受け取ります。渡された値が関数のインスタンスであれば真を返します。`Symbol.hasInstance`の仕組みを理解するには、次のコードを考えてみましょう：
 
 ```js
 obj instanceof Array;
 ```
 
-This code is equivalent to:
+このコードは次のものと同等です。
 
 ```js
 Array[Symbol.hasInstance](obj);
 ```
 
-ECMAScript 6 essentially redefined the `instanceof` operator as shorthand syntax for this method call. And now that there's a method call involved, you can actually change how `instanceof` works.
+本質的に、ECMAScript6はこのメソッド呼び出しの略式構文として`instanceof`演算子を再定義しました。 メソッド呼び出しが含まれているので、`instanceof`の動作方法を実際に変更することができます。
 
-For instance, suppose you want to define a function that claims no object as an instance. You can do so by hardcoding the return value of `Symbol.hasInstance` to `false`, such as:
+たとえば、オブジェクトをインスタンスとして要求しない関数を定義するとします。`Symbol.hasInstance`の戻り値を`false`にハードコーディングすることによって、そうすることができます：
 
 ```js
 function MyObject() {
@@ -245,9 +245,9 @@ let obj = new MyObject();
 console.log(obj instanceof MyObject);       // false
 ```
 
-You must use `Object.defineProperty()` to overwrite a nonwritable property, so this example uses that method to overwrite the `Symbol.hasInstance` method with a new function. The new function always returns `false`, so even though `obj` is actually an instance of the `MyObject` class, the `instanceof` operator returns `false` after the `Object.defineProperty()` call.
+書き込み不可能なプロパティを上書きするにはObject.defineProperty()を使用する必要があります。この例では、このメソッドを使用して、`Symbol.hasInstance`メソッドを新しい関数で上書きします。 新しい関数は常に`false`を返すので、`obj`が実際には`MyObject`クラスのインスタンスであっても、`instanceof`演算子は`Object.defineProperty()`の後に`false`を返します。
 
-Of course, you can also inspect the value and decide whether or not a value should be considered an instance based on any arbitrary condition. For instance, maybe numbers with values between 1 and 100 are to be considered instances of a special number type. To achieve that behavior, you might write code like this:
+もちろん、値を調べて、任意の条件に基づいて値をインスタンスとみなす必要があるかどうかを判断することもできます。 たとえば、1〜100の値を持つ数値は、特殊な数値型のインスタンスと見なされることがあります。 そのような振る舞いを実現するには、次のようなコードを記述します。
 
 ```js
 function SpecialNumber() {
@@ -267,13 +267,13 @@ console.log(two instanceof SpecialNumber);    // true
 console.log(zero instanceof SpecialNumber);   // false
 ```
 
-This code defines a `Symbol.hasInstance` method that returns `true` if the value is an instance of `Number` and also has a value between 1 and 100. Thus, `SpecialNumber` will claim `two` as an instance even though there is no directly defined relationship between the `SpecialNumber` function and the `two` variable. Note that the left operand to `instanceof` must be an object to trigger the `Symbol.hasInstance` call, as nonobjects cause `instanceof` to simply return `false` all the time.
+このコードは、値が`Number`のインスタンスであり、値が1から100までの場合は`true`を返す`Symbol.hasInstance`メソッドを定義しています。したがって、`SpecialNumber`は``SpecialNumber`関数と`two`変数の間に直接定義された関係はありません。`instanceof`への左オペランドは、非オブジェクトが`false`を単に返すようにするため、`Symbol.hasInstance`呼び出しをトリガーするオブジェクトでなければならないことに注意してください。
 
-W> You can also overwrite the default `Symbol.hasInstance` property for all builtin functions such as the `Date` and `Error` functions. This isn't recommended, however, as the effects on your code can be unexpected and confusing. It's a good idea to only overwrite `Symbol.hasInstance` on your own functions and only when necessary.
+W>また、`Date`関数や`Error`関数のようなすべての組み込み関数の既定の`Symbol.hasInstance`プロパティを上書きすることもできます。 ただし、コードへの影響が予想外に混乱する可能性があるため、これはお勧めしません。`Symbol.hasInstance`はあなた自身の関数で、必要な時にだけ上書きすることをお勧めします。
 
 ### The Symbol.isConcatSpreadable Symbol
 
-JavaScript arrays have a `concat()` method designed to concatenate two arrays together. Here's how that method is used:
+JavaScript配列には、2つの配列を連結するための`concat()`メソッドがあります。 この方法を使用する方法は次のとおりです。
 
 ```js
 let colors1 = [ "red", "green" ],
@@ -283,7 +283,7 @@ console.log(colors2.length);    // 4
 console.log(colors2);           // ["red","green","blue","black"]
 ```
 
-This code concatenates a new array to the end of `colors1` and creates `colors2`, a single array with all items from both arrays. However, the `concat()` method can also accept nonarray arguments and, in that case, those arguments are simply added to the end of the array. For example:
+このコードは、新しい配列を`colors1`の終わりに連結し、`colors2`を作成します。これは、両方の配列のすべての項目を持つ単一の配列です。 しかし、`concat()`メソッドは、非配列引数を受け入れることもできます。その場合、それらの引数は単純に配列の最後に追加されます。 例えば：
 
 ```js
 let colors1 = [ "red", "green" ],
@@ -293,9 +293,9 @@ console.log(colors2.length);    // 5
 console.log(colors2);           // ["red","green","blue","black","brown"]
 ```
 
-Here, the extra argument `"brown"` is passed to `concat()` and it becomes the fifth item in the `colors2` array. Why is an array argument treated differently than a string argument? The JavaScript specification says that arrays are automatically split into their individual items and all other types are not. Prior to ECMAScript 6, there was no way to adjust this behavior.
+ここで余分な引数``brown "は`concat()`に渡され、`colors2`配列の5番目の項目になります。 なぜ配列引数は文字列引数とは違って扱われますか？ JavaScriptの仕様では、配列は自動的に個々のアイテムに分割され、他のすべてのタイプは自動的に分割されません。 ECMAScript6以前は、この動作を調整する方法がありませんでした。
 
-The `Symbol.isConcatSpreadable` property is a boolean value indicating that an object has a `length` property and numeric keys, and that its numeric property values should be added individually to the result of a `concat()` call. Unlike other well-known symbols, this symbol property doesn't appear on any standard objects by default. Instead, the symbol is available as a way to augment how `concat()` works on certain types of objects, effectively short-circuiting the default behavior. You can define any type to behave like arrays do in a `concat()` call, like this:
+`Symbol.isConcatSpreadable`プロパティは、オブジェクトが`length`プロパティと数値キーを持ち、数値プロパティ値が`concat()`呼び出しの結果に個別に追加されるべきであることを示すブール値です。 他のよく知られているシンボルとは異なり、このシンボルプロパティはデフォルトでは標準オブジェクトには表示されません。 代わりに、このシンボルは、`concat()`が特定のタイプのオブジェクトでどのように動作して、デフォルト動作を効果的に短絡するかを補う方法として利用できます。 次のように`concat()`コールで配列のように振る舞うような型を定義することができます：
 
 ```js
 let collection = {
@@ -311,31 +311,31 @@ console.log(messages.length);    // 3
 console.log(messages);           // ["Hi","Hello","world"]
 ```
 
-The `collection` object in this example is set up to look like an array: it has a `length` property and two numeric keys. The `Symbol.isConcatSpreadable` property is set to `true` to indicate that the property values should be added as individual items to an array. When `collection` is passed to the `concat()` method, the resulting array has `"Hello"` and `"world"` as separate items after the `"Hi"` element.
+この例の`collection`オブジェクトは配列のように設定されています：`length`プロパティと2つの数値キーを持っています。`Symbol.isConcatSpreadable`プロパティは`true`に設定され、プロパティ値を個々の項目として配列に追加する必要があることを示します。`collection`が`concat()`メソッドに渡されると、結果の配列は``"Hi"`要素の後に別々の項目として``"Hello"`と``"world"`を持ちます。
 
-I> You can also set `Symbol.isConcatSpreadable` to `false` on array subclasses to prevent items from being separated by `concat()` calls. Subclassing is discussed in Chapter 8.
+I>配列のサブクラスで`Symbol.isConcatSpreadable`を`false`に設定して、`concat()`呼び出しで項目が区切られないようにすることもできます。サブクラス化については、第8章で説明します。
 
-### The Symbol.match, Symbol.replace, Symbol.search, and Symbol.split Symbols
+### Symbol.match、Symbol.replace、Symbol.search、Symbol.splitの各シンボル
 
-Strings and regular expressions have always had a close relationship in JavaScript. The string type, in particular, has several methods that accept regular expressions as arguments:
+JavaScriptでは文字列と正規表現は常に密接な関係にあります。特に、文字列型には、正規表現を引数として受け入れるいくつかのメソッドがあります。
 
-* `match(regex)` - Determines whether the given string matches a regular expression
-* `replace(regex, replacement)` - Replaces regular expression matches with a `replacement`
-* `search(regex)` - Locates a regular expression match inside the string
-* `split(regex)` - Splits a string into an array on a regular expression match
+*`match(regex)`- 与えられた文字列が正規表現と一致するかどうかを判定します
+*`replace(regex、replacement)`- 正規表現のマッチを`replacement`に置き換えます。
+*`search(regex)`- 文字列の中で正規表現のマッチを探します。
+*`split(regex)`- 文字列を正規表現のマッチで配列に分割する
 
-Prior to ECMAScript 6, the way these methods interacted with regular expressions was hidden from developers, leaving no way to mimic regular expressions using developer-defined objects. ECMAScript 6 defines four symbols that correspond to these four methods, effectively outsourcing the native behavior to the `RegExp` builtin object.
+ECMAScript6より前では、これらのメソッドが正規表現とやりとりする方法は開発者から隠されていたため、開発者定義のオブジェクトを使って正規表現を模倣する方法はありませんでした。 ECMAScript6では、これらの4つのメソッドに対応する4つのシンボルが定義され、ネイティブビヘイビアを`RegExp`組み込みオブジェクトにアウトソースします。
 
-The `Symbol.match`, `Symbol.replace`, `Symbol.search`, and `Symbol.split` symbols represent methods on the regular expression argument that should be called on the first argument to the `match()` method, the `replace()` method, the `search()` method, and the `split()` method, respectively. The four symbol properties are defined on `RegExp.prototype` as the default implementation that the string methods should use.
+`Symbol.match`、`Symbol.replace`、`Symbol.search`、そして`Symbol.split`の記号は正規表現の引数のメソッドを表します。これは`match()`メソッドの最初の引数で呼び出されます。`replace()`メソッド、`search()`メソッド、`split()`メソッドをそれぞれ呼びます。 4つのシンボルプロパティは、文字列メソッドが使用すべきデフォルトの実装として`RegExp.prototype`で定義されています。
 
-Knowing this, you can create an object to use with the string methods in a way that is similar to regular expressions. To do, you can use the following symbol functions in code:
+これを知ることで、文字列メソッドで使用するオブジェクトを正規表現に似た方法で作成できます。これを行うには、コードで次のシンボル関数を使用できます。
 
-* `Symbol.match` - A function that accepts a string argument and returns an array of matches, or `null` if no match is found.
-* `Symbol.replace` - A function that accepts a string argument and a replacement string, and returns a string.
-* `Symbol.search` - A function that accepts a string argument and returns the numeric index of the match, or -1 if no match is found.
-* `Symbol.split` - A function that accepts a string argument and returns an array containing pieces of the string split on the match.
+*`Symbol.match`- 文字列の引数を受け取り、一致の配列を返す関数。一致するものが見つからない場合は`null`を返します。
+*`Symbol.replace`- 文字列引数と置換文字列を受け取り、文字列を返す関数です。
+*`Symbol.search`- 文字列の引数を受け取り、一致の数値インデックスを返す関数。一致するものが見つからなければ-1を返します。
+*`Symbol.split`- 文字列の引数を受け取り、その文字列を含む配列を返します。
 
-The ability to define these properties on an object allows you to create objects that implement pattern matching without regular expressions and use them in methods that expect regular expressions. Here's an example that shows these symbols in action:
+オブジェクトにこれらのプロパティを定義することで、正規表現を使用しないパターンマッチングを実装し、正規表現を必要とするメソッドで使用するオブジェクトを作成できます。実際にこれらのシンボルが表示されている例を次に示します。
 
 ```js
 // effectively equivalent to /^.{10}$/
@@ -383,33 +383,33 @@ console.log(split1);            // ["Hello world"]
 console.log(split2);            // ["", ""]
 ```
 
-The `hasLengthOf10` object is intended to work like a regular expression that matches whenever the string length is exactly 10. Each of the four methods on `hasLengthOf10` is implemented using the appropriate symbol, and then the corresponding methods on two strings are called. The first string, `message1`, has 11 characters and so it will not match; the second string, `message2`, has 10 characters and so it will match. Despite not being a regular expression, `hasLengthOf10` is passed to each string method and used correctly due to the additional methods.
+`hasLengthOf10`オブジェクトは、文字列の長さが正確に10になるたびに一致する正規表現のように動作します。`hasLengthOf10`の4つのメソッドのそれぞれは、適切なシンボルを使用して実装され、2つの文字列の対応するメソッドが呼び出されます。最初の文字列`message1`は11文字であるため、一致しません。 2番目の文字列`message2`は10文字であるため、一致します。正規表現ではないにもかかわらず、`hasLengthOf10`は各文字列メソッドに渡され、追加のメソッドのために正しく使用されます。
 
-While this is a simple example, the ability to perform more complex matches than are currently possible with regular expressions opens up a lot of possibilities for custom pattern matchers.
+これは簡単な例ですが、現在のところ正規表現で可能なより複雑なマッチを実行する能力は、カスタムパターンマッチャーの可能性を広げています。
 
-### The Symbol.toPrimitive Method
+### Symbol.toPrimitiveメソッド
 
-JavaScript frequently attempts to convert objects into primitive values implicitly when certain operations are applied. For instance, when you compare a string to an object using the double equals (`==`) operator, the object is converted into a primitive value before comparing. Exactly what primitive value should be used was previously an internal operation, but ECMAScript 6 exposes that value (making it changeable) through the `Symbol.toPrimitive` method.
+JavaScriptは、特定の操作が適用されると、オブジェクトをプリミティブ値に暗黙的に変換しようとします。たとえば、文字列をdouble equals(`==`)演算子を使用してオブジェクトと比較すると、オブジェクトは比較前にプリミティブ値に変換されます。正確にどのプリミティブな値を使用すべきかは以前は内部操作でしたが、ECMAScript6は`Symbol.toPrimitive`メソッドを通してその値を公開しました(変更可能にしました)。
 
-The `Symbol.toPrimitive` method is defined on the prototype of each standard type and prescribes what should happen when the object is converted into a primitive. When a primitive conversion is needed, `Symbol.toPrimitive` is called with a single argument, referred to as `hint` in the specification. The `hint` argument is one of three string values. If `hint` is `"number"` then `Symbol.toPrimitive` should return a number. If `hint` is `"string"` then a string should be returned, and if it's `"default"` then the operation has no preference as to the type.
+`Symbol.toPrimitive`メソッドは、各標準型のプロトタイプ上で定義され、オブジェクトがプリミティブに変換されるときに何が起こるべきかを規定します。プリミティブ変換が必要なときは、`Symbol.toPrimitive`が単一の引数で呼び出されます。これは、仕様では`hint`と呼ばれます。`hint`引数は、3つの文字列値のうちの1つです。`hint`が``number"`ならば、`Symbol.toPrimitive`は数値を返さなければなりません。`hint`が``string '`ならば、文字列が返されなければならず、``default'`ならば、操作はその型に関して優先度を持たない。
 
-For most standard objects, number mode has the following behaviors, in order by priority:
+ほとんどの標準オブジェクトでは、数値モードには次のような動作が優先度順に適用されます。
 
-1. Call the `valueOf()` method, and if the result is a primitive value, return it.
-1. Otherwise, call the `toString()` method, and if the result is a primitive value, return it.
-1. Otherwise, throw an error.
+1.`valueOf()`メソッドを呼び出し、結果がプリミティブな値であればそれを返します。
+1.それ以外の場合は、`toString()`メソッドを呼び出し、結果がプリミティブな値であればそれを返します。
+1.それ以外の場合は、エラーを投げます。
 
-Similarly, for most standard objects, the behaviors of string mode have the following priority:
+同様に、ほとんどの標準オブジェクトでは、文字列モードの動作には次の優先順位があります。
 
-1. Call the `toString()` method, and if the result is a primitive value, return it.
-1. Otherwise, call the `valueOf()` method, and if the result is a primitive value, return it.
-1. Otherwise, throw an error.
+1.`toString()`メソッドを呼び出し、結果がプリミティブな値であればそれを返します。
+1.それ以外の場合は、`valueOf()`メソッドを呼び出し、結果がプリミティブ値であればそれを返します。
+1.それ以外の場合は、エラーを投げます。
 
-In many cases, standard objects treat default mode as equivalent to number mode (except for `Date`, which treats default mode as equivalent to string mode). By defining an `Symbol.toPrimitive` method, you can override these default coercion behaviors.
+多くの場合、標準オブジェクトはデフォルトモードを数値モードと同じように扱います(デフォルトモードを文字列モードと同じものとして扱う`Date`を除く)。`Symbol.toPrimitive`メソッドを定義することで、これらのデフォルトの強制動作を上書きすることができます。
 
-I> Default mode is only used for the `==` operator, the `+` operator, and when passing a single argument to the `Date` constructor. Most operations use string or number mode.
+I>デフォルトモードは、`==`演算子、`+`演算子、および`Date`コンストラクタに単一の引数を渡す場合にのみ使用されます。ほとんどの操作では、文字列モードまたは数値モードが使用されます。
 
-To override the default conversion behaviors, use `Symbol.toPrimitive` and assign a function as its value. For example:
+デフォルトの変換動作をオーバーライドするには、`Symbol.toPrimitive`を使用し、その値として関数を割り当てます。例えば：
 
 ```js
 function Temperature(degrees) {
@@ -437,19 +437,19 @@ console.log(freezing / 2);              // 16
 console.log(String(freezing));          // "32°"
 ```
 
-This script defines a `Temperature` constructor and overrides the default `Symbol.toPrimitive` method on the prototype. A different value is returned depending on whether the `hint` argument indicates string, number, or default mode (the `hint` argument is filled in by the JavaScript engine). In string mode, the `Symbol.toPrimitive` method returns the temperature with the Unicode degrees symbol. In number mode, it returns just the numeric value, and in default mode, it appends the word "degrees" after the number.
+このスクリプトは`Temperature`コンストラクタを定義し、プロトタイプのデフォルトの`Symbol.toPrimitive`メソッドをオーバーライドします。`hint`引数が文字列、数字、またはデフォルトモード(JavaScriptエンジンによって`hint`引数が埋められる)を示すかどうかによって、異なる値が返されます。文字列モードでは、`Symbol.toPrimitive`メソッドはUnicode度記号で温度を返します。数値モードでは、数値だけを返し、デフォルトモードでは数値の後ろに`degrees`という語を追加します。
 
-Each of the log statements triggers a different `hint` argument value. The `+` operator triggers default mode by setting `hint` to `"default"`, the `/` operator triggers number mode by setting `hint` to `"number"`, and the `String()` function triggers string mode by setting `hint` to `"string"`. Returning different values for all three modes is possible, it's much more common to set the default mode to be the same as string or number mode.
+それぞれのログステートメントは、異なる`hint`引数値をトリガーします。`+`演算子は`hint`を``default``に設定することでデフォルトモードを起動し、`/`演算子は``hint``を``"number"`に設定して数値モードを起動し、`String()`関数は文字列`hint`を``string '`に設定することで、モードを有効にします。 3つのモードすべてに対して異なる値を返すことが可能です。デフォルトモードを文字列モードまたは数字モードと同じにする方がはるかに一般的です。
 
-### The Symbol.toStringTag Symbol
+### Symbol.toStringTagシンボル
 
-One of the most interesting problems in JavaScript has been the availability of multiple global execution environments. This occurs in web browsers when a page includes an iframe, as the page and the iframe each have their own execution environments. In most cases, this isn't a problem, as data can be passed back and forth between the environments with little cause for concern. The problem arises when trying to identify what type of object you're dealing with after the object has been passed between different objects.
+JavaScriptの最も興味深い問題の1つは、複数のグローバル実行環境が利用できることです。これは、ページにiframeが含まれている場合、ページとiframeにそれぞれ独自の実行環境があるため、Webブラウザで発生します。ほとんどの場合、これは問題ではありません。データが懸念する必要がほとんどない環境間を行き来できるためです。この問題は、オブジェクトが異なるオブジェクト間を渡された後に扱うオブジェクトのタイプを識別しようとするときに発生します。
 
-The canonical example of this issue is passing an array from an iframe into the containing page or vice-versa. In ECMAScript 6 terminology, the iframe and the containing page each represent a different *realm* which is an execution environment for JavaScript. Each realm has its own global scope with its own copy of global objects. In whichever realm the array is created, it is definitely an array. When it's passed to a different realm, however, an `instanceof Array` call returns `false` because the array was created with a constructor from a different realm and `Array` represents the constructor in the current realm.
+この問題の標準的な例は、iframeから配列を含むページに配列を渡すことです。 ECMAScript6の用語では、iframeとそのページを含むページはそれぞれ、JavaScriptの実行環境である別の* realm *を表しています。各レルムには、グローバルオブジェクトのコピーを持つ独自のグローバルスコープがあります。配列が作成されるどの領域でも、配列は間違いありません。しかし、別の領域に渡されたとき、配列は異なる領域のコンストラクタで作成され、`Array`は現在の領域のコンストラクタを表すため、`instanceof Array`呼び出しは`false`を返します。
 
-#### A Workaround for the Identification Problem
+#### 識別問題の回避策
 
-Faced with this problem, developers soon found a good way to identify arrays. They discovered that by calling the standard `toString()` method on the object, a predictable string was always returned. Thus, many JavaScript libraries began including a function like this:
+この問題に直面して、開発者はすぐに配列を識別する良い方法を見つけました。彼らは、オブジェクトの標準の`toString()`メソッドを呼び出すことによって、予測可能な文字列が常に返されることを発見しました。したがって、多くのJavaScriptライブラリは、次のような関数を含むようになりました。
 
 ```js
 function isArray(value) {
@@ -459,11 +459,11 @@ function isArray(value) {
 console.log(isArray([]));   // true
 ```
 
-This may look a bit roundabout, but it worked quite well for identifying arrays in all browsers. The `toString()` method on arrays isn't useful for identifying an object because it returns a string representation of the items the object contains. But the `toString()` method on `Object.prototype` had a quirk: it included internally-defined name called `[[Class]]` in the returned result. Developers could use this method on an object to retrieve what the JavaScript environment thought the object's data type was.
+これは少し迂回して見えるかもしれませんが、すべてのブラウザで配列を識別するのには非常にうまく機能しました。配列の`toString()`メソッドは、オブジェクトに含まれる項目の文字列表現を返すため、オブジェクトを識別するのには役に立ちません。しかし、`Object.prototype`の`toString()`メソッドには奇妙なものがありました。返された結果に`[[Class]]`という内部定義の名前が含まれていました。開発者はオブジェクトに対してこのメ​​ソッドを使用して、JavaScript環境がオブジェクトのデータ型であると考える内容を取得できます。
 
-Developers quickly realized that since there was no way to change this behavior, it was possible to use the same approach to distinguish between native objects and those created by developers. The most important case of this was the ECMAScript 5 `JSON` object.
+開発者は、この動作を変更する方法がないため、ネイティブオブジェクトと開発者によって作成されたオブジェクトを区別するために同じアプローチを使用することが可能であることをすぐに認識しました。これの最も重要なケースは、ECMAScript5の`JSON`オブジェクトでした。
 
-Prior to ECMAScript 5, many developers used Douglas Crockford's *json2.js*, which creates a global `JSON` object. As browsers started to implement the `JSON` global object, figuring out whether the global `JSON` was provided by the JavaScript environment itself or through some other library became necessary. Using the same technique I showed with the `isArray()` function, many developers created functions like this:
+ECMAScript5以前では、多くの開発者がDouglas Crockfordの* json2.js *を使って、グローバルな`JSON`オブジェクトを作成していました。ブラウザーが`JSON`グローバルオブジェクトを実装し始めたので、グローバルな`JSON`がJavaScript環境自体によって提供されたのか、それとも他のライブラリーから提供されたのかがわかりました。`isArray()`関数で示したのと同じテクニックを使って、多くの開発者が次のような関数を作成しました：
 
 ```js
 function supportsNativeJSON() {
@@ -472,13 +472,13 @@ function supportsNativeJSON() {
 }
 ```
 
-The same characteristic of `Object.prototype` that allowed developers to identify arrays across iframe boundaries also provided a way to tell if `JSON` was the native `JSON` object or not. A non-native `JSON` object would return `[object Object]` while the native version returned `[object JSON]` instead. This approach became the de facto standard for identifying native objects.
+開発者がiframe境界を越えて配列を識別できるようにする`Object.prototype`の同じ特性は、`JSON`がネイティブな`JSON`オブジェクトであるかどうかを判断する方法も提供しました。 非ネイティブの`JSON`オブジェクトはネイティブバージョンが`[object JSON]`を返す間に`[object Object]`を返します。 このアプローチは、ネイティブオブジェクトを識別するための事実上の標準になりました。
 
-#### The ECMAScript 6 Answer
+#### ECMAScript6 Answer
 
-ECMAScript 6 redefines this behavior through the `Symbol.toStringTag` symbol. This symbol represents a property on each object that defines what value should be produced when `Object.prototype.toString.call()` is called on it. For an array, the value that function returns is explained by storing `"Array"` in the `Symbol.toStringTag` property.
+ECMAScript6は、この動作を`Symbol.toStringTag`シンボルを通して再定義します。 このシンボルは、`Object.prototype.toString.call()`が呼び出されたときに生成される値を定義する各オブジェクトのプロパティを表します。 配列の場合、関数が返す値は``Array "`を`Symbol.toStringTag`プロパティに格納することで説明されます。
 
-Likewise, you can define the `Symbol.toStringTag` value for your own objects:
+同様に、あなた自身のオブジェクトの`Symbol.toStringTag`値を定義することができます：
 
 ```js
 function Person(name) {
@@ -493,7 +493,7 @@ console.log(me.toString());                         // "[object Person]"
 console.log(Object.prototype.toString.call(me));    // "[object Person]"
 ```
 
-In this example, a `Symbol.toStringTag` property is defined on `Person.prototype` to provide the default behavior for creating a string representation. Since `Person.prototype` inherits the `Object.prototype.toString()` method, the value returned from `Symbol.toStringTag` is also used when calling the `me.toString()` method. However, you can still define your own `toString()` method that provides a different behavior without affecting the use of the `Object.prototype.toString.call()` method. Here's how that might look:
+この例では、`Person.prototype`に`Symbol.toStringTag`プロパティが定義され、文字列表現を作成するためのデフォルトの動作を提供します。`Person.prototype`は`Object.prototype.toString()`メソッドを継承しているので、`Symbol.toStringTag`から返された値は`me.toString()`メソッドを呼び出すときにも使われます。 しかし、`Object.prototype.toString.call()`メソッドの使用に影響を与えずに、異なる動作を提供する独自の`toString()`メソッドを定義することはできます。 それがどのように見えるかは次のとおりです。
 
 ```js
 function Person(name) {
@@ -512,11 +512,11 @@ console.log(me.toString());                         // "Nicholas"
 console.log(Object.prototype.toString.call(me));    // "[object Person]"
 ```
 
-This code defines `Person.prototype.toString()` to return the value of the `name` property. Since `Person` instances no longer inherit the `Object.prototype.toString()` method, calling `me.toString()` exhibits a different behavior.
+このコードは、`Person.prototype.toString()`を定義して`name`プロパティの値を返します。`Person`インスタンスは`Object.prototype.toString()`メソッドを継承しないので、`me.toString()`を呼び出すことで別の振る舞いをします。
 
-I> All objects inherit `Symbol.toStringTag` from `Object.prototype` unless otherwise specified. The string `"Object"` is the default property value.
+I>他の指定がない限り、すべてのオブジェクトは`Object.prototype`から`Symbol.toStringTag`を継承します。 文字列``Object '`はデフォルトのプロパティ値です。
 
-There is no restriction on which values can be used for `Symbol.toStringTag` on developer-defined objects. For example, nothing prevents you from using `"Array"` as the value of the `Symbol.toStringTag` property, such as:
+開発者が定義したオブジェクトの`Symbol.toStringTag`にどの値を使用できるかは制限されていません。 例えば、``Array``を`Symbol.toStringTag`プロパティの値として使用することを妨げるものはありません：
 
 ```js
 function Person(name) {
@@ -535,9 +535,9 @@ console.log(me.toString());                         // "Nicholas"
 console.log(Object.prototype.toString.call(me));    // "[object Array]"
 ```
 
-The result of calling `Object.prototype.toString()` is `"[object Array]"` in this code, which is the same result you'd get from an actual array. This highlights the fact that `Object.prototype.toString()` is no longer a completely reliable way of identifying an object's type.
+`Object.prototype.toString()`の呼び出しの結果は、このコードでは``[object Array]``です。これは実際の配列から得られる結果と同じです。 これは、`Object.prototype.toString()`がオブジェクトの型を識別する完全に信頼できる方法ではなくなったという事実を強調しています。
 
-Changing the string tag for native objects is also possible. Just assign to `Symbol.toStringTag` on the object's prototype, like this:
+ネイティブオブジェクトの文字列タグを変更することも可能です。 オブジェクトのプロトタイプの`Symbol.toStringTag`に以下のように代入するだけです：
 
 ```js
 Array.prototype[Symbol.toStringTag] = "Magic";
@@ -547,17 +547,17 @@ let values = [];
 console.log(Object.prototype.toString.call(values));    // "[object Magic]"
 ```
 
-Even though `Symbol.toStringTag` is overwritten for arrays in this example, the call to `Object.prototype.toString()` results in `"[object Magic]"` instead. While I recommended not changing built-in objects in this way, there's nothing in the language that forbids doing so.
+この例では`Symbol.toStringTag`を配列に上書きしていますが、`Object.prototype.toString()`を呼び出すと``[object Magic]」という結果になります。私はこのように組み込みのオブジェクトを変更しないことをお勧めしましたが、そうするのを禁じる言語は何もありません。
 
-### The Symbol.unscopables Symbol
+### Symbol.unscopablesシンボル
 
-The `with` statement is one of the most controversial parts of JavaScript. Originally designed to avoid repetitive typing, the `with` statement later became roundly criticized for making code harder to understand and for negative performance implications as well as being error-prone.
+`with`ステートメントは、JavaScriptの最も議論の余地がある部分の1つです。もともと繰り返しタイピングを避けるように設計された`with`ステートメントは、後でコードを理解しにくくしたり、パフォーマンスに悪影響を及ぼしたり、エラーを起こしやすいようにするために批判的になりました。
 
-As a result, the `with` statement is not allowed in strict mode; that restriction also affects classes and modules, which are strict mode by default and have no opt-out.
+その結果、strictモードでは`with`ステートメントは使用できません。その制限は、クラスとモジュールにも影響します。クラスとモジュールは、デフォルトでは厳密モードであり、オプトアウトはありません。
 
-While future code will undoubtedly not use the `with` statement, ECMAScript 6 still supports `with` in nonstrict mode for backwards compatibility and, as such, had to find ways to allow code that does use `with` to continue to work properly.
+将来のコードは間違いなく`with`ステートメントを使用しませんが、ECMAScript6は下位互換性のために非厳密モードで`with`をサポートしていますので、`with`を使用するコードが適切に動作し続けるようにする方法を見つけなければなりません。
 
-To understand the complexity of this task, consider the following code:
+このタスクの複雑さを理解するには、次のコードを検討してください。
 
 ```js
 let values = [1, 2, 3],
@@ -572,14 +572,14 @@ with(colors) {
 console.log(colors);    // ["red", "green", "blue", "black", 1, 2, 3]
 ```
 
-In this example, the two calls to `push()` inside the `with` statement are equivalent to `colors.push()` because the `with` statement added `push` as a local binding. The `color` reference refers to the variable created outside the `with` statement, as does the `values` reference.
+この例では、`with`ステートメント内の`push()`への2回の呼び出しは、`with`ステートメントがローカルバインディングとして`push`を追加したので`colors.push()`と同等です。`color`リファレンスは、`values`リファレンスと同様に、`with`ステートメントの外で作成された変数を参照します。
 
-But ECMAScript 6 added a `values` method to arrays. (The `values` method is discussed in detail in Chapter 7, "Iterators and Generators.") That would mean in an ECMAScript 6 environment, the `values` reference inside the `with` statement should refer not to the local variable `values`, but to the array's `values` method, which would break the code. This is why the `Symbol.unscopables` symbol exists.
+しかし、ECMAScript6は配列に`values`メソッドを追加しました。 (`values`メソッドについては、第7章「反復子とジェネレータ」で詳しく説明しています)。ECMAScript6環境では、`with`ステートメント内の`values`参照はローカル変数`values`を呼び出すだけではなく、配列の`values`メソッドに渡されます。これが`Symbol.unscopables`シンボルが存在する理由です。
 
-The `Symbol.unscopables` symbol is used on `Array.prototype` to indicate which properties shouldn't create bindings inside of a `with` statement. When present, `Symbol.unscopables` is an object whose keys are the identifiers to omit from `with` statement bindings and whose values are `true` to enforce the block. Here's the default `Symbol.unscopables` property for arrays:
+`Symbol.unscopables`シンボルは`Array.prototype`で`with`ステートメントの中でどのプロパティがバインディングを作成すべきでないかを示すために使われます。存在する場合、`Symbol.unscopables`は`with`ステートメントバインディングを省略するための識別子とブロックを強制するための値が`true`のキーを持つオブジェクトです。配列のデフォルトの`Symbol.unscopables`プロパティは次のとおりです：
 
 ```js
-// built into ECMAScript 6 by default
+// built into ECMAScript6 by default
 Array.prototype[Symbol.unscopables] = Object.assign(Object.create(null), {
     copyWithin: true,
     entries: true,
@@ -591,18 +591,18 @@ Array.prototype[Symbol.unscopables] = Object.assign(Object.create(null), {
 });
 ```
 
-The `Symbol.unscopables` object has a `null` prototype, which is created by the `Object.create(null)` call, and contains all of the new array methods in ECMAScript 6. (These methods are covered in detail in Chapter 7, "Iterators and Generators," and Chapter 9, "Arrays.") Bindings for these methods are not created inside a `with` statement, allowing old code to continue working without any problem.
+`Symbol.unscopables`オブジェクトには、`Object.create(null)`呼び出しで作成された`null`プロトタイプがあり、ECMAScript6の新しい配列メソッドがすべて含まれています(これらのメソッドについては、 7、 "Iterators and Generators"、第9章、 "配列")これらのメソッドのバインディングは`with`ステートメントの内部では作成されないので、古いコードを問題なくそのまま使用できます。
 
-In general, you shouldn't need to define `Symbol.unscopables` for your objects unless you use the `with` statement and are making changes to an existing object in your code base.
+一般に、`with`ステートメントを使用し、コードベース内の既存のオブジェクトに変更を加えない限り、オブジェクトに`Symbol.unscopables`を定義する必要はありません。
 
-## Summary
+## まとめ
 
-Symbols are a new type of primitive value in JavaScript and are used to create properties that can't be accessed without referencing the symbol.
+シンボルは、JavaScriptの新しいタイプのプリミティブ値であり、シンボルを参照せずにアクセスできないプロパティを作成するために使用されます。
 
-While not truly private, these properties are harder to accidentally change or overwrite and are therefore suitable for functionality that needs a level of protection from developers.
+これらのプロパティは、プライベートではありませんが、誤って変更や上書きすることは難しく、開発者からの保護レベルが必要な機能に適しています。
 
-You can provide descriptions for symbols that allow for easier identification of symbol values. There is a global symbol registry that allows you to use shared symbols in different parts of code by using the same description. In this way, the same symbol can be used for the same reason in multiple places.
+シンボル値の識別を容易にするシンボルの説明を提供できます。同じ記述を使用して、コードの異なる部分で共有シンボルを使用できるようにするグローバルシンボルレジストリがあります。このように、複数の場所で同じ理由で同じシンボルを使用することができます。
 
-Methods like `Object.keys()` or `Object.getOwnPropertyNames()` don't return symbols, so a new method called `Object.getOwnPropertySymbols()` was added in ECMAScript 6 to allow retrieval of symbol properties. You can still make changes to symbol properties by calling the `Object.defineProperty()` and `Object.defineProperties()` methods.
+`Object.keys()`や`Object.getOwnPropertyNames()`のようなメソッドはシンボルを返さないので、ECMAScript6では`Object.getOwnPropertySymbols()`という新しいメソッドが追加され、シンボルのプロパティを取得できます。`Object.defineProperty()`と`Object.defineProperties()`メソッドを呼び出すことで、シンボルのプロパティを変更することができます。
 
-Well-known symbols define previously internal-only functionality for standard objects and use globally-available symbol constants, such as the `Symbol.hasInstance` property. These symbols use the prefix `Symbol.` in the specification and allow developers to modify standard object behavior in a variety of ways.
+よく知られているシンボルは、以前の標準オブジェクトの内部専用機能を定義し、`Symbol.hasInstance`プロパティのようなグローバルに利用可能なシンボル定数を使用します。これらのシンボルは、仕様では`Symbol.`という接頭辞を使用し、開発者はさまざまな方法で標準オブジェクトの動作を変更できます。
