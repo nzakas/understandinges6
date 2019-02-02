@@ -511,7 +511,7 @@ var message = [
     "string"
 ].join("\n");
 
-let message = "Multiline \n" +
+var message = "Multiline \n" +
     "string";
 ```
 
