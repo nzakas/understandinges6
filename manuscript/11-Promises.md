@@ -1116,7 +1116,7 @@ A> (async function() {
 A>     let contents = await readFile("config.json");
 A>     doSomethingWith(contents);
 A>     console.log("Done");
-A> });
+A> })();
 A> ```
 A>
 A> The `async` keyword before `function` indicates that the function is meant to run in an asynchronous manner. The `await` keyword signals that the function call to `readFile("config.json")` should return a promise, and if it doesn't, the response should be wrapped in a promise. Just as with the implementation of `run()` in the preceding section, `await` will throw an error if the promise is rejected and otherwise return the value from the promise. The end result is that you get to write asynchronous code as if it were synchronous without the overhead of managing an iterator-based state machine.
