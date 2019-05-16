@@ -195,11 +195,11 @@ The well-known symbols are:
 
 * `Symbol.hasInstance` - A method used by `instanceof` to determine an object's inheritance.
 * `Symbol.isConcatSpreadable` - A Boolean value indicating that `Array.prototype.concat()` should flatten the collection's elements if the collection is passed as a parameter to `Array.prototype.concat()`.
-* `Symbol.iterator` - A method that returns an iterator. (Iterators are covered in Chapter 7.)
+* `Symbol.iterator` - A method that returns an iterator. (Iterators are covered in Chapter 8.)
 * `Symbol.match` - A method used by `String.prototype.match()` to compare strings.
 * `Symbol.replace` - A method used by `String.prototype.replace()` to replace substrings.
 * `Symbol.search` - A method used by `String.prototype.search()` to locate substrings.
-* `Symbol.species` - The constructor for making derived objects. (Derived objects are covered in Chapter 8.)
+* `Symbol.species` - The constructor for making derived objects. (Derived objects are covered in Chapter 9.)
 * `Symbol.split` - A method used by `String.prototype.split()` to split up strings.
 * `Symbol.toPrimitive` - A method that returns a primitive value representation of an object.
 * `Symbol.toStringTag` - A string used by `Object.prototype.toString()` to create an object description.
