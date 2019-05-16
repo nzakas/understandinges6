@@ -35,7 +35,7 @@ Understanding ECMAScript 6 is being printed by No Starch Press and you can [purc
 
 ## Supporting the Author
 
-If you enjoy this book and would like to support my efforts to create more content, there are a couple was to do so:
+If you enjoy this book and would like to support my efforts to create more content, there are a couple ways to do so:
 
 * [Leave a tip](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EFQLNGT3QEL6J) on PayPal
 * [Become a patron](https://patreon.com/nzakas) on Patreon
