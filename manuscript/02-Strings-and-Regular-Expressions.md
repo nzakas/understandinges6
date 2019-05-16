@@ -684,7 +684,7 @@ let message1 = `Multiline\nstring`,
 
 console.log(message1);          // "Multiline
                                 //  string"
-console.log(message2);          // "Multiline\\nstring"
+console.log(message2);          // "Multiline\nstring"
 ```
 
 In this code, the `\n` in `message1` is interpreted as a newline while the `\n` in `message2` is returned in its raw form of `"\\n"` (the slash and `n` characters). Retrieving the raw string information like this allows for more complex processing when necessary.
@@ -709,7 +709,7 @@ function raw(literals, ...substitutions) {
 
 let message = raw`Multiline\nstring`;
 
-console.log(message);           // "Multiline\\nstring"
+console.log(message);           // "Multiline\nstring"
 console.log(message.length);    // 17
 ```
 
