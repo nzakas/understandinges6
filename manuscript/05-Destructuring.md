@@ -88,10 +88,10 @@ let node = {
     name = 5;
 
 function outputInfo(value) {
-    console.log(value === node);        // true
+    console.log(value === node);
 }
 
-outputInfo({ type, name } = node);
+outputInfo({ type, name } = node);        // true
 
 console.log(type);      // "Identifier"
 console.log(name);      // "foo"
