@@ -634,7 +634,7 @@ The `of()` and `from()` methods in this example are used to create an `Int16Arra
 
 ## Differences Between Typed and Regular Arrays
 
-The most importance difference between typed arrays and regular arrays is that typed arrays are not regular arrays. Typed arrays don't inherit from `Array` and `Array.isArray()` returns `false` when passed a typed array. For example:
+The most important difference between typed arrays and regular arrays is that typed arrays are not regular arrays. Typed arrays don't inherit from `Array` and `Array.isArray()` returns `false` when passed a typed array. For example:
 
 ```js
 let ints = new Int16Array([25, 50]);
