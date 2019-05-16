@@ -515,7 +515,7 @@ function Square(length) {
 Square.prototype = Object.create(Rectangle.prototype, {
     constructor: {
         value:Square,
-        enumerable: true,
+        enumerable: false,
         writable: true,
         configurable: true
     }
