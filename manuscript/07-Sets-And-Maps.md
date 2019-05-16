@@ -117,7 +117,7 @@ set.add(key2);
 console.log(set.size);    // 2
 ```
 
-Because `key1` and `key2` are not converted to strings, they count as two unique items in the set. (Remember, if they were converted to strings, they would both be equal to `"[Object object]"`.)
+Because `key1` and `key2` are not converted to strings, they count as two unique items in the set. (Remember, if they were converted to strings, they would both be equal to `"[object Object]"`.)
 
 If the `add()` method is called more than once with the same value, all calls after the first one are effectively ignored:
 
