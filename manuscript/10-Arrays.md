@@ -375,12 +375,12 @@ Of course, reading information about memory isn't very useful on its own. You ne
 
 For each of JavaScript's eight numeric data types, the `DataView` prototype has a method to write data and a method to read data from an array buffer. The method names all begin with either "set" or "get" and are followed by the data type abbreviation. For instance, here's a list of the read and write methods that can operate on int8 and uint8 values:
 
-* `getInt8(byteOffset, littleEndian)` - Read an int8 starting at `byteOffset`
-* `setInt8(byteOffset, value, littleEndian)` - Write an int8 starting at `byteOffset`
-* `getUint8(byteOffset, littleEndian)` - Read an uint8 starting at `byteOffset`
-* `setUint8(byteOffset, value, littleEndian)` - Write an uint8 starting at `byteOffset`
+* `getInt8(byteOffset)` - Read an int8 starting at `byteOffset`
+* `setInt8(byteOffset, value)` - Write an int8 starting at `byteOffset`
+* `getUint8(byteOffset)` - Read an uint8 starting at `byteOffset`
+* `setUint8(byteOffset, value)` - Write an uint8 starting at `byteOffset`
 
-The "get" methods accept two arguments: the byte offset to read from and an optional boolean indicating whether the value should be read as little-endian. (*Little-endian* means the least significant byte is at byte 0, instead of in the last byte.) The "set" methods accept three arguments: the byte offset to write at, the value to write, and an optional boolean indicating whether the value should be stored in little-endian format.
+The "get" methods accept a single argument: the byte offset to read from. The "set" methods accept two arguments: the byte offset to write at and the value to write.
 
 Though I've only shown the methods you can use with 8-bit values, the same methods exist for operating on 16- and 32-bit values. Just replace the `8` in each name with `16` or `32`. Alongside all those integer methods, `DataView` also has the following read and write methods for floating point numbers:
 
@@ -388,6 +388,8 @@ Though I've only shown the methods you can use with 8-bit values, the same metho
 * `setFloat32(byteOffset, value, littleEndian)` - Write a float32 starting at `byteOffset`
 * `getFloat64(byteOffset, littleEndian)` - Read a float64 starting at `byteOffset`
 * `setFloat64(byteOffset, value, littleEndian)` - Write a float64 starting at `byteOffset`
+
+The float-related methods are only different in that they accept an additional optional boolean indicating whether the value should be read or written as little-endian. (*Little-endian* means the least significant byte is at byte 0, instead of in the last byte.)
 
 To see a "set" and a "get" method in action, consider the following example:
 
