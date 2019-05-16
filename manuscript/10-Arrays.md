@@ -740,7 +740,7 @@ Three typed arrays are created from the original `ints` array in this example. T
 
 ## Summary
 
-ECMAScript 6 continues the work of ECMAScript 5 by making arrays more useful. There are two more ways to create arrays: the `Array.of()` and `Array.from()` methods. The `Array.from()` method can also convert iterables and array-like objects into arrays. Both methods are inherited by derived array classes and use the `Symbol.species` property to determine what type of value should be returned (other inherited methods also use `Symbol.species` when returning an array).
+ECMAScript 6 continues the work of ECMAScript 5 by making arrays more useful. There are two more ways to create arrays: the `Array.of()` and `Array.from()` methods. The `Array.from()` method can also convert iterables and array-like objects into arrays. Both methods are inherited by derived array classes and do not use the `Symbol.species` property to determine what type of value should be returned (other inherited methods do use `Symbol.species` when returning an array).
 
 There are also several new methods on arrays. The `fill()` and `copyWithin()` methods allow you to alter array elements in-place. The `find()` and `findIndex()` methods are useful for finding the first element in an array that matches some criteria. The former returns the first element that fits the criteria, and the latter returns the element's index.
 
