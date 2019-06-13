@@ -240,27 +240,27 @@ The value of `receiver.type` is `"css"` because the second supplier overwrote th
 
 The `Object.assign()` method isn't a big addition to ECMAScript 6, but it does formalize a common function found in many JavaScript libraries.
 
-A> ### Working with Accessor Properties
-A>
-A> Keep in mind that `Object.assign()` doesn't create accessor properties on the receiver when a supplier has accessor properties. Since `Object.assign()` uses the assignment operator, an accessor property on a supplier will become a data property on the receiver. For example:
-A>
-A> ```js
-A> var receiver = {},
-A>     supplier = {
-A>         get name() {
-A>             return "file.js"
-A>         }
-A>     };
-A>
-A> Object.assign(receiver, supplier);
-A>
-A> var descriptor = Object.getOwnPropertyDescriptor(receiver, "name");
-A>
-A> console.log(descriptor.value);      // "file.js"
-A> console.log(descriptor.get);        // undefined
-A> ```
-A>
-A> In this code, the `supplier` has an accessor property called `name`. After using the `Object.assign()` method, `receiver.name` exists as a data property with a value of `"file.js"` because `supplier.name` returned `"file.js"` when `Object.assign()` was called.
+> ### Working with Accessor Properties
+>
+> Keep in mind that `Object.assign()` doesn't create accessor properties on the receiver when a supplier has accessor properties. Since `Object.assign()` uses the assignment operator, an accessor property on a supplier will become a data property on the receiver. For example:
+>
+> ```js
+> var receiver = {},
+>     supplier = {
+>         get name() {
+>             return "file.js"
+>         }
+>     };
+>
+> Object.assign(receiver, supplier);
+>
+> var descriptor = Object.getOwnPropertyDescriptor(receiver, "name");
+>
+> console.log(descriptor.value);      // "file.js"
+> console.log(descriptor.get);        // undefined
+> ```
+>
+> In this code, the `supplier` has an accessor property called `name`. After using the `Object.assign()` method, `receiver.name` exists as a data property with a value of `"file.js"` because `supplier.name` returned `"file.js"` when `Object.assign()` was called.
 
 ## Duplicate Object Literal Properties
 
