@@ -97,16 +97,12 @@ ECMAScript 6  הגיע למצב של     feature complete  במהלך שנת 201
 
 ### סימונים מוסכמים שבשימוש בספר זה 
 
-</div>
+להלן הסימונים הטיפוגראפיים  והמוסכמות בשימוש בספר זה 
 
+* *Italics* מסמנות הגדרה חדשה 
+* `Constant width` מסמן קטע קוד או שם קובץ
 
-
-The following typographical conventions are used in this book:
-
-* *Italics* introduces new terms
-* `Constant width` indicates a piece of code or filename
-
-Additionally, longer code examples are contained in constant width code blocks such as:
+בנוסף, קטעי דוגמת קוד ארוכים מוכלים במסגרות  בלוק של קוד כדוגמת : 
 
 ```js
 function doSomething() {
@@ -114,26 +110,26 @@ function doSomething() {
 }
 ```
 
-Within a code block, comments to the right of a `console.log()` statement indicate the output you'll see in the browser or Node.js console when the code is executed, for example:
+בתוך הקוד בלוק, סימני הערה  עם גרשיים בצד ימין מציגים את הפלט שיוצג בדפדפן  בקונסול או ב Node.js בקונסול  לאחר הרצת הקוד, לדוגמא  לפקודה console.log : 
 
 ```js
 console.log("Hi");      // "Hi"
 ```
 
-If a line of code in a code block throws an error, this is also indicated to the right of the code:
+במידה ושורת קוד תיצור חריגה גם  זה יצויים בצד ימין בקומנט כגון 
 
 ```js
 doSomething();          // error!
 ```
 
-### Help and Support
+### עזרה ותמיכה 
 
-You can file issues, suggest changes, and open pull requests against this book by visiting: [https://github.com/nzakas/understandinges6](https://github.com/nzakas/understandinges6)
+תוכלו להעלות נושאים , הצעות שיפור או  פול רקוואסט  לספר זה על ידי  גלישה לכתובות 
 
-<!-- I would suggest leaving the note above out of the print version, since readers
-won't be able to file issues on it. /JG -->
+[https://github.com/nzakas/understandinges6](https://github.com/nzakas/understandinges6)
 
-If you have questions as you read this book, please send a message to my mailing list: [http://groups.google.com/group/zakasbooks](http://groups.google.com/group/zakasbooks).
+
+</div>
 
 
 
@@ -152,6 +148,7 @@ I'm grateful for the watchful eye of Juriy Zaytsev as tech editor and to Dr. Axe
 Thanks to everyone who submitted fixes to the version of this book that is hosted on GitHub: ShMcK, Ronen Elster, Rick Waldron, blacktail, Paul Salaets, Lonniebiz, Igor Skuhar, jakub-g, David Chang, Kevin Sweeney, Kyle Simpson, Peter Bakondy, Philip Borisov, Shaun Hickson, Steven Foote, kavun, Dan Kielp, Darren Huskie, Jakub Narębski, Jamund Ferguson, Josh Lubaway, Marián Rusnák, Nikolas Poniros, Robin Pokorný, Roman Lo, Yang Su, alexyans, robertd, 404, Aaron Dandy, AbdulFattah Popoola, Adam Richeimer, Ahmad Ali, Aleksandar Djindjic, Arjunkumar, Ben Regenspan, Carlo Costantini, Dmitri Suvorov, Kyle Pollock, Mallory, Erik Sundahl, Ethan Brown, Eugene Zubarev, Francesco Pongiluppi, Jake Champion, Jeremy Caney, Joe Eames, Juriy Zaytsev, Kale Worsley, Kevin Lozandier, Lewis Ellis, Mohsen Azimi, Navaneeth Kesavan, Nick Bottomley, Niels Dequeker, Pahlevi Fikri Auliya, Prayag Verma, Raj Anand, Ross Gerbasi, Roy Ling, Sarbbottam Bandyopadhyay, and Shidhin.
 
 Also, thanks to everyone who supported this book on Patreon: Casey Visco.
+
 
 
 
