@@ -102,25 +102,44 @@ ECMAScript 6  הגיע למצב של     feature complete  במהלך שנת 201
 * *Italics* מסמנות הגדרה חדשה 
 * `Constant width` מסמן קטע קוד או שם קובץ
 
-בנוסף, קטעי דוגמת קוד ארוכים מוכלים במסגרות  בלוק של קוד כדוגמת : 
+בנוסף, קטעי דוגמת קוד ארוכים מוכלים במסגרות  בלוק של קוד כדוגמת :
+</div>
+
+<div dir="ltr">
 
 ```js
 function doSomething() {
     // empty
 }
 ```
-
+</div>
+<div dir="rtl">
 בתוך הקוד בלוק, סימני הערה  עם גרשיים בצד ימין מציגים את הפלט שיוצג בדפדפן  בקונסול או ב Node.js בקונסול  לאחר הרצת הקוד, לדוגמא  לפקודה console.log : 
+
+</div>
+
+<div dir="ltr">
 
 ```js
 console.log("Hi");      // "Hi"
 ```
+</div>
+
+<div dir="rtl">
 
 במידה ושורת קוד תיצור חריגה גם  זה יצויים בצד ימין בקומנט כגון 
+
+</div>
+
+<div dir="ltr">
+
 
 ```js
 doSomething();          // error!
 ```
+</div>
+
+<div dir="rtl">
 
 ### עזרה ותמיכה 
 
@@ -130,7 +149,6 @@ doSomething();          // error!
 
 
 </div>
-
 
 
 <div dir="rtl">
