@@ -465,19 +465,21 @@ console.log(result2);                               // true
 <div dir="rtl">
 
 
-In this example, `Object.setPrototypeOf()` returns `target1` as its value, but `Reflect.setPrototypeOf()` returns `true`. This subtle difference is very important. You'll see more seemingly duplicate methods on `Object` and `Reflect`, but always be sure to use the method on `Reflect` inside any proxy traps.
+בדוגמא הזו, `Object.setPrototypeOf()` מחזיר את `target1` כערך שלו, אבל `Reflect.setPrototypeOf()` מחזיר `true`. ההבדל העדין הזה חשוב מאוד. תאם תוכלו לקראות לכאורה עוד מתודות כפולות ל `Object` ו `Reflect`, אך הקפד להשתמש במתודה `Reflect` בתוך מלכודת פרוקסי.
 
-I> Both sets of methods will call the `getPrototypeOf` and `setPrototypeOf` proxy traps when used on a proxy.
+I> שתי השיטות של המתודות יקראו למלכודת הפרוקסי  `getPrototypeOf` ו `setPrototypeOf` כאשר משתמשים בפרוקסי.
 
-## Object Extensibility Traps
+## מלכודות להרחבת אובייקט
 
-ECMAScript 5 added object extensibility modification through the `Object.preventExtensions()` and `Object.isExtensible()` methods, and ECMAScript 6 allows proxies to intercept those method calls to the underlying objects through the `preventExtensions` and `isExtensible` traps. Both traps receive a single argument called `trapTarget` that is the object on which the method was called. The `isExtensible` trap must return a boolean value indicating whether the object is extensible while the `preventExtensions` trap must return a boolean value indicating if the operation succeeded.
+ECMAScript 5 הוסיף אפשרות להרחבת האובייקט דרך המתודות `Object.preventExtensions()` ו `Object.isExtensible()` , ו ECMAScript 6 מאפשרת לפרוקסי ליירט את הקריאה למתודות לאובייקטים הבסיסיים באמצעות המלכודות `preventExtensions` ו `isExtensible` . שני המלכודות מקבלים ארגומנט אחד שנקרא `trapTarget` זה האובייקט עליו נקראה המתודה. המלכודת `isExtensible` חייבת להחזיר ערך בוליאני המציין אם האובייקט ניתן להרחבה ואילו המלכודת `preventExtensions`  חייבת להחזיר ערך בוליאני המציין אם הפעולה הצליחה.
 
-There are also `Reflect.preventExtensions()` and `Reflect.isExtensible()` methods to implement the default behavior. Both return boolean values, so they can be used directly in their corresponding traps.
+יש גם את המתודות `Reflect.preventExtensions()` ו `Reflect.isExtensible()` ליישם את ההתנהגות הדיפולטיבית. שניהם מחזירים ערך בוליאני, כך שניתן להשתמש בהם ישירות במלכודות המקבילות שלהם.
 
-### Two Basic Examples
+### שתי דוגמאות בסיסיות
 
-To see object extensibility traps in action, consider the following code, which implements the default behavior for the `isExtensible` and `preventExtensions` traps:
+כדי לראות מלכודות הרחבה בפעולה, בקוד הבא , אשר מיישם את התנהגות ברירת המחדל עבור המלכודות `isExtensible` ו `preventExtensions` :
+
+</div>
 
 ```js
 let target = {};
@@ -500,7 +502,11 @@ console.log(Object.isExtensible(target));       // false
 console.log(Object.isExtensible(proxy));        // false
 ```
 
-This example shows that both `Object.preventExtensions()` and `Object.isExtensible()` correctly pass through from `proxy` to `target`. You can, of course, also change the behavior. For example, if you don't want to allow `Object.preventExtensions()` to succeed on your proxy, you could return `false` from the `preventExtensions` trap:
+<div dir="rtl">
+
+דוגמא זו מראה ש `Object.preventExtensions()` ו `Object.isExtensible()` עוברים כראוי מ `proxy` ל `target`. אתה יכול כמובן , לשנות את ההתנהגות. לדוגמא, אם אתה לא רוצה לאפשר ל `Object.preventExtensions()` להצליח בפרוקסי שלך, אתה יכול להחזיר `false` מהמלכודת `preventExtensions` :
+
+</div>
 
 ```js
 let target = {};
@@ -523,7 +529,9 @@ console.log(Object.isExtensible(target));       // true
 console.log(Object.isExtensible(proxy));        // true
 ```
 
-Here, the call to `Object.preventExtensions(proxy)` is effectively ignored because the `preventExtensions` trap returns `false`. The operation isn't forwarded to the underlying `target`, so `Object.isExtensible()` returns `true`.
+<div dir="rtl">
+
+כאן בקריאה ל `Object.preventExtensions(proxy)` מתעלם ביעילות מכיוון שהמלכודת `preventExtensions` מחזירה `false`. הפעולה אינה מועברת לבסיס `target`, כך ש `Object.isExtensible()` מחזיר `true`.
 
 ### Duplicate Extensibility Methods
 
