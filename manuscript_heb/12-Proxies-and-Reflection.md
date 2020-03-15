@@ -677,9 +677,11 @@ Object.defineProperty(proxy, "name", {
 
 <div dir="rtl">
 
-Here, `Object.defineProperty()` is called with a nonstandard `name` property on the third argument. When the `defineProperty` trap is called, the `descriptor` object doesn't have a `name` property but does have a `value` property. That's because `descriptor` isn't a reference to the actual third argument passed to the `Object.defineProperty()` method, but rather a new object that contains only the allowable properties. The `Reflect.defineProperty()` method also ignores any nonstandard properties on the descriptor.
+כאן, `Object.defineProperty()` קורא למאפיין לא סטנדרטי `name` בארגומנט השלישי. כאשר מלכודת `defineProperty` נקראית, ל `descriptor` של האובייקט אין את המאפיין `name` אבל יש לו את המאפיין `value` . זה בגלל ש `descriptor`  לא מתייחס בפועל לארגומנט השלישי שהועובר במתודה  `Object.defineProperty()` , אלא לאובייקט החדש המכיל רק את המאפיינים המותרים. המתודה `Reflect.defineProperty()` גם מתעלמת מהמאפיינים שלא מותרים במתאר.
 
-The `getOwnPropertyDescriptor` trap has a slightly different restriction that requires the return value to be `null`, `undefined`, or an object. If an object is returned, only `enumerable`, `configurable`, `value`, `writable`, `get`, and `set` are allowed as own properties of the object. An error is thrown if you return an object with an own property that isn't allowed, as this code shows:
+המלכודת `getOwnPropertyDescriptor` יש מגבלה מעט שונה שדורשת שיחזיר ערך של  `null`, `undefined`, או אובייקט. אם מוחזר אובייקט, רק המאפיינים `enumerable`, `configurable`, `value`, `writable`, `get`, ו `set` מותרים כמאפיינים על האובייקט. שגיאה נזרקת אם אתה מחזיר אובייקט עם מאפיין משלו שאינו מותר, כמו שהקוד מראה:
+
+</div>
 
 ```js
 let proxy = new Proxy({}, {
@@ -690,11 +692,13 @@ let proxy = new Proxy({}, {
     }
 });
 
-// throws error
+// יזרוק שגיאה
 let descriptor = Object.getOwnPropertyDescriptor(proxy, "name");
 ```
 
-The property `name` isn't allowable on property descriptors, so when `Object.getOwnPropertyDescriptor()` is called, the `getOwnPropertyDescriptor` return value triggers an error. This restriction ensures that the value returned by `Object.getOwnPropertyDescriptor()` always has a reliable structure regardless of use on proxies.
+<div dir="rtl">
+
+המאפיין `name` לא מאושר כמאפיין על המתאר, כך ש `Object.getOwnPropertyDescriptor()` נקרא, ה `getOwnPropertyDescriptor` ערך החזרה מפעיל שגיאה. הגבלה זו מבטיחה שהערך שיוחזר על ידי `Object.getOwnPropertyDescriptor()`תמיד יש מבנה אמין ללא קשר לשימוש בפרוקסי.
 
 ### Duplicate Descriptor Methods
 
