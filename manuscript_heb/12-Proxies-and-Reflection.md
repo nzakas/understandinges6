@@ -533,21 +533,27 @@ console.log(Object.isExtensible(proxy));        // true
 
 כאן בקריאה ל `Object.preventExtensions(proxy)` מתעלם ביעילות מכיוון שהמלכודת `preventExtensions` מחזירה `false`. הפעולה אינה מועברת לבסיס `target`, כך ש `Object.isExtensible()` מחזיר `true`.
 
-### Duplicate Extensibility Methods
+### שיטות הרחבה כפולות
 
-You may have noticed that, once again, there are seemingly duplicate methods on `Object` and `Reflect`. In this case, they're more similar than not. The methods `Object.isExtensible()` and `Reflect.isExtensible()` are similar except when passed a non-object value. In that case, `Object.isExtensible()` always returns `false` while `Reflect.isExtensible()` throws an error. Here's an example of that behavior:
+יתכן ששמת לב, שיש דמיון וכפילויות במתודות ב `Object` ו `Reflect`. במקרה הזה יש יותר דמיון מאשר לא. המתודות  `Object.isExtensible()` ו `Reflect.isExtensible()` הם דומים למעט כאשר מועבר ערך שהוא אינו אובייקט. במקרה הזה, `Object.isExtensible()` תמיד יחזיר `false` כאשר `Reflect.isExtensible()` יזרוק שגיאה. הנה דוגמא להתנהגות הזו:
+
+</div>
 
 ```js
 let result1 = Object.isExtensible(2);
 console.log(result1);                       // false
 
-// throws error
+// יזרוק שגיאה
 let result2 = Reflect.isExtensible(2);
 ```
 
-This restriction is similar to the difference between the `Object.getPrototypeOf()` and `Reflect.getPrototypeOf()` methods, as the method with lower-level functionality has stricter error checks than its higher-level counterpart.
+<div dir="rtl">
 
-The `Object.preventExtensions()` and `Reflect.preventExtensions()` methods are also very similar. The `Object.preventExtensions()` method always returns the value that was passed to it as an argument even if the value isn't an object. The `Reflect.preventExtensions()` method, on the other hand, throws an error if the argument isn't an object; if the argument is an object, then `Reflect.preventExtensions()` returns `true` when the operation succeeds or `false` if not. For example:
+מגבלה זו דומה להבדל בין המתודות `Object.getPrototypeOf()` ו `Reflect.getPrototypeOf()` , מכיוון  שלמתודות עם פונקונאליות ברמה הנמוכה יש יותר בדיקות שגיאה מחמירות מאשר  למקבילה ברמה הגבוהה יותר.
+
+המתודות  `Object.preventExtensions()` ו `Reflect.preventExtensions()` גם כן נורא דומות. המתודה `Object.preventExtensions()` תמיד תחזיר את הערך שהועובר אליה כארגומנט אפילו אם הערך הוא אינו אובייקט. המתודה `Reflect.preventExtensions()` , מצד שני , תזרוק שגיאה אם הארגומנט הוא אינו אובייקט; אם הארגומנט הוא אובייקט, אזי `Reflect.preventExtensions()` יחזיר `true` כאשר הפעולה מצליחה  ויחזיר `false` אם לא. לדוגמא:
+
+</div>
 
 ```js
 let result1 = Object.preventExtensions(2);
@@ -557,23 +563,27 @@ let target = {};
 let result2 = Reflect.preventExtensions(target);
 console.log(result2);                               // true
 
-// throws error
+// יזרוק שגיאה
 let result3 = Reflect.preventExtensions(2);
 ```
 
-Here, `Object.preventExtensions()` passes through the value `2` as its return value even though `2` isn't an object. The `Reflect.preventExtensions()` method returns `true` when an object is passed to it and throws an error when `2` is passed to it.
+<div dir="rtl">
 
-## Property Descriptor Traps
+כאן מועבר ל `Object.preventExtensions()` הערך `2` והוא מחזיר למרות ש`2` הוא לא אובייקט. המתודה `Reflect.preventExtensions()` מחזירה `true` כאשר אובייקט מועובר אליה וזורקת שגיאה כאשר  `2` מועבר אליה.
 
-One of the most important features of ECMAScript 5 was the ability to define property attributes using the `Object.defineProperty()` method. In previous versions of JavaScript, there was no way to define an accessor property, make a property read-only, or make a property nonenumerable. All of these are possible with the `Object.defineProperty()` method, and you can retrieve those attributes with the `Object.getOwnPropertyDescriptor()` method.
+## מלכודת לתיאור מאפיינים
 
-Proxies let you intercept calls to `Object.defineProperty()` and `Object.getOwnPropertyDescriptor()` using the `defineProperty` and `getOwnPropertyDescriptor` traps, respectively. The `defineProperty` trap receives the following arguments:
+אחת התכונות החשובות ביותר של ECMAScript 5 היא היכולת להגדיר מאפיינים -property attributes בשימוש עם המתודה  `Object.defineProperty()` . בגרסאות קודמות של ג'אווה סקריפט, לא הייתה שום דרך להגדיר מאפיין , להגדיר מאפיין רק לקריאה, או בלתי נספר. כל זה אפשרי תודות למתודה `Object.defineProperty()` ,ואתה יכול לקבל מאפיין תודות למתודה `Object.getOwnPropertyDescriptor()`.
 
-1. `trapTarget` - the object on which the property should be defined (the proxy's target)
-1. `key` - the string or symbol for the property
-1. `descriptor` - the descriptor object for the property
+פרוקסי נותן לך אפשרות ליירט קריאות ל `Object.defineProperty()` ו `Object.getOwnPropertyDescriptor()` בשימוש המלכודות `defineProperty` ו `getOwnPropertyDescriptor` , בהתאמה. המלכודת `defineProperty` מקבלת את הארגומנטים הבאים:
 
-The `defineProperty` trap requires you to return `true` if the operation is successful and `false` if not. The `getOwnPropertyDescriptor` traps receives only `trapTarget` and `key`, and you are expected to return the descriptor. The corresponding `Reflect.defineProperty()` and `Reflect.getOwnPropertyDescriptor()` methods accept the same arguments as their proxy trap counterparts. Here's an example that just implements the default behavior for each trap:
+1. `trapTarget` - האובייקט שיקבל את המאפיינים (המטרה של הפרוקסי)
+1. `key` - מפתח המאפיין (סטרינג או symbol) לכתוב אליו
+1. `descriptor` - אובייקט המתאר את המאפיין
+
+מלכודת `defineProperty` דורשת שתחזיר `true` אם הפעולה הצליחה ו `false` אם לא. מלכודת `getOwnPropertyDescriptor` מקבלת רק `trapTarget` ו `key`, ואתה מצפה שתחזיר את המתאר. המתודות התואמות `Reflect.defineProperty()` ו `Reflect.getOwnPropertyDescriptor()` מקבלות את אותם ארגומנטים כמו מלכודת הפרוקסי המקבילה. להלן דוגמא שמיישמת את התנהגות ברירת המחדל עבור כל מלכודת:
+
+</div>
 
 ```js
 let proxy = new Proxy({}, {
@@ -597,11 +607,15 @@ let descriptor = Object.getOwnPropertyDescriptor(proxy, "name");
 console.log(descriptor.value);      // "proxy"
 ```
 
-This code defines a property called `"name"` on the proxy with the `Object.defineProperty()` method. The property descriptor for that property is then retrieved by the `Object.getOwnPropertyDescriptor()` method.
+<div dir="rtl">
 
-### Blocking Object.defineProperty()
+הקוד פה מגדיר מאפיין `"name"` על הפרוקסי עם המתודה  `Object.defineProperty()` . לאחר מכן מאוחזר מתאר המאפיינים של אותו נכס במתודה `Object.getOwnPropertyDescriptor()` .
 
-The `defineProperty` trap requires you to return a boolean value to indicate whether the operation was successful. When `true` is returned, `Object.defineProperty()` succeeds as usual; when `false` is returned, `Object.defineProperty()` throws an error. You can use this functionality to restrict the kinds of properties that the `Object.defineProperty()` method can define. For instance, if you want to prevent symbol properties from being defined, you could check that the key is a string and return `false` if not, like this:
+### חסימת Object.defineProperty()
+
+מלכודת `defineProperty` דורשת שתחזיר עקך בוליאני כדי לציין אם הפעולה הצליחה. כאשר מוחזר `true` , `Object.defineProperty()` הצליח כרגיל; כאשר מוחזר `false` , `Object.defineProperty()` יזרוק שגיאה. אתה יכול להשתמש בפונקציונליות זו כדי להגביל את סוגי המאפיינים שהמתודה- `Object.defineProperty()` יכולה להגדיר. לדוגמה, אם אתה רוצה למנוע את הגדרת מאפייני ה symbol , אתה יכול לבדוק שהמפתח הוא מחרוזת ולהחזיר `false` , כמו כאן:
+
+</div>
 
 ```js
 let proxy = new Proxy({}, {
@@ -624,21 +638,25 @@ console.log(proxy.name);                    // "proxy"
 
 let nameSymbol = Symbol("name");
 
-// throws error
+// יזרוק שגיאה
 Object.defineProperty(proxy, nameSymbol, {
     value: "proxy"
 });
 ```
 
-The `defineProperty` proxy trap returns `false` when `key` is a symbol and otherwise proceeds with the default behavior. When `Object.defineProperty()` is called with `"name"` as the key, the method succeeds because the key is a string. When `Object.defineProperty()` is called with `nameSymbol`, it throws an error because the `defineProperty` trap returns `false`.
+<div dir="rtl">
 
-I> You can also have `Object.defineProperty()` silently fail by returning `true` and not calling the `Reflect.defineProperty()` method. That will suppress the error while not actually defining the property.
+מלכודת הפרוקסי `defineProperty` מחזירה `false` אם `key` הוא symbol אחרת ממשיכה עם ההתנהגות הדיפולטיבית. כאשר `Object.defineProperty()` נקרא עם  `"name"` כמפתח, המתודה תצליח בגלל שהמפתח הוא סטרינג. כאשר `Object.defineProperty()` נקראית עם  `nameSymbol`, הוא יזרוק שגיאה כי המלכודת `defineProperty` מחזירה `false`.
 
-### Descriptor Object Restrictions
+I> אתה יכול גם לקבל את `Object.defineProperty ()` שיכשל בשקט על ידי החזרת `true` ולא לקרוא לשיטה `Reflect.defineProperty ()`. זה ידכא את השגיאה אם לא הגדרת את המאפיין בפועל.
 
-To ensure consistent behavior when using the `Object.defineProperty()` and `Object.getOwnPropertyDescriptor()` methods, descriptor objects passed to the `defineProperty` trap are normalized. Objects returned from `getOwnPropertyDescriptor` trap are always validated for the same reason.
+### הגבלת מתאר אובייקט
 
-No matter what object is passed as the third argument to the `Object.defineProperty()` method, only the properties `enumerable`, `configurable`, `value`, `writable`, `get`, and `set` will be on the descriptor object passed to the `defineProperty` trap. For example:
+על מנת להבטיח התנהגות עקבית בזמן השימוש במתודות `Object.defineProperty()` ו `Object.getOwnPropertyDescriptor()` , מתאר אובייקט שמועבר למלכודת `defineProperty` מנורמלים. אובייקטים שמוחזרים מהמלכודת `getOwnPropertyDescriptor` תמיד יעברו אימות מאותה הסיבה.
+
+לא משנה איזה אובייקט מועבר בארגומנט השלישי למתודה `Object.defineProperty()` , רק המאפיינים `enumerable`, `configurable`, `value`, `writable`, `get`, ו `set` יהיו על מתאר האובייקט המועבר למלכודת  `defineProperty` . לדוגמא:
+
+</div>
 
 ```js
 let proxy = new Proxy({}, {
@@ -656,6 +674,8 @@ Object.defineProperty(proxy, "name", {
     name: "custom"
 });
 ```
+
+<div dir="rtl">
 
 Here, `Object.defineProperty()` is called with a nonstandard `name` property on the third argument. When the `defineProperty` trap is called, the `descriptor` object doesn't have a `name` property but does have a `value` property. That's because `descriptor` isn't a reference to the actual third argument passed to the `Object.defineProperty()` method, but rather a new object that contains only the allowable properties. The `Reflect.defineProperty()` method also ignores any nonstandard properties on the descriptor.
 
