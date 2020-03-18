@@ -700,14 +700,15 @@ let descriptor = Object.getOwnPropertyDescriptor(proxy, "name");
 
 המאפיין `name` לא מאושר כמאפיין על המתאר, כך ש `Object.getOwnPropertyDescriptor()` נקרא, ה `getOwnPropertyDescriptor` ערך החזרה מפעיל שגיאה. הגבלה זו מבטיחה שהערך שיוחזר על ידי `Object.getOwnPropertyDescriptor()`תמיד יש מבנה אמין ללא קשר לשימוש בפרוקסי.
 
-### Duplicate Descriptor Methods
+### מתודות תיאור כפול
 
-Once again, ECMAScript 6 has some confusingly similar methods, as the `Object.defineProperty()` and `Object.getOwnPropertyDescriptor()` methods appear to do the same thing as the `Reflect.defineProperty()` and `Reflect.getOwnPropertyDescriptor()` methods, respectively. Like other method pairs discussed earlier in this chapter, these have some subtle but important differences.
+שוב, ECMAScript 6 יש כמה מתודות דומות באופן מבלבל, כמו המתודת `Object.defineProperty()` ו `Object.getOwnPropertyDescriptor()` נראה שעושות את הודות הדבר כמו המתודות `Reflect.defineProperty()` ו `Reflect.getOwnPropertyDescriptor()` , בהתאמה. כמו זוגות מתודות אחרות שנדונו קודם לכן בפרק זה, יש להם כמה הבדלים עדינים אך חשובים.
 
-#### defineProperty() Methods
+#### המתודה defineProperty()
 
-The `Object.defineProperty()` and `Reflect.defineProperty()` methods are exactly the same except for their return values. The `Object.defineProperty()` method returns the first argument, while `Reflect.defineProperty()` returns `true` if the operation succeeded and `false` if not. For example:
+המתודות `Object.defineProperty()` ו `Reflect.defineProperty()` הם בדיוק אותו הדבר למעט הערך שחוזר מהם. המתודה `Object.defineProperty()` מחזירה את הארומנט הראשון, בזמן ש `Reflect.defineProperty()` תחזיר `true` אם הפעולה הצליחה ו `false` אם לא . לדוגמא:
 
+</div>
 
 ```js
 let target = {};
@@ -720,30 +721,37 @@ let result2 = Reflect.defineProperty(target, "name", { value: "reflect" });
 
 console.log(result2);                   // true
 ```
+<div dir="rtl">
 
-When `Object.defineProperty()` is called on `target`, the return value is `target`. When `Reflect.defineProperty()` is called on `target`, the return value is `true`, indicating that the operation succeeded. Since the `defineProperty` proxy trap requires a boolean value to be returned, it's better to use `Reflect.defineProperty()` to implement the default behavior when necessary.
+כאשר `Object.defineProperty()` נקראת על `target`, הערך החוזר הוא `target`. כאשר `Reflect.defineProperty()` נקרא על `target`, הערך החוזר הוא `true`, שמעיד שהפעולה הצליחה. מאחר ומלכודת הפרוקסי `defineProperty` דורשת שערך בוליאני יחזור, זה יותר טוב להשתמש ב `Reflect.defineProperty()` ליישם את התנהגות ברירת המחדל במידת הצורך.
 
-#### getOwnPropertyDescriptor() Methods
+#### המתודה getOwnPropertyDescriptor()
 
-The `Object.getOwnPropertyDescriptor()` method coerces its first argument into an object when a primitive value is passed and then continues the operation. On the other hand, the `Reflect.getOwnPropertyDescriptor()` method throws an error if the first argument is a primitive value. Here's an example showing both:
+המתודה `Object.getOwnPropertyDescriptor()` כופה את vtrdunby הראשון שלו לאובייקט כאשר מועבר ערך פרימיטיבי ואז ממשיך בפעולה. מצד שני, המתודה `Reflect.getOwnPropertyDescriptor()` תזרוק שגיאה אם הארגומנט הראשון יהיה מסוג פרמטיבי. להלן דוגמה המציגה את שניהם:
+
+</div>
 
 ```js
 let descriptor1 = Object.getOwnPropertyDescriptor(2, "name");
 console.log(descriptor1);       // undefined
 
-// throws an error
+// יזרוק שגיאה
 let descriptor2 = Reflect.getOwnPropertyDescriptor(2, "name");
 ```
 
-The `Object.getOwnPropertyDescriptor()` method returns `undefined` because it coerces `2` into an object, and that object has no `name` property. This is the standard behavior of the method when a property with the given name isn't found on an object. When `Reflect.getOwnPropertyDescriptor()` is called, however, an error is thrown immediately because that method doesn't accept primitive values for the first argument.
+<div dir="rtl">
 
-## The `ownKeys` Trap
+המתודה `Object.getOwnPropertyDescriptor()` תחזיר `undefined` בגלל ההשמה של `2` לתוך אובייקט, ולו אין את המאפיין `name` . זוהי ההתנהגות הסטנדרטית של המתודה כאשר מאפיין עם השם הנתון אינו נמצא באובייקט. כאשר `Reflect.getOwnPropertyDescriptor()` נקרא, מצד שני, שגיאה נזרקת מייד מכיוון שמתודה זו אינה מקבלת ערכים פרימיטיביים לטיעון הראשון.
 
-The `ownKeys` proxy trap intercepts the internal method `[[OwnPropertyKeys]]` and allows you to override that behavior by returning an array of values. This array is used in four methods: the `Object.keys()` method, the `Object.getOwnPropertyNames()` method, the `Object.getOwnPropertySymbols()` method, and the `Object.assign()` method. (The `Object.assign()` method uses the array to determine which properties to copy.)
+## מלכודת `ownKeys`
 
-The default behavior for the `ownKeys` trap is implemented by the `Reflect.ownKeys()` method and returns an array of all own property keys, including both strings and symbols. The `Object.getOwnProperyNames()` method and the `Object.keys()` method filter symbols out of the array and returns the result while `Object.getOwnPropertySymbols()` filters the strings out of the array and returns the result. The `Object.assign()` method uses the array with both strings and symbols.
+מלכודת הפרוקסי `ownKeys` מיירטת את המתודה הפנימית  `[[OwnPropertyKeys]]` ומאפשרת לך לשנות את התתנהגות שלה ע"י החזרה של מערך של ערכים. במערך הזה נעשה שימוש בארבע מתודות שונות: המתודה `Object.keys()` , המתודה `Object.getOwnPropertyNames()` , המתודה `Object.getOwnPropertySymbols()`, והמתודה `Object.assign()` . (המתודה `Object.assign()` משתמשת במערך כדי להחליט איזה מאפיינים להעתיק.)
 
-The `ownKeys` trap receives a single argument, the target, and must always return an array or array-like object; otherwise, an error is thrown. You can use the `ownKeys` trap to, for example, filter out certain property keys that you don't want used when the `Object.keys()`, the `Object.getOwnPropertyNames()` method, the `Object.getOwnPropertySymbols()` method, or the `Object.assign()` method is used. Suppose you don't want to include any property names that begin with an underscore character, a common notation in JavaScript indicating that a field is private. You can use the `ownKeys` trap to filter out those keys as follows:
+ההתנהגות הדיפולטיבית עבור המלכודת `ownKeys` ממומשת ע"י המתודה `Reflect.ownKeys()` ומחזירה מערך של כל מפתחות של המאפיינים,כולל סטרינג וסימבול. המתודה `Object.getOwnProperyNames()` והמתודה `Object.keys()` מסננות סימבול מהמערך ומחזירה את התוצאות בזמן שהמתודה  `Object.getOwnPropertySymbols()` מסננת את הסטרינג ומחזירה את התוצאות. המתודה `Object.assign()` משתמשת גם בסטרינג וגם בסימבול.
+
+המלכודת `ownKeys` מקבלת ארגומנט אחד בלבד, המטרה, וחייבת להחזיר תמיד מערך או מערך-דמה של אובייקט (array-like); אחרת, שגיאה תיזרק. אתה יכול להשתמש במלכודת  `ownKeys` לדוגמא, לסנן החוצה את כל המפתחות שאתה לא רוצה שישתמשו בזמן הקריאה  למתודה `Object.keys()`, למתודה `Object.getOwnPropertyNames()`, למתודה `Object.getOwnPropertySymbols()`, או למתודה `Object.assign()`. נניח שאינך רוצה לכלול את המאפיינים שמתחילים עם קו-תחתון, סימון נפוץ ב- JavaScript המצביע על כך ששדה הוא פרטי. אתה יכול להשתמש במלכודת `ownKeys` לסנן החוצה את המפתחות האלו כך:
+
+</div>
 
 ```js
 let proxy = new Proxy({}, {
@@ -773,6 +781,8 @@ console.log(keys[0]);          // "name"
 console.log(symbols.length);    // 1
 console.log(symbols[0]);        // "Symbol(name)"
 ```
+
+<div dir="rtl">
 
 This example uses an `ownKeys` trap that first calls `Reflect.ownKeys()` to get the default list of keys for the target. Then, the `filter()` method is used to filter out keys that are strings and begin with an underscore character. Then, three properties are added to the `proxy` object: `name`, `_name`, and `nameSymbol`. When `Object.getOwnPropertyNames()` and `Object.keys()` is called on `proxy`, only the `name` property is returned. Similarly, only `nameSymbol` is returned when `Object.getOwnPropertySymbols()` is called on `proxy`. The `_name` property doesn't appear in either result because it is filtered out.
 
