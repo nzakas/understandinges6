@@ -784,26 +784,29 @@ console.log(symbols[0]);        // "Symbol(name)"
 
 <div dir="rtl">
 
-This example uses an `ownKeys` trap that first calls `Reflect.ownKeys()` to get the default list of keys for the target. Then, the `filter()` method is used to filter out keys that are strings and begin with an underscore character. Then, three properties are added to the `proxy` object: `name`, `_name`, and `nameSymbol`. When `Object.getOwnPropertyNames()` and `Object.keys()` is called on `proxy`, only the `name` property is returned. Similarly, only `nameSymbol` is returned when `Object.getOwnPropertySymbols()` is called on `proxy`. The `_name` property doesn't appear in either result because it is filtered out.
+הדוגמה הזו השתמשנו במלכודת `ownKeys` שקוראת בהתחלה למתודה `Reflect.ownKeys()` כדי לקבל את כל המפתחות של אובייקט המטרה. ואז במתודה `filter()` נעשה שימוש לסנן החוצה את המפתחות שמתחילות עם סימון של קו-תחתון. לאחר מכן מוספים שלושה מאפיינים לאובייקט פרוקסי `proxy` : `name`, `_name`, ו `nameSymbol`. כאשר `Object.getOwnPropertyNames()` ו `Object.keys()` נקראות על פרוקסי `proxy`, רק המאפיין `name` מוחזר. באופן דומה `nameSymbol` מוחזר כאשר `Object.getOwnPropertySymbols()` נקרא על  `proxy`. המאפיין `_name` לא מופיע בשום תומאה מאחר והוא סונן החוצה.
 
-I> The `ownKeys` trap also affects the `for-in` loop, which calls the trap to determine which keys to use inside of the loop.
+I> המלכודת `ownKeys` משפיעה גם על הלולאה `for-in`, הקוראת למלכודת כדי לקבוע באילו מפתחות להשתמש בתוך הלולאה.
 
-## Function Proxies with the `apply` and `construct` Traps
+## פונקמיות פרוקסי עם מלכודות `apply` ו `construct` 
 
-Of all the proxy traps, only `apply` and `construct` require the proxy target to be a function. Recall from Chapter 3 that functions have two internal methods called `[[Call]]` and `[[Construct]]` that are executed when a function is called without and with the `new` operator, respectively. The `apply` and `construct` traps correspond to and let you override those internal methods. When a function is called without `new`, the `apply` trap receives, and `Reflect.apply()` expects, the following arguments:
+מבין כל מלכודות הפרוקסי, רק `apply` ו `construct` דורשים השמטרה של הפרוקסי התיה פונקציה. נזכיר מפרק 3 שלפונקציות שתי מתודות פנימיות הנקראות `[[Call]]` ו `[[Construct]]` המבוצעות כאשר פונקציה נקראת ללא ועם האופרטור `new` , בהתאמה. המלכודות `apply` ו `construct` תואמים ומאפשרים לך לעקוף את אותן המתודות הפנימיות. כאשר פונקציה נקראית בלי באופרטוק `new`, המלכודת `apply` ו `Reflect.apply()` מקבלים ומצפים , לארגומנטים הבאים :
 
-1. `trapTarget` - the function being executed (the proxy's target)
-1. `thisArg` - the value of `this` inside of the function during the call
-1. `argumentsList` - an array of arguments passed to the function
 
-The `construct` trap, which is called when the function is executed using `new`, receives the following arguments:
+1. `trapTarget` - הפונקציה שמבוצעת (the proxy's target)
+1. `thisArg` - הערך של  `this` בתוך הפונקציה במהלך הקריאה
+1. `argumentsList` - מערך של ארגומנטים שהועברו לפונקציה 
 
-1. `trapTarget` - the function being executed (the proxy's target)
-1. `argumentsList` - an array of arguments passed to the function
+מלכודת `construct` , אשר נקרא כאשר הפונקציה מבוצעת באמצעות `new`, מקבלת את הארגומנטים הבאים:
 
-The `Reflect.construct()` method also accepts these two arguments and has an optional third argument called `newTarget`. When given, the `newTarget` argument specifies the value of `new.target` inside of the function.
+1. `trapTarget` - הפונקציה שמבוצעת (the proxy's target)
+1. `argumentsList` - מערך של ארגומנטים שהועברו לפונקציה
 
-Together, the `apply` and `construct` traps completely control the behavior of any proxy target function. To mimic the default behavior of a function, you can do this:
+המתודה `Reflect.construct()` מקבלת גם את שני הארגומנטים הללו ויש להם ארגומנט שלישי אופציונלי שנקרא `newTarget`. כאשר ניתן, הארגומנט `newTarget` מציין את הערך של `new.target` בתוך הפונקציה.
+
+יחד, מלכודות `apply` ו `construct` שולטות באופן מוחלט בהתנהגות של כל פונקציית יעד של פרוקסי. בשביל לחקות את התנהגות ברירת המחדל של פונקציה, אתה יכול לעשות זאת:
+
+</div>
 
 ```js
 let target = function() { return 42 },
@@ -816,7 +819,7 @@ let target = function() { return 42 },
         }
     });
 
-// a proxy with a function as its target looks like a function
+// פרוקסי עם פונקציה כמטרה שלו נראה כמו פונקציה
 console.log(typeof proxy);                  // "function"
 
 console.log(proxy());                       // 42
@@ -826,14 +829,18 @@ console.log(instance instanceof proxy);     // true
 console.log(instance instanceof target);    // true
 ```
 
-This example has a function that returns the number 42. The proxy for that function uses the `apply` and `construct` traps to delegate those behaviors to the `Reflect.apply()` and `Reflect.construct()` methods, respectively. The end result is that the proxy function works exactly like the target function, including identifying itself as a function when `typeof` is used. The proxy is called without `new` to return 42 and then is called with `new` to create an object called `instance`. The `instance` object is considered an instance of both `proxy` and `target` because `instanceof` uses the prototype chain to determine this information. Prototype chain lookup is not affected by this proxy, which is why `proxy` and `target` appear to have the same prototype to the JavaScript engine.
+<div dir="rtl">
 
-### Validating Function Parameters
+בדוגמה זו יש פונקציה שמחזירה את המספר 42. ה- proxy עבור פונקציה זו משתמש במלכודות `apply` ו `construct` להאציל התנהגויות אלה למתודות `Reflect.apply()` ו `Reflect.construct()`, בהתאמה. התוצאה הסופית היא שפונקציית ה- Proxy פועלת בדיוק כמו פונקציית היעד, כולל זיהוי עצמו כפונקציה כאשר משתמשים ב- `typeof`. כאשר הפרוקסי נקרא בלי `new` הוא יחזיר 42 וכאשר נקרא עם  `new` הוא יצור אובייקט שנקרא `instance`. האובייקט `instance` נחשב למופע של שניהם- של `proxy` ו `target` בגלל `instanceof` משתמש בשרשרת אב-הטיפוס (prototype chain) כדי לקבוע מידע זה. בדיקת שרשרת אב-טיפוס אינה מושפעת מהפרוקסי, וזו הסיבה ש-  `proxy` ו `target` נראים בעלי אב-טיפוס זהה למנוע ה- JavaScript.
 
-The `apply` and `construct` traps open up a lot of possibilities for altering the way a function is executed. For instance, suppose you want to validate that all arguments are of a specific type. You can check the arguments in the `apply` trap:
+### אימות פרמטרים של פונקציה
+
+המלכודות `apply` ו `construct` לפתוח הרבה אפשרויות לשינוי אופן ביצוע הפונקציה. לדוגמה, נניח שברצונך לאמת שכל הארגומנטים הם מסוג מסוים. אתה יכול לבדוק את הטיעונים במלכודת `apply`:
+
+</div>
 
 ```js
-// adds together all arguments
+// מוסיף יחד את כל הארגומנטים
 function sum(...values) {
     return values.reduce((previous, current) => previous + current, 0);
 }
@@ -856,16 +863,20 @@ let sumProxy = new Proxy(sum, {
 
 console.log(sumProxy(1, 2, 3, 4));          // 10
 
-// throws error
+// יזרוק שגיאה
 console.log(sumProxy(1, "2", 3, 4));
 
-// also throws error
+// גם יזרוק שגיאה
 let result = new sumProxy();
 ```
 
-This example uses the `apply` trap to ensure that all arguments are numbers. The `sum()` function adds up all of the arguments that are passed. If a non-number value is passed, the function will still attempt the operation, which can cause unexpected results. By wrapping `sum()` inside the `sumProxy()` proxy, this code intercepts function calls and ensures that each argument is a number before allowing the call to proceed. To be safe, the code also uses the `construct` trap to ensure that the function can't be called with `new`.
+<div dir="rtl">
 
-You can also do the opposite, ensuring that a function must be called with `new` and validating its arguments to be numbers:
+בדוגמא הזו שנו משתמשים במלכודת `apply` להבטיח שכל הארגומנטים הם מספרים. הפונקציה `sum()`  מחברת את כל הפרמטרים המועברים. אם מועבר ערך שאינו מספר, הפונקציה עדיין תנסה לבצע את הפעולה, מה שעלול לגרום לתוצאות בלתי צפויות. ע"י זה שאנחנו עוטפים את `sum()` בתוך הפרוקסי `sumProxy()` , קוד זה מיירט קריאות לפונקציה ומבטיח שכל ארגומנט הוא מספר לפני שהוא מאפשר לקריאה להמשיך. כדי להיות בטוחים, הקוד משתמש גם במלכודת `construct` כדי להבטיח שלא ניתן לקרוא לפונקציה עם `new`.
+
+אתה יכול גם לעשות את ההפך, להבטיח שחייבים לקרוא לפונקציה עם `new` ולאמת את הארגומנטים שלה שיהיו מספרים :
+
+</div>
 
 ```js
 function Numbers(...values) {
@@ -892,15 +903,19 @@ let NumbersProxy = new Proxy(Numbers, {
 let instance = new NumbersProxy(1, 2, 3, 4);
 console.log(instance.values);               // [1,2,3,4]
 
-// throws error
+// יזרוק שגיאה
 NumbersProxy(1, 2, 3, 4);
 ```
 
-Here, the `apply` trap throws an error while the `construct` trap uses the `Reflect.construct()` method to validate input and return a new instance. Of course, you can accomplish the same thing without proxies using `new.target` instead.
+<div dir="rtl">
 
-### Calling Constructors Without new
+כאן, מלכודת `apply` יזרוק שגיאה בזמן שמלכודת `construct` משתמשת במתודה `Reflect.construct()` כדי לאמת קלט ולהחזיר מופע חדש. כמובן, שתוכלו להשיג את אותו הדבר מבלי להשתמש בפרוקסי ע"י שימוש ב `new.target` במקום.
 
-Chapter 3 introduced the `new.target` metaproperty. To review, `new.target` is a reference to the function on which `new` is called, meaning that you can tell if a function was called using `new` or not by checking the value of `new.target` like this:
+### לקרוא לקונסטרקטור-Constructors בלי new
+
+בפרק 3 הצגנו את המטא-מאפיין `new.target` metaproperty. נזכיר, `new.target` היא הפניה לפונקציה עליה `new` נקרא, כלומר תוכלו לדעת אם נקראה פונקציה באמצעות `new` או לא על ידי בדיקת הערך של `new.target` כך:
+
+</div>
 
 ```js
 function Numbers(...values) {
@@ -915,13 +930,16 @@ function Numbers(...values) {
 let instance = new Numbers(1, 2, 3, 4);
 console.log(instance.values);               // [1,2,3,4]
 
-// throws error
+// יזרוק שגיאה
 Numbers(1, 2, 3, 4);
 ```
+<div dir="rtl">
 
-This example throws an error when `Numbers` is called without using `new`, which is similar to the example in the "Validating Function Parameters" section but doesn't use a proxy. Writing code like this is much simpler than using a proxy and is preferable if your only goal is to prevent calling the function without `new`. But sometimes you aren't in control of the function whose behavior needs to be modified. In that case, using a proxy makes sense.
+דוגמה זו זורקת שגיאה מתי ש `Numbers` נקראית בלי `new`, הדומה לדוגמא בסעיף "אימות פרמטרים של פונקציה" אבל בלי שימוש עם פרוקסי. כתיבת קוד כזה היא הרבה יותר פשוטה מאשר שימוש בפרוקסי ועדיפה אם המטרה היחידה שלך היא למנוע קריאה לפונקציה בלי `new`. אך לפעמים אינך שולט בפונקציה אשר יש לשנות את התנהגותה. במקרה זה, השימוש בפרוקסי הגיוני.
 
-Suppose the `Numbers` function is defined in code you can't modify. You know that the code relies on `new.target` and want to avoid that check while still calling the function. The behavior when using `new` is already set, so you can just use the `apply` trap:
+נניח שהפונקציה `Numbers` מוגדר בקוד שלא ניתן לשנות. אתה יודע שהקוד מסתמך על `new.target` וברצונך להימנע מאותה בדיקה בזמן שאתה קורא לפונקציה. ההתנהגות בעת השימוש `new` נקבעה כבר, כך שתוכלו פשוט להשתמש במלכודת `apply` :
+
+</div>
 
 ```js
 function Numbers(...values) {
@@ -945,7 +963,9 @@ let instance = NumbersProxy(1, 2, 3, 4);
 console.log(instance.values);               // [1,2,3,4]
 ```
 
-The `NumbersProxy` function allows you to call `Numbers` without using `new` and have it behave as if `new` were used. To do so, the `apply` trap calls `Reflect.construct()` with the arguments passed into `apply`. The `new.target` inside of `Numbers` is equal to `Numbers` itself, and no error is thrown. While this is a simple example of modifying `new.target`, you can also do so more directly.
+<div dir="rtl">
+
+הפונקציה `NumbersProxy` מאפשרת לך לקרוא ל `Numbers` מבלי להשתמש ב `new` ושהיא תתנהג כאילו השתמשה ב `new`. לשם כך, המלכודת `apply` קוראית ל `Reflect.construct()` עם הארגומנטים המועוברים ל `apply`. ה `new.target` בתוך `Numbers` הוא שווה ל `Numbers` עצמו, ןהשגיאה תיזרק. אמנם זו דוגמה פשוטה לשינוי `new.target`, אתה יכול גם לעשות זאת באופן ישיר יותר.
 
 ### Overriding Abstract Base Class Constructors
 
