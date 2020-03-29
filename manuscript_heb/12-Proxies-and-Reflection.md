@@ -967,9 +967,11 @@ console.log(instance.values);               // [1,2,3,4]
 
 הפונקציה `NumbersProxy` מאפשרת לך לקרוא ל `Numbers` מבלי להשתמש ב `new` ושהיא תתנהג כאילו השתמשה ב `new`. לשם כך, המלכודת `apply` קוראית ל `Reflect.construct()` עם הארגומנטים המועוברים ל `apply`. ה `new.target` בתוך `Numbers` הוא שווה ל `Numbers` עצמו, ןהשגיאה תיזרק. אמנם זו דוגמה פשוטה לשינוי `new.target`, אתה יכול גם לעשות זאת באופן ישיר יותר.
 
-### Overriding Abstract Base Class Constructors
+### עקיפת מחלקה אבסטרקטית
 
-You can go one step further and specify the third argument to `Reflect.construct()` as the specific value to assign to `new.target`. This is useful when a function is checking `new.target` against a known value, such as when creating an abstract base class constructor (discussed in Chapter 9). In an abstract base class constructor, `new.target` is expected to be something other than the class constructor itself, as in this example:
+אתה יכול ללכת צעד אחד קדימה ולפרט את הארגומנט השלישי ב `Reflect.construct()` כערך ספציפי שיש להקצות עבור `new.target`. זה יכול להיות יעיל כאשר הפונקציה בודקת את  `new.target` מול ערך ידוע, כמו בעת יצירת קוסנרקטור לקלאס בסיס אבסטרקטי (נדון בפרק 9). בקונסטרקטור בקלאס אבסטקטי (מופשט) In , `new.target` מצפה להיות משהו אחר מאשר הקוסנטרקטור עצמו , כמו בדוגמא:
+
+</div>
 
 ```js
 class AbstractNumbers {
@@ -988,11 +990,15 @@ class Numbers extends AbstractNumbers {}
 let instance = new Numbers(1, 2, 3, 4);
 console.log(instance.values);           // [1,2,3,4]
 
-// throws error
+// יזרוק שגיאה
 new AbstractNumbers(1, 2, 3, 4);
 ```
 
-When `new AbstractNumbers()` is called, `new.target` is equal to `AbstractNumbers` and an error is thrown. Calling `new Numbers()` still works because `new.target` is equal to `Numbers`. You can bypass this restriction by manually assigning `new.target` with a proxy:
+<div dir="rtl">
+
+כאשר `new AbstractNumbers()` נקרא, `new.target` שווה ל `AbstractNumbers` ושגיאה נזרקת. שקוראים ל `new Numbers()` יעבוד כי  `new.target` שווה ל `Numbers`.אתה יכול לעקוף מגבלה זו על ידי הקצאה ידנית `new.target` עם פרוקסי:
+
+</div>
 
 ```js
 class AbstractNumbers {
@@ -1017,11 +1023,15 @@ let instance = new AbstractNumbersProxy(1, 2, 3, 4);
 console.log(instance.values);               // [1,2,3,4]
 ```
 
-The `AbstractNumbersProxy` uses the `construct` trap to intercept the call to the `new AbstractNumbersProxy()` method. Then, the `Reflect.construct()` method is called with arguments from the trap and adds an empty function as the third argument. That empty function is used as the value of `new.target` inside of the constructor. Because `new.target` is not equal to `AbstractNumbers`, no error is thrown and the constructor executes completely.
+<div dir="rtl">
 
-### Callable Class Constructors
+ה `AbstractNumbersProxy` משתמש במלכודת `construct` ליירט את הקריאה למתודה `new AbstractNumbersProxy()` . כאשר המתודה  `Reflect.construct()` נראית עם ארגומנט מהמלכות ומוסיפים כארגומנט שלישי פונקציה ריקה. הפונקציה הריקה משמשת כערך  ל `new.target` במקום הבנאי- הקונסרקטור. בגלל ש `new.target` לא שווה ל  `AbstractNumbers`, לא נזרקית שגיאה והבנאי מופעל בשלמות.
 
-Chapter 9 explained that class constructors must always be called with `new`. That happens because the internal `[[Call]]` method for class constructors is specified to throw an error. But proxies can intercept calls to the `[[Call]]` method, meaning you can effectively create callable class constructors by using a proxy. For instance, if you want a class constructor to work without using `new`, you can use the `apply` trap to create a new instance. Here's some sample code:
+### החלפת קונסטרקטור-בנאי של קלאס
+
+פרק 9 הסביר שבנאי שקלאס קונסטקטור חייב להיקרא עם `new`. זה קורה בגלל המתודה הפנימית `[[Call]]` שהיא עבור קלאס קונסטרקטור שמוגדרת לזרוק שגיאה. אבל פרוקסי יכול ליירט קריאות למתודה `[[Call]]`,זאת אומרת שאת היכול ליצור ביעילות בנאי של קונסטרקטור על ידי שימוש בפרוקסי.לדוגמא,אם אתה רוצה שקלאס קונסטרקטור יעבוד בלי `new`, אתה יכול להשתמש במלכודת `apply` על מנת ליצור ישות חדשה . הנה קוד לדוגמא:
+
+</div>
 
 ```js
 class Person {
@@ -1043,18 +1053,22 @@ console.log(me instanceof Person);      // true
 console.log(me instanceof PersonProxy); // true
 ```
 
-The `PersonProxy` object is a proxy of the `Person` class constructor. Class constructors are just functions, so they behave like functions when used in proxies. The `apply` trap overrides the default behavior and instead returns a new instance of `trapTarget` that's equal to `Person`. (I used `trapTarget` in this example to show that you don't need to manually specify the class.) The `argumentList` is passed to `trapTarget` using the spread operator to pass each argument separately. Calling `PersonProxy()` without using `new` returns an instance of `Person`; if you attempt to call `Person()` without `new`, the constructor will still throw an error. Creating callable class constructors is something that is only possible using proxies.
+<div dir="rtl">
 
-## Revocable Proxies
+האובייקט `PersonProxy` הוא פרוקסי של קלאס-קונסטרקטור `Person`.  קלאס קונסטרקטור הוא סכ"ה פונקציה,אז ההתנהגות שלו תהיה כמו פונקציה שנשתמש בפרוקסי.מלכודת  `apply` היא תשכתב את ההתנהגות הדיפולטיבית ובבמקום זאת תחזיר אינסטנס חדש של `trapTarget` שזה שווה ערך ל  `Person`. (בדוגמא זאת אני משתמש ב `trapTarget`  להראות שאתה לא צריך ידנית להגדיר קלאס.) ה `argumentList` מועבר ל `trapTarget` בשימוש ה spread operator להעברת הארגונמטים. קריאה ל  `PersonProxy()` בלי להשתמש `new` יחזיר אינטנס של  `Person`; אם אתה תנסה לקרוא ל  `Person()` בלי `new`, הקונסטרקטור עדיין יזרוק שגיאה. ליצור אפשרות לקרוא לקלאס קונסטקרטוד זה משהו שאפשרי רק ע"י שימוש בפרוקסי.
 
-Normally, a proxy can't be unbound from its target once the proxy has been created. All of the examples to this point in this chapter have used nonrevocable proxies. But there may be situations when you want to revoke a proxy so that it can no longer be used. You'll find it most helpful to revoke proxies when you want to provide an object through an API for security purposes and maintain the ability to cut off access to some functionality at any point in time.
+## לבטל פרוקסי
 
-You can create revocable proxies with the `Proxy.revocable()` method, which takes the same arguments as the `Proxy` constructor--a target object and the proxy handler. The return value is an object with the following properties:
+בדרך כלל פרוקסי לא יכול להתנתק מהמטרה שלו ארי הוא נוצר. כל הדוגמאות בפרק זה השתמשנו בפרוקסים בלתי ניתנים לביטול. אך יתכנו מצבים שבהם ברצונך לבטל פרוקסי כך שלא ניתן יהיה להשתמש בו עוד. תמצא שזה מועיל ביותר לבטל פרוקסי עבודה כאשר ברצונך לספק אובייקט באמצעות API למטרות אבטחה ולשמור על היכולת לנתק את הגישה לפונקציונליות כלשהי בכל נקודת זמן.
 
-1. `proxy` - the proxy object that can be revoked
-1. `revoke` - the function to call to revoke the proxy
+אתה יכול ליצור פרוקסי הניתן לביטול ע"י המתודה `Proxy.revocable()` , שלוקחת את אותם ארגומנטים כמו הבנאי של  ה `Proxy` -- אובייקט מטרה ואת המטפל של הפרוקסי (handler). ערך ההחזרה הוא אובייקט עם המאפיינים הבאים:
 
-When the `revoke()` function is called, no further operations can be performed through the `proxy`. Any attempt to interact with the proxy object in a way that would trigger a proxy trap throws an error. For example:
+1. `proxy` - אובייקט ה- proxy שניתן לבטל
+1. `revoke` - הפונקציה להתקשר לביטול ה- Proxy
+
+כאשר הפונקציה `revoke()` נקראית, לא ניתן לבצע פעולות נוספות דרך `proxy`. כל ניסיון לקיים אינטראקציה עם אובייקט ה- proxy יגרום למלכודת proxy לזרוק שגיאה. לדוגמא:
+
+</div>
 
 ```js
 let target = {
@@ -1067,11 +1081,13 @@ console.log(proxy.name);        // "target"
 
 revoke();
 
-// throws error
+// יזרוק שגיאה
 console.log(proxy.name);
 ```
 
-This example creates a revocable proxy. It uses destructuring to assign the `proxy` and `revoke` variables to the properties of the same name on the object returned by the `Proxy.revocable()` method. After that, the `proxy` object can be used just like a nonrevocable proxy object, so `proxy.name` returns `"target"` because it passes through to `target.name`. Once the `revoke()` function is called, however, `proxy` no longer functions. Attempting to access `proxy.name` throws an error, as will any other operation that would trigger a trap on `proxy`.
+<div dir="rtl">
+
+בדוגמה הזו יצרנו פרוקסי הניתן לביטול. השתמשנו ב destructuring להשמה של המשתנים `proxy` ו `revoke` לתכונות עם אותו שם שהחוזרו ע"י המתודה `Proxy.revocable()`. לאחר מכן,ניתן להשתמש  באובייקט `proxy` כמו כל פרוקסי שלא ניתן לביטול, כך ש `proxy.name` יחזיר `"target"` כי זה עובר ל `target.name`. כאשר הפונקציה `revoke()` נקראית, מאידך, `proxy` כבר לא מתפקד. נסיון לגשת ל  `proxy.name` יזרוק שגיאה, כמו כל פעולה אחרת שתפעיל מלכודת `proxy`.
 
 ## Solving the Array Problem
 
