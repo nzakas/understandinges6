@@ -1207,9 +1207,11 @@ console.log(colors[3]);             // "black"
 
 כאשר ההתנהגות הראשונה עובדת, הגיע הזמן לעבור לשנייה.
 
-### Deleting Elements on Reducing length
+### מחיקת אלמנטים כאשר מצמצמים את האורך - length
 
-The first array behavior to mimic is used only when an array index is greater than or equal to the `length` property. The second behavior does the opposite and removes array items when the `length` property is set to a smaller value than it previously contained. That involves not only changing the `length` property, but also deleting all items that might otherwise exist. For instance, if an array with a `length` of 4 has `length` set to 2, the items in positions 2 and 3 are deleted. You can accomplish this inside the `set` proxy trap alongside the first behavior. Here's the previous example again, with an updated `createMyArray` method:
+ההתנהגות הראשונה לחיקוי המערך תהיה רק כאשר  האינדקס של המערך יהיה שווה או גדול מהערך של המאפיין `length`. ההתנהגות השנייה עושה את ההפך ומסירה פריטי מערך כאשר מאפיין `length` מוגדר לערך קטן יותר מכפי שהיה קודם. זה כרוך לא רק בשינוי מאפיין `length` , אלא גם במחיקת כל הפריטים שעלולים להתקיים. לדוגמא אם מערך עם `length` של 4 וה `length` מוגדר ל 2, האייטמים במקומות  2 ו 3 ימחקו. אתה יכול להשיג זאת בתוך מלכודת הפרוקסי `set` לצד ההתנהגות הראשונה. הנה הדוגמה הקודמת שוב, עם עידכון למתודה `createMyArray`:
+
+</div>
 
 ```js
 function toUint32(value) {
@@ -1227,7 +1229,7 @@ function createMyArray(length=0) {
 
             let currentLength = Reflect.get(trapTarget, "length");
 
-            // the special case
+            // המקרה המיוחד
             if (isArrayIndex(key)) {
                 let numericKey = Number(key);
 
@@ -1244,7 +1246,7 @@ function createMyArray(length=0) {
 
             }
 
-            // always do this regardless of key type
+            // עשה זאת תמיד ללא קשר לסוג המפתח
             return Reflect.set(trapTarget, key, value);
         }
     });
@@ -1269,17 +1271,21 @@ console.log(colors[1]);             // "green"
 console.log(colors[0]);             // "red"
 ```
 
-The `set` proxy trap in this code checks to see if `key` is `"length"` in order to adjust the rest of the object correctly. When that happens, the current length is first retrieved using `Reflect.get()` and compared against the new value. If the new value is less than the current length, then a `for` loop deletes all properties on the target that should no longer be available. The `for` loop goes backward from the current array length (`currentLength`) and deletes each property until it reaches the new array length (`value`).
+<div dir="rtl">
 
-This example adds four colors to `colors` and then sets the `length` property to 2. That effectively removes the items in positions 2 and 3, so they now return `undefined` when you attempt to access them. The `length` property is correctly set to 2 and the items in positions 0 and 1 are still accessible.
+המלכודת `set` בקוד הזה בודקת אם `key` הוא `"length"` על מנת להתאים נכון את שאר האובייקט.כאשר זה קורה, האורך הנוכחי נשלף תחילה באמצעות `Reflect.get()` ומושווה לערך החדש. אם הערך החדש הוא קטן מהאורך הנוכחי, אזי הלופ `for`מוחק את כל המאפיינים ביעד שאינם אמורים להיות זמינים עוד. הלופ `for` הולך לאחור מאורך המערך הנוכחי (`currentLength`) ומוחק כל נכס עד שהוא מגיע לאורך המערך החדש (`value`).
 
-With both behaviors implemented, you can easily create an object that mimics the behavior of built-in arrays. But doing so with a function isn't as desirable as creating a class to encapsulate this behavior, so the next step is to implement this functionality as a class.
+דוגמה זו מוסיפה ארבעה צבעים ל `colors` ואז קובעת את המאפיין `length` ל 2. זה מסיר ביעילות את הפריטים בעמדות 2 ו -3, כך שהם חוזרים כעת `undefined` שמנסים לגשת אליהם. המאפיין `length` המאפיין מוגדר כ- 2 והפריטים בעמדות 0 ו- 1 עדיין נגישים.
 
-### Implementing the MyArray Class
+כאשר שתי ההתנהגויות מיושמות, תוכלו ליצור בקלות אובייקט המחקה את ההתנהגות של מערכים מובנים. אולם פעולה כזו עם פונקציה אינה רצויה כמו יצירת מחלקה שתכסה את ההתנהגות הזו, אז השלב הבא הוא ליישם פונקציונליות זו כמחלקה-קלאס.
 
-The simplest way to create a class that uses a proxy is to define the class as usual and then return a proxy from the constructor. That way, the object returned when a class is instantiated will be the proxy instead of the instance. (The instance is the value of `this` inside the constructor.) The instance becomes the target of the proxy and the proxy is returned as if it were the instance. The instance will be completely private and you won't be able to access it directly, though you'll be able to access it indirectly through the proxy.
+### הטמעת מחלקת MyArray
 
-Here's a simple example of returning a proxy from a class constructor:
+הדרך הפשוטה ביותר ליצור מחלקה המשתמשת בפרוקסי היא להגדיר את המחלקה כרגיל ואז להחזיר פרוקסי מהבנאי. באופן זה, האובייקט המוחזר כאשר מופעלת המחלקה יהיה ה- proxy במקום המופע. (המופע הוא הערך של `this` בתוך הבנאי.) המופע הופך להיות היעד של ה- proxy וה- proxy מוחזר כאילו היה המופע. המופע יהיה פרטי לחלוטין ולא תוכלו לגשת אליו ישירות, אם כי תוכלו לגשת אליו בעקיפין דרך ה- proxy.
+
+להלן דוגמא פשוטה להחזרת שרת פרוקסי מבונה כיתתי:
+
+</div>
 
 ```js
 class Thing {
@@ -1292,9 +1298,13 @@ let myThing = new Thing();
 console.log(myThing instanceof Thing);      // true
 ```
 
-In this example, the class `Thing` returns a proxy from its constructor. The proxy target is `this` and the proxy is returned from the constructor. That means `myThing` is actually a proxy even though it was created by calling the `Thing` constructor. Because proxies pass through their behavior to their targets, `myThing` is still considered an instance of `Thing`, making the proxy completely transparent to anyone using the `Thing` class.
+<div dir="rtl">
 
-With that in mind, creating a custom array class using a proxy in relatively straightforward. The code is mostly the same as the code in the "Deleting Elements on Reducing Length" section. The same proxy code is used, but this time, it's inside a class constructor. Here's the complete example:
+בדוגמא הזו המחלקה `Thing` מחזירה פרוקסי מתוך הבנאי. המטרה של הפרוקסי היא `this` והפרוקסי מוחזר מהבנאי. הכוונה ש `myThing` הוא למעשה פרוקסי למרות שזה נוצר על ידי הקריאה לבנאי של `Thing`. בגלל שפרוקסים מעבירים דרך ההתנהגות שלהם אל היעד שלהם, `myThing` נחשב עדיין למופע של `Thing`, מה שהופך את ה- Proxy לשקוף לחלוטין לכל מי שמשתמש במחלקה `Thing` .
+
+עם זאת בחשבון, יצירת כיתת מערך בהתאמה אישית באמצעות פרוקסי הוא יחסית פשוט. הקוד זהה בעיקר לקוד בסעיף "מחיקת אלמנטים על צמצום האורך". משתמשים באותו קוד פרוקסי, אך הפעם הוא נמצא בתוך בנאי כיתתי. להלן הדוגמא המלאה:
+
+</div>
 
 ```js
 function toUint32(value) {
@@ -1315,7 +1325,7 @@ class MyArray {
 
                 let currentLength = Reflect.get(trapTarget, "length");
 
-                // the special case
+                // המקרה המיוחד
                 if (isArrayIndex(key)) {
                     let numericKey = Number(key);
 
@@ -1332,7 +1342,7 @@ class MyArray {
 
                 }
 
-                // always do this regardless of key type
+                // עשה זאת תמיד ללא קשר לסוג המפתח
                 return Reflect.set(trapTarget, key, value);
             }
         });
@@ -1362,22 +1372,26 @@ console.log(colors[1]);             // "green"
 console.log(colors[0]);             // "red"
 ```
 
-This code creates a `MyArray` class that returns a proxy from its constructor. The `length` property is added in the constructor (initialized to either the value that is passed in or to a default value of 0) and then a proxy is created and returned. This gives the `colors` variable the appearance of being just an instance of `MyArray` and implements both of the key array behaviors.
+<div dir="rtl">
 
-Although returning a proxy from a class constructor is easy, it does mean that a new proxy is created for every instance. There is, however, a way to have all instances share one proxy: you can use the proxy as a prototype.
+הקוד הזה יצר מחלקה `MyArray` שמחזירה פרוקסי מתוך הבנאי שלה.המאפיין `length` מתווסף בתוך הבנאי (מאתחל לערך שמועבר או לערך ברירת מחדל של 0) והפרוקסי נוצר ומוחזר. זה נותן למשתנה `colors` את הנראות להיות רמופע של `MyArray` ומיישם את שתי התנהגויות של המערך והמפתח.
 
-## Using a Proxy as a Prototype
+אמנם קל להחזיר פרוקסי מבנאימחלקה, אך זה אומר שנוצר פרוקסי חדש עבור כל מופע. עם זאת יש דרך לגרום לכל המקרים לשתף פרוקסי אחד: אתה יכול להשתמש בפרוקסי כאב-טיפוס - prototype.
 
-Proxies can be used as prototypes, but doing so is a bit more involved than the previous examples in this chapter. When a proxy is a prototype, the proxy traps are only called when the default operation would normally continue on to the prototype, which does limit a proxy's capabilities as a prototype. Consider this example:
+## שימוש בפרוקסי כאב-טיפוס - Prototype
+
+פרוקסיות יכולות לשמש כאבות-טיפוס, אך פעולה זו מסובכת מעט יותר מהדוגמאות הקודמות בפרק זה. כאשר פרוקסי הוא אב-טיפוס, מלכודות ה- Proxy נקראות רק כאשר פעולת ברירת המחדל תמשיך בדרך כלל לאב-טיפוס, מה שמגביל את יכולות ה- Proxy כאב-טיפוס. שקול דוגמה זו:
+
+</div>
 
 ```js
 let target = {};
 let newTarget = Object.create(new Proxy(target, {
 
-    // never called
+    // לעולם לא יקרא
     defineProperty(trapTarget, name, descriptor) {
 
-        // would cause an error if called
+        // יחזיר שגיאה אם יקרא
         return false;
     }
 }));
@@ -1390,11 +1404,11 @@ console.log(newTarget.name);                    // "newTarget"
 console.log(newTarget.hasOwnProperty("name"));  // true
 ```
 
-The `newTarget` object is created with a proxy as the prototype. Making `target` the proxy target effectively makes `target` the prototype of `newTarget` because the proxy is transparent. Now, proxy traps will only be called if an operation on `newTarget` would pass the operation through to happen on `target`.
+האובייקט `newTarget` נוצר באמצעות פרוקסי כאב-טיפוס. הפיכת `target` למטרת הפרוקסי באופן יעיל עושה  את `target` לאב-טיפוס של `newTarget` בגלל שהפרוקסי הוא שקוף. כעת, מלכודות פרוקסי יקראו רק אם פעולה ב- `newTarget` תעביר את הפעולה לקרות ב `target`.
 
-The `Object.defineProperty()` method is called on `newTarget` to create an own property called `name`. Defining a property on an object isn't an operation that normally continues to the object's prototype, so the `defineProperty` trap on the proxy is never called and the `name` property is added to `newTarget` as an own property.
+המתודה `Object.defineProperty()` נקראית ב `newTarget` ליצירת מאפיין משלו בשם `name`. הגדרת מאפיין על אובייקט אינה פעולה שממשיכה בדרך כלל לאב-טיפוס של האובייקט, כך שמלכודת  `defineProperty` על הפרוקסי לעולם לא נקראת והמאפיין `name` מתווסף ל `newTarget` כמאפיין משל עצמו.
 
-While proxies are severely limited when used as prototypes, there are a few traps that are still useful.
+בעוד שיכולות פרוקסי  מוגבלים מאוד כאשר משתמשים בהם כאבות-טיפוס, ישנם כמה מלכודות שעדיין מועילות.
 
 ### Using the `get` Trap on a Prototype
 
