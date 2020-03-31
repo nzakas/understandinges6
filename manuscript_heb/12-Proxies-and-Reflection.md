@@ -1089,9 +1089,11 @@ console.log(proxy.name);
 
 בדוגמה הזו יצרנו פרוקסי הניתן לביטול. השתמשנו ב destructuring להשמה של המשתנים `proxy` ו `revoke` לתכונות עם אותו שם שהחוזרו ע"י המתודה `Proxy.revocable()`. לאחר מכן,ניתן להשתמש  באובייקט `proxy` כמו כל פרוקסי שלא ניתן לביטול, כך ש `proxy.name` יחזיר `"target"` כי זה עובר ל `target.name`. כאשר הפונקציה `revoke()` נקראית, מאידך, `proxy` כבר לא מתפקד. נסיון לגשת ל  `proxy.name` יזרוק שגיאה, כמו כל פעולה אחרת שתפעיל מלכודת `proxy`.
 
-## Solving the Array Problem
+## לפתור את בעיית המערך
 
-At the beginning of this chapter, I explained how developers couldn't mimic the behavior of an array accurately in JavaScript prior to ECMAScript 6. Proxies and the reflection API allow you to create an object that behaves in the same manner as the built-in `Array` type when properties are added and removed. To refresh your memory, here's an example showing the behavior that proxies help to mimick:
+בתחילת פרק זה הסברתי כיצד מפתחים לא יכולים לחקות את ההתנהגות של מערך במדויק ב- JavaScript לפני ECMAScript 6. פרוקסי והAPI של ההשתקפות (reflection API) מאפשרים לך ליצור אובייקט שמתנהג כמו הסוג המובנה של `Array` כאשר מוסיפים או מחסירים ערכים. לריענון הזיכרון, הנה מספר דוגמאותשפרוקסי יכול לחקות:
+
+</div>
 
 ```js
 let colors = ["red", "green", "blue"];
@@ -1111,20 +1113,24 @@ console.log(colors[2]);             // undefined
 console.log(colors[1]);             // "green"
 ```
 
-There are two particularly important behaviors to notice in this example:
+<div dir="rtl">
 
-1. The `length` property is increased to 4 when `colors[3]` is assigned a value.
-1. The last two items in the array are deleted when the `length` property is set to 2.
+בדוגמה זו ישנן שתי התנהגויות חשובות במיוחד:
 
-These two behaviors are the only ones that need to be mimicked to accurately recreate how built-in arrays work. The next few sections describe how to make an object that correctly mimics them.
+1. המאפיין  `length` יוגדל לארבע כאשר תהיה השמה של ערך ב  `colors[3]`.
+1. שני הערכים האחרונים של המערך ימחקו כאשר המאפיין `length` מוגדר ל 2.
 
-### Detecting Array Indices
+שתי ההתנהגויות הללו הן היחידות שצריך לחקות כדי לשחזר במדויק את האופן שבו מערכים מובנים עובדים. החלקים הבאים הבאים מתארים כיצד ליצור אובייקט שמחקה אותם נכון.
 
-Keep in mind that assigning to an integer property key is a special case for arrays, as those are treated differently from non-integer keys. The ECMAScript 6 specification gives these instructions on how to determine if a property key is an array index:
+### איתור מדדי מערך
+
+קחו בחשבון שהקצאה למפתח מספר שלם הוא מקרה מיוחד עבור מערכים, מכיוון שאלו מטופלים באופן שונה ממפתחות שאינם מספרים. מפרט ECMAScript 6 נותן הוראות אלה כיצד לקבוע אם ערך מפתח הוא אינדקס מערך:
 
 > A String property name `P` is an array index if and only if `ToString(ToUint32(P))` is equal to `P` and `ToUint32(P)` is not equal to 2^32^-1.
 
-This operation can be implemented in JavaScript as follows:
+ניתן ליישם פעולה זו ב- JavaScript באופן הבא:
+
+</div>
 
 ```js
 function toUint32(value) {
@@ -1137,11 +1143,15 @@ function isArrayIndex(key) {
 }
 ```
 
-The `toUint32()` function converts a given value into an unsigned 32-bit integer using an algorithm described in the specification. The `isArrayIndex()` function first converts the key into a uint32 and then performs the comparisons to determine if the key is an array index or not. With these utility functions available, you can start to implement an object that will mimic a built-in array.
+<div dir="rtl">
 
-### Increasing length when Adding New Elements
+הפונקציה `toUint32()` ממירה ערך שמתקבל ממיר ערך נתון למספר שלם של  32 סיביות לא חתום באמצעות אלגוריתם המתואר במפרט. הפונקציה `isArrayIndex()` ראשית ממיר את המפתח ל- uint32 ואז מבצע את ההשוואות כדי לקבוע אם המפתח הוא אינדקס מערך או לא. עם פונקציות שירות אלה זמינות, אתה יכול להתחיל ליישם אובייקט שיחקה מערך מובנה.
 
-You might have noticed that both array behaviors I described rely on the assignment of a property. That means you really only need to use the `set` proxy trap to accomplish both behaviors. To get started, here's an example that implements the first of the two behaviors by incrementing the `length` property when an array index larger than `length - 1` is used:
+### הגדלת האורך בעת הוספת אלמנטים חדשים
+
+אולי שמתם לב ששתי התנהגויות המערך שתיארתי מסתמכות על הקצאת ערך. זה אומר שאתה באמת צריך להשתמש רק במלכודת `set` של פרוקסי להשיג את ההתנהגות הזו. כדי להתחיל, הנה דוגמה המיישמת את ההתנהגות הראשונה משתיים על ידי הגדלת המאפיין `length` כאשר משתמשים באינדקס מערך גדול מ `length - 1` :
+
+</div>
 
 ```js
 function toUint32(value) {
@@ -1159,7 +1169,7 @@ function createMyArray(length=0) {
 
             let currentLength = Reflect.get(trapTarget, "length");
 
-            // the special case
+            // המקרה המיוחד
             if (isArrayIndex(key)) {
                 let numericKey = Number(key);
 
@@ -1168,7 +1178,7 @@ function createMyArray(length=0) {
                 }
             }
 
-            // always do this regardless of key type
+            // עשה זאת תמיד ללא קשר לסוג המפתח
             return Reflect.set(trapTarget, key, value);
         }
     });
@@ -1189,11 +1199,13 @@ console.log(colors.length);         // 4
 console.log(colors[3]);             // "black"
 ```
 
-This example uses the `set` proxy trap to intercept the setting of an array index. If the key is an array index, then it is converted into a number because keys are always passed as strings. Next, if that numeric value is greater than or equal to the current `length` property, then the `length` property is updated to be one more than the numeric key (setting an item in position 3 means the `length` must be 4). After that, the default behavior for setting a property is used via `Reflect.set()`, since you do want the property to receive the value as specified.
+<div dir="rtl">
 
-The initial custom array is created by calling `createMyArray()` with a `length` of 3 and the values for those three items are added immediately afterward. The `length` property correctly remains 3 until the value `"black"` is assigned to position 3. At that point, `length` is set to 4.
+הדוגמא הזו משתמשת במלכודת פרוקסי `set` ליירט הגדרת אינדקס מערך. אם המפתח הוא אינדקס מערך, הוא יומר למספר מכיוון שמפתחות מועברים תמיד כמחרוזות. בשלב הבא, אם הערך המספרי הזה גדול או שווה למאפיין `length` הנוכחי, אז המאפיין `length` מתעדכן להיות אחד יותר מהמפתח המספרי (הגדרה של פריט במיקום 3 פירושה ש `length` חייב להיות 4). לאחר מכן משתמשים בהתנהגות ברירת המחדל להגדרת מאפיין באמצעות  `Reflect.set()`, מכיוון שאתה רוצה שהמאפיין יקבל את הערך כמפורט.
 
-With the first behavior working, it's time to move on to the second.
+המערך המותאם אישית מאותחל על ידי קריאה ל `createMyArray()` עם  `length` של 3 והערכים לשלושת הפריטים מתווספים מיד לאחר מכן. המאפיין `length` נכון לעכשיו נשאר 3 עד שהערך `"black"` מוקצה למיקום  3. בנקודה הזו, `length` מוגדר ל 4.
+
+כאשר ההתנהגות הראשונה עובדת, הגיע הזמן לעבור לשנייה.
 
 ### Deleting Elements on Reducing length
 
