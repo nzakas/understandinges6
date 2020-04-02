@@ -1404,17 +1404,21 @@ console.log(newTarget.name);                    // "newTarget"
 console.log(newTarget.hasOwnProperty("name"));  // true
 ```
 
+<div dir="rtl">
+
 האובייקט `newTarget` נוצר באמצעות פרוקסי כאב-טיפוס. הפיכת `target` למטרת הפרוקסי באופן יעיל עושה  את `target` לאב-טיפוס של `newTarget` בגלל שהפרוקסי הוא שקוף. כעת, מלכודות פרוקסי יקראו רק אם פעולה ב- `newTarget` תעביר את הפעולה לקרות ב `target`.
 
 המתודה `Object.defineProperty()` נקראית ב `newTarget` ליצירת מאפיין משלו בשם `name`. הגדרת מאפיין על אובייקט אינה פעולה שממשיכה בדרך כלל לאב-טיפוס של האובייקט, כך שמלכודת  `defineProperty` על הפרוקסי לעולם לא נקראת והמאפיין `name` מתווסף ל `newTarget` כמאפיין משל עצמו.
 
 בעוד שיכולות פרוקסי  מוגבלים מאוד כאשר משתמשים בהם כאבות-טיפוס, ישנם כמה מלכודות שעדיין מועילות.
 
-### Using the `get` Trap on a Prototype
+### שימוש במלכודת `get` על מאפיין
 
-When the internal `[[Get]]` method is called to read a property, the operation looks for own properties first. If an own property with the given name isn't found, then the operation continues to the prototype and looks for a property there. The process continues until there are no further prototypes to check.
+כאשר הפונקציה הפנימית  `[[Get]]` נקראית כדי לקבל מאפיין, הפעולה מחפשת תחילה במאפיינים שלו.אם לא נמצא מאפיין משלו עם השם הנתון, הפעולה ממשיכה לאב-טיפוס ומחפשת שם מאפיין. התהליך נמשך עד שלא יהיו אבטיפוסים נוספים לבדיקה.
 
-Thanks to that process, if you set up a `get` proxy trap, the trap will be called on a prototype whenever an own property of the given name doesn't exist. You can use the `get` trap to prevent unexpected behavior when accessing properties that you can't guarantee will exist. Just create an object that throws an error whenever you try to access a property that doesn't exist:
+תודה לתהליך זה, אם תגדיר את מלכודת הפרוקסי `get` , המלכודת תיקרא באב-טיפוס בכל פעם שאין מאפיין משלו בשם הנתון. רתה יכול להשתמש במלכודת `get` כדי למנוע התנהגות בלתי צפויה בעת כניסה למאפיינים שאינך יכול להבטיח שיהיו קיימים. פשוט צור אובייקט שזורק שגיאה בכל פעם שאתה מנסה לגשת למאפיין שאינו קיים:
+
+</div>
 
 ```js
 let target = {};
@@ -1428,21 +1432,25 @@ thing.name = "thing";
 
 console.log(thing.name);        // "thing"
 
-// throw an error
+// יזרוק שגיאה
 let unknown = thing.unknown;
 ```
 
-In this code, the `thing` object is created with a proxy as its prototype. The `get` trap throws an error when called to indicate that the given key doesn't exist on the `thing` object. When `thing.name` is read, the operation never calls the `get` trap on the prototype because the property exists on `thing`. The `get` trap is called only when the `thing.unknown` property, which doesn't exist, is accessed.
+<div dir="rtl">
 
-When the last line executes, `unknown` isn't an own property of `thing`, so the operation continues to the prototype. The `get` trap then throws an error. This type of behavior can be very useful in JavaScript, where unknown properties silently return `undefined` instead of throwing an error (as happens in other languages).
+בקוד הזה האובייקט `thing` האובייקט נוצר באמצעות פרוקסי כאב-טיפוס שלו. המלכודת  `get` זורקת שגיאה כאשר היא נקראת כדי לציין שהמפתח הנתון אינו קיים באובייקט - `thing`. כאשר `thing.name` נקרא, הפעולה אינה קוראת לעולם למלכודת `get` באב-טיפוס מכיוון שהמאפיין קיים על `thing`. מלכודת `get` נקראית רק כאשר קוראים למאפיין `thing.unknown` , שלא קיים ואין אליו גישה.
 
-It's important to understand that in this example, `trapTarget` and `receiver` are different objects. When a proxy is used as a prototype, the `trapTarget` is the prototype object itself while the `receiver` is the instance object. In this case, that means `trapTarget` is equal to `target` and `receiver` is equal to `thing`. That allows you access both to the original target of the proxy and the object on which the operation is meant to take place.
+כאשר השורה האחרונה מתבצעת, `unknown` אינו מאפיין של `thing`,כך שהפעולה ממשיכה לאב-טיפוס. המלכודת `get` אזי זוקרת שגיאה. התנהגות מסוג זה יכולה להיות שימושית מאוד ב- JavaScript, כאשר תכונות לא ידועות חוזרות בשקט `undefined` במקום לזרוק שגיאה (כמו שקורה בשפות אחרות).
 
-### Using the `set` Trap on a Prototype
+חשוב להבין כי בדוגמה זו, `trapTarget` ו `receiver` הם אובייקטים שונים. כאשר פרוקסי משמש כאב-טיפוס, ה `trapTarget` הוא האובייקט האבטיפוס עצמו בעוד `receiver` הוא אובייקט המופע. במקרה זה, משמעות הדבר היא כי  `trapTarget` שווה ל `target` ו `receiver` שווה ל `thing`. זה מאפשר לך לגשת הן למטרה המקורית של ה- Proxy והן לאובייקט עליו אמורה הפעולה להתקיים.
 
-The internal `[[Set]]` method also checks for own properties and then continues to the prototype if needed. When you assign a value to an object property, the value is assigned to the own property with the same name if it exists. If no own property with the given name exists, then the operation continues to the prototype. The tricky part is that even though the assignment operation continues to the prototype, assigning a value to that property will create a property on the instance (not the prototype) by default, regardless of whether a property of that name exists on the prototype.
+### שימוש במלכודת `set` על אבטיפוסים - Prototype
 
-To get a better idea of when the `set` trap will be called on a prototype and when it won't, consider the following example showing the default behavior:
+המתודה הפנימית  `[[Set]]` בודק גם מאפיינים משלו ואז ממשיך לאב-טיפוס במידת הצורך. כשאתה מקצה ערך למאפיין באובייקט, הערך מוקצה למאפיין עצמו עם אותו שם אם הוא קיים. אם אין מאפיין משלו עם השם הנתון, הפעולה ממשיכה לאב-טיפוס. החלק המסובך הוא שלמרות שפעולת ההקצאה ממשיכה לאב-טיפוס, הקצאת ערך למאפיין זה תיצור מאפיין במופע (ולא אב-הטיפוס) כברירת מחדל, ללא קשר אם קיים מאפיין בשם זה באב-הטיפוס.
+
+כדי לקבל מושג טוב יותר מתי נקרא מלכודת  `set` באב-טיפוס ומתי  לא , הבט בדוגמה הבאה שמציגה את התנהגות ברירת המחדל:
+
+</div>
 
 ```js
 let target = {};
@@ -1454,27 +1462,31 @@ let thing = Object.create(new Proxy(target, {
 
 console.log(thing.hasOwnProperty("name"));      // false
 
-// triggers the `set` proxy trap
+// מפעיל את מלכודת ה-  `set`
 thing.name = "thing";
 
 console.log(thing.name);                        // "thing"
 console.log(thing.hasOwnProperty("name"));      // true
 
-// does not trigger the `set` proxy trap
+// לא מפעיל את המלכודת `set`
 thing.name = "boo";
 
 console.log(thing.name);                        // "boo"
 ```
 
-In this example, `target` starts with no own properties. The `thing` object has a proxy as its prototype that defines a `set` trap to catch the creation of any new properties. When `thing.name` is assigned `"thing"` as its value, the `set` proxy trap is called because `thing` doesn't have an own property called `name`. Inside the `set` trap, `trapTarget` is equal to `target` and `receiver` is equal to `thing`. The operation should ultimately create a new property on `thing`, and fortunately `Reflect.set()` implements this default behavior for you if you pass in `receiver` as the fourth argument.
+<div dir="rtl">
 
-Once the `name` property is created on `thing`, setting `thing.name` to a different value will no longer call the `set` proxy trap. At that point, `name` is an own property so the `[[Set]]` operation never continues on to the prototype.
+בדוגמא זו, `target` מתחיל ללא מאפיינים משלו. האובייקט `thing` יש לו פרוקסי כאב-טיפוס שלו שמגדיר המלכודת `set` לתפוס את היצירה של כל מאפיינים חדשים. כאשר `thing.name` מוקצה `"thing"` כערך שלו,מהלכודת פרוקסי `set` נקראית בגלל של `thing` אין לו מאפיין משלו שנקרא `name`. בתוך מלכודת `set` , `trapTarget` שווה ערך ל `target` ו `receiver` שווה ל `thing`. הביצוע אמור בסופו של דבר ליצור מאפיין חדש ב `thing`, ולמרבה המזל `Reflect.set()` מיישם עבורך התנהגות ברירת מחדל אם תעביר `receiver` כארגומנט רביעי.
 
-### Using the `has` Trap on a Prototype
+כאשר המאפיין  `name` נוצר על `thing`, הגדרת `thing.name` לערך שונה לא תקרא למלכודת `set` .בנקודה זו, `name` הוא מאפיין משלו אז `[[Set]]` הפעולה אף פעם לא ממשיכה לאב-טיפוס.
 
-Recall that the `has` trap intercepts the use of the `in` operator on objects. The `in` operator searches first for an object's own property with the given name. If an own property with that name doesn't exist, the operation continues to the prototype. If there's no own property on the prototype, then the search continues through the prototype chain until the own property is found or there are no more prototypes to search.
+### שימוש במלכודת `has` על אבטיפוסים - Prototype
 
-The `has` trap is therefore only called when the search reaches the proxy object in the prototype chain. When using a proxy as a prototype, that only happens when there's no own property of the given name. For example:
+נזכיר שמלכודת ה `has` מיירטת את השימוש באופרטור  `in` על אובייקטים. האופרטור `in` מחפש תחילה מאפיין של אובייקט עם השם הנתון. אם מאפיין משלו בשם זה לא קיים, הפעולה ממשיכה לאב-טיפוס. אם אין מאפיין דומה באב-הטיפוס, החיפוש יימשך דרך שרשרת האבות-טיפוס עד שנמצא המאפיין עצמו או שאין יותר טיפוס לחיפוש.
+
+לפיכך נקראת מלכודת ה `has` רק כאשר החיפוש מגיע לאובייקט ה- proxy בשרשרת האב-טיפוס. כשמשתמשים בפרוקסי כאב-טיפוס, זה קורה רק כאשר אין מאפיין משלו בשם זה. לדוגמה:
+
+</div>
 
 ```js
 let target = {};
@@ -1484,26 +1496,30 @@ let thing = Object.create(new Proxy(target, {
     }
 }));
 
-// triggers the `has` proxy trap
+// יפעיל את מלכודת `has`
 console.log("name" in thing);                   // false
 
 thing.name = "thing";
 
-// does not trigger the `has` proxy trap
+// לא יפעיל את מלכודת `has`
 console.log("name" in thing);                   // true
 ```
 
-This code creates a `has` proxy trap on the prototype of `thing`. The `has` trap isn't passed a `receiver` object like the `get` and `set` traps are because searching the prototype happens automatically when the `in` operator is used. Instead, the `has` trap must operate only on `trapTarget`, which is equal to `target`. The first time the `in` operator is used in this example, the `has` trap is called because the property `name` doesn't exist as an own property of `thing`. When `thing.name` is given a value and then the `in` operator is used again, the `has` trap isn't called because the operation stops after finding the own property `name` on `thing`.
+<div dir="rtl">
 
-The prototype examples to this point have centered around objects created using the  `Object.create()` method. But if you want to create a class that has a proxy as a prototype, the process is a bit more involved.
+הקוד כאן יוצר מלכודת `has` באב-טיפוס של `thing`. המלכודתלא מעבירה `has` את האובייקט `receiver` כמו המלכודות `get` ו `set` מכיוון שחיפוש באב-טיפוס מתרחש באופן אוטומטי כאשר משתמשים באופרטור  `in`. במקום זאת, מלכודת `has` חייבת לפעול רק על `trapTarget`,שזה שווה ל `target`. בפעם הראשונה האופרטור `in`  משמש בדוגמה זו, המלכודת `has` נקראית מכיוון ששהמאפיין `name` לא קיים כמאפיין משל עתמו על  `thing`. כאשר `thing.name` מקבל ערך ושוב משתמשים באופרטור `in` , המלכודת `has` לא נקראת מכיוון שהפעולה נפסקת לאחר מציאת המאפיין האישי `name` בתוך `thing`.
 
-### Proxies as Prototypes on Classes
+דוגמאות האבטיפוס לנקודה זו התרכזו סביב אובייקטים שנוצרו באמצעות המתודה `Object.create()`.אבל אם אתה רוצה ליצור מחלקה שיש בה פרוקסי כאב-טיפוס, התהליך מורכב קצת יותר.
 
-Classes cannot be directly modified to use a proxy as a prototype because their `prototype` property is non-writable. You can, however, use a bit of misdirection to create a class that has a proxy as its prototype by using inheritance. To start, you need to create an ECMAScript 5-style type definition using a constructor function. You can then overwrite the prototype to be a proxy. Here's an example:
+### פרוקסים כאבות-טיפוס למחלקות
+
+לא ניתן לשנות מחלקות באופן ישיר להשתמש כפרוקסי כאב טיפוס מכיוון שמאפיין ה `prototype` שלהם לא ניתן לכתיבה - non-writable. עם זאת, באפשרותך להשתמש במעט הכוונה שגויה כדי ליצור מחלקה שיש בה פרוקסי כאב-טיפוס שלה באמצעות ירושה.כדי להתחיל, עליך ליצור בסגנון ECMAScript 5- הגדרת באמצעות פונקציית קונסטרוקטור. לאחר מכן באפשרותך להחליף את אב-הטיפוס כפרוקסי. הנה דוגמא:
+
+</div>
 
 ```js
 function NoSuchProperty() {
-    // empty
+    // ריק
 }
 
 NoSuchProperty.prototype = new Proxy({}, {
@@ -1514,17 +1530,21 @@ NoSuchProperty.prototype = new Proxy({}, {
 
 let thing = new NoSuchProperty();
 
-// throws error due to `get` proxy trap
+// זורק שגיאה עקב `get` proxy trap
 let result = thing.name;
 ```
 
-The `NoSuchProperty` function represents the base from which the class will inherit. There are no restrictions on the `prototype` property of functions, so you can overwrite it with a proxy. The `get` trap is used to throw an error when the property doesn't exist. The `thing` object is created as an instance of `NoSuchProperty` and throws an error when the nonexistent `name` property is accessed.
+<div dir="rtl">
 
-The next step is to create a class that inherits from `NoSuchProperty`. You can simply use the `extends` syntax discussed in Chapter 9 to introduce the proxy into the class' prototype chain, like this:
+הפונקציה `NoSuchProperty` מייצגת את הבסיס ממנו תירש המחלקה. אין הגבלות על המאפיין `prototype` של פונקציות,כך שתוכל להחליף אותו באמצעות פרוקסי. המלכודת `get` בשימוש לזרוק שגיאה כאשר המאפיין אינו קיים. האובייקט `thing` נוצר כמופע של `NoSuchProperty` וזורק שגיאה כאשר ניגשים למאפיין `name` שאינו קיים.
+
+השלב הבא הוא ליצור מחלקה שיורשת מ `NoSuchProperty`. אתה יכול פשוט להשתמש בסינטקס `extends` כמו שהוסבר בפרק 9 כדי להכניס את ה- proxy לשרשרת האב-טיפוס של מחלקה, ככה:
+
+</div>
 
 ```js
 function NoSuchProperty() {
-    // empty
+    // ריק
 }
 
 NoSuchProperty.prototype = new Proxy({}, {
@@ -1546,20 +1566,24 @@ let shape = new Square(2, 6);
 let area1 = shape.length * shape.width;
 console.log(area1);                         // 12
 
-// throws an error because "wdth" doesn't exist
+// יזרוק שגיאה בגלל ש "wdth" לא קיים
 let area2 = shape.length * shape.wdth;
 ```
 
-The `Square` class inherits from `NoSuchProperty` so the proxy is in the `Square` class' prototype chain. The `shape` object is then created as a new instance of `Square` and has two own properties: `length` and `width`. Reading the values of those properties succeeds because the `get` proxy trap is never called. Only when a property that doesn't exist on `shape` is accessed (`shape.wdth`, an obvious typo) does the `get` proxy trap trigger and throw an error.
+<div dir="rtl">
 
-That proves the proxy is in the prototype chain of `shape`, but it might not be obvious that the proxy is not the direct prototype of `shape`. In fact, the proxy is a couple of steps up the prototype chain from `shape`. You can see this more clearly by slightly altering the preceding example:
+המחלקה  `Square` יורשת מ `NoSuchProperty` אז ה- proxy נמצא בשרשרת אב-טיפוס של  `Square`.האובייקט `shape` וצר אז כמופע חדש של `Square` ויש לו שני מאפיינים משלו: `length` ו `width`. קריאת הערכים של אותם נכסים מצליחה מכיוון שמלכודת `get` אף פעם לא נקראת. רק כאשר ניגשים למאפיין שאינו קיים על  `shape` (`shape.wdth`, שגיאת הקלדה ברורה) גורם למלכודת  `get` לפעול ולזרוק שגיאה.
+
+זה מוכיח שהפרוקסי נמצא בשרשרת האב-טיפוס של `shape`, אך יתכן שלא יהיה ברור שה- proxy אינו האבטיפוס הישיר של `shape`. למעשה, ה- proxy הוא כמה צעדים במעלה שרשרת האבטיפוס מ `shape`. ניתן לראות זאת בצורה ברורה יותר על ידי שינוי מעט של הדוגמה הקודמת:
+
+</div>
 
 ```js
 function NoSuchProperty() {
-    // empty
+    // ריק
 }
 
-// store a reference to the proxy that will be the prototype
+// מאחסן הפניה ל- פרוקסי- שיהיה אב-הטיפוס
 let proxy = new Proxy({}, {
     get(trapTarget, key, receiver) {
         throw new ReferenceError(`${key} doesn't exist`);
@@ -1587,13 +1611,17 @@ let secondLevelProto = Object.getPrototypeOf(shapeProto);
 console.log(secondLevelProto === proxy);            // true
 ```
 
-This version of the code stores the proxy in a variable called `proxy` so it's easy to identify later. The prototype of `shape` is `Square.prototype`, which is not a proxy. But the prototype of `Square.prototype` is the proxy that was inherited from `NoSuchProperty`.
+<div dir="rtl">
 
-The inheritance adds another step in the prototype chain, and that matters because operations that might result in calling the `get` trap on `proxy` need to go through one extra step before getting there. If there's a property on `Square.prototype`, then that will prevent the `get` proxy trap from being called, as in this example:
+גרסה זו של הקוד מאחסנת את ה- proxy במשתנה שנקרא `proxy` כך שקל לזהות אחר כך. אב הטיפוס של  `shape` הוא `Square.prototype`, שאינו proxy. אבל אב הטיפוס של `Square.prototype` הוא ה- proxy שיורש ממנו `NoSuchProperty`.
+
+הירושה מוסיפה שלב נוסף בשרשרת האב-טיפוס, וזה משנה מכיוון שפעולות שעלולות לגרום לקריאה למלכודת `get` על `proxy` צריכות לעבור שלב נוסף נוסף לפני שתגיע לשם. אם יש מאפיין ב `Square.prototype`,אז זה ימנע את קריאת מלכודת `get` להקרא,כמו בדוגמה הזו:
+
+</div>
 
 ```js
 function NoSuchProperty() {
-    // empty
+    // ריק
 }
 
 NoSuchProperty.prototype = new Proxy({}, {
@@ -1622,20 +1650,22 @@ console.log(area1);                         // 12
 let area2 = shape.getArea();
 console.log(area2);                         // 12
 
-// throws an error because "wdth" doesn't exist
+// זורק שגיאה מכיוון ש "wdth" אינו קיים
 let area3 = shape.length * shape.wdth;
 ```
 
-Here, the `Square` class has a `getArea()` method. The `getArea()` method is automatically added to `Square.prototype` so when `shape.getArea()` is called, the search for the method `getArea()` starts on the `shape` instance and then proceeds to its prototype. Because `getArea()` is found on the prototype, the search stops and the proxy is never called. That is actually the behavior you want in this situation, as you wouldn't want to incorrectly throw an error when `getArea()` was called.
+<div dir="rtl">
 
-Even though it takes a little bit of extra code to create a class with a proxy in its prototype chain, it can be worth the effort if you need such functionality.
+כאן למחלקה `Square` יש מתודה `getArea()` . המתודה `getArea()` מתווספת אוטומטית ל- `Square.prototype` כך כאשר `shape.getArea()` נקראית, החיפוש אחרי המתודה  `getArea()` מתחיל במופע `shape` ואז ממשיך לאב-טיפוס שלו. בגלל ש `getArea()` נמצא באב-טיפוס, החיפוש נעצר והפרוקסי מעולם לא נקרא. זוהי למעשה ההתנהגות שאתה רוצה במצב זה, מכיוון שלא תרצה לזרוק בטעות טעות כש `getArea()`נקראית.
 
-## Summary
+למרות שנדרש קצת קוד נוסף כדי ליצור כיתה עם פרוקסי בשרשרת האב-טיפוס שלה, זה יכול להיות שווה את המאמץ אם אתה זקוק לפונקציונליות כזוty.
 
-Prior to ECMAScript 6, certain objects (such as arrays) displayed nonstandard behavior that developers couldn't replicate. Proxies change that. They let you define your own nonstandard behavior for several low-level JavaScript operations, so you can replicate all behaviors of built-in JavaScript objects through proxy traps. These traps are called behind the scenes when various operations take place, like a use of the `in` operator.
+## סיכום
 
-A reflection API was also introduced in ECMAScript 6 to allow developers to implement the default behavior for each proxy trap. Each proxy trap has a corresponding method of the same name on the `Reflect` object, another ECMAScript 6 addition. Using a combination of proxy traps and reflection API methods, it's possible to filter some operations to behave differently only in certain conditions while defaulting to the built-in behavior.
+לפני ECMAScript 6, אובייקטים מסוימים (כגון מערכים) הציגו התנהגות לא סטנדרטית שמפתחים לא הצליחו לשכפל.פרוקסי משנה את זה. הם מאפשרים לך להגדיר התנהגות לא-סטנדרטית משלך עבור מספר פעולות JavaScript ברמה נמוכה, כך שתוכל לשכפל את כל ההתנהגויות של אובייקטים מובנים של JavaScript באמצעות מלכודות proxy. מלכודות אלה נקראות מאחורי הקלעים כאשר מבצעים פעולות שונות, כמו שימוש באופרטור  `in`.
 
-Revocable proxies are a special proxies that can be effectively disabled by using a `revoke()` function. The `revoke()` function terminates all functionality on the proxy, so any attempt to interact with the proxy's properties throws an error after `revoke()` is called. Revocable proxies are important for application security where third-party developers may need access to certain objects for a specified amount of time.
+ה API לשיקוף -Reflect הוצג גם ב- ECMAScript 6 כדי לאפשר למפתחים ליישם את התנהגות ברירת המחדל עבור כל מלכודת פרוקסי. לכל מלכודת פרוקסי יש שיטה המתאימה לאותו שם באובייקט `Reflect` , תוספות נוספת של ECMAScript 6. באמצעות שילוב של מלכודות פרוקסי ושיטות API של השתקפות, זה אפשרי  לסנן פעולות מסוימות כדי להתנהג אחרת רק בתנאים מסוימים תוך ברירת המחדל להתנהגות המובנית.
 
-While using proxies directly is the most powerful use case, you can also use a proxy as the prototype for another object. In that case, you are severely limited in the number of proxy traps you can effectively use. Only the `get`, `set`, and `has` proxy traps will ever be called on a proxy when it's used as a prototype, making the set of use cases much smaller.
+פרוקסי הניתנים לביטול הם פרוקסים מיוחדים הניתנים לביטול יעיל באמצעות השימוש בפונקציה `revoke()`. הפונקציה `revoke()` מסיים את כל הפונקציונליות שב- proxy, כך שכל ניסיון לקיים אינטראקציה עם תכונות ה- proxy זורק שגיאה לאחר ש `revoke()` נקרא.פרוקסי הניתנים לביטול חשובים לאבטחת יישומים שבהם מפתחים של צד שלישי עשויים להזדקק לגישה לאובייקטים מסוימים למשך פרק זמן מוגדר.
+
+בעוד ששימוש בפרוקסי ישירות הוא מקרה השימוש החזק ביותר, אתה יכול גם להשתמש בפרוקסי כאב-טיפוס של אובייקט אחר. במקרה כזה, אתה מוגבל מאוד במספר מלכודות ה- proxy בהן אתה יכול להשתמש ביעילות. רק המלכודות `get`, `set`, ו `has` אי פעם ייקרא לפרוקסי כאשר הוא משמש כאב-טיפוס, מה שהופך את מערך השימוש במקרים להרבה יותר קטן.
