@@ -2,7 +2,7 @@
 
 by Nicholas C. Zakas
 
-![Creative Commons License](http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png)
+[![Creative Commons License](http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png)](https://creativecommons.org/licenses/by-nc-nd/3.0/)
 
 ECMAScript 6 represents the biggest change to the core of JavaScript in the history of the language. Not only does the sixth edition add new object types, but also new syntax and exciting new capabilities. The result of years of study and debate, ECMAScript 6 reached feature complete status in 2014. While it will take a bit of time before all JavaScript environments support ECMAScript 6, it's still useful to understand what's coming and which features are available already.
 
