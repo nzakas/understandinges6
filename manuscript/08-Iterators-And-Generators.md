@@ -196,7 +196,7 @@ I> All iterators created by generators are also iterables, as generators assign 
 
 At the beginning of this chapter, I mentioned the problem of tracking an index inside a `for` loop. Iterators are the first part of the solution to that problem. The `for-of` loop is the second part: it removes the need to track an index into a collection entirely, leaving you free to focus on working with the contents of the collection.
 
-A `for-of` loop calls `next()` on an iterable each time the loop executes and stores the `value` from the result object in a variable. The loop continues this process until the returned object's `done` property is `true`. Here's an example:
+A `for-of` loop works on an iterable and uses its `Symbol.iterator` property to retrieve an iterator. Then, the `for-of` loop calls `next()` on that iterator each time the loop executes and stores the `value` from the result object in a variable. The loop continues this process until the returned object's `done` property is `true`. Here's an example:
 
 ```js
 let values = [1, 2, 3];
