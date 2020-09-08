@@ -547,7 +547,7 @@ let values = [];
 console.log(Object.prototype.toString.call(values));    // "[object Magic]"
 ```
 
-Because `Symbol.toStringTag` is overwritten for arrays in this example, the call to `Object.prototype.toString()` results in `"[object Magic]"` instead of `"[object Array]"`. While I recommended not changing built-in objects in this way, there's nothing in the language that forbids doing so.
+`Symbol.toStringTag` is overwritten for arrays in this example, meaning the call to `Object.prototype.toString()` results in `"[object Magic]"` instead of `"[object Array]"`. While I recommended not changing built-in objects in this way, there's nothing in the language that forbids doing so.
 
 ### The Symbol.unscopables Symbol
 
