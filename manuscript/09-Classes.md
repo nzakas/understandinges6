@@ -305,7 +305,7 @@ console.log("set" in descriptor);   // true
 console.log(descriptor.enumerable); // false
 ```
 
-In this code, the `CustomHTMLElement` class is made as a wrapper around an existing DOM element. It has both a getter and setter for `html` that delegates to the `innerHTML` method on the element itself. This accessor property is created on the `CustomHTMLElement.prototype` and, just like any other method would be, is created as non-enumerable. The equivalent non-class representation is:
+In this code, the `CustomHTMLElement` class is made as a wrapper around an existing DOM element. It has both a getter and setter for `html` that delegates to the `innerHTML` property on the element itself. This accessor property is created on the `CustomHTMLElement.prototype` and, just like any other method would be, is created as non-enumerable. The equivalent non-class representation is:
 
 ```js
 // direct equivalent to previous example
