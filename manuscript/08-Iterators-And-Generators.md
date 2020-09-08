@@ -492,7 +492,7 @@ A> The `for-of` loop in this code uses a destructured array to assign `key` and 
 
 ### String Iterators
 
-JavaScript strings have slowly become more like arrays since ECMAScript 5 was released. For example, ECMAScript 5 formalized bracket notation for accessing characters in strings (that is, using `text[0]` to get the first character, and so on). But bracket notation works on code units rather than characters, so it cannot be used to access double-byte characters correctly, as this example demonstrates:
+JavaScript strings have slowly become more like arrays since ECMAScript 5 was released. For example, ECMAScript 5 formalized bracket notation for accessing characters in strings (that is, using `text[0]` to get the first character, and so on). But bracket notation works on code units rather than characters, so it cannot be used to access surrogate pair characters correctly, as this example demonstrates:
 
 ```js
 var message = "A 𠮷 B";
@@ -513,7 +513,7 @@ A
 B
 ```
 
-Since the double-byte character is treated as two separate code units, there are four empty lines between `A` and `B` in the output.
+Since the surrogate pair character is treated as two separate code units, there are four empty lines between `A` and `B` in the output.
 
 Fortunately, ECMAScript 6 aims to fully support Unicode (see Chapter 2), and the default string iterator is an attempt to solve the string iteration problem. As such, the default iterator for strings works on characters rather than code units. Changing this example to use the default string iterator with a `for-of` loop results in more appropriate output. Here's the tweaked code:
 
