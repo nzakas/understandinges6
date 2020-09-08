@@ -502,7 +502,7 @@ for (let i=0; i < message.length; i++) {
 }
 ```
 
-This code uses bracket notation and the `length` property to iterate over and print a string containing a Unicode character. The output is a bit unexpected:
+This code uses bracket notation and the `length` property to iterate over and print a string containing a surrogate pair character. The output is a bit unexpected:
 
 ```
 A
@@ -536,7 +536,7 @@ A
 B
 ```
 
-This result is more in line with what you'd expect when working with characters: the loop successfully prints the Unicode character, as well as all the rest.
+This result is more in line with what you'd expect when working with characters: the loop successfully prints the surrogate pair character, as well as all the rest.
 
 ### NodeList Iterators
 
