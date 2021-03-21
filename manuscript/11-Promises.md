@@ -308,7 +308,7 @@ The `Promise` constructor is the best way to create unsettled promises due to th
 
 #### Using Promise.resolve()
 
-The `Promise.resolve()` method accepts a single argument and returns a promise in the fulfilled state. That means no job scheduling occurs, and you need to add one or more fulfillment handlers to the promise to retrieve the value. For example:
+The `Promise.resolve()` method accepts a single argument and returns a promise in the fulfilled state.(There is an exception when you pass a rejected promise to this method.) That means no job scheduling occurs, and you need to add one or more fulfillment handlers to the promise to retrieve the value. For example:
 
 ```js
 let promise = Promise.resolve(42);
@@ -334,7 +334,7 @@ promise.catch(function(value) {
 
 Any additional rejection handlers added to this promise would be called, but not fulfillment handlers.
 
-I> If you pass a promise to either the `Promise.resolve()` or `Promise.reject()` methods, the promise is returned without modification.
+I> If you pass a promise to  `Promise.resolve()` , the promise is returned without modification. If you pass a promise to `Promise.reject()`, a *new rejected* promise is returned.
 
 #### Non-Promise Thenables
 
