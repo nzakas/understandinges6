@@ -1,4 +1,4 @@
-# Introduction
+# Introduction 
 
 The JavaScript core language features are defined in a standard called ECMA-262. The language defined in this standard is called ECMAScript. What you know as JavaScript in browsers and Node.js is actually a superset of ECMAScript. Browsers and Node.js add more functionality through additional objects and methods, but the core of the language remains as defined in ECMAScript. The ongoing development of ECMA-262 is vital to the success of JavaScript as a whole, and this book covers the changes brought about by the most recent major update to the language: ECMAScript 6.
 
