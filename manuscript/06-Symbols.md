@@ -30,7 +30,7 @@ person[firstName] = "Nicholas";
 
 console.log("first name" in person);        // false
 console.log(person[firstName]);             // "Nicholas"
-console.log(firstName);                     // "Symbol(first name)"
+console.log(firstName);                     // Symbol(first name)
 ```
 
 A symbol's description is stored internally in the `[[Description]]` property. This property is read whenever the symbol's `toString()` method is called either explicitly or implicitly. The `firstName` symbol's `toString()` method is called implictly by `console.log()` in this example, so the description gets printed to the log. It is not otherwise possible to access `[[Description]]` directly from code. I recommended always providing a description to make both reading and debugging symbols easier.
@@ -91,7 +91,7 @@ let object = {};
 object[uid] = "12345";
 
 console.log(object[uid]);       // "12345"
-console.log(uid);               // "Symbol(uid)"
+console.log(uid);               // Symbol(uid)
 ```
 
 The `Symbol.for()` method first searches the global symbol registry to see if a symbol with the key `"uid"` exists. If so, the method returns the existing symbol. If no such symbol exists, then a new symbol is created and registered to the global symbol registry using the specified key. The new symbol is then returned. That means subsequent calls to `Symbol.for()` using the same key will return the same symbol, as follows:
@@ -103,13 +103,13 @@ let object = {
 };
 
 console.log(object[uid]);       // "12345"
-console.log(uid);               // "Symbol(uid)"
+console.log(uid);               // Symbol(uid)
 
 let uid2 = Symbol.for("uid");
 
 console.log(uid === uid2);      // true
 console.log(object[uid2]);      // "12345"
-console.log(uid2);              // "Symbol(uid)"
+console.log(uid2);              // Symbol(uid)
 ```
 
 In this example, `uid` and `uid2` contain the same symbol and so they can be used interchangeably. The first call to `Symbol.for()` creates the symbol, and the second call retrieves the symbol from the global symbol registry.
@@ -177,7 +177,7 @@ let object = {
 let symbols = Object.getOwnPropertySymbols(object);
 
 console.log(symbols.length);        // 1
-console.log(symbols[0]);            // "Symbol(uid)"
+console.log(symbols[0]);            // Symbol(uid)
 console.log(object[symbols[0]]);    // "12345"
 ```
 
